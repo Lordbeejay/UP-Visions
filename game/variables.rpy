@@ -10,7 +10,13 @@ default game_complete = False
 
 ## --- Act Task Requirements ---
 ## Each act has a set of task IDs the player must complete to advance
-define ACT1_TASKS = {"talk_driver", "visit_physician", "visit_dentist", "talk_sir_ruel"}
+define ACT1_TASKS = {
+    "talk_jaden",
+    "talk_manong_josh",
+    "talk_aleng_maria",
+    "talk_manong_chris",
+    "talk_joseph_driver",
+}
 define ACT2_TASKS = {"talk_ms_santos", "talk_sarah"}
 define ACT3_TASKS = {"talk_mikhaela", "talk_jaden", "talk_caezar"}
 define ACT4_TASKS = {"talk_dorm_manager"}
@@ -22,11 +28,11 @@ default player_facing = "down"
 
 ## --- Task Names (for HUD display) ---
 define TASK_DESCRIPTIONS = {
-    "talk_driver": "Talk to Manong Driver at the gate",
-    "visit_hsu_nurse": "Visit the HSU Nurse",
-    "visit_physician": "Get checked by the School Physician",
-    "visit_dentist": "Visit the School Dentist",
-    "talk_sir_ruel": "Submit forms to Sir Ruel at the Registrar",
+    "talk_jaden": "Talk to Jaden",
+    "talk_manong_josh": "Talk to Manong Josh",
+    "talk_aleng_maria": "Talk to Aleng Maria",
+    "talk_manong_chris": "Talk to Manong Chris",
+    "talk_joseph_driver": "Talk to Joseph (Driver)",
     "talk_ms_santos": "Visit Ms. Santos at the OSA (CUB)",
     "talk_sarah": "Talk to Sarah at the enrollment line",
     "talk_mikhaela": "Find Mikhaela",
