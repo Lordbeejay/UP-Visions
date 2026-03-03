@@ -8,7 +8,7 @@ label npc_mikhaela:
     window show
 
     mikhaela "Did you survive Sir Ruel?"
-    mikhaela "Want some? It's isaw from the kiosk near the gate. Best reward after enrollment."
+    mikhaela "Want some? It's isaw from the kiosk near the gate. Best post-enrollment reward."
 
     menu:
         "Sure, thanks.":
@@ -18,21 +18,25 @@ label npc_mikhaela:
 
 label npc_mikhaela_eat:
     narrator_char "(You take a stick of isaw. It's perfectly grilled.)"
+    mikhaela "See? Instant morale boost."
     $ complete_task("talk_mikhaela")
     window hide
     return
 
 label npc_mikhaela_decline:
-    mikhaela "Your loss!"
+    mikhaela "Your loss! I'll save you one if you change your mind."
     $ complete_task("talk_mikhaela")
     window hide
     return
 
 ## --- Jaden ---
+label act3_npc_jaden:
+    jump Act3_npc_jaden
+
 label Act3_npc_jaden:
     window show
 
-    jaden "Hey! You survived Sir Ruel!"
+    jaden "Hey! You survived Sir Ruel."
 
     menu:
         "Barely. He's intense.":
@@ -43,19 +47,22 @@ label Act3_npc_jaden:
             jump npc_jaden_hungry
 
 label npc_jaden_intense:
-    jaden "Same. I just came from the CUB too, got my partial stipend tagged."
+    jaden "Same. I came from CUB and got my stipend papers tagged."
+    jaden "That line took forever."
     jump npc_jaden_invite
 
 label npc_jaden_easy:
-    jaden "Same. I just came from the CUB too, got my partial stipend tagged."
+    jaden "Wow, confident freshie."
+    jaden "I came from CUB too and got my stipend papers tagged."
     jump npc_jaden_invite
 
 label npc_jaden_hungry:
-    jaden "Same. I just came from the CUB too, got my partial stipend tagged."
+    jaden "Real. Enrollment burns more energy than PE."
+    jaden "I just finished at CUB too."
     jump npc_jaden_invite
 
 label npc_jaden_invite:
-    jaden "Hey, I'm heading to Lover's Lane to meet some friends. It's on the way to the dorms. Want to walk with me?"
+    jaden "I'm heading to Lover's Lane to meet some friends. Want to walk with me?"
 
     menu:
         "Sure, let's go.":
@@ -64,13 +71,13 @@ label npc_jaden_invite:
             jump npc_jaden_explain
 
 label npc_jaden_explain:
-    jaden "It's near HSU, after the dormitory area. Let's go there after you've finished talking with the dorm staff."
-    jaden "It's nice and windy there. Come on, it's walking distance."
+    jaden "It's near HSU, just past the dormitory road."
+    jaden "It's breezy there, and the sunset is good. It's walking distance."
     jump npc_jaden_go
 
 label npc_jaden_go:
     jaden "All settled?"
-    jaden "Come on. Let's walk it off. My friends are waiting at the Lover's Lane."
+    jaden "Come on, let's walk it off. My friends are waiting at Lover's Lane."
     $ complete_task("talk_jaden")
     window hide
     return
@@ -79,9 +86,9 @@ label npc_jaden_go:
 label npc_caezar:
     window show
 
-    caezar "Oy, JADEN! Finally."
-    caezar "Welcome to UPV. First day survival rate is currently 100%%, I see."
-    caezar "So, freshie. What's the plan? You here to get honors, or here to save the world?"
+    caezar "Oy, Jaden! Finally."
+    caezar "Welcome to UPV. First-day survival rate is still 100%%, I see."
+    caezar "So, freshie, what's the plan? Honors, org life, or just survive semester one?"
 
     menu:
         "I need to maintain my scholarship. Grades are priority.":
@@ -92,10 +99,10 @@ label npc_caezar:
             jump npc_caezar_response
 
 label npc_caezar_response:
-    caezar "Good answers."
+    caezar "Good answer."
     caezar "Just remember: UP isn't just about the classroom."
     narrator_char "(He gestures to the field and the trees.)"
-    caezar "Look at this. Don't forget to look up once in a while."
+    caezar "Look around once in a while. That's part of learning too."
     $ complete_task("talk_caezar")
     window hide
     return
