@@ -1,13 +1,19 @@
-﻿################################################################################
-## Initialization
-################################################################################
-
-init offset = -1
-
-
+﻿
 ################################################################################
 ## Styles
 ################################################################################
+init offset = -1
+
+## Student Portal Colors
+define DARK_MAROON = "#5c1a1a"
+define LIGHT_PINK_BG = "#f0e6e6"
+define WHITE = "#ffffff"
+define TEXT_DARK = "#3a1a1a"
+define RED_BADGE = "#cc0000"
+define BUTTON_BG = "#f5eded"
+define BUTTON_BORDER = "#c8b0b0"
+define DISABLED_TEXT = "#cc4444"
+
 
 style default:
     properties gui.text_properties()
@@ -230,10 +236,257 @@ style choice_button_text is default:
     properties gui.text_properties("choice_button")
 
 
-## Quick Menu screen ###########################################################
-##
-## The quick menu is displayed in-game to provide easy access to the out-of-game
-## menus.
+
+
+################################################################################
+## Student Portal
+################################################################################
+
+
+
+
+
+################################################################################
+## Main Portal Screen
+################################################################################
+
+
+
+
+################################################################################
+## Student Portal Screen
+## Replicates the BORRES, JOSAIAH LOBATON student dashboard UI
+##CRS Screen
+################################################################################
+screen student_portal():
+
+    ## Background
+    add Solid(LIGHT_PINK_BG)
+
+    ## Top Info Bar (student info area)
+    frame:
+        xalign 0.5
+        ypos 190
+        xsize 900
+        ysize 600
+        background Solid("#ffffff")
+        padding (20, 20, 20, 20)
+
+        hbox:
+            spacing 30
+            xalign 0.0
+            yalign 0.5
+
+            ## Student Photo Placeholder
+            frame:
+                xsize 120
+                ysize 155
+                background Solid("#8b1a1a")
+                ## In a real project, replace with: add "images/student_photo.png"
+                text "PHOTO" color "#ffffff" size 16 xalign 0.5 yalign 0.5
+
+            ## Student Info Text
+            vbox:
+                spacing 4
+                yalign 0.5
+
+                hbox:
+                    spacing 6
+                    text "Student ID :" bold True color TEXT_DARK size 16
+                    text "202150631" color TEXT_DARK size 16
+
+                hbox:
+                    spacing 6
+                    text "Name :" bold True color TEXT_DARK size 16
+                    text "BORRES, JOSAIAH LOBATON" color TEXT_DARK size 16
+
+                hbox:
+                    spacing 6
+                    text "Degree Program :" bold True color TEXT_DARK size 16
+                    text "B.S. in Computer Science" color TEXT_DARK size 16
+
+                hbox:
+                    spacing 6
+                    text "Degree Level:" bold True color TEXT_DARK size 16
+                    text "Undergraduate" color TEXT_DARK size 16
+
+                hbox:
+                    spacing 6
+                    text "Year Level :" bold True color TEXT_DARK size 16
+                    text "4" color TEXT_DARK size 16
+
+                null height 10
+
+                hbox:
+                    spacing 6
+                    text "Scholarship :" bold True color TEXT_DARK size 16
+                    text "Free Tuition and Other Fees" color TEXT_DARK size 16
+
+    ## Main Content Panel
+    frame:
+        xalign 0.5
+        ypos 190
+        xsize 900
+        ysize 680
+        background Solid(LIGHT_PINK_BG)
+        padding (0, 0, 0, 0)
+
+        vbox:
+            spacing 0
+
+            ## Header Banner
+            frame:
+                xsize 900
+                ysize 48
+                background Solid(DARK_MAROON)
+                text "Second Semester ,  A.Y. 2025-2026" color "#ffffff" bold True size 18 xalign 0.5 yalign 0.5
+
+            ## Content Area
+            frame:
+                xsize 900
+                background Solid(LIGHT_PINK_BG)
+                padding (60, 24, 60, 24)
+
+                vbox:
+                    spacing 24
+
+                    ##──────────────────────────────────────
+                    ## PERSONAL DATA Section
+                    ##──────────────────────────────────────
+                    vbox:
+                        spacing 10
+
+                        text "PERSONAL DATA" bold True color TEXT_DARK size 18
+
+                        ## Buttons
+                        use portal_button("My Login Account", "login_account")
+                        use portal_button("My Personal Information", "personal_info")
+                        use portal_button("My Existing Accountability", "accountability")
+                        use portal_button("My Class Syllabus", "class_syllabus")
+                        use portal_button("My Study Plan", "study_plan")
+                        use portal_button("My Schedule, Grades & Checklist", "schedule_grades")
+
+                    ##──────────────────────────────────────
+                    ## APPS Section
+                    ##──────────────────────────────────────
+                    vbox:
+                        spacing 10
+
+                        text "APPS" bold True color TEXT_DARK size 18
+
+                        ## Disabled label
+                        hbox:
+                            xalign 0.5
+                            spacing 8
+                            text "Evaluate Teacher" bold True color TEXT_DARK size 16 xalign 0.5
+                            text "(Disabled)" color DISABLED_TEXT bold True size 16
+
+                        use portal_button("Graduation Application", "graduation_app")
+                        use portal_button("Remote Learning Survey", "remote_survey")
+
+                    ##──────────────────────────────────────
+                    ## REGISTRATION Section
+                    ##──────────────────────────────────────
+                    vbox:
+                        spacing 10
+
+                        text "REGISTRATION" bold True color TEXT_DARK size 18
+
+                        use portal_button("View Subjects", "view_subjects")
+                        use portal_button_badge("Enrollment", "enrollment_status", "1")
+
+            ## Footer Banner
+            frame:
+                xsize 900
+                ysize 28
+                background Solid(DARK_MAROON)
+                null
+
+
+################################################################################
+## Reusable Portal Button (plain)
+################################################################################
+
+screen portal_button(label, action_tag):
+    button:
+        xsize 780
+        ysize 48
+        background Frame(Solid(BUTTON_BG), 0, 0)
+        hover_background Frame(Solid("#e8d4d4"), 0, 0)
+        padding (16, 0, 16, 0)
+
+        ## Border via solid frame trick
+        frame:
+            xsize 780
+            ysize 48
+            background Solid(BUTTON_BORDER)
+            padding (1, 1, 1, 1)
+
+            frame:
+                xfill True
+                yfill True
+                background Solid(BUTTON_BG)
+                hover_background Solid("#e8d4d4")
+                padding (14, 0, 14, 0)
+
+                text label color TEXT_DARK size 16 yalign 0.5
+
+        action NullAction()
+
+
+################################################################################
+## Reusable Portal Button WITH red badge
+################################################################################
+
+screen portal_button_badge(label, action_tag, badge_count):
+    hbox:
+        spacing 8
+        yalign 0.5
+
+        button:
+            xsize 740
+            ysize 48
+            padding (0, 0, 0, 0)
+
+            frame:
+                xsize 740
+                ysize 48
+                background Solid(BUTTON_BORDER)
+                padding (1, 1, 1, 1)
+
+                frame:
+                    xfill True
+                    yfill True
+                    background Solid(BUTTON_BG)
+                    hover_background Solid("#e8d4d4")
+                    padding (14, 0, 14, 0)
+
+                    text label color TEXT_DARK size 16 yalign 0.5
+
+            action NullAction()
+
+        ## Red circle badge
+        frame:
+            xsize 32
+            ysize 32
+            background Solid(RED_BADGE)
+            xalign 0.5
+            yalign 0.5
+
+            text badge_count color "#ffffff" bold True size 16 xalign 0.5 yalign 0.5
+
+
+################################################################################
+## Entry point label
+################################################################################
+
+label start_portal:
+    call screen student_portal()
+    return
+
+
+
+
 
 screen quick_menu():
 
@@ -1507,7 +1760,19 @@ define bubble.expand_area = {
     "thought" : (0, 0, 0, 0),
 }
 
-
+screen debug_overlay():
+    zorder 999
+    frame:
+        xalign 1.0
+        yalign 0.0
+        xsize 400
+        background Solid("#000000cc")
+        padding (10, 10, 10, 10)
+        vbox:
+            spacing 4
+            text "=== DEBUG ===" color "#ffff00" size 14
+            text "act1_done: [act1_done]" color "#ffffff" size 12
+            text "tasks: [tasks_completed]" color "#aaffaa" size 11
 
 ################################################################################
 ## Mobile Variants
