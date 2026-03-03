@@ -23,6 +23,10 @@ define joseph_driver = Character("Joseph", color="#ffd700", what_color="#ffffff"
 define manong_chris = Character("Manong Chris", color="#aaddff", what_color="#ffffff")
 define manong_josh = Character("Manong Josh", color="#ffd7a0", what_color="#ffffff")
 define joseph = Character("Joseph", color="#ffd700", what_color="#ffffff")
+define ate_bea = Character("ate bea", color="#ffd700", what_color="#ffffff")
+define kuya_mark = Character("kuya mark", color="#aaddff", what_color="#ffffff")
+define maam_reyes = Character("maam reyes", color="#ffd7a0", what_color="#ffffff")
+define sir_allan = Character("sir allan", color="#ffd700", what_color="#ffffff")
 ## --- NPC Sprite Images ---
 ## Ren'Py auto-names files in subdirectories with a space prefix (e.g. "npcs manong_guard").
 ## We define them explicitly here so `show manong_guard` works in dialogue scenes.
@@ -41,6 +45,10 @@ image aleng_maria_sprite = "images/npcs/alengmaria.png"
 image manong_josh = "images/npcs/manongjosh.png"      ## already have file, just add this
 image manong_chris = "images/npcs/manong_chris.png"
 image joseph_driver = "images/npcs/joseph_driver.png"
+image ate_bea = "images/npcs/ate_bea.png"
+image kuya_mark = "images/npcs/kuya_mark.png"
+image maam_reyes = "images/npcs/maam_reyes.png"
+image sir_allan = "images/npcs/sir_allan.png"
 ## --- Scene Backgrounds ---
 image bg gate_entrance = Solid("#2a3a2a")
 image bg miagao_campus = "images/ui/Entrance.png"

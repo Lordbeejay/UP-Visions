@@ -131,12 +131,12 @@ screen map_screen(map_bg, nodes, task_text="", map_scale=1.0):
                         xalign 0.5
 
     ## Player sprite — also converted to screen coords
-    $ _px = int(player_map_x * MAP_SCALE_X) - 24
-    $ _py = int(player_map_y * MAP_SCALE_Y) - 48
+    $ _px = int(player_map_x * MAP_SCALE_X) - 60
+    $ _py = int(player_map_y * MAP_SCALE_Y) - 100
     add ("player_idle_" + player_facing):
         xpos _px
         ypos _py
-        zoom 2.0
+        zoom 2.5
 
     ## --- TASK DISPLAY BAR (top center) ---
     if task_text:
@@ -192,14 +192,14 @@ label walk_to_node(target_node, map_bg="maps/banwa.png"):
     $ _dur = calc_walk_duration(player_map_x, player_map_y, target_node.x, target_node.y)
 
     ## Calculate screen positions for walk animation
-    $ _start_x = int(player_map_x * MAP_SCALE_X) - 24
-    $ _start_y = int(player_map_y * MAP_SCALE_Y) - 48
-    $ _end_x = int(target_node.x * MAP_SCALE_X) - 24
-    $ _end_y = int(target_node.y * MAP_SCALE_Y) - 48
+    $ _start_x = int(player_map_x * MAP_SCALE_X) - 60
+    $ _start_y = int(player_map_y * MAP_SCALE_Y) - 100
+    $ _end_x = int(target_node.x * MAP_SCALE_X) - 60
+    $ _end_y = int(target_node.y * MAP_SCALE_Y) - 100
 
     show expression ("player_walk_" + _dir) as player_sprite:
         pos (_start_x, _start_y)
-        zoom 2.0
+        zoom 2.5
         linear _dur pos (_end_x, _end_y)
 
     $ renpy.pause(_dur, hard=True)
