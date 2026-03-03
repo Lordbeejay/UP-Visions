@@ -8,7 +8,7 @@
 ## ============================================================================
 ##
 ## ============================================================================
-
+default act1_done = False
 ## --- Map zoom constant ---
 define MAP_ZOOM = 0.144
 
@@ -37,7 +37,7 @@ label start:
     $ player_map_x = 2500
     $ player_map_y = 3200
     $ player_facing = "up"
-    jump act1_map
+    jump act2_map
 
 
 ## ============================================================================
@@ -70,39 +70,36 @@ label act1_loop:
     if _action == "walk":
         call walk_to_node(_node)
         call expression _node.target_label
-
-        ## --- After talking to Jaden, unlock Manong Josh and Aleng Maria ---
-        if "talk_jaden" in tasks_completed:
-            $ act1_nodes[1].locked = False  # Manong Josh
-            $ act1_nodes[2].locked = False  # Aleng Maria
-            if "talk_manong_josh" not in tasks_completed and "talk_aleng_maria" not in tasks_completed:
-                $ current_task_text = "Explore the Banwa Area — talk to the locals"
-
-        ## --- After Josh OR Maria, unlock Manong Chris ---
-        if "talk_manong_josh" in tasks_completed or "talk_aleng_maria" in tasks_completed:
-            $ act1_nodes[3].locked = False  # Manong Chris
-
-        ## --- After Chris, unlock Joseph ---
-        if "talk_manong_chris" in tasks_completed:
-            $ act1_nodes[4].locked = False  # Joseph
-            if "talk_joseph_driver" not in tasks_completed:
-                $ current_task_text = "Find Joseph the tricycle driver near the plaza"
-
-        ## --- After all 5 NPCs, unlock BOX 1 ---
-        if (
-            "talk_jaden"          in tasks_completed and
-            "talk_manong_josh"    in tasks_completed and
-            "talk_aleng_maria"    in tasks_completed and
-            "talk_manong_chris"   in tasks_completed and
-            "talk_joseph_driver"  in tasks_completed
-        ):
-            $ act1_nodes[5].locked = False  # BOX 1
-            $ current_task_text = "Head to BOX 1 at the edge of the Banwa Area"
-
-        if is_act_complete():
+        
+        if act1_done:
             jump act1_complete
 
+        ## unlock logic below...
+        if "talk_jaden" in tasks_completed:
+            $ act1_nodes[1].locked = False
+            $ act1_nodes[2].locked = False
+
+        if "talk_manong_josh" in tasks_completed or "talk_aleng_maria" in tasks_completed:
+            $ act1_nodes[3].locked = False
+
+        if "talk_manong_chris" in tasks_completed:
+            $ act1_nodes[4].locked = False
+
+        if (
+            "talk_jaden"         in tasks_completed and
+            "talk_manong_josh"   in tasks_completed and
+            "talk_aleng_maria"   in tasks_completed and
+            "talk_manong_chris"  in tasks_completed and
+            "talk_joseph_driver" in tasks_completed
+        ):
+            $ act1_nodes[5].locked = False
+            $ current_task_text = "Head to BOX 1 at the edge of the Banwa Area"
+
+    if act1_done:               ## ← ADD SECOND CHECK HERE outside the walk block
+        jump act1_complete
+
     jump act1_loop
+
 
 
 label act1_complete:
@@ -128,46 +125,43 @@ label act1_complete:
 
 label act2_map:
     $ act2_nodes = [
-        MapNode("CUB", 1900, 1800, "npc_ms_santos", "CUB / OSA Office", False, "#cc99ff", "ms_santos.png"),
-        MapNode("Enrollment", 3000, 2500, "npc_sarah", "Enrollment Line", False, "#ffcc99", "sarah.png"),
+        MapNode("ate_bea",    1600, 2200, "act2_npc_ate_bea",      tooltip="Ate Bea",     icon_image="ate_bea.png",      locked=False),
+        MapNode("kuya_mark",  2800, 1900, "act2_npc_kuya_mark",    tooltip="Kuya Mark",   icon_image="kuya_mark.png",    locked=True),
+        MapNode("maam_reyes", 2200, 2600, "act2_npc_maam_reyes",   tooltip="Ma'am Reyes", icon_image="maam_reyes.png",   locked=True),
+        MapNode("sir_allan",  3200, 2300, "act2_npc_sir_allan",    tooltip="Sir Allan",   icon_image="sir_allan.png",    locked=True),
+        MapNode("enrollment", 2500, 1700, "act2_enrollment_office", tooltip="Enrollment",  icon_image="enrollment.png",   locked=True),
     ]
-
-    $ current_task_text = "Visit Ms. Santos at the OSA and check the enrollment line"
+    $ current_task_text = "Talk to Ate Bea near the BOX 1 entrance"
 
 label act2_loop:
-    call screen map_screen("NewAd/.png", act2_nodes, current_task_text, MAP_ZOOM)
+    call screen map_screen("maps/NewAd.png", act2_nodes, current_task_text, MAP_ZOOM)
     $ _action, _node = _return
 
     if _action == "walk":
         call walk_to_node(_node)
         call expression _node.target_label
 
-        if "talk_ms_santos" in tasks_completed and "talk_sarah" not in tasks_completed:
-            $ current_task_text = "Talk to Sarah at the enrollment line"
-        elif "talk_sarah" in tasks_completed and "talk_ms_santos" not in tasks_completed:
-            $ current_task_text = "Visit Ms. Santos at the OSA"
+        if "talk_ate_bea" in tasks_completed:
+            $ act2_nodes[1].locked = False
+            $ act2_nodes[2].locked = False
+            $ current_task_text = "Learn about security and offices — talk to Kuya Mark and Ma'am Reyes"
+
+        if "talk_kuya_mark" in tasks_completed or "talk_maam_reyes" in tasks_completed:
+            $ act2_nodes[3].locked = False
+
+        if (
+            "talk_ate_bea"    in tasks_completed and
+            "talk_kuya_mark"  in tasks_completed and
+            "talk_maam_reyes" in tasks_completed and
+            "talk_sir_allan"  in tasks_completed
+        ):
+            $ act2_nodes[4].locked = False
+            $ current_task_text = "Head to the Enrollment Office"
 
         if is_act_complete():
             jump act2_complete
 
     jump act2_loop
-
-
-label act2_complete:
-    scene black with fade
-    pause 0.5
-    centered "{size=+4}{color=#44cc44}✅ ACT 2 COMPLETE{/color}{/size}\n\n{color=#ffffff}Scholarship tagged and enrollment confirmed!{/color}"
-    pause 2.5
-
-    scene black with fade
-    centered "{size=+6}{color=#ffd700}ACT 3{/color}{/size}\n{color=#ffffff}Campus Life{/color}"
-    pause 2.0
-
-    $ current_act = 3
-    $ player_map_x = 2500
-    $ player_map_y = 2800
-    $ player_facing = "down"
-    jump act3_map
 
 
 ## ============================================================================
