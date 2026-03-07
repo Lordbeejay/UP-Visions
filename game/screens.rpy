@@ -477,6 +477,36 @@ screen portal_button_badge(label, action_tag, badge_count):
 
 
 ################################################################################
+## CRS Enrollment UI wrapper for Act 2 flow
+################################################################################
+
+screen crs_enrollment_ui():
+    use student_portal
+
+    frame:
+        xalign 0.5
+        yalign 0.97
+        xsize 900
+        ysize 70
+        background Solid(DARK_MAROON)
+        padding (20, 12, 20, 12)
+
+        hbox:
+            xfill True
+            spacing 20
+
+            text "CRS Simulation" color "#ffffff" bold True size 20 yalign 0.5
+
+            null width 1
+
+            textbutton "Done":
+                action Return("completed")
+
+            textbutton "Back":
+                action Return("cancelled")
+
+
+################################################################################
 ## Entry point label
 ################################################################################
 

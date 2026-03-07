@@ -29,7 +29,7 @@ label npc_mikhaela_decline:
     return
 
 ## --- Jaden ---
-label Act3_npc_jaden:
+label act3_npc_jaden:
     window show
 
     jaden "Hey! You survived Sir Ruel!"
@@ -70,10 +70,13 @@ label npc_jaden_explain:
 
 label npc_jaden_go:
     jaden "All settled?"
-    jaden "Come on. Let's walk it off. My friends are waiting at the Lover's Lane."
+    jaden "Come on, let's walk it off. My friends are waiting at Lover's Lane."
     $ complete_task("talk_jaden")
     window hide
     return
+
+label Act3_npc_jaden:
+    jump act3_npc_jaden
 
 ## --- Caezar (at Lover's Lane) ---
 label npc_caezar:

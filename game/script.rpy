@@ -171,7 +171,7 @@ label act2_loop:
 label act3_map:
     $ act3_nodes = [
         MapNode("Kiosk", 2300, 3100, "npc_mikhaela", "Kiosk (Mikhaela)", False, "#ff99cc", "mikhaela.png"),
-        MapNode("Path", 2100, 2600, "act1_npc_jaden", "Main Path (Jaden)", False, "#99ccff", "jaden.png"),
+        MapNode("Path", 2100, 2600, "act3_npc_jaden", "Main Path (Jaden)", False, "#99ccff", "jaden.png"),
         MapNode("Lover's", 1600, 1800, "npc_caezar", "Lover's Lane", True, "#ccff99", "caezar.png"),
     ]
 
