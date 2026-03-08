@@ -13,6 +13,9 @@ default act1_done = False
 define MAP_ZOOM = 0.144
 
 label start:
+    ## stop the fucking music when entering game
+    stop music fadeout 1.0  # FUCKING STOP the main menu theme
+
     ## Hide the dialogue window for map exploration
     window hide
 
