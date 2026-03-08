@@ -350,61 +350,83 @@ style navigation_button_text:
 ##
 ## https://www.renpy.org/doc/html/screen_special.html#main-menu
 
-screen main_menu():
 
-    ## This ensures that any other menu screen is replaced.
+# Initializing shit
+
+transform parallax_loop(speed):
+    subpixel True
+    # 'xpan' handles the infinite horizontal wrap-around.
+    # We start at 0 and move to 360 degrees.
+    xpan 0
+    linear speed xpan 360
+    repeat
+
+screen main_menu():
     tag menu
 
-    add gui.main_menu_background
+    # Layers ordered back (7) to front (1).
+    # Higher 'speed' numbers move SLOWER (it's the time in seconds to loop).
+    add "gui/main_menu/layer7.png" at parallax_loop(60.0)  # Distant sky (Slowest)
+    add "gui/main_menu/layer6.png" at parallax_loop(50.0)
+    add "gui/main_menu/layer5.png" at parallax_loop(40.0)
+    add "gui/main_menu/layer4.png" at parallax_loop(30.0)
+    add "gui/main_menu/layer3.png" at parallax_loop(20.0)
+    add "gui/main_menu/layer2.png" at parallax_loop(15.0)
+    add "gui/main_menu/layer1.png" at parallax_loop(10.0)  # Foreground (Fastest)
 
-    ## This empty frame darkens the main menu.
-    frame:
-        style "main_menu_frame"
+    # UI Overlay for readability
+    add Solid("#00000044")
 
-    ## The use statement includes another screen inside this one. The actual
-    ## contents of the main menu are in the navigation screen.
-    use navigation
-
+    # Title Text in the FUCKING MIDDLE
     if gui.show_name:
-
         vbox:
-            style "main_menu_vbox"
-
+            align (0.5, 0.5)  # Perfectly centers the box in the middle of the screen
+            spacing 5
+            
             text "[config.name!t]":
                 style "main_menu_title"
+                xalign 0.5  # Centers the text within the vbox
+                size 120    # Made it bigger since it's the centerpiece
+                outlines [ (4, "#000", 0, 0) ]
 
-            text "[config.version]":
+            text "v. [config.version]":
                 style "main_menu_version"
+                xalign 0.5
+                italic True
 
+    # Horizontal Navigation in the FUCKING BOTTOM
+    hbox:
+        align (0.5, 0.95)   # Centered horizontally, 95% down the screen
+        spacing 40          # Space between the horizontal buttons
+        
+        textbutton _("NEW GAME") action Start() style "custom_menu_button"
+        textbutton _("CONTINUE") action ShowMenu("load") style "custom_menu_button"
+        textbutton _("PREFERENCES") action ShowMenu("preferences") style "custom_menu_button"
+        textbutton _("ABOUT") action ShowMenu("about") style "custom_menu_button"
+        textbutton _("QUIT") action Quit(confirm=not main_menu) style "custom_menu_button"
 
-style main_menu_frame is empty
-style main_menu_vbox is vbox
-style main_menu_text is gui_text
-style main_menu_title is main_menu_text
-style main_menu_version is main_menu_text
+# Keep existing default fucking styles
+style custom_menu_button is button
+style custom_menu_button_text is text
 
-style main_menu_frame:
-    xsize 420
-    yfill True
+style custom_menu_button_text:
+    font gui.interface_text_font
+    size 35
+    idle_color "#ffffffcc"
+    hover_color "#ffcc00"
 
-    background "gui/overlay/main_menu.png"
+style main_menu_title is default:
+    size 80
+    color "#ffffff"
+    outlines [ (2, "#000", 0, 0) ]
 
-style main_menu_vbox:
-    xalign 1.0
-    xoffset -30
-    xmaximum 1200
-    yalign 1.0
-    yoffset -30
+style main_menu_version is default:
+    size 24
+    color "#ffffffcc"
 
-style main_menu_text:
-    properties gui.text_properties("main_menu", accent=True)
-
-style main_menu_title:
-    properties gui.text_properties("title")
-
-style main_menu_version:
-    properties gui.text_properties("version")
-
+style custom_menu_button is button:
+    idle_background None
+    hover_background None
 
 ## Game Menu screen ############################################################
 ##
@@ -731,7 +753,7 @@ style slot_button_text:
 ## https://www.renpy.org/doc/html/screen_special.html#preferences
 
 screen preferences():
-
+    
     tag menu
 
     use game_menu(_("Preferences"), scroll="viewport"):
@@ -1557,16 +1579,21 @@ style main_menu_frame:
     background "gui/phone/overlay/main_menu.png"
 
 style game_menu_outer_frame:
-    variant "small"
-    background "gui/phone/overlay/game_menu.png"
+    background None 
 
 style game_menu_navigation_frame:
-    variant "small"
-    xsize 510
+    background None 
 
 style game_menu_content_frame:
-    variant "small"
-    top_margin 0
+    background None 
+
+# Styling the sliders to be thin and elegant instead of blocky
+
+style slider:   
+    ysize 12
+    base_bar Solid("#ffffff44")
+    thumb Solid("#ffcc00") 
+    hover_base_bar Solid("#ffffff88")
 
 style game_menu_viewport:
     variant "small"
@@ -1600,17 +1627,12 @@ style vscrollbar:
     base_bar Frame("gui/phone/scrollbar/vertical_[prefix_]bar.png", gui.vscrollbar_borders, tile=gui.scrollbar_tile)
     thumb Frame("gui/phone/scrollbar/vertical_[prefix_]thumb.png", gui.vscrollbar_borders, tile=gui.scrollbar_tile)
 
-style slider:
-    variant "small"
-    ysize gui.slider_size
-    base_bar Frame("gui/phone/slider/horizontal_[prefix_]bar.png", gui.slider_borders, tile=gui.slider_tile)
-    thumb "gui/phone/slider/horizontal_[prefix_]thumb.png"
 
-style vslider:
-    variant "small"
-    xsize gui.slider_size
-    base_bar Frame("gui/phone/slider/vertical_[prefix_]bar.png", gui.vslider_borders, tile=gui.slider_tile)
-    thumb "gui/phone/slider/vertical_[prefix_]thumb.png"
+# style vslider:
+#     variant "small"
+#     xsize gui.slider_size
+#     base_bar Frame("gui/phone/slider/vertical_[prefix_]bar.png", gui.vslider_borders, tile=gui.slider_tile)
+#     thumb "gui/phone/slider/vertical_[prefix_]thumb.png"
 
 style slider_vbox:
     variant "small"
