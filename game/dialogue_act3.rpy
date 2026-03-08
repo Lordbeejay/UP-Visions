@@ -5,6 +5,7 @@
 
 ## --- Mikhaela ---
 label npc_mikhaela:
+    scene bg act3_dialogue
     window show
 
     mikhaela "You survived Sir Ruel? Respect."
@@ -30,6 +31,7 @@ label npc_mikhaela_decline:
 
 ## --- Jaden ---
 label act3_npc_jaden:
+    scene bg act3_dialogue
     window show
 
     jaden "Hey! You made it out of Sir Ruel's class alive."
@@ -55,12 +57,12 @@ label npc_jaden_hungry:
     jump npc_jaden_invite
 
 label npc_jaden_invite:
-    jaden "I'm heading to Lover's Lane to meet some friends. It's on the way to the dorms—walk with me?"
+    jaden "I'm heading to Ceazar to meet some friends. It's on the way to the dorms—walk with me?"
 
     menu:
         "Sure, let's go.":
             jump npc_jaden_go
-        "Where is Lover's Lane?":
+        "Where is Ceazar?":
             jump npc_jaden_explain
 
 label npc_jaden_explain:
@@ -70,7 +72,7 @@ label npc_jaden_explain:
 
 label npc_jaden_go:
     jaden "All settled?"
-    jaden "Come on, let's walk it off. My friends are waiting at Lover's Lane."
+    jaden "Come on, let's walk it off. My friends are waiting at Ceazar."
     $ complete_task("talk_jaden")
     window hide
     return
@@ -78,8 +80,9 @@ label npc_jaden_go:
 label Act3_npc_jaden:
     jump act3_npc_jaden
 
-## --- Caezar (at Lover's Lane) ---
+## --- Caezar (at Ceazar) ---
 label npc_caezar:
+    scene bg act3_dialogue
     window show
 
     caezar "Oy, JADEN! Finally."

@@ -103,27 +103,94 @@ style frame:
 
 screen say(who, what):
 
+    $ _who_text = renpy.filter_text_tags(who, deny=["color"]) if who is not None else None
+    $ _speaker_portrait = get_speaker_portrait(_who_text)
+
+    ## Show portrait during dialogue lines; no portrait is rendered by the choice screen.
+    if not renpy.variant("small"):
+        if _speaker_portrait is not None:
+            add _speaker_portrait xalign 0.06 yalign 1.0 yoffset -110 zoom 0.9
+        else:
+            add SideImage() xalign 0.0 yalign 1.0
+
     window:
         id "window"
 
-        if who is not None:
+        fixed:
+            frame:
+                style "pixel_shadow_fill"
+                xpos 6
+                ypos 6
 
-            window:
-                id "namebox"
-                style "namebox"
-                text who id "who"
+            frame:
+                style "say_outer_panel"
 
-        text what id "what"
+                frame:
+                    style "say_panel"
 
+                    fixed:
+                        frame:
+                            xfill True
+                            ysize 4
+                            yalign 0.0
+                            left_margin 10
+                            right_margin 10
+                            background Frame(Solid("#f2e2c2"), 0, 0)
+                            padding (0, 0, 0, 0)
 
-    ## If there's a side image, display it above the text. Do not display on the
-    ## phone variant - there's no room.
-    if not renpy.variant("small"):
-        add SideImage() xalign 0.0 yalign 1.0
+                        frame:
+                            xfill True
+                            ysize 4
+                            yalign 1.0
+                            left_margin 10
+                            right_margin 10
+                            background Frame(Solid("#b38a60"), 0, 0)
+                            padding (0, 0, 0, 0)
 
+                        if who is not None:
+
+                            vbox:
+                                style "say_content_vbox"
+
+                                window:
+                                    id "namebox"
+                                    style "namebox"
+                                    text _who_text id "who" color "#7f2d3a"
+
+                                text what id "what"
+
+                        else:
+                            frame:
+                                style "say_center_wrap"
+                                text what id "what" style "say_dialogue_center"
 
 ## Make the namebox available for styling through the Character object.
 init python:
+    speaker_portraits = {
+        "Sarah": "images/npcs/sarah.png",
+        "Jaden": "images/npcs/jaden.png",
+        "Caezar": "images/npcs/caezar.png",
+        "Manong Guard": "images/npcs/manong_guard.png",
+        "Sir Ruel": "images/npcs/sir_ruel.png",
+        "Ms. Santos": "images/npcs/ms_santos.png",
+        "Dorm Manager": "images/npcs/dorm_mgr.png",
+    }
+
+    # Warm portrait assets so they appear instantly on first dialogue line.
+    for _portrait_path in speaker_portraits.values():
+        try:
+            renpy.cache_pin(_portrait_path)
+        except Exception:
+            try:
+                renpy.load_image(_portrait_path)
+            except Exception:
+                pass
+
+    def get_speaker_portrait(who_text):
+        if not who_text:
+            return None
+        return speaker_portraits.get(who_text)
+
     config.character_id_prefixes.append('namebox')
 
 style window is default
@@ -134,38 +201,95 @@ style say_thought is say_dialogue
 style namebox is default
 style namebox_label is say_label
 
+style pixel_shadow_fill is default:
+    xfill True
+    yfill True
+    background Frame("gui/rounded_shadow.png", 20, 20, 20, 20)
+    padding (0, 0, 0, 0)
 
 style window:
     xalign 0.5
     xfill True
     yalign gui.textbox_yalign
     ysize gui.textbox_height
+    left_margin 60
+    right_margin 60
+    bottom_margin 56
+    background None
+    padding (0, 0, 0, 0)
 
-    background Image("gui/textbox.png", xalign=0.5, yalign=1.0)
+style say_outer_panel is default:
+    xfill True
+    yfill True
+    background Frame("gui/rounded_outer.png", 20, 20, 20, 20)
+    padding (5, 5, 5, 5)
+
+style say_panel is default:
+    xfill True
+    yfill True
+    background Frame("gui/rounded_inner.png", 18, 18, 18, 18)
+    padding (0, 0, 0, 0)
+
+style say_content_vbox is vbox:
+    xfill True
+    yfill True
+    spacing 10
+    padding (30, 22, 30, 22)
 
 style namebox:
-    xpos gui.name_xpos
-    xanchor gui.name_xalign
-    xsize gui.namebox_width
-    ypos gui.name_ypos
-    ysize gui.namebox_height
+    xalign 0.5
+    xfill False
+    yalign 0.0
+    top_margin 4
+    bottom_margin 4
+    left_margin 8
+    right_margin 8
 
-    background Frame("gui/namebox.png", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
-    padding gui.namebox_borders.padding
+    background Frame(Solid("#d6b487"), 0, 0)
+    padding (14, 8, 14, 8)
 
 style say_label:
-    properties gui.text_properties("name", accent=True)
-    xalign gui.name_xalign
+    properties gui.text_properties("name")
+    size 30
+    xalign 0.5
+    text_align 0.5
     yalign 0.5
+    color "#7f2d3a"
+    outlines []
+    antialias False
 
 style say_dialogue:
     properties gui.text_properties("dialogue")
 
-    xpos gui.dialogue_xpos
-    xsize gui.dialogue_width
-    ypos gui.dialogue_ypos
+    xalign 0.5
+    xfill True
+    text_align 0.5
+    top_margin 6
+    bottom_margin 6
+    left_margin 6
+    right_margin 6
+    color "#ffffff"
+    outlines [(2, "#4b2730", 0, 0)]
+    line_spacing 8
+    antialias False
 
     adjust_spacing False
+
+style say_dialogue_center is say_dialogue:
+    top_margin 0
+    bottom_margin 0
+    xfill False
+    xmaximum 1600
+    xpos 0.5
+    xanchor 0.5
+    ypos 0.58
+    yanchor 0.5
+
+style say_center_wrap is default:
+    xfill True
+    yfill True
+    background None
+    padding (30, 22, 30, 22)
 
 ## Input screen ################################################################
 ##
@@ -212,10 +336,26 @@ style input:
 
 screen choice(items):
     style_prefix "choice"
+    zorder 1
+    default _hovered_choice = -1
 
-    vbox:
-        for i in items:
-            textbutton i.caption action i.action
+    frame:
+        style "choice_area"
+
+        frame:
+            style "choice_content"
+
+            vbox:
+                style "choice_vbox"
+                for _idx, i in enumerate(items):
+                    textbutton (("> " if _hovered_choice == _idx else "  ") + i.caption) action i.action hovered SetScreenVariable("_hovered_choice", _idx) unhovered SetScreenVariable("_hovered_choice", -1) at choice_hover_anim
+
+
+transform choice_hover_anim:
+    on idle:
+        linear 0.08 xoffset 0 zoom 1.0
+    on hover:
+        linear 0.08 xoffset 10 zoom 1.02
 
 
 style choice_vbox is vbox
@@ -223,19 +363,46 @@ style choice_button is button
 style choice_button_text is button_text
 
 style choice_vbox:
+    xfill True
     xalign 0.5
-    ypos 405
-    yanchor 0.5
+    spacing 8
 
-    spacing gui.choice_spacing
+style choice_content is default:
+    xfill True
+    ymaximum 180
+    yalign 0.5
+    background None
+    padding (0, 0, 0, 0)
+
+style choice_area is default:
+    xalign 0.5
+    yalign 1.0
+    xfill True
+    ysize gui.textbox_height
+    left_margin 120
+    right_margin 120
+    bottom_margin 92
+    background None
+    padding (12, 12, 12, 12)
 
 style choice_button is default:
     properties gui.button_properties("choice_button")
+    background None
+    hover_background None
+    selected_background None
+    insensitive_background None
+    left_padding 0
+    right_padding 0
+    top_padding 0
+    bottom_padding 0
+    xfill True
+    xalign 0.5
 
 style choice_button_text is default:
     properties gui.text_properties("choice_button")
-
-
+    color "#ffffff"
+    hover_color "#ffe4b5"
+    outlines [(2, "#4b2730", 0, 0)]
 
 
 ################################################################################

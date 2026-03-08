@@ -29,9 +29,9 @@ define TASK_DESCRIPTIONS = {
     "talk_sir_ruel": "Submit forms to Sir Ruel at the Registrar",
     "talk_ms_santos": "Visit Ms. Santos at the OSA (CUB)",
     "talk_sarah": "Talk to Sarah at the enrollment line",
-    "talk_mikhaela": "Find Mikhaela",
+    "talk_mikhaela": "Find Sarah",
     "talk_jaden": "Talk to Jaden",
-    "talk_caezar": "Meet Caezar at Lover's Lane",
+    "talk_caezar": "Meet Caezar at Ceazar",
     "talk_dorm_manager": "Talk to the Dorm Manager",
 }
 

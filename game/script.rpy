@@ -27,17 +27,18 @@ label start:
     centered "{size=+2}{color=#cccccc}Navigate your first day at UP Visayas{/color}{/size}"
     pause 1.5
 
-    ## --- ACT 1 ---
+    ## --- ACT 3 ---
     scene bg Miagao with fade
-    show text "{size=+6}{color=#ffd700}ACT 1{/color}{/size}\n{color=#ffffff}Arrival in Miagao{/color}" at truecenter
+    show text "{size=+6}{color=#ffd700}ACT 3{/color}{/size}\n{color=#ffffff}Social / Exploration{/color}" at truecenter
     pause 2.0
     hide text
 
-    $ current_act = 1
-    $ player_map_x = 2500
-    $ player_map_y = 3200
+    $ current_act = 3
+    $ tasks_completed = set()
+    $ player_map_x = 2300
+    $ player_map_y = 3100
     $ player_facing = "up"
-    jump act2_map
+    jump act3_map
 
 
 ## ============================================================================
@@ -170,12 +171,12 @@ label act2_loop:
 
 label act3_map:
     $ act3_nodes = [
-        MapNode("Kiosk", 2300, 3100, "npc_mikhaela", "Kiosk (Mikhaela)", False, "#ff99cc", "mikhaela.png"),
+        MapNode("Kiosk", 2600, 3000, "npc_mikhaela", "Kiosk (Sarah)", False, "#ff99cc", "sarah.png"),
         MapNode("Path", 2100, 2600, "act3_npc_jaden", "Main Path (Jaden)", False, "#99ccff", "jaden.png"),
-        MapNode("Lover's", 1600, 1800, "npc_caezar", "Lover's Lane", True, "#ccff99", "caezar.png"),
+        MapNode("Ceazar", 1600, 1800, "npc_caezar", "Ceazar", True, "#ccff99", "caezar.png"),
     ]
 
-    $ current_task_text = "Explore campus — find Mikhaela and Jaden"
+    $ current_task_text = "Explore campus — find Sarah and Jaden"
 
 label act3_loop:
     call screen map_screen("maps/banwa.png", act3_nodes, current_task_text, MAP_ZOOM)
@@ -188,7 +189,7 @@ label act3_loop:
         if "talk_jaden" in tasks_completed:
             $ act3_nodes[2].locked = False
             if "talk_caezar" not in tasks_completed:
-                $ current_task_text = "Meet Caezar at Lover's Lane"
+                $ current_task_text = "Meet Caezar at Ceazar"
 
         if is_act_complete():
             jump act3_complete
@@ -266,8 +267,8 @@ label open_world:
         MapNode("HSU", 1800, 2000, "ow_hsu", "Health Services", False, "#4499ff", "hsu_nurse.png"),
         MapNode("Admin", 2500, 2500, "ow_admin", "New Admin Building", False, "#ff8844", "sir_ruel.png"),
         MapNode("CUB", 1900, 1800, "ow_cub", "CUB / OSA", False, "#cc99ff", "ms_santos.png"),
-        MapNode("Kiosk", 2300, 3100, "ow_kiosk", "Food Kiosks", False, "#ff99cc", "mikhaela.png"),
-        MapNode("Lover's", 1600, 1800, "ow_lovers", "Lover's Lane", False, "#ccff99", "caezar.png"),
+        MapNode("Kiosk", 2600, 3000, "ow_kiosk", "Food Kiosks", False, "#ff99cc", "sarah.png"),
+        MapNode("Ceazar", 1600, 1800, "ow_lovers", "Ceazar", False, "#ccff99", "caezar.png"),
         MapNode("Dorm", 3300, 1900, "ow_dorm", "Dormitory", False, "#ffaa77", "dorm_mgr.png"),
     ]
 
@@ -320,7 +321,7 @@ label ow_kiosk:
 
 label ow_lovers:
     window show
-    narrator_char "Lover's Lane. The wind is strong here, carrying the scent of the sea."
+    narrator_char "Ceazar. The wind is strong here, carrying the scent of the sea."
     narrator_char "You can see the open field stretching out. The world is still big."
     caezar "Just remember: Don't forget to look up once in a while."
     window hide
