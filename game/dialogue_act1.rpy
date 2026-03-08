@@ -339,7 +339,6 @@ label act1_box1_arrive:
     narrator_char "\[ACT 1 COMPLETE] — Arrival in Miagao."
     $ complete_task("reach_box1")
     $ complete_task("act1_complete")
-    $ act1_done = True
     window hide
     return
 

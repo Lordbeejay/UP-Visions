@@ -138,42 +138,175 @@ screen map_screen(map_bg, nodes, task_text="", map_scale=1.0):
         ypos _py
         zoom 2.5
 
-    ## --- TASK DISPLAY BAR (top center) ---
-    if task_text:
+    ## --- ACT + TASK LIST PANEL (top left) ---
+
+    ## Outer glow border
+    frame:
+        xpos 14
+        ypos 160
+        xminimum 360
+        xmaximum 520
+        padding (3, 3, 3, 3)
+        background Frame(Solid("#f6d79d22"), 0, 0)
+
+        ## Main dark panel
         frame:
-            xalign 0.5
-            ypos 10
-            padding (30, 10, 30, 10)
-            background Solid("#000000cc")
-            has hbox:
-                spacing 10
-            text "📋" size 20
-            text task_text:
-                size 20
-                color "#ffd700"
-                outlines [(2, "#000000", 0, 0)]
-                text_align 0.5
+            xfill True
+            padding (24, 18, 24, 18)
+            background Frame(Solid("#1e0c12ee"), 0, 0)
 
-    ## --- ACT DISPLAY (bottom left) ---
-    frame:
-        xpos 10
-        ypos 680
-        padding (16, 6, 16, 6)
-        background Solid("#000000cc")
-        text get_act_title(current_act):
-            size 16
-            color "#ffd700"
-            outlines [(2, "#000000", 0, 0)]
+            vbox:
+                xfill True
+                spacing 0
 
-    ## --- HELP TEXT (bottom right) ---
-    frame:
-        xalign 1.0
-        ypos 685
-        padding (12, 4, 12, 4)
-        background Solid("#00000088")
-        text "Click a marker to walk there":
-            size 13
-            color "#aaaaaa"
+                ## Top ornament line
+                hbox:
+                    xalign 0.5
+                    spacing 6
+
+                    frame:
+                        xsize 40
+                        ysize 2
+                        yalign 0.5
+                        background Solid("#f6d79d66")
+                        padding (0, 0, 0, 0)
+                    frame:
+                        xsize 8
+                        ysize 8
+                        yalign 0.5
+                        background Solid("#f6d79d")
+                        padding (0, 0, 0, 0)
+                    frame:
+                        xsize 80
+                        ysize 2
+                        yalign 0.5
+                        background Solid("#f6d79d")
+                        padding (0, 0, 0, 0)
+                    frame:
+                        xsize 8
+                        ysize 8
+                        yalign 0.5
+                        background Solid("#f6d79d")
+                        padding (0, 0, 0, 0)
+                    frame:
+                        xsize 40
+                        ysize 2
+                        yalign 0.5
+                        background Solid("#f6d79d66")
+                        padding (0, 0, 0, 0)
+
+                null height 12
+
+                ## Act title
+                text "[get_act_title(current_act)]":
+                    xalign 0.5
+                    text_align 0.5
+                    size 20
+                    color "#ffd700"
+                    outlines [(3, "#1e0c12", 0, 0), (1, "#8b6914aa", 1, 1)]
+
+                null height 6
+
+                ## Thin separator
+                frame:
+                    xalign 0.5
+                    xsize 160
+                    ysize 1
+                    background Solid("#f6d79d44")
+                    padding (0, 0, 0, 0)
+
+                null height 10
+
+                ## Task list
+                for _task_label, _is_done, _is_unlocked in get_act_task_items(current_act):
+                    if _is_done:
+                        hbox:
+                            spacing 8
+                            text "★":
+                                size 14
+                                color "#b8e6b0"
+                                outlines [(1, "#1e0c12", 0, 0)]
+                                yalign 0.5
+                            text "{s}[_task_label]{/s}":
+                                size 16
+                                color "#9fd19b88"
+                                outlines [(1, "#1e0c12", 0, 0)]
+                                yalign 0.5
+                    elif _is_unlocked:
+                        hbox:
+                            spacing 8
+                            at task_item_bob
+                            text "◇":
+                                size 14
+                                color "#f6d79d"
+                                outlines [(1, "#1e0c12", 0, 0)]
+                                yalign 0.5
+                            text "[_task_label]":
+                                size 16
+                                color "#f1debf"
+                                outlines [(1, "#1e0c12", 0, 0)]
+                                yalign 0.5
+                    else:
+                        hbox:
+                            spacing 8
+                            at task_item_bob
+                            text "◇":
+                                size 14
+                                color "#9f8d7666"
+                                outlines [(1, "#1e0c12", 0, 0)]
+                                yalign 0.5
+                            text "[_task_label]":
+                                size 16
+                                color "#9f8d7688"
+                                outlines [(1, "#1e0c12", 0, 0)]
+                                yalign 0.5
+
+                    null height 4
+
+                null height 8
+
+                ## Bottom ornament line (mirrors top)
+                hbox:
+                    xalign 0.5
+                    spacing 6
+
+                    frame:
+                        xsize 40
+                        ysize 2
+                        yalign 0.5
+                        background Solid("#f6d79d66")
+                        padding (0, 0, 0, 0)
+                    frame:
+                        xsize 8
+                        ysize 8
+                        yalign 0.5
+                        background Solid("#f6d79d")
+                        padding (0, 0, 0, 0)
+                    frame:
+                        xsize 80
+                        ysize 2
+                        yalign 0.5
+                        background Solid("#f6d79d")
+                        padding (0, 0, 0, 0)
+                    frame:
+                        xsize 8
+                        ysize 8
+                        yalign 0.5
+                        background Solid("#f6d79d")
+                        padding (0, 0, 0, 0)
+                    frame:
+                        xsize 40
+                        ysize 2
+                        yalign 0.5
+                        background Solid("#f6d79d66")
+                        padding (0, 0, 0, 0)
+
+transform task_item_bob:
+    yoffset 0
+    block:
+        easein 1.2 yoffset -1
+        easeout 1.2 yoffset 0
+        repeat
 
 
 ## ============================================================================

@@ -8,7 +8,6 @@
 ## ============================================================================
 ##
 ## ============================================================================
-default act1_done = False
 ## --- Map zoom constant ---
 define MAP_ZOOM = 0.144
 
@@ -74,9 +73,6 @@ label act1_loop:
     if _action == "walk":
         call walk_to_node(_node)
         call expression _node.target_label
-        
-        if act1_done:
-            jump act1_complete
 
         ## unlock logic below...
         if "talk_jaden" in tasks_completed:
@@ -99,22 +95,18 @@ label act1_loop:
             $ act1_nodes[5].locked = False
             $ current_task_text = "Head to BOX 1 at the edge of the Banwa Area"
 
-    if act1_done:               ## ← ADD SECOND CHECK HERE outside the walk block
-        jump act1_complete
+        if is_act_complete():
+            jump act1_complete
 
     jump act1_loop
 
 
 
 label act1_complete:
-    scene black with fade
-    pause 0.5
-    centered "{size=+4}{color=#44cc44}✅ ACT 1 COMPLETE{/color}{/size}\n\n{color=#ffffff}You've learned the lay of the land. Miagao is starting to feel like home.{/color}"
-    pause 2.5
-
-    scene black with fade
-    centered "{size=+6}{color=#ffd700}ACT 2{/color}{/size}\n{color=#ffffff}Entering the University{/color}"
-    pause 2.0
+    scene expression "images/ui/UI_Miagao.png" with fade
+    pause 0.3
+    call screen act_transition("ACT 1 COMPLETE", "You've learned the lay of the land.\nMiagao is starting to feel like home.", "complete")
+    call screen act_transition("ACT 2", "Entering the University", "intro")
 
     $ current_act = 2
     $ player_map_x = 2500
@@ -168,6 +160,19 @@ label act2_loop:
     jump act2_loop
 
 
+label act2_complete:
+    scene expression "images/ui/UI_Miagao.png" with fade
+    pause 0.3
+    call screen act_transition("ACT 2 COMPLETE", "You've navigated enrollment\nand met the campus staff!", "complete")
+    call screen act_transition("ACT 3", "Social / Exploration", "intro")
+
+    $ current_act = 3
+    $ player_map_x = 2500
+    $ player_map_y = 2600
+    $ player_facing = "down"
+    jump act3_map
+
+
 ## ============================================================================
 ## ACT 3 MAP — Social / Exploration
 ## ============================================================================
@@ -182,6 +187,15 @@ label act3_map:
     $ current_task_text = "Explore campus — find Sarah and Jaden"
 
 label act3_loop:
+    # Refresh node labels/tooltips for compatibility with old saves.
+    if len(act3_nodes) >= 3:
+        $ act3_nodes[0].name = "Kiosk"
+        $ act3_nodes[0].tooltip = "Kiosk (Sarah)"
+        $ act3_nodes[1].name = "Path"
+        $ act3_nodes[1].tooltip = "Main Path (Jaden)"
+        $ act3_nodes[2].name = "Ceazar"
+        $ act3_nodes[2].tooltip = "Ceazar"
+
     call screen map_screen("maps/banwa.png", act3_nodes, current_task_text, MAP_ZOOM)
     $ _action, _node = _return
 
@@ -201,14 +215,10 @@ label act3_loop:
 
 
 label act3_complete:
-    scene black with fade
-    pause 0.5
-    centered "{size=+4}{color=#44cc44}✅ ACT 3 COMPLETE{/color}{/size}\n\n{color=#ffffff}You've made friends and explored the campus!{/color}"
-    pause 2.5
-
-    scene black with fade
-    centered "{size=+6}{color=#ffd700}ACT 4{/color}{/size}\n{color=#ffffff}Dorm Accommodation{/color}"
-    pause 2.0
+    scene expression "images/ui/UI_Miagao.png" with fade
+    pause 0.3
+    call screen act_transition("ACT 3 COMPLETE", "You've made friends and explored the campus!", "complete")
+    call screen act_transition("ACT 4", "Dorm Accommodation", "intro")
 
     $ current_act = 4
     $ player_map_x = 2500
@@ -243,10 +253,9 @@ label act4_loop:
 
 
 label act4_complete:
-    scene black with fade
-    pause 0.5
-    centered "{size=+4}{color=#44cc44}✅ ACT 4 COMPLETE{/color}{/size}\n\n{color=#ffffff}You've secured your dorm room!{/color}"
-    pause 2.5
+    scene expression "images/ui/UI_Miagao.png" with fade
+    pause 0.3
+    call screen act_transition("ACT 4 COMPLETE", "You've secured your dorm room!", "complete")
 
     jump open_world
 
@@ -256,9 +265,9 @@ label act4_complete:
 ## ============================================================================
 
 label open_world:
-    scene black with fade
-    centered "{size=+6}{color=#ffd700}OPEN WORLD{/color}{/size}\n{color=#ffffff}Classes start next week. Explore freely!{/color}"
-    pause 2.0
+    scene expression "images/ui/UI_Miagao.png" with fade
+    pause 0.3
+    call screen act_transition("OPEN WORLD", "Classes start next week. Explore freely!", "intro")
 
     $ current_act = 5
     $ player_map_x = 2500

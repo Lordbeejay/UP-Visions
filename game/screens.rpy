@@ -106,63 +106,188 @@ screen say(who, what):
     $ _who_text = renpy.filter_text_tags(who, deny=["color"]) if who is not None else None
     $ _speaker_portrait = get_speaker_portrait(_who_text)
 
-    ## Show portrait during dialogue lines; no portrait is rendered by the choice screen.
-    if not renpy.variant("small"):
-        if _speaker_portrait is not None:
-            add _speaker_portrait xalign 0.06 yalign 1.0 yoffset -110 zoom 0.9
-        else:
-            add SideImage() xalign 0.0 yalign 1.0
+    ## Narration/act transition lines render as clean center text (no large box overlay).
+    if who is None:
+        text what id "what":
+            style "say_dialogue_center"
+            xalign 0.5
+            yalign 0.5
 
-    window:
-        id "window"
+    else:
+        ## Show portrait during dialogue lines
+        if not renpy.variant("small"):
+            if _speaker_portrait is not None:
+                add _speaker_portrait xalign 0.06 yalign 1.0 yoffset -110 zoom 0.9
+            else:
+                add SideImage() xalign 0.0 yalign 1.0
 
-        fixed:
+        window:
+            id "window"
+
+            ## Outer glow border
             frame:
-                style "pixel_shadow_fill"
-                xpos 6
-                ypos 6
+                xfill True
+                yfill True
+                padding (3, 3, 3, 3)
+                background Frame(Solid("#f6d79d33"), 0, 0)
 
-            frame:
-                style "say_outer_panel"
-
+                ## Inner border accent
                 frame:
-                    style "say_panel"
+                    xfill True
+                    yfill True
+                    padding (2, 2, 2, 2)
+                    background Frame(Solid("#f6d79d11"), 0, 0)
 
-                    fixed:
-                        frame:
-                            xfill True
-                            ysize 4
-                            yalign 0.0
-                            left_margin 10
-                            right_margin 10
-                            background Frame(Solid("#f2e2c2"), 0, 0)
-                            padding (0, 0, 0, 0)
+                    ## Main dark panel
+                    frame:
+                        xfill True
+                        yfill True
+                        padding (0, 0, 0, 0)
+                        background Frame(Solid("#1a0a10f0"), 0, 0)
 
-                        frame:
-                            xfill True
-                            ysize 4
-                            yalign 1.0
-                            left_margin 10
-                            right_margin 10
-                            background Frame(Solid("#b38a60"), 0, 0)
-                            padding (0, 0, 0, 0)
+                        fixed:
 
-                        if who is not None:
+                            ## Corner accents (top-left)
+                            frame:
+                                xpos 8
+                                ypos 8
+                                xsize 20
+                                ysize 2
+                                background Solid("#f6d79d66")
+                                padding (0, 0, 0, 0)
+                            frame:
+                                xpos 8
+                                ypos 8
+                                xsize 2
+                                ysize 20
+                                background Solid("#f6d79d66")
+                                padding (0, 0, 0, 0)
 
+                            ## Corner accents (top-right)
+                            frame:
+                                xalign 1.0
+                                xoffset -8
+                                ypos 8
+                                xsize 20
+                                ysize 2
+                                background Solid("#f6d79d66")
+                                padding (0, 0, 0, 0)
+                            frame:
+                                xalign 1.0
+                                xoffset -8
+                                ypos 8
+                                xsize 2
+                                ysize 20
+                                background Solid("#f6d79d66")
+                                padding (0, 0, 0, 0)
+
+                            ## Corner accents (bottom-left)
+                            frame:
+                                xpos 8
+                                yalign 1.0
+                                yoffset -8
+                                xsize 20
+                                ysize 2
+                                background Solid("#f6d79d66")
+                                padding (0, 0, 0, 0)
+                            frame:
+                                xpos 8
+                                yalign 1.0
+                                yoffset -28
+                                xsize 2
+                                ysize 20
+                                background Solid("#f6d79d66")
+                                padding (0, 0, 0, 0)
+
+                            ## Corner accents (bottom-right)
+                            frame:
+                                xalign 1.0
+                                xoffset -8
+                                yalign 1.0
+                                yoffset -8
+                                xsize 20
+                                ysize 2
+                                background Solid("#f6d79d66")
+                                padding (0, 0, 0, 0)
+                            frame:
+                                xalign 1.0
+                                xoffset -8
+                                yalign 1.0
+                                yoffset -28
+                                xsize 2
+                                ysize 20
+                                background Solid("#f6d79d66")
+                                padding (0, 0, 0, 0)
+
+                            ## Top inner highlight edge
+                            frame:
+                                xalign 0.5
+                                ypos 4
+                                xsize 600
+                                ysize 1
+                                background Solid("#f6d79d18")
+                                padding (0, 0, 0, 0)
+
+                            ## Bottom inner highlight edge
+                            frame:
+                                xalign 0.5
+                                yalign 1.0
+                                yoffset -4
+                                xsize 600
+                                ysize 1
+                                background Solid("#f6d79d18")
+                                padding (0, 0, 0, 0)
+
+                            ## Content area
                             vbox:
                                 style "say_content_vbox"
 
-                                window:
-                                    id "namebox"
-                                    style "namebox"
-                                    text _who_text id "who" color "#7f2d3a"
+                                if who is not None:
+                                    ## Namebox with flanking ornaments
+                                    hbox:
+                                        xalign 0.5
+                                        spacing 10
+
+                                        ## Left ornament
+                                        hbox:
+                                            yalign 0.5
+                                            spacing 4
+                                            frame:
+                                                xsize 24
+                                                ysize 1
+                                                yalign 0.5
+                                                background Solid("#f6d79d44")
+                                                padding (0, 0, 0, 0)
+                                            frame:
+                                                xsize 5
+                                                ysize 5
+                                                yalign 0.5
+                                                background Solid("#f6d79d")
+                                                padding (0, 0, 0, 0)
+
+                                        window:
+                                            id "namebox"
+                                            style "namebox"
+                                            text _who_text id "who"
+
+                                        ## Right ornament
+                                        hbox:
+                                            yalign 0.5
+                                            spacing 4
+                                            frame:
+                                                xsize 5
+                                                ysize 5
+                                                yalign 0.5
+                                                background Solid("#f6d79d")
+                                                padding (0, 0, 0, 0)
+                                            frame:
+                                                xsize 24
+                                                ysize 1
+                                                yalign 0.5
+                                                background Solid("#f6d79d44")
+                                                padding (0, 0, 0, 0)
 
                                 text what id "what"
-
-                        else:
-                            frame:
-                                style "say_center_wrap"
-                                text what id "what" style "say_dialogue_center"
 
 ## Make the namebox available for styling through the Character object.
 init python:
@@ -201,12 +326,6 @@ style say_thought is say_dialogue
 style namebox is default
 style namebox_label is say_label
 
-style pixel_shadow_fill is default:
-    xfill True
-    yfill True
-    background Frame("gui/rounded_shadow.png", 20, 20, 20, 20)
-    padding (0, 0, 0, 0)
-
 style window:
     xalign 0.5
     xfill True
@@ -218,61 +337,46 @@ style window:
     background None
     padding (0, 0, 0, 0)
 
-style say_outer_panel is default:
-    xfill True
-    yfill True
-    background Frame("gui/rounded_outer.png", 20, 20, 20, 20)
-    padding (5, 5, 5, 5)
-
-style say_panel is default:
-    xfill True
-    yfill True
-    background Frame("gui/rounded_inner.png", 18, 18, 18, 18)
-    padding (0, 0, 0, 0)
-
 style say_content_vbox is vbox:
     xfill True
     yfill True
-    spacing 10
-    padding (30, 22, 30, 22)
+    spacing 8
+    padding (36, 20, 36, 20)
 
 style namebox:
     xalign 0.5
     xfill False
     yalign 0.0
-    top_margin 4
+    top_margin 0
     bottom_margin 4
-    left_margin 8
-    right_margin 8
-
-    background Frame(Solid("#d6b487"), 0, 0)
-    padding (14, 8, 14, 8)
+    left_margin 0
+    right_margin 0
+    background Frame("gui/namebox_gold.png", 8, 8, 8, 8)
+    padding (18, 5, 18, 5)
 
 style say_label:
     properties gui.text_properties("name")
-    size 30
+    size 22
     xalign 0.5
     text_align 0.5
     yalign 0.5
-    color "#7f2d3a"
+    color "#1a0a10"
     outlines []
     antialias False
 
 style say_dialogue:
     properties gui.text_properties("dialogue")
-
     xalign 0.5
     xfill True
     text_align 0.5
-    top_margin 6
-    bottom_margin 6
+    top_margin 4
+    bottom_margin 4
     left_margin 6
     right_margin 6
-    color "#ffffff"
-    outlines [(2, "#4b2730", 0, 0)]
+    color "#f1debf"
+    outlines [(2, "#1a0a10", 0, 0), (1, "#f6d79d22", 1, 1)]
     line_spacing 8
     antialias False
-
     adjust_spacing False
 
 style say_dialogue_center is say_dialogue:
@@ -280,16 +384,11 @@ style say_dialogue_center is say_dialogue:
     bottom_margin 0
     xfill False
     xmaximum 1600
-    xpos 0.5
-    xanchor 0.5
-    ypos 0.58
-    yanchor 0.5
-
-style say_center_wrap is default:
-    xfill True
-    yfill True
-    background None
-    padding (30, 22, 30, 22)
+    xalign 0.5
+    yalign 0.5
+    size 28
+    color "#f1debf"
+    outlines [(3, "#1e0c12", 0, 0), (1, "#f6d79d44", 2, 2)]
 
 ## Input screen ################################################################
 ##
@@ -339,6 +438,7 @@ screen choice(items):
     zorder 1
     default _hovered_choice = -1
 
+    ## Outer glow border
     frame:
         style "choice_area"
 
@@ -347,15 +447,269 @@ screen choice(items):
 
             vbox:
                 style "choice_vbox"
+
+                ## Decorative top ornament
+                hbox:
+                    xalign 0.5
+                    spacing 6
+
+                    frame:
+                        xsize 30
+                        ysize 2
+                        yalign 0.5
+                        background Solid("#f6d79d44")
+                        padding (0, 0, 0, 0)
+                    frame:
+                        xsize 6
+                        ysize 6
+                        yalign 0.5
+                        background Solid("#f6d79d")
+                        padding (0, 0, 0, 0)
+                    frame:
+                        xsize 60
+                        ysize 2
+                        yalign 0.5
+                        background Solid("#f6d79d")
+                        padding (0, 0, 0, 0)
+                    frame:
+                        xsize 6
+                        ysize 6
+                        yalign 0.5
+                        background Solid("#f6d79d")
+                        padding (0, 0, 0, 0)
+                    frame:
+                        xsize 30
+                        ysize 2
+                        yalign 0.5
+                        background Solid("#f6d79d44")
+                        padding (0, 0, 0, 0)
+
+                null height 4
+
                 for _idx, i in enumerate(items):
-                    textbutton (("> " if _hovered_choice == _idx else "  ") + i.caption) action i.action hovered SetScreenVariable("_hovered_choice", _idx) unhovered SetScreenVariable("_hovered_choice", -1) at choice_hover_anim
+                    textbutton (("◇ " if _hovered_choice == _idx else "  ") + i.caption) action i.action hovered SetScreenVariable("_hovered_choice", _idx) unhovered SetScreenVariable("_hovered_choice", -1) at choice_hover_anim
 
 
 transform choice_hover_anim:
     on idle:
-        linear 0.08 xoffset 0 zoom 1.0
+        easein 0.1 xoffset 0 zoom 1.0
     on hover:
-        linear 0.08 xoffset 10 zoom 1.02
+        easein 0.1 xoffset 12 zoom 1.03
+
+
+## Act Transition screen #######################################################
+##
+## Shown between acts: completion banner and next-act title card.
+
+transform tr_overlay_fade:
+    alpha 0.0
+    easein 0.8 alpha 1.0
+
+transform tr_panel_rise:
+    alpha 0.0 yoffset 30
+    pause 0.15
+    easein 0.55 alpha 1.0 yoffset 0
+
+transform tr_title_reveal:
+    alpha 0.0 zoom 0.9
+    pause 0.3
+    easein 0.45 alpha 1.0 zoom 1.0
+
+transform tr_divider_grow:
+    alpha 0.0 xzoom 0.0
+    pause 0.5
+    easein 0.4 alpha 1.0 xzoom 1.0
+
+transform tr_subtitle_fade:
+    alpha 0.0 yoffset 8
+    pause 0.6
+    easein 0.45 alpha 1.0 yoffset 0
+
+transform tr_star_spin:
+    alpha 0.0 rotate 0
+    pause 0.25
+    easein 0.5 alpha 1.0 rotate 360
+
+screen act_transition(title, subtitle, mode="complete"):
+
+    ## Full overlay — gradient-like with layered solids
+    add Solid("#000000bb") at tr_overlay_fade
+
+    ## Outer decorative frame (border glow effect)
+    frame:
+        xalign 0.5
+        yalign 0.5
+        xminimum 680
+        xmaximum 780
+        padding (4, 4, 4, 4)
+        background Frame(Solid("#f6d79d44"), 0, 0)
+        at tr_panel_rise
+
+        ## Main panel
+        frame:
+            xfill True
+            padding (48, 40, 48, 40)
+            background Frame(Solid("#1e0c12f0"), 0, 0)
+
+            vbox:
+                xalign 0.5
+                spacing 0
+
+                ## Top ornament: triple line
+                hbox:
+                    xalign 0.5
+                    spacing 8
+                    at tr_divider_grow
+
+                    frame:
+                        xsize 60
+                        ysize 2
+                        yalign 0.5
+                        background Solid("#f6d79d88")
+                        padding (0, 0, 0, 0)
+                    frame:
+                        xsize 12
+                        ysize 12
+                        yalign 0.5
+                        background Solid("#f6d79d")
+                        padding (0, 0, 0, 0)
+                    frame:
+                        xsize 120
+                        ysize 2
+                        yalign 0.5
+                        background Solid("#f6d79d")
+                        padding (0, 0, 0, 0)
+                    frame:
+                        xsize 12
+                        ysize 12
+                        yalign 0.5
+                        background Solid("#f6d79d")
+                        padding (0, 0, 0, 0)
+                    frame:
+                        xsize 60
+                        ysize 2
+                        yalign 0.5
+                        background Solid("#f6d79d88")
+                        padding (0, 0, 0, 0)
+
+                null height 24
+
+                ## Completion star or intro label
+                if mode == "complete":
+                    text "★":
+                        xalign 0.5
+                        size 40
+                        color "#f6d79d"
+                        outlines [(2, "#1e0c12", 0, 0)]
+                        at tr_star_spin
+                else:
+                    text "— NEW CHAPTER —":
+                        xalign 0.5
+                        size 14
+                        color "#f6d79d99"
+                        outlines [(1, "#1e0c12", 0, 0)]
+                        at tr_subtitle_fade
+
+                null height 12
+
+                ## Main title
+                if mode == "complete":
+                    text title:
+                        xalign 0.5
+                        text_align 0.5
+                        size 38
+                        color "#b8e6b0"
+                        outlines [(4, "#1e0c12", 0, 0), (2, "#3a7a3a55", 2, 2)]
+                        at tr_title_reveal
+                else:
+                    text title:
+                        xalign 0.5
+                        text_align 0.5
+                        size 46
+                        color "#ffd700"
+                        outlines [(4, "#1e0c12", 0, 0), (2, "#8b6914aa", 2, 2)]
+                        at tr_title_reveal
+
+                null height 8
+
+                ## Center divider
+                hbox:
+                    xalign 0.5
+                    spacing 6
+                    at tr_divider_grow
+
+                    frame:
+                        xsize 80
+                        ysize 1
+                        yalign 0.5
+                        background Solid("#f6d79d66")
+                        padding (0, 0, 0, 0)
+                    frame:
+                        xsize 6
+                        ysize 6
+                        yalign 0.5
+                        background Solid("#f6d79d")
+                        padding (0, 0, 0, 0)
+                    frame:
+                        xsize 80
+                        ysize 1
+                        yalign 0.5
+                        background Solid("#f6d79d66")
+                        padding (0, 0, 0, 0)
+
+                null height 14
+
+                ## Subtitle
+                text subtitle:
+                    xalign 0.5
+                    text_align 0.5
+                    size 22
+                    color "#f1debf"
+                    outlines [(2, "#1e0c12", 0, 0)]
+                    line_spacing 6
+                    at tr_subtitle_fade
+
+                null height 24
+
+                ## Bottom ornament: triple line (mirrors top)
+                hbox:
+                    xalign 0.5
+                    spacing 8
+                    at tr_divider_grow
+
+                    frame:
+                        xsize 60
+                        ysize 2
+                        yalign 0.5
+                        background Solid("#f6d79d88")
+                        padding (0, 0, 0, 0)
+                    frame:
+                        xsize 12
+                        ysize 12
+                        yalign 0.5
+                        background Solid("#f6d79d")
+                        padding (0, 0, 0, 0)
+                    frame:
+                        xsize 120
+                        ysize 2
+                        yalign 0.5
+                        background Solid("#f6d79d")
+                        padding (0, 0, 0, 0)
+                    frame:
+                        xsize 12
+                        ysize 12
+                        yalign 0.5
+                        background Solid("#f6d79d")
+                        padding (0, 0, 0, 0)
+                    frame:
+                        xsize 60
+                        ysize 2
+                        yalign 0.5
+                        background Solid("#f6d79d88")
+                        padding (0, 0, 0, 0)
+
+    ## Auto-dismiss
+    timer 3.5 action Return()
 
 
 style choice_vbox is vbox
@@ -365,14 +719,14 @@ style choice_button_text is button_text
 style choice_vbox:
     xfill True
     xalign 0.5
-    spacing 8
+    spacing 6
 
 style choice_content is default:
     xfill True
-    ymaximum 180
+    ymaximum 200
     yalign 0.5
-    background None
-    padding (0, 0, 0, 0)
+    background Frame(Solid("#1e0c12ee"), 0, 0)
+    padding (20, 14, 20, 14)
 
 style choice_area is default:
     xalign 0.5
@@ -382,27 +736,27 @@ style choice_area is default:
     left_margin 120
     right_margin 120
     bottom_margin 92
-    background None
-    padding (12, 12, 12, 12)
+    background Frame(Solid("#f6d79d22"), 0, 0)
+    padding (3, 3, 3, 3)
 
 style choice_button is default:
     properties gui.button_properties("choice_button")
     background None
-    hover_background None
+    hover_background Frame(Solid("#f6d79d11"), 0, 0)
     selected_background None
     insensitive_background None
-    left_padding 0
-    right_padding 0
-    top_padding 0
-    bottom_padding 0
+    left_padding 8
+    right_padding 8
+    top_padding 4
+    bottom_padding 4
     xfill True
     xalign 0.5
 
 style choice_button_text is default:
     properties gui.text_properties("choice_button")
-    color "#ffffff"
-    hover_color "#ffe4b5"
-    outlines [(2, "#4b2730", 0, 0)]
+    color "#f1debf"
+    hover_color "#ffd700"
+    outlines [(2, "#1e0c12", 0, 0)]
 
 
 ################################################################################
@@ -1740,33 +2094,50 @@ style skip_triangle:
 screen notify(message):
 
     zorder 100
-    style_prefix "notify"
 
     frame at notify_appear:
-        text "[message!tq]"
+        xalign 0.5
+        ypos 80
+        xminimum 320
+        padding (3, 3, 3, 3)
+        background Frame(Solid("#f6d79d44"), 0, 0)
 
-    timer 3.25 action Hide('notify')
+        frame:
+            xfill True
+            padding (28, 16, 28, 16)
+            background Frame(Solid("#1e0c12ee"), 0, 0)
+
+            hbox:
+                xalign 0.5
+                spacing 10
+
+                text "★":
+                    size 20
+                    color "#ffd700"
+                    outlines [(2, "#1e0c12", 0, 0)]
+                    yalign 0.5
+
+                text "[message!tq]":
+                    size 20
+                    color "#b8e6b0"
+                    outlines [(2, "#1e0c12", 0, 0)]
+                    yalign 0.5
+
+                text "★":
+                    size 20
+                    color "#ffd700"
+                    outlines [(2, "#1e0c12", 0, 0)]
+                    yalign 0.5
+
+    timer 3.0 action Hide('notify')
 
 
 transform notify_appear:
     on show:
-        alpha 0
-        linear .25 alpha 1.0
+        alpha 0 yoffset -20
+        easein 0.35 alpha 1.0 yoffset 0
     on hide:
-        linear .5 alpha 0.0
-
-
-style notify_frame is empty
-style notify_text is gui_text
-
-style notify_frame:
-    ypos gui.notify_ypos
-
-    background Frame("gui/notify.png", gui.notify_frame_borders, tile=gui.frame_tile)
-    padding gui.notify_frame_borders.padding
-
-style notify_text:
-    properties gui.text_properties("notify")
+        easeout 0.4 alpha 0.0 yoffset -20
 
 
 ## NVL screen ##################################################################
@@ -1990,7 +2361,7 @@ screen debug_overlay():
         vbox:
             spacing 4
             text "=== DEBUG ===" color "#ffff00" size 14
-            text "act1_done: [act1_done]" color "#ffffff" size 12
+            text "act: [current_act]" color "#ffffff" size 12
             text "tasks: [tasks_completed]" color "#aaffaa" size 11
 
 ################################################################################
