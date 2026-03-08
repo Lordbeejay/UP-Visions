@@ -117,7 +117,8 @@ screen say(who, what):
         ## Show portrait during dialogue lines
         if not renpy.variant("small"):
             if _speaker_portrait is not None:
-                add _speaker_portrait xalign 0.06 yalign 1.0 yoffset -110 zoom 0.9
+                $ _portrait_zoom = portrait_zoom.get(_who_text, 0.9)
+                add _speaker_portrait xalign 0.06 yalign 1.0 yoffset -110 zoom _portrait_zoom
             else:
                 add SideImage() xalign 0.0 yalign 1.0
 
@@ -299,6 +300,11 @@ init python:
         "Sir Ruel": "images/npcs/sir_ruel.png",
         "Ms. Santos": "images/npcs/ms_santos.png",
         "Dorm Manager": "images/npcs/dorm_mgr.png",
+    }
+
+    # Per-character portrait zoom overrides (default is 0.9)
+    portrait_zoom = {
+        "Caezar": 0.8,
     }
 
     # Warm portrait assets so they appear instantly on first dialogue line.
@@ -503,32 +509,32 @@ transform choice_hover_anim:
 
 transform tr_overlay_fade:
     alpha 0.0
-    easein 0.8 alpha 1.0
+    easein 0.3 alpha 1.0
 
 transform tr_panel_rise:
-    alpha 0.0 yoffset 30
-    pause 0.15
-    easein 0.55 alpha 1.0 yoffset 0
+    alpha 0.0 yoffset 20
+    pause 0.05
+    easein 0.25 alpha 1.0 yoffset 0
 
 transform tr_title_reveal:
-    alpha 0.0 zoom 0.9
-    pause 0.3
-    easein 0.45 alpha 1.0 zoom 1.0
+    alpha 0.0 zoom 0.95
+    pause 0.1
+    easein 0.2 alpha 1.0 zoom 1.0
 
 transform tr_divider_grow:
     alpha 0.0 xzoom 0.0
-    pause 0.5
-    easein 0.4 alpha 1.0 xzoom 1.0
+    pause 0.15
+    easein 0.2 alpha 1.0 xzoom 1.0
 
 transform tr_subtitle_fade:
-    alpha 0.0 yoffset 8
-    pause 0.6
-    easein 0.45 alpha 1.0 yoffset 0
+    alpha 0.0 yoffset 5
+    pause 0.2
+    easein 0.2 alpha 1.0 yoffset 0
 
 transform tr_star_spin:
     alpha 0.0 rotate 0
-    pause 0.25
-    easein 0.5 alpha 1.0 rotate 360
+    pause 0.08
+    easein 0.25 alpha 1.0 rotate 360
 
 screen act_transition(title, subtitle, mode="complete"):
 
@@ -602,6 +608,26 @@ screen act_transition(title, subtitle, mode="complete"):
                         color "#f6d79d"
                         outlines [(2, "#1e0c12", 0, 0)]
                         at tr_star_spin
+                elif mode == "welcome":
+                    text "✦":
+                        xalign 0.5
+                        size 36
+                        color "#ffd700"
+                        outlines [(2, "#1e0c12", 0, 0)]
+                        at tr_star_spin
+                elif mode == "ending":
+                    text "★":
+                        xalign 0.5
+                        size 36
+                        color "#ffd700"
+                        outlines [(2, "#1e0c12", 0, 0)]
+                        at tr_star_spin
+                elif mode == "credits":
+                    text "◇":
+                        xalign 0.5
+                        size 20
+                        color "#f6d79d66"
+                        at tr_subtitle_fade
                 else:
                     text "— NEW CHAPTER —":
                         xalign 0.5
@@ -620,6 +646,30 @@ screen act_transition(title, subtitle, mode="complete"):
                         size 38
                         color "#b8e6b0"
                         outlines [(4, "#1e0c12", 0, 0), (2, "#3a7a3a55", 2, 2)]
+                        at tr_title_reveal
+                elif mode == "welcome":
+                    text title:
+                        xalign 0.5
+                        text_align 0.5
+                        size 42
+                        color "#ffd700"
+                        outlines [(4, "#1e0c12", 0, 0), (2, "#8b6914aa", 2, 2)]
+                        at tr_title_reveal
+                elif mode == "ending":
+                    text title:
+                        xalign 0.5
+                        text_align 0.5
+                        size 40
+                        color "#ffd700"
+                        outlines [(4, "#1e0c12", 0, 0), (2, "#8b6914aa", 2, 2)]
+                        at tr_title_reveal
+                elif mode == "credits":
+                    text title:
+                        xalign 0.5
+                        text_align 0.5
+                        size 18
+                        color "#888888"
+                        outlines [(2, "#1e0c12", 0, 0)]
                         at tr_title_reveal
                 else:
                     text title:
@@ -660,14 +710,15 @@ screen act_transition(title, subtitle, mode="complete"):
                 null height 14
 
                 ## Subtitle
-                text subtitle:
-                    xalign 0.5
-                    text_align 0.5
-                    size 22
-                    color "#f1debf"
-                    outlines [(2, "#1e0c12", 0, 0)]
-                    line_spacing 6
-                    at tr_subtitle_fade
+                if subtitle:
+                    text subtitle:
+                        xalign 0.5
+                        text_align 0.5
+                        size 22
+                        color "#f1debf"
+                        outlines [(2, "#1e0c12", 0, 0)]
+                        line_spacing 6
+                        at tr_subtitle_fade
 
                 null height 24
 
@@ -708,8 +759,11 @@ screen act_transition(title, subtitle, mode="complete"):
                         background Solid("#f6d79d88")
                         padding (0, 0, 0, 0)
 
+    ## Click or key to dismiss
+    key "dismiss" action Return()
+
     ## Auto-dismiss
-    timer 3.5 action Return()
+    timer 2.0 action Return()
 
 
 style choice_vbox is vbox

@@ -18,22 +18,19 @@ label start:
     ## Hide the dialogue window for map exploration
     window hide
 
-    ## --- INTRO SEQUENCE ---
-    scene bg miagao_campus with fade
-    pause 0.5
+    ## --- Fade to black from main menu ---
+    scene black with Dissolve(1.0)
+    pause 0.3
 
-    centered "{size=+8}{color=#ffd700}MIAGAO FRESHMAN GUIDE{/color}{/size}"
-    pause 1.0
-    centered "{size=+2}{color=#ffffff}A point-and-click adventure{/color}{/size}"
-    pause 1.0
-    centered "{size=+2}{color=#cccccc}Navigate your first day at UP Visayas{/color}{/size}"
-    pause 1.5
+    ## --- INTRO SEQUENCE ---
+    scene bg miagao_campus with Dissolve(1.2)
+    pause 0.3
+
+    call screen act_transition("MIAGAO FRESHMAN GUIDE", "A point-and-click adventure\nNavigate your first day at UP Visayas", mode="welcome")
 
     ## --- ACT 3 ---
-    scene bg Miagao with fade
-    show text "{size=+6}{color=#ffd700}ACT 3{/color}{/size}\n{color=#ffffff}Social / Exploration{/color}" at truecenter
-    pause 2.0
-    hide text
+    scene expression "images/ui/UI_Miagao.png" with fade
+    call screen act_transition("ACT 3", "Social / Exploration", mode="intro")
 
     $ current_act = 3
     $ tasks_completed = set()
@@ -179,9 +176,9 @@ label act2_complete:
 
 label act3_map:
     $ act3_nodes = [
-        MapNode("Kiosk", 2600, 3000, "npc_mikhaela", "Kiosk (Sarah)", False, "#ff99cc", "sarah.png"),
-        MapNode("Path", 2100, 2600, "act3_npc_jaden", "Main Path (Jaden)", False, "#99ccff", "jaden.png"),
-        MapNode("Ceazar", 1600, 1800, "npc_caezar", "Ceazar", True, "#ccff99", "caezar.png"),
+        MapNode("Sarah", 2600, 3000, "npc_mikhaela", "Sarah", False, "#ff99cc", "sarah.png"),
+        MapNode("Jaden", 2100, 2600, "act3_npc_jaden", "Jaden", False, "#99ccff", "jaden.png"),
+        MapNode("Ceazar", 1600, 1800, "npc_caezar", "Ceazar", True, "#ccff99", "caezar.png", icon_zoom=0.06),
     ]
 
     $ current_task_text = "Explore campus — find Sarah and Jaden"
@@ -189,10 +186,10 @@ label act3_map:
 label act3_loop:
     # Refresh node labels/tooltips for compatibility with old saves.
     if len(act3_nodes) >= 3:
-        $ act3_nodes[0].name = "Kiosk"
-        $ act3_nodes[0].tooltip = "Kiosk (Sarah)"
-        $ act3_nodes[1].name = "Path"
-        $ act3_nodes[1].tooltip = "Main Path (Jaden)"
+        $ act3_nodes[0].name = "Sarah"
+        $ act3_nodes[0].tooltip = "Sarah"
+        $ act3_nodes[1].name = "Jaden"
+        $ act3_nodes[1].tooltip = "Jaden"
         $ act3_nodes[2].name = "Ceazar"
         $ act3_nodes[2].tooltip = "Ceazar"
 
@@ -280,7 +277,7 @@ label open_world:
         MapNode("Admin", 2500, 2500, "ow_admin", "New Admin Building", False, "#ff8844", "sir_ruel.png"),
         MapNode("CUB", 1900, 1800, "ow_cub", "CUB / OSA", False, "#cc99ff", "ms_santos.png"),
         MapNode("Kiosk", 2600, 3000, "ow_kiosk", "Food Kiosks", False, "#ff99cc", "sarah.png"),
-        MapNode("Ceazar", 1600, 1800, "ow_lovers", "Ceazar", False, "#ccff99", "caezar.png"),
+        MapNode("Ceazar", 1600, 1800, "ow_lovers", "Ceazar", False, "#ccff99", "caezar.png", icon_zoom=0.06),
         MapNode("Dorm", 3300, 1900, "ow_dorm", "Dormitory", False, "#ffaa77", "dorm_mgr.png"),
     ]
 
@@ -355,16 +352,10 @@ label game_ending:
     scene black with fade
     pause 1.0
 
-    centered "{size=+6}{color=#ffd700}MIAGAO FRESHMAN GUIDE{/color}{/size}"
-    pause 1.0
-    centered "{color=#ffffff}You survived your first day.{/color}"
-    pause 1.5
-    centered "{color=#cccccc}Classes start next week.{/color}\n{color=#cccccc}But for now, breathe.{/color}"
-    pause 2.0
-    centered "{color=#ffd700}Welcome to UP Visayas.{/color}"
-    pause 2.0
+    call screen act_transition("MIAGAO FRESHMAN GUIDE", "You survived your first day.", mode="ending")
 
-    centered "{size=-2}{color=#888888}Made with Ren'Py{/color}{/size}"
-    pause 1.0
+    call screen act_transition("Welcome to UP Visayas", "Classes start next week.\nBut for now, breathe.", mode="ending")
+
+    call screen act_transition("Made with Ren'Py", "", mode="credits")
 
     return

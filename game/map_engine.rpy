@@ -7,7 +7,7 @@ init python:
 
     class MapNode:
         """A clickable location on the map."""
-        def __init__(self, name, x, y, target_label, tooltip="", locked=False, icon_color="#44cc44", icon_image=None):
+        def __init__(self, name, x, y, target_label, tooltip="", locked=False, icon_color="#44cc44", icon_image=None, icon_zoom=0.12):
             self.name = name
             self.x = x
             self.y = y
@@ -16,6 +16,7 @@ init python:
             self.locked = locked
             self.icon_color = icon_color
             self.icon_image = icon_image
+            self.icon_zoom = icon_zoom
             self.visited = False
 
         def unlock(self):
@@ -83,7 +84,7 @@ screen map_screen(map_bg, nodes, task_text="", map_scale=1.0):
 
                     if getattr(node, "icon_image", None):
                         add ("npcs/" + node.icon_image):
-                            zoom 0.12
+                            zoom getattr(node, "icon_zoom", 0.12)
                             xalign 0.5
                     else:
                         frame:
@@ -114,7 +115,7 @@ screen map_screen(map_bg, nodes, task_text="", map_scale=1.0):
 
                     if getattr(node, "icon_image", None):
                         add ("npcs/" + node.icon_image):
-                            zoom 0.12
+                            zoom getattr(node, "icon_zoom", 0.12)
                             xalign 0.5
                             matrixcolor BrightnessMatrix(-0.5)
                     else:
