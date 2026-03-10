@@ -1153,7 +1153,7 @@ screen navigation():
         xpos gui.navigation_xpos
         yalign 0.5
 
-        spacing gui.navigation_spacing
+        spacing 4
 
         if main_menu:
 
@@ -1167,7 +1167,7 @@ screen navigation():
 
         textbutton _("Load") action ShowMenu("load")
 
-        textbutton _("Preferences") action ShowMenu("preferences")
+        textbutton _("Settings") action ShowMenu("preferences")
 
         if _in_replay:
 
@@ -1181,25 +1181,32 @@ screen navigation():
 
         if renpy.variant("pc") or (renpy.variant("web") and not renpy.variant("mobile")):
 
-            ## Help isn't necessary or relevant to mobile devices.
             textbutton _("Help") action ShowMenu("help")
 
         if renpy.variant("pc"):
 
-            ## The quit button is banned on iOS and unnecessary on Android and
-            ## Web.
             textbutton _("Quit") action Quit(confirm=not main_menu)
 
 
-style navigation_button is gui_button
-style navigation_button_text is gui_button_text
-
-style navigation_button:
+style navigation_button is gui_button:
     size_group "navigation"
-    properties gui.button_properties("navigation_button")
+    xsize 300
+    ysize 50
+    padding (20, 8, 20, 8)
+    idle_background Frame(Solid("#00000000"), 4, 4, 4, 4)
+    hover_background Frame(Solid("#00cc9922"), 4, 4, 4, 4)
+    selected_idle_background Frame(Solid("#00cc9933"), 4, 4, 4, 4)
+    selected_hover_background Frame(Solid("#00cc9944"), 4, 4, 4, 4)
 
 style navigation_button_text:
-    properties gui.text_properties("navigation_button")
+    font "fonts/PressStart2P-Regular.ttf"
+    size 15
+    yalign 0.5
+    idle_color "#ffffff88"
+    hover_color "#00cc99"
+    selected_idle_color "#00cc99"
+    selected_hover_color "#ffffff"
+    outlines [ (2, "#000000", 0, 0) ]
 
 
 ## Main Menu screen ############################################################
@@ -1209,82 +1216,165 @@ style navigation_button_text:
 ## https://www.renpy.org/doc/html/screen_special.html#main-menu
 
 
-# Initializing shit
+# ── Transforms ──
 
 transform parallax_loop(speed):
     subpixel True
-    # 'xpan' handles the infinite horizontal wrap-around.
-    # We start at 0 and move to 360 degrees.
     xpan 0
     linear speed xpan 360
     repeat
 
+# Title gently breathes
+transform title_breathe:
+    yoffset 0
+    ease 4.0 yoffset -6
+    ease 4.0 yoffset 0
+    repeat
+
+# Title entrance — drops in and fades
+transform title_enter:
+    alpha 0.0 zoom 1.05 yoffset -40
+    pause 0.2
+    easein 1.2 alpha 1.0 zoom 1.0 yoffset 0
+
+# Subtitle slides in after title
+transform subtitle_enter:
+    alpha 0.0 yoffset 10
+    pause 1.0
+    easein 0.6 alpha 1.0 yoffset 0
+
+# Separator line grows from center
+transform separator_enter:
+    alpha 0.0 xzoom 0.0
+    pause 0.8
+    easein 0.5 alpha 1.0 xzoom 1.0
+
+# Staggered button slide-up
+transform btn_appear(delay):
+    alpha 0.0 yoffset 30
+    pause delay
+    easein 0.35 alpha 1.0 yoffset 0
+
+# Button hover — lift + glow
+transform btn_hover_lift:
+    on hover:
+        easein 0.12 yoffset -4 zoom 1.02
+    on idle:
+        easeout 0.2 yoffset 0 zoom 1.0
+
+# Bottom panel slides up from offscreen
+transform bottom_panel_enter:
+    alpha 0.0 yoffset 60
+    pause 0.5
+    easein 0.6 alpha 1.0 yoffset 0
+
+# Overlay fades in
+transform overlay_fadein:
+    alpha 0.0
+    linear 1.5 alpha 1.0
+
 screen main_menu():
     tag menu
 
-    # Layers ordered back (7) to front (1).
-    # Higher 'speed' numbers move SLOWER (it's the time in seconds to loop).
-    add "gui/main_menu/layer7.png" at parallax_loop(60.0)  # Distant sky (Slowest)
-    add "gui/main_menu/layer6.png" at parallax_loop(50.0)
-    add "gui/main_menu/layer5.png" at parallax_loop(40.0)
-    add "gui/main_menu/layer4.png" at parallax_loop(30.0)
-    add "gui/main_menu/layer3.png" at parallax_loop(20.0)
-    add "gui/main_menu/layer2.png" at parallax_loop(15.0)
-    add "gui/main_menu/layer1.png" at parallax_loop(10.0)  # Foreground (Fastest)
+    # ── Parallax Background ──
+    add "gui/main_menu/layer7.png" at parallax_loop(360.0)
+    add "gui/main_menu/layer6.png" at parallax_loop(300.0)
+    add "gui/main_menu/layer5.png" at parallax_loop(240.0)
+    add "gui/main_menu/layer4.png" at parallax_loop(180.0)
+    add "gui/main_menu/layer3.png" at parallax_loop(120.0)
+    add "gui/main_menu/layer2.png" at parallax_loop(90.0)
+    add "gui/main_menu/layer1.png" at parallax_loop(60.0)
 
-    # UI Overlay for readability
-    add Solid("#00000044")
+    # ── Overlays for depth ──
+    # Top vignette — darkens the sky slightly
+    add Solid("#00000055") at overlay_fadein
 
-    # Title Text in the FUCKING MIDDLE
+    # ── Title Block ──
     if gui.show_name:
-        vbox:
-            align (0.5, 0.5)  # Perfectly centers the box in the middle of the screen
-            spacing 5
-            
-            text "[config.name!t]":
-                style "main_menu_title"
-                xalign 0.5  # Centers the text within the vbox
-                size 120    # Made it bigger since it's the centerpiece
-                outlines [ (4, "#000", 0, 0) ]
+        vbox at title_enter:
+            align (0.5, 0.35)
+            spacing 0
 
-            text "v. [config.version]":
-                style "main_menu_version"
+            text "[config.name!t]" at title_breathe:
+                style "mm_title"
                 xalign 0.5
-                italic True
 
-    # Horizontal Navigation in the FUCKING BOTTOM
-    hbox:
-        align (0.5, 0.95)   # Centered horizontally, 95% down the screen
-        spacing 40          # Space between the horizontal buttons
-        
-        textbutton _("NEW GAME") action Start() style "custom_menu_button"
-        textbutton _("CONTINUE") action ShowMenu("load") style "custom_menu_button"
-        textbutton _("PREFERENCES") action ShowMenu("preferences") style "custom_menu_button"
-        textbutton _("ABOUT") action ShowMenu("about") style "custom_menu_button"
-        textbutton _("QUIT") action Quit(confirm=not main_menu) style "custom_menu_button"
+            # Decorative separator line
+            frame at separator_enter:
+                xalign 0.5
+                xsize 360
+                ysize 3
+                background Solid("#00cc99")
+                top_margin 12
+                bottom_margin 12
 
-# Keep existing default fucking styles
-style custom_menu_button is button
-style custom_menu_button_text is text
+            text "v. [config.version]" at subtitle_enter:
+                style "mm_version"
+                xalign 0.5
 
-style custom_menu_button_text:
-    font gui.interface_text_font
-    size 35
-    idle_color "#ffffffcc"
-    hover_color "#ffcc00"
+    # ── Bottom Navigation Panel ──
+    # Frosted dark panel that anchors the buttons
+    frame at bottom_panel_enter:
+        align (0.5, 0.88)
+        xsize 1400
+        ysize 100
+        background Frame(Solid("#0a0a1acc"), 6, 6, 6, 6)
+        padding (40, 0, 40, 0)
 
-style main_menu_title is default:
-    size 80
-    color "#ffffff"
-    outlines [ (2, "#000", 0, 0) ]
+        # Accent border line at the top of the panel
+        add Solid("#00cc9966", xsize=1400, ysize=2):
+            yalign 0.0
 
-style main_menu_version is default:
-    size 24
-    color "#ffffffcc"
+        hbox:
+            align (0.5, 0.5)
+            spacing 0
 
-style custom_menu_button is button:
+            textbutton _("NEW GAME") action Start() style "mm_btn" at btn_appear(0.7), btn_hover_lift
+            textbutton _("CONTINUE") action ShowMenu("load") style "mm_btn" at btn_appear(0.85), btn_hover_lift
+            textbutton _("SETTINGS") action ShowMenu("preferences") style "mm_btn" at btn_appear(1.0), btn_hover_lift
+            textbutton _("ABOUT") action ShowMenu("about") style "mm_btn" at btn_appear(1.15), btn_hover_lift
+            textbutton _("QUIT") action Quit(confirm=not main_menu) style "mm_btn_quit" at btn_appear(1.3), btn_hover_lift
+
+# ── Main Menu Styles ──
+
+style mm_btn is button:
+    xsize 260
+    ysize 80
+    padding (0, 0, 0, 0)
     idle_background None
-    hover_background None
+    hover_background Frame(Solid("#00cc9922"), 4, 4, 4, 4)
+
+style mm_btn_text is text:
+    font "fonts/PressStart2P-Regular.ttf"
+    size 18
+    xalign 0.5
+    yalign 0.5
+    text_align 0.5
+    idle_color "#ffffffaa"
+    hover_color "#00cc99"
+    selected_color "#ffffff"
+    insensitive_color "#ffffff22"
+    outlines [ (2, "#000000", 0, 0) ]
+    kerning 1
+
+# Quit button — distinct red tint
+style mm_btn_quit is mm_btn:
+    hover_background Frame(Solid("#cc333322"), 4, 4, 4, 4)
+
+style mm_btn_quit_text is mm_btn_text:
+    hover_color "#ff6666"
+
+style mm_title is default:
+    font "fonts/PressStart2P-Regular.ttf"
+    size 64
+    color "#ffffff"
+    outlines [ (8, "#000000cc", 0, 0), (4, "#00cc9955", 0, 0) ]
+
+style mm_version is default:
+    font "fonts/PressStart2P-Regular.ttf"
+    size 12
+    color "#00cc9988"
+    outlines [ (1, "#000000aa", 0, 0) ]
 
 ## Game Menu screen ############################################################
 ##
@@ -1376,7 +1466,11 @@ style game_menu_scrollbar is gui_vscrollbar
 style game_menu_label is gui_label
 style game_menu_label_text is gui_label_text
 
-style return_button is navigation_button
+style return_button is navigation_button:
+    xpos gui.navigation_xpos
+    yalign 1.0
+    yoffset -45
+
 style return_button_text is navigation_button_text
 
 style game_menu_outer_frame:
@@ -1408,9 +1502,11 @@ style game_menu_label:
     ysize 180
 
 style game_menu_label_text:
-    size 75
-    color gui.accent_color
+    font "fonts/PressStart2P-Regular.ttf"
+    size 48
+    color "#00cc99"
     yalign 0.5
+    outlines [ (3, "#000000", 0, 0) ]
 
 style return_button:
     xpos gui.navigation_xpos
@@ -1611,155 +1707,281 @@ style slot_button_text:
 ## https://www.renpy.org/doc/html/screen_special.html#preferences
 
 screen preferences():
-    
+
     tag menu
 
-    use game_menu(_("Preferences"), scroll="viewport"):
+    use game_menu(_("Settings"), scroll="viewport"):
+
+        style_prefix "pref"
 
         vbox:
+            spacing 36
 
-            hbox:
-                box_wrap True
+            # ═══════════════════════════════════════
+            # DISPLAY SECTION
+            # ═══════════════════════════════════════
+            frame:
+                xfill True
+                background Frame(Solid("#0e1b2a99"), 6, 6, 6, 6)
+                padding (30, 20, 30, 20)
 
-                if renpy.variant("pc") or renpy.variant("web"):
+                vbox:
+                    spacing 14
 
+                    hbox:
+                        spacing 12
+                        text ">" style "pref_icon_text"
+                        label _("Display") style "pref_section_label"
+
+                    if renpy.variant("pc") or renpy.variant("web"):
+                        hbox:
+                            spacing 16
+                            xoffset 28
+                            textbutton _("Window") action Preference("display", "window") style "pref_pill_btn"
+                            textbutton _("Fullscreen") action Preference("display", "fullscreen") style "pref_pill_btn"
+
+            # ═══════════════════════════════════════
+            # SKIP SECTION
+            # ═══════════════════════════════════════
+            frame:
+                xfill True
+                background Frame(Solid("#0e1b2a99"), 6, 6, 6, 6)
+                padding (30, 20, 30, 20)
+
+                vbox:
+                    spacing 14
+
+                    hbox:
+                        spacing 12
+                        text ">>" style "pref_icon_text"
+                        label _("Skip") style "pref_section_label"
+
+                    hbox:
+                        spacing 12
+                        xoffset 28
+                        textbutton _("Unseen Text") action Preference("skip", "toggle") style "pref_chip_btn"
+                        textbutton _("After Choices") action Preference("after choices", "toggle") style "pref_chip_btn"
+                        textbutton _("Transitions") action InvertSelected(Preference("transitions", "toggle")) style "pref_chip_btn"
+
+            # ═══════════════════════════════════════
+            # TEXT SECTION
+            # ═══════════════════════════════════════
+            frame:
+                xfill True
+                background Frame(Solid("#0e1b2a99"), 6, 6, 6, 6)
+                padding (30, 20, 30, 20)
+
+                vbox:
+                    spacing 18
+
+                    hbox:
+                        spacing 12
+                        text "Aa" style "pref_icon_text"
+                        label _("Text") style "pref_section_label"
+
+                    # Text Speed
                     vbox:
-                        style_prefix "radio"
-                        label _("Display")
-                        textbutton _("Window") action Preference("display", "window")
-                        textbutton _("Fullscreen") action Preference("display", "fullscreen")
+                        xoffset 28
+                        spacing 8
+                        text _("Text Speed") style "pref_slider_label_text"
+                        hbox:
+                            spacing 16
+                            bar value Preference("text speed") style "pref_styled_bar"
+                            text _("FAST") style "pref_bar_hint_text"
+
+                    # Auto-Forward
+                    vbox:
+                        xoffset 28
+                        spacing 8
+                        text _("Auto-Forward Time") style "pref_slider_label_text"
+                        hbox:
+                            spacing 16
+                            bar value Preference("auto-forward time") style "pref_styled_bar"
+                            text _("SLOW") style "pref_bar_hint_text"
+
+            # ═══════════════════════════════════════
+            # AUDIO SECTION
+            # ═══════════════════════════════════════
+            frame:
+                xfill True
+                background Frame(Solid("#0e1b2a99"), 6, 6, 6, 6)
+                padding (30, 20, 30, 20)
 
                 vbox:
-                    style_prefix "check"
-                    label _("Skip")
-                    textbutton _("Unseen Text") action Preference("skip", "toggle")
-                    textbutton _("After Choices") action Preference("after choices", "toggle")
-                    textbutton _("Transitions") action InvertSelected(Preference("transitions", "toggle"))
+                    spacing 18
 
-                ## Additional vboxes of type "radio_pref" or "check_pref" can be
-                ## added here, to add additional creator-defined preferences.
-
-            null height (4 * gui.pref_spacing)
-
-            hbox:
-                style_prefix "slider"
-                box_wrap True
-
-                vbox:
-
-                    label _("Text Speed")
-
-                    bar value Preference("text speed")
-
-                    label _("Auto-Forward Time")
-
-                    bar value Preference("auto-forward time")
-
-                vbox:
+                    hbox:
+                        spacing 12
+                        text "♪" style "pref_icon_text"
+                        label _("Audio") style "pref_section_label"
 
                     if config.has_music:
-                        label _("Music Volume")
-
-                        hbox:
-                            bar value Preference("music volume")
+                        vbox:
+                            xoffset 28
+                            spacing 8
+                            text _("Music") style "pref_slider_label_text"
+                            bar value Preference("music volume") style "pref_styled_bar_music"
 
                     if config.has_sound:
-
-                        label _("Sound Volume")
-
-                        hbox:
-                            bar value Preference("sound volume")
-
-                            if config.sample_sound:
-                                textbutton _("Test") action Play("sound", config.sample_sound)
-
+                        vbox:
+                            xoffset 28
+                            spacing 8
+                            hbox:
+                                spacing 16
+                                text _("Sound") style "pref_slider_label_text"
+                                if config.sample_sound:
+                                    textbutton _("[ Test ]") action Play("sound", config.sample_sound) style "pref_test_btn"
+                            bar value Preference("sound volume") style "pref_styled_bar_sfx"
 
                     if config.has_voice:
-                        label _("Voice Volume")
-
-                        hbox:
-                            bar value Preference("voice volume")
-
-                            if config.sample_voice:
-                                textbutton _("Test") action Play("voice", config.sample_voice)
+                        vbox:
+                            xoffset 28
+                            spacing 8
+                            hbox:
+                                spacing 16
+                                text _("Voice") style "pref_slider_label_text"
+                                if config.sample_voice:
+                                    textbutton _("[ Test ]") action Play("voice", config.sample_voice) style "pref_test_btn"
+                            bar value Preference("voice volume") style "pref_styled_bar_voice"
 
                     if config.has_music or config.has_sound or config.has_voice:
-                        null height gui.pref_spacing
+                        null height 6
+                        hbox:
+                            xoffset 28
+                            textbutton _("Mute All") action Preference("all mute", "toggle") style "pref_mute_btn"
 
-                        textbutton _("Mute All"):
-                            action Preference("all mute", "toggle")
-                            style "mute_all_button"
+# ═══════════════════════════════════════════════════
+# SETTINGS STYLES
+# ═══════════════════════════════════════════════════
 
-
-style pref_label is gui_label
-style pref_label_text is gui_label_text
-style pref_vbox is vbox
-
-style radio_label is pref_label
-style radio_label_text is pref_label_text
-style radio_button is gui_button
-style radio_button_text is gui_button_text
-style radio_vbox is pref_vbox
-
-style check_label is pref_label
-style check_label_text is pref_label_text
-style check_button is gui_button
-style check_button_text is gui_button_text
-style check_vbox is pref_vbox
-
-style slider_label is pref_label
-style slider_label_text is pref_label_text
-style slider_slider is gui_slider
-style slider_button is gui_button
-style slider_button_text is gui_button_text
-style slider_pref_vbox is pref_vbox
-
-style mute_all_button is check_button
-style mute_all_button_text is check_button_text
-
-style pref_label:
-    top_margin gui.pref_spacing
-    bottom_margin 3
-
-style pref_label_text:
-    yalign 1.0
-
-style pref_vbox:
-    xsize 338
-
-style radio_vbox:
-    spacing gui.pref_button_spacing
-
-style radio_button:
-    properties gui.button_properties("radio_button")
-    foreground "gui/button/radio_[prefix_]foreground.png"
-
-style radio_button_text:
-    properties gui.text_properties("radio_button")
-
-style check_vbox:
-    spacing gui.pref_button_spacing
-
-style check_button:
-    properties gui.button_properties("check_button")
-    foreground "gui/button/check_[prefix_]foreground.png"
-
-style check_button_text:
-    properties gui.text_properties("check_button")
-
-style slider_slider:
-    xsize 525
-
-style slider_button:
-    properties gui.button_properties("slider_button")
+# Section header icon (>, >>, Aa, ♪)
+style pref_icon_text:
+    font "fonts/PressStart2P-Regular.ttf"
+    size 18
+    color "#00cc99"
     yalign 0.5
-    left_margin 15
+    outlines [ (2, "#000000", 0, 0) ]
 
-style slider_button_text:
-    properties gui.text_properties("slider_button")
+# Section label
+style pref_section_label:
+    bottom_margin 0
 
-style slider_vbox:
-    xsize 675
+style pref_section_label_text:
+    font "fonts/PressStart2P-Regular.ttf"
+    size 20
+    color "#ffffff"
+    yalign 0.5
+    outlines [ (2, "#00000088", 0, 0) ]
+
+# Slider labels
+style pref_slider_label_text:
+    font "fonts/PressStart2P-Regular.ttf"
+    size 13
+    color "#ffffffbb"
+    outlines [ (1, "#000000", 0, 0) ]
+
+# Bar end-hint (FAST, SLOW)
+style pref_bar_hint_text:
+    font "fonts/PressStart2P-Regular.ttf"
+    size 10
+    color "#ffffff44"
+    yalign 0.5
+    outlines [ (1, "#000000", 0, 0) ]
+
+# ── Pill Button (Display: Window/Fullscreen) ──
+style pref_pill_btn is gui_button:
+    xsize 200
+    ysize 44
+    idle_background Frame(Solid("#ffffff0e"), 6, 6, 6, 6)
+    hover_background Frame(Solid("#00cc9933"), 6, 6, 6, 6)
+    selected_idle_background Frame(Solid("#00cc9955"), 6, 6, 6, 6)
+    selected_hover_background Frame(Solid("#00cc9977"), 6, 6, 6, 6)
+
+style pref_pill_btn_text:
+    font "fonts/PressStart2P-Regular.ttf"
+    size 14
+    xalign 0.5
+    yalign 0.5
+    text_align 0.5
+    idle_color "#ffffff77"
+    hover_color "#00cc99"
+    selected_idle_color "#00cc99"
+    selected_hover_color "#ffffff"
+    outlines [ (1, "#000000", 0, 0) ]
+
+# ── Chip Button (Skip toggles) ──
+style pref_chip_btn is gui_button:
+    padding (18, 10, 18, 10)
+    idle_background Frame(Solid("#ffffff0e"), 6, 6, 6, 6)
+    hover_background Frame(Solid("#3399ff33"), 6, 6, 6, 6)
+    selected_idle_background Frame(Solid("#3399ff55"), 6, 6, 6, 6)
+    selected_hover_background Frame(Solid("#3399ff77"), 6, 6, 6, 6)
+
+style pref_chip_btn_text:
+    font "fonts/PressStart2P-Regular.ttf"
+    size 12
+    idle_color "#ffffff77"
+    hover_color "#66bbff"
+    selected_idle_color "#66bbff"
+    selected_hover_color "#ffffff"
+    outlines [ (1, "#000000", 0, 0) ]
+
+# ── Slider Bars ──
+# Text Speed / Auto-Forward (teal)
+style pref_styled_bar is gui_slider:
+    xsize 600
+    ysize 24
+    base_bar Frame(Solid("#ffffff14"), 6, 6, 6, 6)
+    hover_base_bar Frame(Solid("#ffffff22"), 6, 6, 6, 6)
+    thumb Frame(Solid("#00cc99"), 6, 6, 6, 6)
+    hover_thumb Frame(Solid("#66e0c1"), 6, 6, 6, 6)
+    thumb_offset 12
+
+# Music (warm amber)
+style pref_styled_bar_music is pref_styled_bar:
+    thumb Frame(Solid("#ffaa33"), 6, 6, 6, 6)
+    hover_thumb Frame(Solid("#ffcc66"), 6, 6, 6, 6)
+
+# Sound FX (blue)
+style pref_styled_bar_sfx is pref_styled_bar:
+    thumb Frame(Solid("#3399ff"), 6, 6, 6, 6)
+    hover_thumb Frame(Solid("#66bbff"), 6, 6, 6, 6)
+
+# Voice (pink)
+style pref_styled_bar_voice is pref_styled_bar:
+    thumb Frame(Solid("#ff6699"), 6, 6, 6, 6)
+    hover_thumb Frame(Solid("#ff99bb"), 6, 6, 6, 6)
+
+# ── Test Button ──
+style pref_test_btn is gui_button:
+    padding (8, 4, 8, 4)
+    idle_background None
+    hover_background None
+    yalign 0.5
+
+style pref_test_btn_text:
+    font "fonts/PressStart2P-Regular.ttf"
+    size 10
+    idle_color "#ffffff44"
+    hover_color "#ffcc00"
+    outlines [ (1, "#000000", 0, 0) ]
+
+# ── Mute All Button ──
+style pref_mute_btn is gui_button:
+    padding (22, 10, 22, 10)
+    idle_background Frame(Solid("#ff334422"), 6, 6, 6, 6)
+    hover_background Frame(Solid("#ff334444"), 6, 6, 6, 6)
+    selected_idle_background Frame(Solid("#ff334466"), 6, 6, 6, 6)
+    selected_hover_background Frame(Solid("#ff334488"), 6, 6, 6, 6)
+
+style pref_mute_btn_text:
+    font "fonts/PressStart2P-Regular.ttf"
+    size 13
+    idle_color "#ff666688"
+    hover_color "#ff6666"
+    selected_idle_color "#ff6666"
+    selected_hover_color "#ffffff"
+    outlines [ (1, "#000000", 0, 0) ]
 
 
 ## History screen ##############################################################

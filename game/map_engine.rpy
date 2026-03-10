@@ -56,12 +56,18 @@ screen map_screen(map_bg, nodes, task_text="", map_scale=1.0):
 
     predict False
 
-    ## Map background — displayed at full screen size (1920x1080 image, no zoom)
-    add ("images/" + map_bg):
-        xpos 0
-        ypos 0
-        xsize 1920
-        ysize 1080
+    ## Black background behind everything
+    add Solid("#000000"):
+        xysize (1920, 1080)
+
+    ## Map background — scaled and centered with white border
+    frame:
+        background Solid("#ffffff")
+        padding (4, 4, 4, 4)
+        xalign 0.5
+        yalign 0.5
+        add ("images/" + map_bg):
+            zoom map_scale
 
     ## Node markers — positioned using screen coordinates
     for node in nodes:

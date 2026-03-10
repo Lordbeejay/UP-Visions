@@ -27,6 +27,30 @@ define ate_bea = Character("ate bea", color="#6e1f2a", what_color="#ffffff")
 define kuya_mark = Character("kuya mark", color="#6e1f2a", what_color="#ffffff")
 define maam_reyes = Character("maam reyes", color="#6e1f2a", what_color="#ffffff")
 define sir_allan = Character("sir allan", color="#6e1f2a", what_color="#ffffff")
+
+## --- Act 5 Characters ---
+define prof_lena = Character("Prof. Lena", color="#6e1f2a", what_color="#ffffff")
+define kuya_rico = Character("Kuya Rico", color="#6e1f2a", what_color="#ffffff")
+define ate_grace = Character("Ate Grace", color="#6e1f2a", what_color="#ffffff")
+define dan = Character("Dan", color="#6e1f2a", what_color="#ffffff")
+
+## --- Act 6 Characters ---
+define mika = Character("Mika", color="#6e1f2a", what_color="#ffffff")
+define kuya_tomas = Character("Kuya Tomas", color="#6e1f2a", what_color="#ffffff")
+define ate_jenny = Character("Ate Jenny", color="#6e1f2a", what_color="#ffffff")
+define coach_ramon = Character("Coach Ramon", color="#6e1f2a", what_color="#ffffff")
+
+## --- Act 7 Characters ---
+define ate_rosa = Character("Ate Rosa", color="#6e1f2a", what_color="#ffffff")
+define kuya_neil = Character("Kuya Neil", color="#6e1f2a", what_color="#ffffff")
+define prof_santos = Character("Prof. Santos", color="#6e1f2a", what_color="#ffffff")
+define bea = Character("Bea", color="#6e1f2a", what_color="#ffffff")
+
+## --- Act 8 Characters ---
+define ate_linda = Character("Ate Linda", color="#6e1f2a", what_color="#ffffff")
+define nanay_elena = Character("Nanay Elena", color="#6e1f2a", what_color="#ffffff")
+define prof_reyes = Character("Prof. Reyes", color="#6e1f2a", what_color="#ffffff")
+
 ## --- NPC Sprite Images ---
 ## Ren'Py auto-names files in subdirectories with a space prefix (e.g. "npcs manong_guard").
 ## We define them explicitly here so `show manong_guard` works in dialogue scenes.
@@ -49,6 +73,31 @@ image ate_bea = "images/npcs/ate_bea.png"
 image kuya_mark = "images/npcs/kuya_mark.png"
 image maam_reyes = "images/npcs/maam_reyes.png"
 image sir_allan = "images/npcs/sir_allan.png"
+
+## --- Act 5 NPC Sprites ---
+image prof_lena_sprite = "images/npcs/prof_lena.png"
+image kuya_rico_sprite = "images/npcs/kuya_rico.png"
+image ate_grace_sprite = "images/npcs/ate_grace.png"
+image classmate_dan_sprite = "images/npcs/classmate_dan.png"
+
+## --- Act 6 NPC Sprites ---
+image mika_sprite = "images/npcs/mika.png"
+image kuya_tomas_sprite = "images/npcs/kuya_tomas.png"
+image ate_jenny_sprite = "images/npcs/ate_jenny.png"
+image coach_ramon_sprite = "images/npcs/coach_ramon.png"
+
+## --- Act 7 NPC Sprites ---
+image ate_rosa_sprite = "images/npcs/ate_rosa.png"
+image kuya_neil_sprite = "images/npcs/kuya_neil.png"
+image prof_santos_sprite = "images/npcs/prof_santos.png"
+image classmate_bea_sprite = "images/npcs/classmate_bea.png"
+
+## --- Act 8 NPC Sprites ---
+image jaden_sprite = "images/npcs/jaden.png"
+image ate_linda_sprite = "images/npcs/ate_linda.png"
+image nanay_elena_sprite = "images/npcs/nanay_elena.png"
+image prof_reyes_sprite = "images/npcs/prof_reyes.png"
+
 ## --- Scene Backgrounds ---
 image bg gate_entrance = Solid("#2a3a2a")
 image bg miagao_campus = "images/ui/Entrance.png"
