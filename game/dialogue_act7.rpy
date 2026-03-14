@@ -16,7 +16,6 @@ label act7_start:
 ## KEY INFO: Library system, borrowing, digital resources
 ## ============================================================================
 label act7_npc_ate_rosa:
-    show ate_rosa_sprite at center
     window show
     ate_rosa "Welcome to the UPV Library! First time here?"
     player_char "Yes, Ate. It's bigger than I expected."
@@ -85,7 +84,6 @@ label act7_rosa_end:
     ate_rosa "Happy reading!"
     $ talked_ate_rosa = True
     $ complete_task("talk_ate_rosa")
-    hide ate_rosa_sprite
     window hide
     return
 
@@ -94,7 +92,6 @@ label act7_rosa_end:
 ## KEY INFO: Computer labs, UP Mail, CRS tips, campus WiFi
 ## ============================================================================
 label act7_npc_kuya_neil:
-    show kuya_neil_sprite at left
     window show
     kuya_neil "Oh, freshie? Come in, come in. Welcome to the computer lab."
     player_char "Hi, Kuya. Can I use the computers here?"
@@ -161,7 +158,6 @@ label act7_neil_end:
     kuya_neil "If you have any tech issues, just ask me. I've seen it all."
     $ talked_kuya_neil = True
     $ complete_task("talk_kuya_neil")
-    hide kuya_neil_sprite
     window hide
     return
 
@@ -170,7 +166,6 @@ label act7_neil_end:
 ## KEY INFO: Research culture, thesis awareness, critical thinking
 ## ============================================================================
 label act7_npc_prof_santos:
-    show prof_santos_sprite at right
     window show
     prof_santos "Ah, a curious freshie approaches. Are you here about my class, or just exploring?"
     player_char "Just exploring, Prof. I heard you're a research professor?"
@@ -235,7 +230,6 @@ label act7_santos_end:
     prof_santos "Don't be a stranger."
     $ talked_prof_santos = True
     $ complete_task("talk_prof_santos")
-    hide prof_santos_sprite
     window hide
     return
 
@@ -244,7 +238,6 @@ label act7_santos_end:
 ## KEY INFO: Study groups, exam tips, academic survival
 ## ============================================================================
 label act7_npc_classmate_bea:
-    show classmate_bea_sprite at left
     window show
     bea "Hey! Are you in the GE 1 class with Prof. Ramos? I keep seeing you around."
     player_char "Yeah, I am! I'm still trying to figure out how to study for college."
@@ -309,7 +302,6 @@ label act7_bea_end:
     bea "Together, we survive!"
     $ talked_classmate_bea = True
     $ complete_task("talk_classmate_bea")
-    hide classmate_bea_sprite
     window hide
     return
 

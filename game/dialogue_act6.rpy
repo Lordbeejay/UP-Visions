@@ -16,7 +16,6 @@ label act6_start:
 ## KEY INFO: Student organizations, how to join, what they offer
 ## ============================================================================
 label act6_npc_mika:
-    show mika_sprite at left
     window show
     mika "Hey, freshie! Have you checked out the org fair yet?"
     player_char "Org fair? What's that?"
@@ -83,7 +82,6 @@ label act6_mika_end:
     mika "And don't forget — org fair is only this week. Don't miss it!"
     $ talked_mika = True
     $ complete_task("talk_mika")
-    hide mika_sprite
     window hide
     return
 
@@ -92,7 +90,6 @@ label act6_mika_end:
 ## KEY INFO: Scholarships, financial aid, stipends
 ## ============================================================================
 label act6_npc_kuya_tomas:
-    show kuya_tomas_sprite at right
     window show
     kuya_tomas "Good morning. Are you here for scholarship inquiries?"
     player_char "Yes, Kuya. I want to know what financial aid is available."
@@ -161,7 +158,6 @@ label act6_tomas_end:
     kuya_tomas "My office is right here in BOX 1, ground floor. Come back anytime."
     $ talked_kuya_tomas = True
     $ complete_task("talk_kuya_tomas")
-    hide kuya_tomas_sprite
     window hide
     return
 
@@ -170,7 +166,6 @@ label act6_tomas_end:
 ## KEY INFO: Campus events, org registration, student handbook
 ## ============================================================================
 label act6_npc_ate_jenny:
-    show ate_jenny_sprite at center
     window show
     ate_jenny "Hi! Welcome to the Office of Student Affairs. How can I help you?"
     player_char "Hi, Ate. I want to know more about campus events and what the OSA does."
@@ -237,7 +232,6 @@ label act6_jenny_end:
     ate_jenny "And enjoy Freshie Week! It only happens once."
     $ talked_ate_jenny = True
     $ complete_task("talk_ate_jenny")
-    hide ate_jenny_sprite
     window hide
     return
 
@@ -246,7 +240,6 @@ label act6_jenny_end:
 ## KEY INFO: Sports, physical education, inter-UP games
 ## ============================================================================
 label act6_npc_coach_ramon:
-    show coach_ramon_sprite at right
     window show
     coach_ramon "You! Freshie! You look athletic. Do you play any sport?"
     player_char "I used to play a bit in high school..."
@@ -310,7 +303,6 @@ label act6_ramon_end:
     coach_ramon "The gym is open 6 AM to 8 PM on weekdays. Free for students. No excuses!"
     $ talked_coach_ramon = True
     $ complete_task("talk_coach_ramon")
-    hide coach_ramon_sprite
     window hide
     return
 

@@ -32,12 +32,12 @@ label start:
     scene expression "images/ui/UI_Miagao.png" with fade
     call screen act_transition("ACT 4", "Dorm Accommodation", mode="intro")
 
-    $ current_act = 4
+    $ current_act = 1
     $ tasks_completed = set()
     $ player_map_x = 2300
     $ player_map_y = 3100
     $ player_facing = "up"
-    jump act4_map
+    jump act1_map
 
 
 ## ============================================================================

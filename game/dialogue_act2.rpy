@@ -8,7 +8,6 @@
 ## KEY INFO: What is BOX 1, Bus schedules, tips
 ## ============================================================================
 label act2_npc_ate_bea:
-    show ate_bea_sprite at left
     window show
     ate_bea "Oh, you look lost. First time sa BOX 1?"
     player_char "Is it that obvious?"
@@ -64,7 +63,6 @@ label act2_bea_tips:
 
 label act2_bea_end:
     $ complete_task("talk_ate_bea")
-    hide ate_bea_sprite
     window hide
     return
 
@@ -73,7 +71,6 @@ label act2_bea_end:
 ## KEY INFO: ID policies, security protocols, restricted areas
 ## ============================================================================
 label act2_npc_kuya_mark:
-    show kuya_mark_sprite at right
     window show
     kuya_mark "Good morning. Transaction?"
     player_char "Good morning, Kuya. I'm a freshie — I wanted to ask about the campus rules."
@@ -135,7 +132,6 @@ label act2_mark_restricted:
 label act2_mark_end:
     kuya_mark "Any more questions, come find me at the Security Office near the main gate. I'm here 6 AM to 6 PM."
     $ complete_task("talk_kuya_mark")
-    hide kuya_mark_sprite
     window hide
     return
 
@@ -144,7 +140,6 @@ label act2_mark_end:
 ## KEY INFO: Offices in BOX 1, office hours, appointments vs walk-ins
 ## ============================================================================
 label act2_npc_maam_reyes:
-    show maam_reyes_sprite at center
     window show
     maam_reyes "Good morning! How can I help you?"
     player_char "Good morning, Ma'am. I'm a freshie. I wanted to know more about the offices here."
@@ -210,7 +205,6 @@ label act2_reyes_appointments:
 label act2_reyes_end:
     maam_reyes "If you have more questions, my desk is right here at the New Admin lobby. Don't hesitate!"
     $ complete_task("talk_maam_reyes")
-    hide maam_reyes_sprite
     window hide
     return
 
@@ -219,7 +213,6 @@ label act2_reyes_end:
 ## KEY INFO: CRS walkthrough, enrollment process
 ## ============================================================================
 label act2_npc_sir_allan:
-    show sir_allan_sprite at right
     window show
     sir_allan "Ah, a freshie! You look like you need help with the CRS."
     player_char "The CRS? I've heard it mentioned but I don't fully understand it yet."
@@ -236,7 +229,6 @@ label act2_allan_crs_prereq:
     sir_allan "You'll need your Notice of Admission and one valid ID."
     sir_allan "Once you have your student number and temporary password, come back and we'll go through the CRS together."
     $ complete_task("talk_sir_allan")
-    hide sir_allan_sprite
     window hide
     return
 
@@ -280,7 +272,6 @@ label act2_allan_end:
     sir_allan "You're going to be fine. The first enrollment is always the most confusing."
     sir_allan "My consultation hours are Tuesday and Thursday, 2 PM to 4 PM, Room 201 New Admin. Door's always open."
     $ complete_task("talk_sir_allan")
-    hide sir_allan_sprite
     window hide
     return
 

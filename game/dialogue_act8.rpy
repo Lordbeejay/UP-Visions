@@ -16,7 +16,6 @@ label act8_start:
 ## KEY INFO: Reflecting on the freshman week, campus identity, homesickness
 ## ============================================================================
 label act8_npc_jaden:
-    show jaden_sprite at left
     window show
     jaden "Hey! Can you believe it's almost the end of our first week?"
     player_char "It went by so fast. I feel like I just got off the bus yesterday."
@@ -81,7 +80,6 @@ label act8_jaden_end:
     jaden "See you in class Monday!"
     $ talked_jaden_act8 = True
     $ complete_task("talk_jaden_act8")
-    hide jaden_sprite
     window hide
     return
 
@@ -90,7 +88,6 @@ label act8_jaden_end:
 ## KEY INFO: Local community perspective, campus-town relationship, Miagao beyond campus
 ## ============================================================================
 label act8_npc_ate_linda:
-    show ate_linda_sprite at center
     window show
     ate_linda "Anak, what will you have today? Adobo or sinigang?"
     player_char "Adobo please, Ate. By the way, you've been working here long?"
@@ -154,7 +151,6 @@ label act8_linda_end:
     ate_linda "Come back tomorrow. I'm making kare-kare!"
     $ talked_ate_linda = True
     $ complete_task("talk_ate_linda")
-    hide ate_linda_sprite
     window hide
     return
 
@@ -163,7 +159,6 @@ label act8_linda_end:
 ## KEY INFO: Self-care, well-being, practical life skills
 ## ============================================================================
 label act8_npc_nanay_elena:
-    show nanay_elena_sprite at right
     window show
     nanay_elena "Good evening, anak. You look tired. Did you eat dinner?"
     player_char "Not yet, Nanay Elena. It's been a long day."
@@ -229,7 +224,6 @@ label act8_elena_end:
     nanay_elena "And get to bed early tonight. Your brain needs rest."
     $ talked_nanay_elena = True
     $ complete_task("talk_nanay_elena")
-    hide nanay_elena_sprite
     window hide
     return
 
@@ -238,7 +232,6 @@ label act8_elena_end:
 ## KEY INFO: UP identity, Iskolar ng Bayan, responsibility to nation
 ## ============================================================================
 label act8_npc_prof_reyes:
-    show prof_reyes_sprite at center
     window show
     prof_reyes "Come in, come in. You caught me just in time."
     prof_reyes "I'm Prof. Reyes, one of the senior faculty here. You must be part of the new batch."
@@ -307,7 +300,6 @@ label act8_reyes_end:
     prof_reyes "Welcome to UP Visayas. You belong here."
     $ talked_prof_reyes = True
     $ complete_task("talk_prof_reyes")
-    hide prof_reyes_sprite
     window hide
     return
 

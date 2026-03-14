@@ -1,5 +1,4 @@
-﻿
-################################################################################
+﻿################################################################################
 ## Styles
 ################################################################################
 init offset = -1
@@ -114,14 +113,6 @@ screen say(who, what):
             yalign 0.5
 
     else:
-        ## Show portrait during dialogue lines
-        if not renpy.variant("small"):
-            if _speaker_portrait is not None:
-                $ _portrait_zoom = portrait_zoom.get(_who_text, 0.9)
-                add _speaker_portrait xalign 0.06 yalign 1.0 yoffset -110 zoom _portrait_zoom
-            else:
-                add SideImage() xalign 0.0 yalign 1.0
-
         window:
             id "window"
 
@@ -290,21 +281,236 @@ screen say(who, what):
 
                                 text what id "what"
 
+        ## ── Portrait box (left side, separate from dialogue window) ──
+        frame:
+            xalign 0.0
+            yalign 1.0
+            xoffset 40
+            yoffset -56
+            xsize 220
+            ysize 310
+            padding (3, 3, 3, 3)
+            background Frame(Solid("#f6d79d33"), 0, 0)
+
+            frame:
+                xfill True
+                yfill True
+                padding (2, 2, 2, 2)
+                background Frame(Solid("#f6d79d11"), 0, 0)
+
+                frame:
+                    xfill True
+                    yfill True
+                    padding (0, 0, 0, 0)
+                    background Frame(Solid("#1a0a10f0"), 0, 0)
+
+                    fixed:
+                        ## Corner accents (top-left)
+                        frame:
+                            xpos 6
+                            ypos 6
+                            xsize 14
+                            ysize 2
+                            background Solid("#f6d79d66")
+                            padding (0, 0, 0, 0)
+                        frame:
+                            xpos 6
+                            ypos 6
+                            xsize 2
+                            ysize 14
+                            background Solid("#f6d79d66")
+                            padding (0, 0, 0, 0)
+
+                        ## Corner accents (top-right)
+                        frame:
+                            xalign 1.0
+                            xoffset -6
+                            ypos 6
+                            xsize 14
+                            ysize 2
+                            background Solid("#f6d79d66")
+                            padding (0, 0, 0, 0)
+                        frame:
+                            xalign 1.0
+                            xoffset -6
+                            ypos 6
+                            xsize 2
+                            ysize 14
+                            background Solid("#f6d79d66")
+                            padding (0, 0, 0, 0)
+
+                        ## Corner accents (bottom-left)
+                        frame:
+                            xpos 6
+                            yalign 1.0
+                            yoffset -6
+                            xsize 14
+                            ysize 2
+                            background Solid("#f6d79d66")
+                            padding (0, 0, 0, 0)
+                        frame:
+                            xpos 6
+                            yalign 1.0
+                            yoffset -22
+                            xsize 2
+                            ysize 14
+                            background Solid("#f6d79d66")
+                            padding (0, 0, 0, 0)
+
+                        ## Corner accents (bottom-right)
+                        frame:
+                            xalign 1.0
+                            xoffset -6
+                            yalign 1.0
+                            yoffset -6
+                            xsize 14
+                            ysize 2
+                            background Solid("#f6d79d66")
+                            padding (0, 0, 0, 0)
+                        frame:
+                            xalign 1.0
+                            xoffset -6
+                            yalign 1.0
+                            yoffset -22
+                            xsize 2
+                            ysize 14
+                            background Solid("#f6d79d66")
+                            padding (0, 0, 0, 0)
+
+                        ## Portrait image and title
+                        vbox:
+                            xfill True
+                            yfill True
+                            spacing 0
+
+                            frame:
+                                xfill True
+                                ysize 240
+                                padding (0, 0, 0, 0)
+                                background None
+                                if _speaker_portrait is not None:
+                                    add _speaker_portrait:
+                                        xalign 0.5
+                                        yalign 0.5
+                                        fit "contain"
+                                        xsize 200
+                                        ysize 240
+                                else:
+                                    text "?" xalign 0.5 yalign 0.5 size 72 color "#f6d79d44"
+
+                            ## Title ribbon banner below portrait
+                            $ _speaker_title = get_speaker_title(_who_text)
+                            if _speaker_title is not None:
+                                frame:
+                                    xalign 0.5
+                                    ysize 40
+                                    xsize 200
+                                    padding (0, 0, 0, 0)
+                                    yoffset -8
+                                    add Solid("#5c1a1a"):
+                                        xysize (200, 40)
+                                    add Solid("#f6d79d"):
+                                        xysize (160, 32)
+                                        xpos 20
+                                        ypos 4
+                                    add Solid("#5c1a1a"):
+                                        xysize (20, 20)
+                                        xpos 0
+                                        ypos 20
+                                    add Solid("#5c1a1a"):
+                                        xysize (20, 20)
+                                        xpos 180
+                                        ypos 20
+                                    text _speaker_title:
+                                        xalign 0.5
+                                        text_align 0.5
+                                        size 15
+                                        color "#1a0a10"
+                                        bold True
+                                        yalign 0.5
+                                        outlines [(2, "#f6d79d33", 0, 0)]
+
+
 ## Make the namebox available for styling through the Character object.
 init python:
     speaker_portraits = {
-        "Sarah": "images/npcs/sarah.png",
+        ## Act 1
         "Jaden": "images/npcs/jaden.png",
+        "Manong Josh": "images/npcs/manongjosh.png",
+        "Aleng Maria": "images/npcs/alengmaria.png",
+        "Manong Chris": "images/npcs/manong_chris.png",
+        "Joseph": "images/npcs/joseph_driver.png",
+        ## Act 2
+        "ate bea": "images/npcs/ate_bea.png",
+        "kuya mark": "images/npcs/kuya_mark.png",
+        "maam reyes": "images/npcs/maam_reyes.png",
+        "sir allan": "images/npcs/sir_allan.png",
+        ## Act 3/4 NPCs
+        "Sarah": "images/npcs/sarah.png",
         "Caezar": "images/npcs/caezar.png",
         "Manong Guard": "images/npcs/manong_guard.png",
         "Sir Ruel": "images/npcs/sir_ruel.png",
         "Ms. Santos": "images/npcs/ms_santos.png",
         "Dorm Manager": "images/npcs/dorm_mgr.png",
+        ## Act 5
+        "Prof. Lena": "images/npcs/prof_lena.png",
+        "Kuya Rico": "images/npcs/kuya_rico.png",
+        "Ate Grace": "images/npcs/ate_grace.png",
+        "Dan": "images/npcs/classmate_dan.png",
+        ## Act 6
+        "Mika": "images/npcs/mika.png",
+        "Kuya Tomas": "images/npcs/kuya_tomas.png",
+        "Ate Jenny": "images/npcs/ate_jenny.png",
+        "Coach Ramon": "images/npcs/coach_ramon.png",
+        ## Act 7
+        "Ate Rosa": "images/npcs/ate_rosa.png",
+        "Kuya Neil": "images/npcs/kuya_neil.png",
+        "Prof. Santos": "images/npcs/prof_santos.png",
+        "Bea": "images/npcs/classmate_bea.png",
+        ## Act 8
+        "Ate Linda": "images/npcs/ate_linda.png",
+        "Nanay Elena": "images/npcs/nanay_elena.png",
+        "Prof. Reyes": "images/npcs/prof_reyes.png",
     }
 
-    # Per-character portrait zoom overrides (default is 0.9)
-    portrait_zoom = {
-        "Caezar": 0.8,
+    speaker_titles = {
+        ## Act 1
+        "Jaden": "Fellow Freshie",
+        "Manong Josh": "Town Guide",
+        "Aleng Maria": "Carinderia Owner",
+        "Manong Chris": "Local Resident",
+        "Joseph": "Tricycle Driver",
+        ## Act 2
+        "ate bea": "Upperclassman Guide",
+        "kuya mark": "Campus Security",
+        "maam reyes": "Admin Staff",
+        "sir allan": "Faculty Member",
+        ## Act 3/4
+        "Sarah": "Fellow Student",
+        "Caezar": "Campus Regular",
+        "Manong Guard": "Gate Guard",
+        "Sir Ruel": "Strict Professor",
+        "Ms. Santos": "OSA Staff",
+        "Dorm Manager": "Dorm Manager",
+        ## Act 5
+        "Prof. Lena": "GE Professor",
+        "Kuya Rico": "Senior Adviser",
+        "Ate Grace": "Council Rep",
+        "Dan": "Fellow Freshie",
+        ## Act 6
+        "Mika": "Org Recruiter",
+        "Kuya Tomas": "Scholarship Staff",
+        "Ate Jenny": "OSA Staff",
+        "Coach Ramon": "Sports Coordinator",
+        ## Act 7
+        "Ate Rosa": "Campus Librarian",
+        "Kuya Neil": "Lab Attendant",
+        "Prof. Santos": "Research Mentor",
+        "Bea": "Study Organizer",
+        ## Act 8
+        "Ate Linda": "Canteen Worker",
+        "Nanay Elena": "Dorm Housemother",
+        "Prof. Reyes": "Senior Faculty",
     }
 
     # Warm portrait assets so they appear instantly on first dialogue line.
@@ -322,6 +528,11 @@ init python:
             return None
         return speaker_portraits.get(who_text)
 
+    def get_speaker_title(who_text):
+        if not who_text:
+            return None
+        return speaker_titles.get(who_text)
+
     config.character_id_prefixes.append('namebox')
 
 style window is default
@@ -337,8 +548,8 @@ style window:
     xfill True
     yalign gui.textbox_yalign
     ysize gui.textbox_height
-    left_margin 60
-    right_margin 60
+    left_margin 280
+    right_margin 80
     bottom_margin 56
     background None
     padding (0, 0, 0, 0)
@@ -363,6 +574,7 @@ style namebox:
 style say_label:
     properties gui.text_properties("name")
     size 22
+    bold True
     xalign 0.5
     text_align 0.5
     yalign 0.5
@@ -377,8 +589,8 @@ style say_dialogue:
     text_align 0.5
     top_margin 4
     bottom_margin 4
-    left_margin 6
-    right_margin 6
+    left_margin 40
+    right_margin 40
     color "#f1debf"
     outlines [(2, "#1a0a10", 0, 0), (1, "#f6d79d22", 1, 1)]
     line_spacing 8
@@ -2451,8 +2663,6 @@ screen nvl(dialogue, items=None):
             textbutton i.caption:
                 action i.action
                 style "nvl_button"
-
-    add SideImage() xalign 0.0 yalign 1.0
 
 
 screen nvl_dialogue(dialogue):

@@ -16,7 +16,6 @@ label act5_start:
 ## KEY INFO: GE curriculum, class expectations, grading system
 ## ============================================================================
 label act5_npc_prof_lena:
-    show prof_lena_sprite at center
     window show
     prof_lena "Good morning, class. Sit down. If you're in the wrong room, now is the time to leave."
     prof_lena "..."
@@ -81,7 +80,6 @@ label act5_lena_end:
     prof_lena "Class starts properly next meeting. Read Chapters 1 through 3 of Agoncillo. No excuses."
     $ talked_prof_lena = True
     $ complete_task("talk_prof_lena")
-    hide prof_lena_sprite
     window hide
     return
 
@@ -90,7 +88,6 @@ label act5_lena_end:
 ## KEY INFO: Classrooms, building navigation, class schedules
 ## ============================================================================
 label act5_npc_kuya_rico:
-    show kuya_rico_sprite at left
     window show
     kuya_rico "Hey, freshie! Lost already? I saw you walking in circles."
     player_char "I can't find Room 203. The building numbers don't make sense."
@@ -154,7 +151,6 @@ label act5_rico_end:
     kuya_rico "If you get lost again, ask any upperclassman. We don't bite. Usually."
     $ talked_kuya_rico = True
     $ complete_task("talk_kuya_rico")
-    hide kuya_rico_sprite
     window hide
     return
 
@@ -163,7 +159,6 @@ label act5_rico_end:
 ## KEY INFO: Student rights, academic freedom, the UP Code
 ## ============================================================================
 label act5_npc_ate_grace:
-    show ate_grace_sprite at right
     window show
     ate_grace "Hey! I noticed you in Kas 1 earlier. First class, huh? How was it?"
     player_char "Intense. Professor Lena doesn't mess around."
@@ -225,7 +220,6 @@ label act5_grace_end:
     ate_grace "Welcome to UP, freshie. Don't just survive — participate. The university is what you make of it."
     $ talked_ate_grace = True
     $ complete_task("talk_ate_grace")
-    hide ate_grace_sprite
     window hide
     return
 
@@ -234,7 +228,6 @@ label act5_grace_end:
 ## KEY INFO: Study tips, survival strategies, student life balance
 ## ============================================================================
 label act5_npc_classmate_dan:
-    show classmate_dan_sprite at left
     window show
     dan "Psst. Hey. You're in Kas 1 too, right? With Professor Lena?"
     player_char "Yeah. That reading list she gave us is terrifying."
@@ -298,7 +291,6 @@ label act5_dan_end:
     dan "Strength in numbers, right? See you in Kas 1!"
     $ talked_classmate_dan = True
     $ complete_task("talk_classmate_dan")
-    hide classmate_dan_sprite
     window hide
     return
 

@@ -15,7 +15,6 @@ label act1_start:
 ## NPC 1 — JADEN
 ## ============================================================================
 label act1_npc_jaden:
-    show jaden at left
     window show
     jaden "Oh! Hey. You're a freshie too, right? I can tell by the confused look."
     player_char "Is it that obvious?"
@@ -55,7 +54,6 @@ label act1_jaden_end:
     jaden "Anyway, if you need someone to eat dinner with at the carinderia later, I'm usually around the plaza by 6."
     $ talked_jaden = True
     $ complete_task("talk_jaden")
-    hide jaden
     window hide
     return
 
@@ -63,7 +61,6 @@ label act1_jaden_end:
 ## NPC 2 — MANONG JOSH
 ## ============================================================================
 label act1_npc_manong_josh:
-    show manong_josh at right
     window show
     manong_josh "Ay, estudyante ka? Bagong-abot?"
     player_char "Yes po, Manong. Just arrived today."
@@ -104,7 +101,6 @@ label act1_josh_end:
     manong_josh "You seem like a good kid. Study hard. Miagao will treat you well if you respect it."
     $ talked_josh = True
     $ complete_task("talk_manong_josh")
-    hide manong_josh
     window hide
     return
 
@@ -112,7 +108,6 @@ label act1_josh_end:
 ## NPC 3 — ALENG MARIA
 ## ============================================================================
 label act1_npc_aleng_maria:
-    show aleng_maria_sprite at center
     window show
     aleng_maria "Uy, estudyante! Gutom ka na? Kain na dali!"
     player_char "Actually, Aleng, I wanted to ask about food around here."
@@ -175,7 +170,6 @@ label act1_maria_end:
     aleng_maria "Sige! I'll save you the last portion of adobo!"
     $ talked_maria = True
     $ complete_task("talk_aleng_maria")
-    hide aleng_maria
     window hide
     return
 
@@ -183,7 +177,6 @@ label act1_maria_end:
 ## NPC 4 — MANONG CHRIS
 ## ============================================================================
 label act1_npc_manong_chris:
-    show manong_chris at left
     window show
     manong_chris "Ay, bag-o ka diri? Taga-diin ka?"
     player_char "Po? Sorry, I didn't catch that."
@@ -245,7 +238,6 @@ label act1_chris_end:
     manong_chris "And if you're ever lost—just look for the church tower. You can see it from almost anywhere."
     $ talked_chris = True
     $ complete_task("talk_manong_chris")
-    hide manong_chris
     window hide
     return
 
@@ -253,7 +245,6 @@ label act1_chris_end:
 ## NPC 5 — JOSEPH THE TRICYCLE DRIVER
 ## ============================================================================
 label act1_npc_joseph_driver:
-    show joseph_driver at right
     window show
     joseph "Sakay! Saan? Saan?"
     player_char "Actually, Joseph—wait, how did I know your name?"
@@ -321,7 +312,6 @@ label act1_joseph_end:
     joseph "Anytime! I'll be here."
     $ talked_joseph = True
     $ complete_task("talk_joseph_driver")
-    hide joseph_driver
     window hide
     return
 
