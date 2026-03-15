@@ -1,4 +1,4 @@
-﻿################################################################################
+################################################################################
 ## Styles
 ################################################################################
 init offset = -1
@@ -2042,7 +2042,7 @@ screen preferences():
                                 spacing 16
                                 text _("Sound") style "pref_slider_label_text"
                                 if config.sample_sound:
-                                    textbutton _("[ Test ]") action Play("sound", config.sample_sound) style "pref_test_btn"
+                                    textbutton _("[[ Test ]") action Play("sound", config.sample_sound) style "pref_test_btn"
                             bar value Preference("sound volume") style "pref_styled_bar_sfx"
 
                     if config.has_voice:
@@ -2053,7 +2053,7 @@ screen preferences():
                                 spacing 16
                                 text _("Voice") style "pref_slider_label_text"
                                 if config.sample_voice:
-                                    textbutton _("[ Test ]") action Play("voice", config.sample_voice) style "pref_test_btn"
+                                    textbutton _("[[ Test ]") action Play("voice", config.sample_voice) style "pref_test_btn"
                             bar value Preference("voice volume") style "pref_styled_bar_voice"
 
                     if config.has_music or config.has_sound or config.has_voice:
@@ -2960,3 +2960,869 @@ style slider_vbox:
 style slider_slider:
     variant "small"
     xsize 900
+
+
+## ============================================================================
+## GAME SCREENS — Notebook, Items, Quiz, Phone (moved from dialogue_act1.rpy)
+## These are universal screens available across all acts.
+## ============================================================================
+
+## ----------------------------------------------------------------------------
+## SCREEN: NOTEBOOK INTRO ANIMATION
+## Shows the notebook with blank questions before Act 1 starts
+## ----------------------------------------------------------------------------
+
+screen notebook_intro_screen():
+    modal True
+    zorder 200
+
+    add "#1a1a2e" alpha 0.97
+
+    frame:
+        xalign 0.5
+        yalign 0.5
+        xsize 680
+        ysize 560
+        background "#0f0f1a"
+        padding (0,0,0,0)
+
+        vbox:
+            spacing 0
+
+            ## Header
+            frame:
+                background "#1e1e3a"
+                xfill True
+                padding (32, 20, 32, 20)
+                hbox:
+                    spacing 12
+                    text "🔍" size 28
+                    vbox:
+                        spacing 2
+                        text "DETECTIVE NOTEBOOK" size 13 color "#a78bfa" bold True
+                        text "Freshie Field Notes — Day 1" size 11 color "#6b7280"
+
+            ## Questions list
+            frame:
+                background "#111128"
+                xfill True
+                ysize 420
+                padding (28, 20, 28, 20)
+
+                vbox:
+                    spacing 10
+
+                    text "Find answers to these questions by talking to the locals." size 12 color "#9ca3af" italic True
+
+                    null height 8
+
+                    for q in notebook_questions:
+                        frame:
+                            background "#1a1a30"
+                            xfill True
+                            padding (16, 12, 16, 12)
+                            hbox:
+                                spacing 12
+                                xfill True
+                                text "?" size 18 color "#a78bfa" yalign 0.5
+                                vbox:
+                                    spacing 2
+                                    xfill True
+                                    text q.text size 13 color "#e2e8f0"
+                                    text "[[ not yet discovered ]" size 11 color "#4b5563" italic True
+
+            ## Button
+            frame:
+                background "#1e1e3a"
+                xfill True
+                padding (32, 16, 32, 16)
+                textbutton "Start Exploring →":
+                    xalign 0.5
+                    style "notebook_btn"
+                    action Return()
+
+style notebook_btn:
+    background "#7C3AED"
+    hover_background "#6d28d9"
+    padding (24, 10, 24, 10)
+
+style notebook_btn_text:
+    color "#ffffff"
+    hover_color "#ffffff"
+    size 13
+    bold True
+
+## ----------------------------------------------------------------------------
+## SCREEN: ITEM PICKUP NOTIFICATION
+## Brief flash when player receives an info item
+## ----------------------------------------------------------------------------
+
+screen item_pickup_screen(item):
+    zorder 300
+    modal False
+
+    frame:
+        xalign 0.5
+        yalign 0.0
+        yoffset 80
+        background "#1e1e3a"
+        padding (20, 14, 24, 14)
+        at item_pickup_anim
+
+        hbox:
+            spacing 12
+            yalign 0.5
+            text item.icon size 22 yalign 0.5
+            vbox:
+                spacing 2
+                text "INFO ITEM COLLECTED" size 10 color "#a78bfa" bold True
+                text item.label size 13 color "#f1f5f9" bold True
+                text item.short size 11 color "#94a3b8"
+
+transform item_pickup_anim:
+    alpha 0.0 yoffset -20
+    ease 0.3 alpha 1.0 yoffset 0
+    pause 2.0
+    ease 0.4 alpha 0.0 yoffset -10
+
+## ----------------------------------------------------------------------------
+## SCREEN: INVENTORY (can be toggled, I key)
+## ----------------------------------------------------------------------------
+
+screen inventory_screen():
+    modal True
+    zorder 150
+
+    key "K_p" action Hide("phone_screen")
+    key "K_i" action Hide("inventory_screen")
+    key "K_ESCAPE" action Hide("inventory_screen")
+    key "K_e" action [Hide("inventory_screen"), Show("encyclopedia_screen")]
+
+    add "#000000" alpha 0.6
+
+    frame:
+        xalign 0.5
+        yalign 0.5
+        xsize 800
+        ysize 540
+        background "#F9F6F0" # Book paper color
+        padding (0, 0, 0, 0)
+
+        # Spine shadow in the middle
+        add Solid("#E8E0D5"):
+            xalign 0.5
+            xsize 2
+            ysize 540
+
+        vbox:
+            spacing 0
+
+            # Header
+            frame:
+                background "#2C3E50"
+                xfill True
+                padding (30, 20, 30, 20)
+                hbox:
+                    xfill True
+                    text "FRESHMAN DICTIONARY" size 16 color "#F9F6F0" bold True xalign 0.0 yalign 0.5
+                    text "Entries: [len(collected_items)]/14" size 14 color "#BDC3C7" xalign 1.0 yalign 0.5
+
+            # Content
+            frame:
+                background None
+                xfill True
+                ysize 420
+                padding (40, 30, 40, 30)
+
+                vpgrid:
+                    cols 2
+                    spacing 40
+                    xfill True
+                    yinitial 0.0
+
+                    if len(collected_items) == 0:
+                        text "No entries yet.\nTalk to locals to gather information." size 14 color "#7F8C8D" italic True xalign 0.5
+
+                    for item in collected_items:
+                        vbox:
+                            xfill True
+                            spacing 6
+
+                            # Term and Source
+                            hbox:
+                                spacing 8
+                                text item.icon size 18 yalign 0.5
+                                text item.label size 16 color "#2C3E50" bold True yalign 0.5
+                                text "— " + item.source size 11 color "#95A5A6" italic True yalign 0.7
+                            
+                            # Definition
+                            text item.short size 13 color "#34495E"
+                            
+                            # Separator
+                            null height 8
+                            # ✅ FIX
+                            frame:
+                                background Solid("#E0DCD3")
+                                xfill True
+                                ysize 1
+                                padding (0, 0, 0, 0)
+
+            # Footer
+            frame:
+                background None
+                xfill True
+                padding (20, 10, 20, 10)
+                hbox:
+                    xalign 0.5
+                    spacing 24
+                    text "[[I]] / [[ESC]] — Close" size 11 color "#95A5A6" italic True yalign 0.5
+                    textbutton "📖 Encyclopedia [[E]]":
+                        style "inv_enc_btn"
+                        action [Hide("inventory_screen"), Show("encyclopedia_screen")]
+
+style inv_enc_btn:
+    background "#2C3E50"
+    hover_background "#1e2d3d"
+    padding (10, 5, 10, 5)
+    color "#BDC3C7"
+    hover_color "#ffffff"
+    size 11
+
+## ----------------------------------------------------------------------------
+## SCREEN: ENCYCLOPEDIA — Detailed knowledge book, organised by NPC source
+## Key: E (on map or from inventory)
+## ----------------------------------------------------------------------------
+
+screen encyclopedia_screen():
+    modal True
+    zorder 155
+
+    key "K_e" action Hide("encyclopedia_screen")
+    key "K_i" action [Hide("encyclopedia_screen"), Show("inventory_screen")]
+    key "K_ESCAPE" action Hide("encyclopedia_screen")
+
+    default enc_selected = ""
+
+    add "#000000" alpha 0.78
+
+    python:
+        _enc_order = ["Jaden", "Manong Josh", "Aleng Maria", "Manong Chris", "Tol Joseph"]
+        _enc_has   = [s for s in _enc_order if any(i.source == s for i in collected_items)]
+        _enc_extra = [s for s in dict.fromkeys(i.source for i in collected_items) if s not in _enc_order]
+        _enc_srcs  = _enc_has + _enc_extra
+
+        _enc_meta = {
+            "Jaden":        ("🎒", "Fellow freshie from Iloilo City with UPV tips."),
+            "Manong Josh":  ("🏘️", "Long-time Miagao local who knows every corner."),
+            "Aleng Maria":  ("🍚", "Carinderia owner near the UPV gate — feeds half the campus."),
+            "Manong Chris": ("🙏", "Born-and-raised Miagaoanon fluent in Kinaray-a."),
+            "Tol Joseph":   ("🛺", "The tricycle driver who knows every route and fare."),
+        }
+
+    frame:
+        xalign 0.5
+        yalign 0.5
+        xsize 880
+        ysize 560
+        background "#F5EFE0"
+        padding (0, 0, 0, 0)
+
+        vbox:
+            spacing 0
+
+            ## Header
+            frame:
+                background "#1e130a"
+                xfill True
+                padding (28, 14, 28, 14)
+                hbox:
+                    xfill True
+                    yalign 0.5
+                    vbox:
+                        spacing 2
+                        text "📖  MIAGAO FRESHMAN ENCYCLOPEDIA" size 15 color "#d4a843" bold True
+                        text "Complete knowledge gathered from locals" size 10 color "#8b7355" italic True
+                    text "[len(collected_items)] entries" size 12 color "#8b6914" xalign 1.0 yalign 0.5
+
+            ## Body
+            hbox:
+                spacing 0
+
+                ## TOC panel
+                frame:
+                    xsize 210
+                    ysize 492
+                    background "#E8DFC8"
+                    padding (0, 0, 0, 0)
+
+                    vbox:
+                        spacing 0
+                        frame:
+                            background "#2c1810"
+                            xfill True
+                            padding (14, 10, 14, 10)
+                            text "CHAPTERS" size 10 color "#d4a843" bold True
+
+                        if len(_enc_srcs) == 0:
+                            frame:
+                                background None
+                                xfill True
+                                padding (14, 20, 14, 20)
+                                text "Talk to locals to\nunlock chapters." size 11 color "#8b7355" italic True
+
+                        for _esrc in _enc_srcs:
+                            python:
+                                _emeta  = _enc_meta.get(_esrc, ("📄", "A local source."))
+                                _ecount = len([i for i in collected_items if i.source == _esrc])
+                                _eword  = "entry" if _ecount == 1 else "entries"
+                                _eact   = (enc_selected == _esrc)
+
+                            button:
+                                xfill True
+                                background ("#3d2214" if _eact else None)
+                                hover_background "#2c1810"
+                                padding (14, 12, 14, 12)
+                                action SetScreenVariable("enc_selected", _esrc)
+                                hbox:
+                                    spacing 8
+                                    text _emeta[0] size 14 yalign 0.5
+                                    vbox:
+                                        spacing 1
+                                        text _esrc size 12 color ("#d4a843" if _eact else "#4a3020") bold True
+                                        text "[_ecount] [_eword]" size 9 color "#8b7355"
+
+                            frame:
+                                background Solid("#D4C4A066")
+                                xfill True
+                                ysize 1
+                                padding (0, 0, 0, 0)
+
+                ## Spine
+                frame:
+                    xsize 3
+                    ysize 492
+                    background "#d4a843"
+                    padding (0, 0, 0, 0)
+
+                ## Content panel
+                frame:
+                    xsize 667
+                    ysize 492
+                    background "#FDFAF4"
+                    padding (0, 0, 0, 0)
+
+                    if enc_selected == "":
+                        frame:
+                            xfill True
+                            ysize 492
+                            background None
+                            vbox:
+                                xalign 0.5
+                                yalign 0.5
+                                spacing 14
+                                text "📖" size 52 xalign 0.5
+                                text "Select a Chapter" size 18 color "#4a3020" bold True xalign 0.5
+                                text "Choose a source from the left\nto read the knowledge you collected." size 12 color "#8b7355" italic True xalign 0.5 text_align 0.5
+
+                    else:
+                        python:
+                            _eitems  = [i for i in collected_items if i.source == enc_selected]
+                            _echmeta = _enc_meta.get(enc_selected, ("📄", "Information gathered from a local."))
+
+                        vbox:
+                            spacing 0
+
+                            ## Chapter header
+                            frame:
+                                background "#E8DFC8"
+                                xfill True
+                                padding (20, 12, 20, 12)
+                                hbox:
+                                    spacing 12
+                                    text _echmeta[0] size 26 yalign 0.5
+                                    vbox:
+                                        spacing 2
+                                        text enc_selected size 17 color "#1e130a" bold True
+                                        text _echmeta[1] size 11 color "#6b5a3a" italic True
+
+                            ## Scrollable entries
+                            viewport:
+                                xfill True
+                                ysize 398
+                                scrollbars "vertical"
+                                mousewheel True
+                                yinitial 0.0
+
+                                frame:
+                                    xfill True
+                                    background None
+                                    padding (20, 12, 20, 12)
+
+                                    vbox:
+                                        xfill True
+                                        spacing 0
+
+                                        for _eitem in _eitems:
+                                            frame:
+                                                xfill True
+                                                background None
+                                                padding (0, 10, 0, 10)
+                                                vbox:
+                                                    xfill True
+                                                    spacing 5
+
+                                                    hbox:
+                                                        spacing 10
+                                                        text _eitem.icon size 20 yalign 0.5
+                                                        text _eitem.label size 14 color "#1e130a" bold True yalign 0.5
+
+                                                    text _eitem.short size 12 color "#3a2a1a"
+
+                                                    if _eitem.full and _eitem.full != _eitem.short:
+                                                        null height 4
+                                                        frame:
+                                                            background "#EDE4CC"
+                                                            xfill True
+                                                            padding (12, 8, 12, 8)
+                                                            text _eitem.full size 11 color "#4a3a1a"
+
+                                                    null height 6
+                                                    frame:
+                                                        background Solid("#D8CCAA")
+                                                        xfill True
+                                                        ysize 1
+                                                        padding (0, 0, 0, 0)
+
+            ## Footer
+            frame:
+                background "#E8DFC8"
+                xfill True
+                padding (20, 8, 20, 8)
+                hbox:
+                    xalign 0.5
+                    spacing 24
+                    text "[[E]] / [[ESC]] — Close" size 10 color "#8b7355" italic True yalign 0.5
+                    text "[[I]] — Dictionary" size 10 color "#8b7355" italic True yalign 0.5
+                    text "Scroll with mouse wheel" size 10 color "#8b7355" italic True yalign 0.5
+
+## ----------------------------------------------------------------------------
+## SCREEN: QUIZ MINIGAME
+## Player drags/selects items to answer notebook questions
+## ----------------------------------------------------------------------------
+
+screen quiz_screen():
+    modal True
+    zorder 200
+
+    add "#0a0a1a" alpha 0.98
+
+    default quiz_state = {
+        "current_q": 0,
+        "score": 0,
+        "done": False,
+        "feedback": None,
+        "chosen": None,
+    }
+
+    use quiz_inner(quiz_state)
+
+screen quiz_inner(state):
+
+    python:
+        q       = notebook_questions[state["current_q"]]
+        total_q = len(notebook_questions)
+        items   = collected_items[:]
+
+    frame:
+        xalign 0.5
+        yalign 0.5
+        xsize 700
+        background "#0f0f1a"
+        padding (0, 0, 0, 0)
+
+        vbox:
+            spacing 0
+
+            ## Top bar
+            frame:
+                background "#1e1e3a"
+                xfill True
+                padding (24, 16, 24, 16)
+                hbox:
+                    xfill True
+                    vbox:
+                        text "🔍  NOTEBOOK QUIZ" size 13 color "#a78bfa" bold True
+                        text "Question [state['current_q']+1] of [total_q]" size 11 color "#6b7280"
+                    text "Score: [state['score']]/[total_q]" size 13 color "#10b981" bold True xalign 1.0 yalign 0.5
+
+            ## Progress bar
+            frame:
+                background "#111128"
+                xfill True
+                ysize 6
+                padding (0, 0, 0, 0)
+                frame:
+                    background "#7C3AED"
+                    xsize int(700 * (state["current_q"] / total_q))
+                    ysize 6
+
+            ## Question
+            frame:
+                background "#111128"
+                xfill True
+                padding (32, 24, 32, 16)
+                vbox:
+                    spacing 8
+                    text "QUESTION" size 10 color "#a78bfa" bold True
+                    text q.text size 16 color "#f1f5f9" bold True
+                    text "Select the info item that answers this question:" size 12 color "#9ca3af" italic True
+
+                    if state["feedback"] == "correct":
+                        frame:
+                            background "#064e3b"
+                            xfill True
+                            padding (12, 8, 12, 8)
+                            text "✓  Correct! That information answers this question." size 12 color "#10b981"
+
+                    elif state["feedback"] == "wrong":
+                        frame:
+                            background "#450a0a"
+                            xfill True
+                            padding (12, 8, 12, 8)
+                            text "✗  Not quite. Hint: [q.hint]" size 12 color "#f87171"
+
+            ## Items grid
+            frame:
+                background "#0d0d20"
+                xfill True
+                padding (16, 12, 16, 12)
+
+                vpgrid:
+                    cols 2
+                    xfill True
+                    spacing 8
+
+                    for item in items:
+                        python:
+                            is_chosen  = (state["chosen"] == item.item_id)
+                            bg_color   = "#2e1065" if is_chosen else "#1a1a2e"
+                            border_col = "#7C3AED" if is_chosen else "#1e1e3a"
+
+                        button:
+                            background bg_color
+                            xfill True
+                            padding (12, 10, 12, 10)
+                            if state["feedback"] is None:
+                                action [
+                                    SetDict(state, "chosen", item.item_id),
+                                ]
+                            else:
+                                action NullAction()
+                            hbox:
+                                spacing 10
+                                yalign 0.5
+                                text item.icon size 18 yalign 0.5
+                                vbox:
+                                    spacing 2
+                                    text item.label size 12 color "#e2e8f0" bold True
+                                    text item.short size 10 color "#94a3b8"
+
+            ## Confirm button
+            frame:
+                background "#1e1e3a"
+                xfill True
+                padding (24, 14, 24, 14)
+
+                if state["feedback"] is None:
+                    textbutton "Confirm Answer →":
+                        xalign 0.5
+                        style "quiz_btn"
+                        sensitive (state["chosen"] is not None)
+                        action [
+                            Function(save_quiz_answer, state["current_q"], state["chosen"]),
+                            If(
+                                state["chosen"] == q.correct_item_id,
+                                [
+                                    SetDict(state, "feedback", "correct"),
+                                    SetDict(state, "score", state["score"] + 1),
+                                ],
+                                SetDict(state, "feedback", "wrong")
+                            )
+                        ]
+
+                else:
+                    python:
+                        next_label = "Next Question →" if state["current_q"] < total_q - 1 else "Finish Quiz ✓"
+
+                    textbutton next_label:
+                        xalign 0.5
+                        style "quiz_btn"
+                        action [
+                            If(
+                                state["current_q"] < total_q - 1,
+                                [
+                                    SetDict(state, "current_q", state["current_q"] + 1),
+                                    SetDict(state, "feedback",  None),
+                                    SetDict(state, "chosen",    None),
+                                ],
+                                [
+                                    SetVariable("quiz_score", state["score"]),
+                                    Return(state["score"])
+                                ]
+                            )
+                        ]
+
+style quiz_btn:
+    background "#7C3AED"
+    hover_background "#6d28d9"
+    insensitive_background "#2d2d4a"
+    padding (28, 10, 28, 10)
+    color "#ffffff"
+    insensitive_color "#4b5563"
+    hover_color "#ffffff"
+    size 13
+    bold True
+
+## ----------------------------------------------------------------------------
+## SCREEN: QUIZ RESULTS
+## ----------------------------------------------------------------------------
+
+screen quiz_results_screen(score):
+    modal True
+    zorder 200
+
+    add "#000000" alpha 0.95
+
+    frame:
+        xalign 0.5
+        yalign 0.5
+        xsize 520
+        background "#0f0f1a"
+        padding (0, 0, 0, 0)
+
+        vbox:
+            spacing 0
+
+            frame:
+                background "#1e1e3a"
+                xfill True
+                padding (32, 24, 32, 20)
+                vbox:
+                    spacing 8
+                    xalign 0.5
+                    text "🔍  CASE CLOSED" size 22 color "#a78bfa" bold True xalign 0.5
+
+                    python:
+                        total = len(notebook_questions)
+                        total_q = len(notebook_questions)
+                        pct   = int((score / total) * 100)
+                        if pct == 100:
+                            grade   = "PERFECT DETECTIVE"
+                            g_color = "#10b981"
+                            g_msg   = "You absorbed everything. Miagao has no secrets from you."
+                        elif pct >= 66:
+                            grade   = "GOOD INSTINCTS"
+                            g_color = "#f59e0b"
+                            g_msg   = "Solid work. A few gaps — but you'll fill them in time."
+                        else:
+                            grade   = "STILL LEARNING"
+                            g_color = "#f87171"
+                            g_msg   = "You missed some locals. Their knowledge would have helped."
+
+                    text "[score]/[total_q]  ([pct]%%)" size 36 color g_color bold True xalign 0.5
+                    text grade size 13 color g_color bold True xalign 0.5
+                    null height 4
+                    text g_msg size 12 color "#9ca3af" italic True xalign 0.5
+
+            frame:
+                background "#111128"
+                xfill True
+                padding (24, 16, 24, 16)
+                vbox:
+                    spacing 6
+                    for i in range(len(notebook_questions)):
+                        python:
+                            q2   = notebook_questions[i]
+                            ok   = q2.answered and (q2.chosen_item_id == q2.correct_item_id)
+                            ic   = "✓" if ok else "✗"
+                            tcol = "#10b981" if ok else "#f87171"
+                        hbox:
+                            spacing 10
+                            text ic size 13 color tcol yalign 0.5
+                            text q2.text size 12 color "#cbd5e1" yalign 0.5
+
+            frame:
+                background "#1e1e3a"
+                xfill True
+                padding (24, 14, 24, 14)
+
+                if score >= 4:
+                    textbutton "Continue to BOX 1 →":
+                        xalign 0.5
+                        style "notebook_btn"
+                        action Return()
+                else:
+                    vbox:
+                        spacing 8
+                        text "You need at least 4/6 correct to enter BOX 1." size 12 color "#f87171" italic True xalign 0.5
+                        textbutton "Try Again":
+                            xalign 0.5
+                            style "quiz_btn"
+                            action Return(-1)
+
+## ----------------------------------------------------------------------------
+## SCREEN: PHONE / GROUP CHAT UI
+## Toggle with [P] key — available universally after GC unlock in Act 1
+## ----------------------------------------------------------------------------
+
+screen phone_screen():
+    modal True
+    zorder 250
+
+    key "p" action Hide("phone_screen")
+    key "K_ESCAPE" action Hide("phone_screen")
+
+    add "#000000" alpha 0.6
+
+    ## Phone frame
+    frame:
+        xalign 0.98
+        yalign 0.5
+        xsize 320
+        ysize 580
+        background "#111111"
+        padding (0, 0, 0, 0)
+
+        vbox:
+            spacing 0
+
+            ## Status bar
+            frame:
+                background "#1a1a1a"
+                xfill True
+                ysize 28
+                padding (12, 0, 12, 0)
+                hbox:
+                    xfill True
+                    yalign 0.5
+                    text "9:41 AM" size 10 color "#ffffff" bold True yalign 0.5
+                    text "●●●  WiFi  🔋" size 9 color "#9ca3af" xalign 1.0 yalign 0.5
+
+            ## App bar
+            frame:
+                background "#1e1e1e"
+                xfill True
+                padding (12, 10, 12, 10)
+                hbox:
+                    spacing 10
+                    xfill True
+                    yalign 0.5
+                    text "←" size 14 color "#7C3AED" yalign 0.5
+                    vbox:
+                        spacing 1
+                        text "UPV Freshies 2024 🌊" size 12 color "#f1f5f9" bold True
+                        text "Batch [gc_open_count]/[len(gc_all_messages)]  •  4 members" size 10 color "#6b7280"
+                    text "⋮" size 16 color "#6b7280" xalign 1.0 yalign 0.5
+
+            ## Messages area
+            frame:
+                background "#0d0d0d"
+                xfill True
+                ysize 430
+                padding (8, 8, 8, 8)
+
+                vpgrid:
+                    cols 1
+                    xfill True
+                    yinitial 1.0
+                    spacing 10
+
+                    if len(gc_revealed) == 0:
+                        frame:
+                            background "#1a1a1a"
+                            xfill True
+                            padding (12, 16, 12, 16)
+                            text "Talk to Jaden again to unlock the group chat..." size 11 color "#4b5563" italic True xalign 0.5
+
+                    for idx in gc_revealed:
+                        python:
+                            msg   = gc_all_messages[idx // 3][idx % 3]
+                            align = 1.0 if msg.is_player else 0.0
+
+                        if msg.is_player:
+                            hbox:
+                                xfill True
+                                xalign 1.0
+                                null width 40
+                                frame:
+                                    background "#7C3AED"
+                                    padding (10, 7, 10, 7)
+                                    text msg.text size 11 color "#ffffff"
+
+                        else:
+                            hbox:
+                                spacing 6
+                                xfill True
+
+                                ## Avatar circle (simulated)
+                                frame:
+                                    background msg.avatar_color
+                                    xsize 28
+                                    ysize 28
+                                    padding (0, 0, 0, 0)
+                                    text msg.sender[0] size 12 color "#ffffff" bold True xalign 0.5 yalign 0.5
+
+                                vbox:
+                                    spacing 2
+                                    text msg.sender size 10 color "#9ca3af" bold True
+                                    frame:
+                                        background "#1e1e1e"
+                                        padding (10, 7, 10, 7)
+                                        text msg.text size 11 color "#e2e8f0"
+
+                                null width 40
+
+            ## Input bar + load more
+            frame:
+                background "#1a1a1a"
+                xfill True
+                padding (8, 8, 8, 8)
+                vbox:
+                    spacing 6
+
+                    if gc_open_count < len(gc_all_messages):
+                        textbutton "Next Batch →  ([gc_open_count + 1]/[len(gc_all_messages)])":
+                            xalign 0.5
+                            style "gc_load_btn"
+                            action [
+                                Function(reveal_gc_batch),
+                                Function(renpy.restart_interaction),
+                            ]
+
+                    hbox:
+                        spacing 6
+                        xfill True
+                        frame:
+                            background "#2a2a2a"
+                            xfill True
+                            padding (10, 8, 10, 8)
+                            text "Type a message..." size 11 color "#4b5563" italic True
+                        frame:
+                            background "#7C3AED"
+                            padding (10, 8, 10, 8)
+                            text "➤" size 12 color "#ffffff"
+
+            ## Close hint
+            frame:
+                background "#111111"
+                xfill True
+                padding (8, 6, 8, 6)
+                text "Press [[P]] to put phone away" size 9 color "#374151" italic True xalign 0.5
+
+style gc_load_btn:
+    background "#1e1e2e"
+    hover_background "#2d2d4a"
+    padding (16, 6, 16, 6)
+    color "#a78bfa"
+    hover_color "#c4b5fd"
+    size 11

@@ -56,6 +56,11 @@ screen map_screen(map_bg, nodes, task_text="", map_scale=1.0):
 
     predict False
 
+    ## Key bindings for phone, inventory, encyclopedia — overlays so the map stays visible
+    key "p" action If(phone_unlocked, Show("phone_screen"), NullAction())
+    key "i" action If(inventory_unlocked, Show("inventory_screen"), NullAction())
+    key "e" action If(inventory_unlocked, Show("encyclopedia_screen"), NullAction())
+
     ## Black background behind everything
     add Solid("#000000"):
         xysize (1920, 1080)

@@ -1,4 +1,4 @@
-﻿## ============================================================================
+## ============================================================================
 ## MIAGAO FRESHMAN GUIDE — Main Game Script
 ## ============================================================================
 ## A point-and-click adventure set in UP Visayas - Miagao campus.
@@ -37,7 +37,7 @@ label start:
     $ player_map_x = 2300
     $ player_map_y = 3100
     $ player_facing = "up"
-    jump act1_map
+    jump act1_start
 
 
 ## ============================================================================
@@ -57,7 +57,7 @@ label act1_map:
         MapNode("aleng_maria",   3000, 2200, "act1_npc_aleng_maria",   tooltip="Aleng Maria",     icon_image="alengmaria.png",    locked=True),
         MapNode("manong_chris",  3600, 3000, "act1_npc_manong_chris",  tooltip="Manong Chris",    icon_image="manongchris.png",   locked=True),
         MapNode("joseph_driver", 2500, 3800, "act1_npc_joseph_driver", tooltip="Joseph (Driver)", icon_image="manong_driver.png",  locked=True),
-        MapNode("box1",          4200, 1800, "act1_box1_arrive",       tooltip="BOX 1",           icon_image="box1.png",           locked=True),
+        MapNode("box1",          4200, 1800, "act1_prebox1_gate",      tooltip="BOX 1",           icon_image="box1.png",           locked=True),
     ]
 
     $ current_task_text = "Talk to Jaden near the Banwa entrance"
@@ -75,6 +75,8 @@ label act1_loop:
         if "talk_jaden" in tasks_completed:
             $ act1_nodes[1].locked = False
             $ act1_nodes[2].locked = False
+            ## Switch Jaden's target to second talk (unlocks GC)
+            $ act1_nodes[0].target_label = "act1_npc_jaden_second"
 
         if "talk_manong_josh" in tasks_completed or "talk_aleng_maria" in tasks_completed:
             $ act1_nodes[3].locked = False
@@ -90,10 +92,19 @@ label act1_loop:
             "talk_joseph_driver" in tasks_completed
         ):
             $ act1_nodes[5].locked = False
-            $ current_task_text = "Head to BOX 1 at the edge of the Banwa Area"
+            $ current_task_text = "Talk to Jaden again, then head to BOX 1"
 
         if is_act_complete():
             jump act1_complete
+
+    ## Phone toggle (P key) — universal
+    if _action == "phone":
+        call phone_check
+
+    ## Inventory toggle (I key) — universal
+    if _action == "inventory":
+        if inventory_unlocked:
+            call screen inventory_screen()
 
     jump act1_loop
 
