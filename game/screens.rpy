@@ -1,4 +1,4 @@
-################################################################################
+﻿################################################################################
 ## Styles
 ################################################################################
 init offset = -1
@@ -387,7 +387,7 @@ screen say(who, what):
                                 xfill True
                                 ysize 240
                                 padding (0, 0, 0, 0)
-                                background None
+                                background Solid("#00000000")
                                 if _speaker_portrait is not None:
                                     add _speaker_portrait:
                                         xalign 0.5
@@ -551,7 +551,7 @@ style window:
     left_margin 280
     right_margin 80
     bottom_margin 56
-    background None
+    background Solid("#00000000")
     padding (0, 0, 0, 0)
 
 style say_content_vbox is vbox:
@@ -1007,10 +1007,10 @@ style choice_area is default:
 
 style choice_button is default:
     properties gui.button_properties("choice_button")
-    background None
+    background Solid("#00000000")
     hover_background Frame(Solid("#f6d79d11"), 0, 0)
-    selected_background None
-    insensitive_background None
+    selected_background Solid("#00000000")
+    insensitive_background Solid("#00000000")
     left_padding 8
     right_padding 8
     top_padding 4
@@ -1553,7 +1553,7 @@ style mm_btn is button:
     xsize 260
     ysize 80
     padding (0, 0, 0, 0)
-    idle_background None
+    idle_background Solid("#00000000")
     hover_background Frame(Solid("#00cc9922"), 4, 4, 4, 4)
 
 style mm_btn_text is text:
@@ -2042,7 +2042,7 @@ screen preferences():
                                 spacing 16
                                 text _("Sound") style "pref_slider_label_text"
                                 if config.sample_sound:
-                                    textbutton _("[[ Test ]") action Play("sound", config.sample_sound) style "pref_test_btn"
+                                    textbutton _("[ Test ]") action Play("sound", config.sample_sound) style "pref_test_btn"
                             bar value Preference("sound volume") style "pref_styled_bar_sfx"
 
                     if config.has_voice:
@@ -2053,7 +2053,7 @@ screen preferences():
                                 spacing 16
                                 text _("Voice") style "pref_slider_label_text"
                                 if config.sample_voice:
-                                    textbutton _("[[ Test ]") action Play("voice", config.sample_voice) style "pref_test_btn"
+                                    textbutton _("[ Test ]") action Play("voice", config.sample_voice) style "pref_test_btn"
                             bar value Preference("voice volume") style "pref_styled_bar_voice"
 
                     if config.has_music or config.has_sound or config.has_voice:
@@ -2167,8 +2167,8 @@ style pref_styled_bar_voice is pref_styled_bar:
 # ── Test Button ──
 style pref_test_btn is gui_button:
     padding (8, 4, 8, 4)
-    idle_background None
-    hover_background None
+    idle_background Solid("#00000000")
+    hover_background Solid("#00000000")
     yalign 0.5
 
 style pref_test_btn_text:
@@ -2898,13 +2898,13 @@ style main_menu_frame:
     background "gui/phone/overlay/main_menu.png"
 
 style game_menu_outer_frame:
-    background None 
+    background Solid("#00000000")
 
 style game_menu_navigation_frame:
-    background None 
+    background Solid("#00000000")
 
 style game_menu_content_frame:
-    background None 
+    background Solid("#00000000")
 
 # Styling the sliders to be thin and elegant instead of blocky
 
@@ -3029,7 +3029,7 @@ screen notebook_intro_screen():
                                     spacing 2
                                     xfill True
                                     text q.text size 13 color "#e2e8f0"
-                                    text "[[ not yet discovered ]" size 11 color "#4b5563" italic True
+                                    text "[ not yet discovered ]" substitute False size 11 color "#4b5563" italic True
 
             ## Button
             frame:
@@ -3129,7 +3129,7 @@ screen inventory_screen():
 
             # Content
             frame:
-                background None
+                background Solid("#00000000")
                 xfill True
                 ysize 420
                 padding (40, 30, 40, 30)
@@ -3169,14 +3169,14 @@ screen inventory_screen():
 
             # Footer
             frame:
-                background None
+                background Solid("#00000000")
                 xfill True
                 padding (20, 10, 20, 10)
                 hbox:
                     xalign 0.5
                     spacing 24
-                    text "[[I]] / [[ESC]] — Close" size 11 color "#95A5A6" italic True yalign 0.5
-                    textbutton "📖 Encyclopedia [[E]]":
+                    text "[[I]] / [[ESC]] — Close" substitute False size 11 color "#95A5A6" italic True yalign 0.5
+                    textbutton "📖 Encyclopedia [[E]]" substitute False:
                         style "inv_enc_btn"
                         action [Hide("inventory_screen"), Show("encyclopedia_screen")]
 
@@ -3265,7 +3265,7 @@ screen encyclopedia_screen():
 
                         if len(_enc_srcs) == 0:
                             frame:
-                                background None
+                                background Solid("#00000000")
                                 xfill True
                                 padding (14, 20, 14, 20)
                                 text "Talk to locals to\nunlock chapters." size 11 color "#8b7355" italic True
@@ -3315,7 +3315,7 @@ screen encyclopedia_screen():
                         frame:
                             xfill True
                             ysize 492
-                            background None
+                            background Solid("#00000000")
                             vbox:
                                 xalign 0.5
                                 yalign 0.5
@@ -3355,7 +3355,7 @@ screen encyclopedia_screen():
 
                                 frame:
                                     xfill True
-                                    background None
+                                    background Solid("#00000000")
                                     padding (20, 12, 20, 12)
 
                                     vbox:
@@ -3365,7 +3365,7 @@ screen encyclopedia_screen():
                                         for _eitem in _eitems:
                                             frame:
                                                 xfill True
-                                                background None
+                                                background Solid("#00000000")
                                                 padding (0, 10, 0, 10)
                                                 vbox:
                                                     xfill True
@@ -3401,8 +3401,8 @@ screen encyclopedia_screen():
                 hbox:
                     xalign 0.5
                     spacing 24
-                    text "[[E]] / [[ESC]] — Close" size 10 color "#8b7355" italic True yalign 0.5
-                    text "[[I]] — Dictionary" size 10 color "#8b7355" italic True yalign 0.5
+                    text "[[E]] / [[ESC]] — Close" substitute False size 10 color "#8b7355" italic True yalign 0.5
+                    text "[[I]] — Dictionary" substitute False size 10 color "#8b7355" italic True yalign 0.5
                     text "Scroll with mouse wheel" size 10 color "#8b7355" italic True yalign 0.5
 
 ## ----------------------------------------------------------------------------
@@ -3817,7 +3817,7 @@ screen phone_screen():
                 background "#111111"
                 xfill True
                 padding (8, 6, 8, 6)
-                text "Press [[P]] to put phone away" size 9 color "#374151" italic True xalign 0.5
+                text "Press [[P]] to put phone away" substitute False size 9 color "#374151" italic True xalign 0.5
 
 style gc_load_btn:
     background "#1e1e2e"

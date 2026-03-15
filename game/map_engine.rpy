@@ -86,8 +86,8 @@ screen map_screen(map_bg, nodes, task_text="", map_scale=1.0):
                 ypos _sy - 70
                 xysize (80, 90)
                 action Return(("walk", node))
-                background None
-                hover_background None
+                background Solid("#00000000")
+                hover_background Solid("#00000000")
 
                 vbox:
                     xalign 0.5
@@ -118,7 +118,7 @@ screen map_screen(map_bg, nodes, task_text="", map_scale=1.0):
                 xpos _sx - 40
                 ypos _sy - 70
                 xysize (80, 90)
-                background None
+                background Solid("#00000000")
 
                 vbox:
                     xalign 0.5
