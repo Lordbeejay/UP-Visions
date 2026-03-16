@@ -12,7 +12,7 @@ default game_complete = False
 ## Each act has a set of task IDs the player must complete to advance
 define ACT1_TASKS = {"talk_jaden", "talk_manong_josh", "talk_aleng_maria", "talk_manong_chris", "talk_joseph_driver", "reach_box1"}
 define ACT2_TASKS = {"talk_ate_bea", "talk_kuya_mark", "go_to_newad", "talk_maam_reyes", "complete_flip_card"}
-define ACT3_TASKS = {"talk_mikhaela", "talk_jaden", "talk_caezar"}
+define ACT3_TASKS = {"talk_sir_noel", "view_crs_portal", "complete_enrollment_tetris"}
 define ACT4_TASKS = {"talk_dorm_manager"}
 
 ## --- Acts 5–8 Task Requirements ---
@@ -40,8 +40,9 @@ define TASK_DESCRIPTIONS = {
     "go_to_newad": "Go to New Admin",
     "talk_maam_reyes": "Talk to Ma'am Reyes",
     "complete_flip_card": "Complete the Office Match Game",
-    "talk_mikhaela": "Find Sarah",
-    "talk_caezar": "Meet Caezar at Ceazar",
+    "talk_sir_noel": "Talk to Sir Noel",
+    "view_crs_portal": "View the CRS Portal",
+    "complete_enrollment_tetris": "Complete Enrollment Tetris",
     "talk_dorm_manager": "Talk to the Dorm Manager",
     "talk_prof_lena": "Talk to Prof. Lena",
     "talk_kuya_rico": "Talk to Kuya Rico",
@@ -68,7 +69,7 @@ define TASK_DESCRIPTIONS = {
 define ACT_TASK_ORDER = {
     1: ["talk_jaden", "talk_manong_josh", "talk_aleng_maria", "talk_manong_chris", "talk_joseph_driver", "reach_box1"],
     2: ["talk_ate_bea", "talk_kuya_mark", "go_to_newad", "talk_maam_reyes", "complete_flip_card"],
-    3: ["talk_jaden", "talk_mikhaela", "talk_caezar"],
+    3: ["talk_sir_noel", "view_crs_portal", "complete_enrollment_tetris"],
     4: ["talk_dorm_manager"],
     5: ["talk_prof_lena", "talk_kuya_rico", "talk_ate_grace", "talk_classmate_dan", "attend_first_class"],
     6: ["talk_mika", "talk_kuya_tomas", "talk_ate_jenny", "talk_coach_ramon", "visit_org_fair"],
@@ -88,8 +89,9 @@ define TASK_LIST_TEXT = {
     "go_to_newad": "Head to New Admin building",
     "talk_maam_reyes": "Find Ma'am Reyes inside New Admin",
     "complete_flip_card": "Complete the Office Match Game",
-    "talk_mikhaela": "Talk to Sarah",
-    "talk_caezar": "Meet Caezar after talking to Jaden and Sarah",
+    "talk_sir_noel": "Talk to Sir Noel about enrollment",
+    "view_crs_portal": "View the CRS Student Portal",
+    "complete_enrollment_tetris": "Complete Enrollment Tetris",
     "talk_dorm_manager": "Talk to the Dorm Manager",
     "talk_prof_lena": "Talk to Prof. Lena in the classroom",
     "talk_kuya_rico": "Ask Kuya Rico about buildings",
@@ -166,11 +168,10 @@ init python:
         if task_id == "complete_flip_card":
             return "talk_maam_reyes" in store.tasks_completed
         ## Act 3 prerequisites
-        if task_id == "talk_caezar":
-            return (
-                "talk_jaden" in store.tasks_completed and
-                "talk_mikhaela" in store.tasks_completed
-            )
+        if task_id == "view_crs_portal":
+            return "talk_sir_noel" in store.tasks_completed
+        if task_id == "complete_enrollment_tetris":
+            return "view_crs_portal" in store.tasks_completed
         ## Act 5 prerequisites
         if task_id in ("talk_kuya_rico", "talk_ate_grace"):
             return "talk_prof_lena" in store.tasks_completed
@@ -244,7 +245,7 @@ init python:
         titles = {
             1: "ACT 1: Arrival in Miagao",
             2: "ACT 2: Entering the University",
-            3: "ACT 3: Social / Exploration",
+            3: "ACT 3: Enrollment",
             4: "ACT 4: Dorm Accommodation",
             5: "ACT 5: First Day of Classes",
             6: "ACT 6: Student Orgs & Campus Life",
@@ -556,6 +557,40 @@ init python:
         "Walk-in: Registrar, Cashier, OSA. Appointment: Chancellor",
         "Ma'am Reyes", "📅",
         full="Walk-in offices (no appointment needed): Registrar for Form 5, enrollment, certifications. Cashier for payments and receipts. OSA for scholarship inquiries and org matters (expect a wait). Appointment required: Chancellor's Office (email the administrative aide), Vice Chancellor offices, faculty consultations (coordinate with professor), and non-routine Medical Certificate requests through Health Services Unit."
+    )
+
+    ## =========================================================================
+    ## ACT 3 INFO ITEMS — Sir Noel (Enrollment)
+    ## =========================================================================
+
+    # --- SIR NOEL ITEMS ---
+    ITEM_CRS_SYSTEM = InfoItem(
+        "crs_system",
+        "CRS Enrollment System",
+        "Computerized Registration System — online enrollment portal",
+        "Sir Noel", "💻",
+        full="The Computerized Registration System (CRS) is UP's online enrollment portal at crs.upv.edu.ph. Students use it every semester to pre-enlist subjects, confirm enrollment, view grades, and check their academic records. You log in with your student number and password from the Registrar. Pre-enlistment happens before the official enrollment period — the system assigns slots based on availability and priority."
+    )
+    ITEM_ENROLLMENT_STEPS = InfoItem(
+        "enrollment_steps",
+        "Enrollment Steps",
+        "Pre-enlist → Confirm → Assess → Pay → Get Form 5",
+        "Sir Noel", "📝",
+        full="The enrollment process: (1) Pre-enlistment — log into CRS and select desired subjects and sections. (2) Confirmation — verify your pre-enlisted subjects when enrollment opens. (3) Assessment — the system calculates your tuition and fees. (4) Payment — pay at the Cashier's Office or via online payment. (5) Form 5 — your official proof of enrollment is generated. Keep it safe — you'll need it everywhere on campus."
+    )
+    ITEM_UNITS_LOAD = InfoItem(
+        "units_load",
+        "Academic Load & Units",
+        "18 units typical, 3 units per subject, plus PE and NSTP",
+        "Sir Noel", "📊",
+        full="A typical freshman load is 18 academic units (6 subjects at 3 units each). On top of this, you'll have PE (Physical Education) and NSTP (National Service Training Program) — these are required but carry 0 academic units. Each unit roughly equals 1 hour of class per week. When building your schedule, consider time gaps between classes and avoid back-to-back heavy subjects. The maximum load is usually 21 units with special permission."
+    )
+    ITEM_SCHEDULE_TIPS = InfoItem(
+        "schedule_tips",
+        "Schedule Building Tips",
+        "Avoid conflicts, check room locations, keep buffer time",
+        "Sir Noel", "📅",
+        full="Tips for building your class schedule: (1) Check for time conflicts — the CRS won't allow overlapping classes. (2) Consider room locations — give yourself at least 15 minutes between classes in different buildings. (3) Avoid 7:00 AM classes if you're not a morning person — attendance matters. (4) Keep at least one lunch break slot. (5) Balance heavy and light subjects across the week. (6) PE and NSTP schedules are fixed — build around them first."
     )
 
 

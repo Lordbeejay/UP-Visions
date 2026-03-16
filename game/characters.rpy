@@ -27,6 +27,7 @@ define ate_bea = Character("ate bea", color="#6e1f2a", what_color="#ffffff")
 define kuya_mark = Character("kuya mark", color="#6e1f2a", what_color="#ffffff")
 define maam_reyes = Character("maam reyes", color="#6e1f2a", what_color="#ffffff")
 define sir_allan = Character("sir allan", color="#6e1f2a", what_color="#ffffff")
+define sir_noel = Character("Sir Noel", color="#6e1f2a", what_color="#ffffff")
 
 ## --- Act 5 Characters ---
 define prof_lena = Character("Prof. Lena", color="#6e1f2a", what_color="#ffffff")
@@ -73,6 +74,7 @@ image ate_bea = "images/npcs/ate_bea.png"
 image kuya_mark = "images/npcs/kuya_mark.png"
 image maam_reyes = "images/npcs/maam_reyes.png"
 image sir_allan = "images/npcs/sir_allan.png"
+image sir_noel = "images/npcs/sir_allan.png"  ## placeholder — reuses sir_allan portrait
 
 ## --- Act 5 NPC Sprites ---
 image prof_lena_sprite = "images/npcs/prof_lena.png"

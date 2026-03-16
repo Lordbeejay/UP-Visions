@@ -445,6 +445,7 @@ init python:
         "kuya mark": "images/npcs/kuya_mark.png",
         "maam reyes": "images/npcs/maam_reyes.png",
         "sir allan": "images/npcs/sir_allan.png",
+        "Sir Noel": "images/npcs/sir_allan.png",
         ## Act 3/4 NPCs
         "Sarah": "images/npcs/sarah.png",
         "Caezar": "images/npcs/caezar.png",
@@ -4116,3 +4117,431 @@ screen flip_card_game():
                 text_hover_color "#ffffff"
                 text_outlines [(2, "#1e0c12", 0, 0)]
                 action Return("completed")
+
+
+## ============================================================================
+## ENROLLMENT TETRIS — Drag subject blocks onto a weekly schedule grid
+## ============================================================================
+## Grid: 5 days (M-F) x 11 time slots (7AM-6PM, 1-hour rows)
+## 6 academic subjects (3 units each = 18 units total)
+## 2 non-unit subjects: PE, NSTP
+## Each subject block spans 1-2 hours (60-120 min)
+## Player clicks a subject from the palette, then clicks a grid cell to place it.
+## No overlaps allowed. All 8 subjects placed = game complete.
+## ============================================================================
+
+init python:
+
+    ## Subject definitions: (name, code, units, duration_hours, color)
+    TETRIS_SUBJECTS = [
+        ("Math 21",     "MATH 21",   3, 2, "#4a90d9"),   ## 120 min
+        ("Eng 1",       "ENG 1",     3, 2, "#d94a4a"),   ## 120 min
+        ("Fil 40",      "FIL 40",    3, 1, "#4ad97a"),   ## 60 min
+        ("STS",         "STS",       3, 2, "#d9a04a"),   ## 120 min
+        ("Kas 1",       "KAS 1",     3, 1, "#9a4ad9"),   ## 60 min
+        ("CS 11",       "CS 11",     3, 2, "#4ad9d9"),   ## 120 min
+        ("PE",          "PE",        0, 1, "#d97aaa"),   ## 60 min, non-unit
+        ("NSTP",        "NSTP",      0, 2, "#7a9ad9"),   ## 120 min, non-unit
+    ]
+
+    TETRIS_DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri"]
+    TETRIS_TIMES = [
+        "7:00", "8:00", "9:00", "10:00", "11:00",
+        "12:00", "1:00", "2:00", "3:00", "4:00", "5:00"
+    ]
+
+    class EnrollmentTetrisState:
+        def __init__(self):
+            self.reset()
+
+        def reset(self):
+            ## Grid: grid[day_idx][time_idx] = subject_index or -1
+            self.grid = [[-1 for _ in range(len(TETRIS_TIMES))] for _ in range(len(TETRIS_DAYS))]
+            ## Which subject is currently selected for placement
+            self.selected_subject = -1
+            ## Track which subjects have been placed (subject_idx -> list of (day, time) tuples)
+            self.placements = {}
+            ## Each subject needs to be placed on 2 different days (meeting pattern)
+            ## For simplicity: each subject is placed once (one block on one day)
+            self.placed_count = 0
+            self.total_subjects = len(TETRIS_SUBJECTS)
+            self.game_complete = False
+            self.error_msg = ""
+            self.total_units = 0
+
+        def select_subject(self, subj_idx):
+            """Select a subject from the palette to place."""
+            if subj_idx in self.placements:
+                self.error_msg = "Already placed!"
+                return
+            self.selected_subject = subj_idx
+            self.error_msg = ""
+
+        def place_at(self, day_idx, time_idx):
+            """Try to place the selected subject at the given grid cell."""
+            if self.selected_subject < 0:
+                self.error_msg = "Select a subject first!"
+                return
+
+            subj_idx = self.selected_subject
+            subj = TETRIS_SUBJECTS[subj_idx]
+            duration = subj[3]  ## hours
+
+            ## Check bounds
+            if time_idx + duration > len(TETRIS_TIMES):
+                self.error_msg = "Doesn't fit! Goes past 6:00 PM."
+                return
+
+            ## Check for overlaps
+            for t in range(time_idx, time_idx + duration):
+                if self.grid[day_idx][t] != -1:
+                    existing = TETRIS_SUBJECTS[self.grid[day_idx][t]]
+                    self.error_msg = "Conflict with " + existing[1] + "!"
+                    return
+
+            ## Place the subject
+            for t in range(time_idx, time_idx + duration):
+                self.grid[day_idx][t] = subj_idx
+
+            self.placements[subj_idx] = (day_idx, time_idx)
+            self.placed_count += 1
+            self.total_units += subj[2]
+            self.selected_subject = -1
+            self.error_msg = ""
+
+            if self.placed_count >= self.total_subjects:
+                self.game_complete = True
+
+        def remove_subject(self, subj_idx):
+            """Remove a placed subject from the grid."""
+            if subj_idx not in self.placements:
+                return
+            day_idx, time_idx = self.placements[subj_idx]
+            duration = TETRIS_SUBJECTS[subj_idx][3]
+            for t in range(time_idx, time_idx + duration):
+                if self.grid[day_idx][t] == subj_idx:
+                    self.grid[day_idx][t] = -1
+            self.total_units -= TETRIS_SUBJECTS[subj_idx][2]
+            del self.placements[subj_idx]
+            self.placed_count -= 1
+            self.game_complete = False
+            self.error_msg = ""
+
+    tetris_state = EnrollmentTetrisState()
+
+
+screen enrollment_tetris_game():
+
+    on "show" action Function(tetris_state.reset)
+
+    modal True
+    zorder 200
+
+    ## Dark overlay
+    add Solid("#0d0d20ee"):
+        xysize (1920, 1080)
+
+    hbox:
+        xalign 0.5
+        yalign 0.5
+        spacing 24
+
+        ## === LEFT: Subject Palette ===
+        vbox:
+            spacing 8
+            xsize 280
+
+            text "ENROLLMENT TETRIS":
+                size 22
+                color "#ffd700"
+                xalign 0.5
+                outlines [(2, "#1e0c12", 0, 0)]
+
+            text "Build your class schedule!":
+                size 13
+                color "#f1debf"
+                xalign 0.5
+                outlines [(1, "#1e0c12", 0, 0)]
+
+            null height 6
+
+            text "SUBJECTS":
+                size 14
+                color "#f6d79d"
+                outlines [(1, "#1e0c12", 0, 0)]
+
+            ## Subject list
+            for _si in range(len(TETRIS_SUBJECTS)):
+                $ _subj = TETRIS_SUBJECTS[_si]
+                $ _placed = _si in tetris_state.placements
+                $ _selected = tetris_state.selected_subject == _si
+
+                if _placed:
+                    ## Already placed — show with checkmark, click to remove
+                    button:
+                        xsize 270
+                        ysize 42
+                        background Solid(_subj[4] + "44")
+                        hover_background Solid(_subj[4] + "66")
+                        action Function(tetris_state.remove_subject, _si)
+                        padding (8, 4, 8, 4)
+
+                        hbox:
+                            spacing 6
+                            yalign 0.5
+                            text "✓":
+                                size 14
+                                color "#10b981"
+                            text _subj[1]:
+                                size 13
+                                color "#9f9f9f"
+                                strikethrough True
+                            if _subj[2] > 0:
+                                text "(" + str(_subj[2]) + "u)":
+                                    size 11
+                                    color "#9f9f9f88"
+                            else:
+                                text "(non-unit)":
+                                    size 11
+                                    color "#9f9f9f88"
+
+                elif _selected:
+                    ## Currently selected
+                    frame:
+                        xsize 270
+                        ysize 42
+                        background Solid(_subj[4])
+                        padding (8, 4, 8, 4)
+
+                        hbox:
+                            spacing 6
+                            yalign 0.5
+                            text "►":
+                                size 14
+                                color "#ffffff"
+                            text _subj[1]:
+                                size 13
+                                color "#ffffff"
+                                bold True
+                            if _subj[2] > 0:
+                                text "(" + str(_subj[2]) + "u, " + str(_subj[3]) + "hr)":
+                                    size 11
+                                    color "#ffffffcc"
+                            else:
+                                text "(non-unit, " + str(_subj[3]) + "hr)":
+                                    size 11
+                                    color "#ffffffcc"
+
+                else:
+                    ## Available to select
+                    button:
+                        xsize 270
+                        ysize 42
+                        background Solid("#1e0c12")
+                        hover_background Solid(_subj[4] + "44")
+                        action Function(tetris_state.select_subject, _si)
+                        padding (8, 4, 8, 4)
+
+                        hbox:
+                            spacing 6
+                            yalign 0.5
+
+                            frame:
+                                xsize 12
+                                ysize 12
+                                yalign 0.5
+                                background Solid(_subj[4])
+                                padding (0, 0, 0, 0)
+
+                            text _subj[1]:
+                                size 13
+                                color "#f1debf"
+                            if _subj[2] > 0:
+                                text "(" + str(_subj[2]) + "u, " + str(_subj[3]) + "hr)":
+                                    size 11
+                                    color "#f6d79d88"
+                            else:
+                                text "(non-unit, " + str(_subj[3]) + "hr)":
+                                    size 11
+                                    color "#f6d79d88"
+
+            null height 8
+
+            ## Units counter
+            hbox:
+                xalign 0.5
+                spacing 8
+                text "Units:":
+                    size 14
+                    color "#f6d79d"
+                    outlines [(1, "#1e0c12", 0, 0)]
+                text "[tetris_state.total_units]/18":
+                    size 14
+                    color "#b8e6b0"
+                    outlines [(1, "#1e0c12", 0, 0)]
+
+            text "[tetris_state.placed_count]/[tetris_state.total_subjects] placed":
+                size 12
+                color "#f6d79d88"
+                xalign 0.5
+
+            ## Error message
+            if tetris_state.error_msg:
+                null height 4
+                text "[tetris_state.error_msg]":
+                    size 13
+                    color "#f87171"
+                    xalign 0.5
+                    outlines [(1, "#1e0c12", 0, 0)]
+
+        ## === RIGHT: Schedule Grid ===
+        vbox:
+            spacing 0
+
+            ## Day headers
+            hbox:
+                spacing 0
+
+                ## Empty corner cell (time label column)
+                frame:
+                    xsize 60
+                    ysize 32
+                    background Solid("#1e0c12")
+                    padding (0, 0, 0, 0)
+                    text "Time":
+                        size 11
+                        color "#f6d79d"
+                        xalign 0.5
+                        yalign 0.5
+
+                for _day in TETRIS_DAYS:
+                    frame:
+                        xsize 120
+                        ysize 32
+                        background Solid(DARK_MAROON)
+                        padding (0, 0, 0, 0)
+                        text _day:
+                            size 13
+                            color "#ffffff"
+                            bold True
+                            xalign 0.5
+                            yalign 0.5
+
+            ## Time rows
+            for _ti in range(len(TETRIS_TIMES)):
+                hbox:
+                    spacing 0
+
+                    ## Time label
+                    frame:
+                        xsize 60
+                        ysize 48
+                        background Solid("#1a0a10")
+                        padding (4, 0, 4, 0)
+                        text TETRIS_TIMES[_ti]:
+                            size 11
+                            color "#f6d79d"
+                            xalign 0.5
+                            yalign 0.5
+
+                    ## Day cells
+                    for _di in range(len(TETRIS_DAYS)):
+                        $ _cell_val = tetris_state.grid[_di][_ti]
+
+                        if _cell_val >= 0:
+                            ## Occupied cell — show subject color and name
+                            $ _cs = TETRIS_SUBJECTS[_cell_val]
+                            ## Only show label on the first cell of the block
+                            $ _show_label = (_ti == 0 or tetris_state.grid[_di][_ti - 1] != _cell_val)
+
+                            frame:
+                                xsize 120
+                                ysize 48
+                                background Solid(_cs[4] + "cc")
+                                padding (4, 2, 4, 2)
+
+                                if _show_label:
+                                    vbox:
+                                        xalign 0.5
+                                        yalign 0.5
+                                        text _cs[1]:
+                                            size 12
+                                            color "#ffffff"
+                                            bold True
+                                            xalign 0.5
+                                            outlines [(1, "#00000088", 0, 0)]
+                                        if _cs[2] > 0:
+                                            text str(_cs[2]) + " units":
+                                                size 9
+                                                color "#ffffffaa"
+                                                xalign 0.5
+                                        else:
+                                            text "non-unit":
+                                                size 9
+                                                color "#ffffffaa"
+                                                xalign 0.5
+
+                        else:
+                            ## Empty cell — clickable if subject is selected
+                            if tetris_state.selected_subject >= 0:
+                                button:
+                                    xsize 120
+                                    ysize 48
+                                    background Solid("#1e0c1288")
+                                    hover_background Solid(TETRIS_SUBJECTS[tetris_state.selected_subject][4] + "44")
+                                    action Function(tetris_state.place_at, _di, _ti)
+                                    padding (0, 0, 0, 0)
+
+                                    ## Grid lines
+                                    frame:
+                                        xfill True
+                                        yfill True
+                                        background Solid("#2a1a2a22")
+                                        padding (0, 0, 0, 0)
+                            else:
+                                frame:
+                                    xsize 120
+                                    ysize 48
+                                    background Solid("#1e0c1288")
+                                    padding (0, 0, 0, 0)
+
+                                    frame:
+                                        xfill True
+                                        yfill True
+                                        background Solid("#2a1a2a22")
+                                        padding (0, 0, 0, 0)
+
+            ## Bottom instruction
+            null height 12
+
+            if tetris_state.selected_subject >= 0:
+                $ _sel_s = TETRIS_SUBJECTS[tetris_state.selected_subject]
+                text "Click a time slot to place " + _sel_s[1] + " (" + str(_sel_s[3]) + " hr block)":
+                    size 14
+                    color "#f6d79d"
+                    xalign 0.5
+                    outlines [(1, "#1e0c12", 0, 0)]
+            elif not tetris_state.game_complete:
+                text "Select a subject, then click the grid to place it. Click placed subjects to remove.":
+                    size 12
+                    color "#f6d79d88"
+                    xalign 0.5
+
+            ## Game complete
+            if tetris_state.game_complete:
+                null height 12
+                text "Schedule Complete! All subjects placed.":
+                    size 20
+                    color "#10b981"
+                    xalign 0.5
+                    outlines [(2, "#1e0c12", 0, 0)]
+
+                null height 8
+
+                textbutton "Continue":
+                    xalign 0.5
+                    text_size 20
+                    text_color "#ffd700"
+                    text_hover_color "#ffffff"
+                    text_outlines [(2, "#1e0c12", 0, 0)]
+                    action Return("completed")

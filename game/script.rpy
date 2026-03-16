@@ -37,7 +37,7 @@ label start:
     $ player_map_x = 2300
     $ player_map_y = 3100
     $ player_facing = "up"
-    jump act2_map
+    jump act3_map
 
 
 ## ============================================================================
@@ -220,7 +220,7 @@ label act2_complete:
     scene expression "images/ui/UI_Miagao.png" with fade
     pause 0.3
     call screen act_transition("ACT 2 COMPLETE", "You've navigated enrollment\nand met the campus staff!", "complete")
-    call screen act_transition("ACT 3", "Social / Exploration", "intro")
+    call screen act_transition("ACT 3", "Enrollment", "intro")
 
     $ current_act = 3
     $ player_map_x = 2500
@@ -230,40 +230,30 @@ label act2_complete:
 
 
 ## ============================================================================
-## ACT 3 MAP — Social / Exploration
+## ACT 3 MAP — Enrollment (CRS Portal & Schedule Building)
 ## ============================================================================
 
 label act3_map:
-    $ current_map_bg = "maps/banwa.png"
+    $ current_map_bg = "maps/NewAd.png"
     $ act3_nodes = [
-        MapNode("Sarah", 2600, 3000, "npc_mikhaela", "Sarah", False, "#ff99cc", "sarah.png"),
-        MapNode("Jaden", 2100, 2600, "act3_npc_jaden", "Jaden", False, "#99ccff", "jaden.png"),
-        MapNode("Ceazar", 1600, 1800, "npc_caezar", "Ceazar", True, "#ccff99", "caezar.png", icon_zoom=0.06),
+        MapNode("sir_noel", 2500, 2200, "act3_npc_sir_noel", tooltip="Sir Noel", icon_image="sir_allan.png", locked=False),
     ]
 
-    $ current_task_text = "Explore campus — find Sarah and Jaden"
+    $ current_task_text = "Talk to Sir Noel about enrollment"
 
 label act3_loop:
-    # Refresh node labels/tooltips for compatibility with old saves.
-    if len(act3_nodes) >= 3:
-        $ act3_nodes[0].name = "Sarah"
-        $ act3_nodes[0].tooltip = "Sarah"
-        $ act3_nodes[1].name = "Jaden"
-        $ act3_nodes[1].tooltip = "Jaden"
-        $ act3_nodes[2].name = "Ceazar"
-        $ act3_nodes[2].tooltip = "Ceazar"
-
-    call screen map_screen("maps/banwa.png", act3_nodes, current_task_text, 1.0)
+    call screen map_screen("maps/NewAd.png", act3_nodes, current_task_text, 1.0)
     $ _action, _node = _return
 
     if _action == "walk":
         call walk_to_node(_node)
         call expression _node.target_label
 
-        if "talk_jaden" in tasks_completed:
-            $ act3_nodes[2].locked = False
-            if "talk_caezar" not in tasks_completed:
-                $ current_task_text = "Meet Caezar at Ceazar"
+        if "talk_sir_noel" in tasks_completed:
+            $ current_task_text = "View the CRS Student Portal"
+
+        if "view_crs_portal" in tasks_completed:
+            $ current_task_text = "Complete Enrollment Tetris!"
 
         if is_act_complete():
             jump act3_complete
@@ -274,7 +264,7 @@ label act3_loop:
 label act3_complete:
     scene expression "images/ui/UI_Miagao.png" with fade
     pause 0.3
-    call screen act_transition("ACT 3 COMPLETE", "You've made friends and explored the campus!", "complete")
+    call screen act_transition("ACT 3 COMPLETE", "You've completed enrollment\nand built your class schedule!", "complete")
     call screen act_transition("ACT 4", "Dorm Accommodation", "intro")
 
     $ current_act = 4
