@@ -3826,3 +3826,293 @@ style gc_load_btn:
     color "#a78bfa"
     hover_color "#c4b5fd"
     size 11
+
+
+## ============================================================================
+## FLIP CARD MINI-GAME — Match offices with what they do
+## ============================================================================
+## Uses a grid of face-down cards. Player flips two at a time.
+## If they match (office name ↔ office function), they stay revealed.
+## All 6 pairs matched = game complete.
+## ============================================================================
+
+init python:
+
+    ## Card pairs: (office_name, office_function)
+    FLIP_CARD_PAIRS = [
+        ("Registrar", "Enrollment, Transcripts\n& Form 5"),
+        ("Cashier's Office", "Payment of Fees\n& Refunds"),
+        ("OSA", "Scholarships, Orgs\n& Discipline"),
+        ("Chancellor's Office", "Administrative\nLeadership"),
+        ("Security Office", "Campus Safety\n& ID Policies"),
+        ("Health Services", "Medical Checkups\n& Certificates"),
+    ]
+
+    ## Card colors for matched pairs (so each pair gets a distinct color)
+    FLIP_CARD_COLORS = [
+        "#4a90d9",  ## blue
+        "#d94a4a",  ## red
+        "#4ad97a",  ## green
+        "#d9a04a",  ## orange
+        "#9a4ad9",  ## purple
+        "#4ad9d9",  ## teal
+    ]
+
+    import random as _random
+
+    class FlipCardState:
+        def __init__(self):
+            self.reset()
+
+        def reset(self):
+            ## Build the card deck: 12 cards (6 pairs)
+            self.cards = []
+            for i, (name, func) in enumerate(FLIP_CARD_PAIRS):
+                self.cards.append({
+                    "id": i * 2,
+                    "pair_id": i,
+                    "text": name,
+                    "is_name": True,
+                    "flipped": False,
+                    "matched": False,
+                })
+                self.cards.append({
+                    "id": i * 2 + 1,
+                    "pair_id": i,
+                    "text": func,
+                    "is_name": False,
+                    "flipped": False,
+                    "matched": False,
+                })
+            _random.shuffle(self.cards)
+            self.first_pick = None
+            self.second_pick = None
+            self.matches_found = 0
+            self.total_pairs = len(FLIP_CARD_PAIRS)
+            self.attempts = 0
+            self.show_mismatch = False
+            self.game_complete = False
+
+        def flip_card(self, card_idx):
+            """Handle flipping a card."""
+            card = self.cards[card_idx]
+
+            ## Ignore if already matched or flipped
+            if card["matched"] or card["flipped"]:
+                return
+
+            ## Ignore if two cards already shown (waiting for reset)
+            if self.first_pick is not None and self.second_pick is not None:
+                return
+
+            card["flipped"] = True
+
+            if self.first_pick is None:
+                self.first_pick = card_idx
+            else:
+                self.second_pick = card_idx
+                self.attempts += 1
+                self._check_match()
+
+        def _check_match(self):
+            """Check if the two flipped cards match."""
+            c1 = self.cards[self.first_pick]
+            c2 = self.cards[self.second_pick]
+
+            if c1["pair_id"] == c2["pair_id"]:
+                ## Match found!
+                c1["matched"] = True
+                c2["matched"] = True
+                self.matches_found += 1
+                self.first_pick = None
+                self.second_pick = None
+                if self.matches_found >= self.total_pairs:
+                    self.game_complete = True
+            else:
+                ## Mismatch — will need to flip back
+                self.show_mismatch = True
+
+        def clear_mismatch(self):
+            """Flip mismatched cards back face-down."""
+            if self.show_mismatch and self.first_pick is not None and self.second_pick is not None:
+                self.cards[self.first_pick]["flipped"] = False
+                self.cards[self.second_pick]["flipped"] = False
+                self.first_pick = None
+                self.second_pick = None
+                self.show_mismatch = False
+
+    ## Global instance
+    flip_state = FlipCardState()
+
+
+screen flip_card_game():
+
+    ## Reset state when screen shows
+    on "show" action Function(flip_state.reset)
+
+    modal True
+    zorder 200
+
+    ## Dark overlay
+    add Solid("#0d0d20ee"):
+        xysize (1920, 1080)
+
+    ## Main container
+    vbox:
+        xalign 0.5
+        yalign 0.5
+        spacing 20
+
+        ## Title
+        text "OFFICE MATCH GAME":
+            xalign 0.5
+            size 36
+            color "#ffd700"
+            outlines [(3, "#1e0c12", 0, 0)]
+
+        text "Match each office with what it does!":
+            xalign 0.5
+            size 18
+            color "#f1debf"
+            outlines [(2, "#1e0c12", 0, 0)]
+
+        ## Score display
+        hbox:
+            xalign 0.5
+            spacing 30
+
+            text "Matches: [flip_state.matches_found]/[flip_state.total_pairs]":
+                size 16
+                color "#b8e6b0"
+                outlines [(2, "#1e0c12", 0, 0)]
+
+            text "Attempts: [flip_state.attempts]":
+                size 16
+                color "#f6d79d"
+                outlines [(2, "#1e0c12", 0, 0)]
+
+        null height 10
+
+        ## Card grid — 4 columns x 3 rows
+        grid 4 3:
+            xalign 0.5
+            spacing 12
+
+            for _ci in range(len(flip_state.cards)):
+                $ _card = flip_state.cards[_ci]
+
+                if _card["matched"]:
+                    ## Matched card — stays face up with pair color
+                    frame:
+                        xysize (220, 130)
+                        padding (10, 10, 10, 10)
+                        background Solid(FLIP_CARD_COLORS[_card["pair_id"]])
+
+                        vbox:
+                            xfill True
+                            yfill True
+                            xalign 0.5
+                            yalign 0.5
+
+                            if _card["is_name"]:
+                                text "📋":
+                                    size 22
+                                    xalign 0.5
+                                null height 4
+                            else:
+                                text "📝":
+                                    size 22
+                                    xalign 0.5
+                                null height 4
+
+                            text _card["text"]:
+                                size 13
+                                color "#ffffff"
+                                text_align 0.5
+                                xalign 0.5
+                                outlines [(1, "#00000088", 0, 0)]
+
+                elif _card["flipped"]:
+                    ## Flipped but not yet matched — show content
+                    frame:
+                        xysize (220, 130)
+                        padding (10, 10, 10, 10)
+                        background Solid("#2a1a3a")
+
+                        vbox:
+                            xfill True
+                            yfill True
+                            xalign 0.5
+                            yalign 0.5
+
+                            if _card["is_name"]:
+                                text "📋":
+                                    size 22
+                                    xalign 0.5
+                                null height 4
+                            else:
+                                text "📝":
+                                    size 22
+                                    xalign 0.5
+                                null height 4
+
+                            text _card["text"]:
+                                size 13
+                                color "#f1debf"
+                                text_align 0.5
+                                xalign 0.5
+
+                else:
+                    ## Face-down card — clickable
+                    button:
+                        xysize (220, 130)
+                        padding (10, 10, 10, 10)
+                        background Solid("#1e0c12")
+                        hover_background Solid("#3a1a2a")
+
+                        if flip_state.show_mismatch:
+                            action Function(flip_state.clear_mismatch)
+                        else:
+                            action Function(flip_state.flip_card, _ci)
+
+                        vbox:
+                            xfill True
+                            yfill True
+                            xalign 0.5
+                            yalign 0.5
+
+                            text "?":
+                                size 40
+                                color "#f6d79d"
+                                xalign 0.5
+                                yalign 0.5
+                                outlines [(2, "#1e0c12", 0, 0)]
+
+        null height 6
+
+        ## Mismatch hint
+        if flip_state.show_mismatch:
+            text "Not a match! Click any card to continue.":
+                xalign 0.5
+                size 16
+                color "#f87171"
+                outlines [(2, "#1e0c12", 0, 0)]
+
+        ## Game complete message
+        if flip_state.game_complete:
+            null height 10
+            text "All offices matched!":
+                xalign 0.5
+                size 24
+                color "#10b981"
+                outlines [(3, "#1e0c12", 0, 0)]
+
+            null height 10
+
+            textbutton "Continue":
+                xalign 0.5
+                text_size 20
+                text_color "#ffd700"
+                text_hover_color "#ffffff"
+                text_outlines [(2, "#1e0c12", 0, 0)]
+                action Return("completed")

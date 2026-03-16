@@ -325,7 +325,11 @@ transform task_item_bob:
 ## WALK LABEL
 ## ============================================================================
 
-label walk_to_node(target_node, map_bg="maps/banwa.png"):
+label walk_to_node(target_node, map_bg=None):
+    ## Use the global current_map_bg if no explicit map_bg is passed
+    if map_bg is None:
+        $ map_bg = current_map_bg
+
     ## Show the map background so it stays visible during the walk animation
     scene expression ("images/" + map_bg):
         xpos 0

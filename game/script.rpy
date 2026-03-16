@@ -37,7 +37,7 @@ label start:
     $ player_map_x = 2300
     $ player_map_y = 3100
     $ player_facing = "up"
-    jump act1_start
+    jump act2_map
 
 
 ## ============================================================================
@@ -51,6 +51,7 @@ label start:
 ## ============================================================================
 
 label act1_map:
+    $ current_map_bg = "maps/banwa.png"
     $ act1_nodes = [
         MapNode("jaden",         1200, 1400, "act1_npc_jaden",         tooltip="Jaden",           icon_image="jaden.png",          locked=False),
         MapNode("manong_josh",   2100, 2600, "act1_npc_manong_josh",   tooltip="Manong Josh",     icon_image="manongjosh.png",    locked=True),
@@ -124,21 +125,21 @@ label act1_complete:
 
 
 ## ============================================================================
-## ACT 2 MAP — BOX 1 / CUB / OSA
+## ACT 2 MAP — Entrance → New Admin → Inside New Admin
 ## ============================================================================
 
+## --- PHASE 1: Entrance map with Ate Bea and Kuya Mark ---
 label act2_map:
-    $ act2_nodes = [
-        MapNode("ate_bea",    1600, 2200, "act2_npc_ate_bea",      tooltip="Ate Bea",     icon_image="ate_bea.png",      locked=False),
-        MapNode("kuya_mark",  2800, 1900, "act2_npc_kuya_mark",    tooltip="Kuya Mark",   icon_image="kuya_mark.png",    locked=True),
-        MapNode("maam_reyes", 2200, 2600, "act2_npc_maam_reyes",   tooltip="Ma'am Reyes", icon_image="maam_reyes.png",   locked=True),
-        MapNode("sir_allan",  3200, 2300, "act2_npc_sir_allan",    tooltip="Sir Allan",   icon_image="sir_allan.png",    locked=True),
-        MapNode("enrollment", 2500, 1700, "act2_enrollment_office", tooltip="Enrollment",  icon_image="enrollment.png",   locked=True),
+    $ current_map_bg = "maps/Entrance.png"
+    $ act2_entrance_nodes = [
+        MapNode("ate_bea",    1600, 2600, "act2_npc_ate_bea",    tooltip="Ate Bea",     icon_image="ate_bea.png",    locked=False),
+        MapNode("kuya_mark",  3200, 2200, "act2_npc_kuya_mark",  tooltip="Kuya Mark",   icon_image="kuya_mark.png",  locked=True),
+        MapNode("newad_gate", 2500, 1200, "act2_go_to_newad",    tooltip="New Admin",   icon_image="box1.png",       locked=True),
     ]
-    $ current_task_text = "Talk to Ate Bea near the BOX 1 entrance"
+    $ current_task_text = "Talk to Ate Bea at the Entrance"
 
-label act2_loop:
-    call screen map_screen("maps/NewAd.png", act2_nodes, current_task_text, 1.0)
+label act2_entrance_loop:
+    call screen map_screen("maps/Entrance.png", act2_entrance_nodes, current_task_text, 1.0)
     $ _action, _node = _return
 
     if _action == "walk":
@@ -146,26 +147,73 @@ label act2_loop:
         call expression _node.target_label
 
         if "talk_ate_bea" in tasks_completed:
-            $ act2_nodes[1].locked = False
-            $ act2_nodes[2].locked = False
-            $ current_task_text = "Learn about security and offices — talk to Kuya Mark and Ma'am Reyes"
+            $ act2_entrance_nodes[1].locked = False
+            $ current_task_text = "Talk to Kuya Mark about campus security"
 
-        if "talk_kuya_mark" in tasks_completed or "talk_maam_reyes" in tasks_completed:
-            $ act2_nodes[3].locked = False
+        if "talk_ate_bea" in tasks_completed and "talk_kuya_mark" in tasks_completed:
+            $ act2_entrance_nodes[2].locked = False
+            $ current_task_text = "Head to New Admin building"
 
-        if (
-            "talk_ate_bea"    in tasks_completed and
-            "talk_kuya_mark"  in tasks_completed and
-            "talk_maam_reyes" in tasks_completed and
-            "talk_sir_allan"  in tasks_completed
-        ):
-            $ act2_nodes[4].locked = False
-            $ current_task_text = "Head to the Enrollment Office"
+        ## After clicking New Admin, transition to phase 2
+        if "go_to_newad" in tasks_completed:
+            jump act2_newad_map
+
+    jump act2_entrance_loop
+
+
+## --- PHASE 2: New Admin exterior — enter inside ---
+label act2_newad_map:
+    $ current_map_bg = "maps/NewAd.png"
+    $ player_map_x = 2500
+    $ player_map_y = 3200
+    $ player_facing = "up"
+
+    $ act2_newad_nodes = [
+        MapNode("enter_inside", 2500, 1800, "act2_enter_inside", tooltip="Enter New Admin", icon_image="box1.png", locked=False),
+    ]
+    $ current_task_text = "Enter the New Admin building"
+
+label act2_newad_loop:
+    call screen map_screen("maps/NewAd.png", act2_newad_nodes, current_task_text, 1.0)
+    $ _action, _node = _return
+
+    if _action == "walk":
+        call walk_to_node(_node)
+        call expression _node.target_label
+
+        ## After entering, transition to phase 3
+        jump act2_inside_map
+
+    jump act2_newad_loop
+
+
+## --- PHASE 3: Inside New Admin — find Ma'am Reyes ---
+label act2_inside_map:
+    $ current_map_bg = "maps/NewAd_Inside.png"
+    $ player_map_x = 2500
+    $ player_map_y = 3500
+    $ player_facing = "up"
+
+    $ act2_inside_nodes = [
+        MapNode("maam_reyes", 2500, 1800, "act2_npc_maam_reyes", tooltip="Ma'am Reyes", icon_image="maam_reyes.png", locked=False),
+    ]
+    $ current_task_text = "Find Ma'am Reyes inside New Admin"
+
+label act2_inside_loop:
+    call screen map_screen("maps/NewAd_Inside.png", act2_inside_nodes, current_task_text, 1.0)
+    $ _action, _node = _return
+
+    if _action == "walk":
+        call walk_to_node(_node)
+        call expression _node.target_label
+
+        if "talk_maam_reyes" in tasks_completed:
+            $ current_task_text = "Complete the Office Match Game!"
 
         if is_act_complete():
             jump act2_complete
 
-    jump act2_loop
+    jump act2_inside_loop
 
 
 label act2_complete:
@@ -186,6 +234,7 @@ label act2_complete:
 ## ============================================================================
 
 label act3_map:
+    $ current_map_bg = "maps/banwa.png"
     $ act3_nodes = [
         MapNode("Sarah", 2600, 3000, "npc_mikhaela", "Sarah", False, "#ff99cc", "sarah.png"),
         MapNode("Jaden", 2100, 2600, "act3_npc_jaden", "Jaden", False, "#99ccff", "jaden.png"),
@@ -240,6 +289,7 @@ label act3_complete:
 ## ============================================================================
 
 label act4_map:
+    $ current_map_bg = "ui/Dorm.png"
     $ act4_nodes = [
         MapNode("Dorm", 2500, 2500, "npc_dorm_manager", "Dormitory Office", False, "#ffaa77", "dorm_mgr.png"),
     ]
@@ -278,6 +328,7 @@ label act4_complete:
 ## ============================================================================
 
 label act5_map:
+    $ current_map_bg = "ui/CL3.png"
     $ act5_nodes = [
         MapNode("prof_lena",     1800, 1800, "act5_npc_prof_lena",     tooltip="Prof. Lena",     icon_image="prof_lena.png",     locked=False),
         MapNode("kuya_rico",     2800, 2200, "act5_npc_kuya_rico",     tooltip="Kuya Rico",      icon_image="kuya_rico.png",     locked=True),
@@ -336,6 +387,7 @@ label act5_complete:
 ## ============================================================================
 
 label act6_map:
+    $ current_map_bg = "ui/CAS_Overworld(F).png"
     $ act6_nodes = [
         MapNode("mika",         1600, 2200, "act6_npc_mika",         tooltip="Mika",          icon_image="mika.png",         locked=False),
         MapNode("kuya_tomas",   2800, 1900, "act6_npc_kuya_tomas",   tooltip="Kuya Tomas",    icon_image="kuya_tomas.png",   locked=True),
@@ -394,6 +446,7 @@ label act6_complete:
 ## ============================================================================
 
 label act7_map:
+    $ current_map_bg = "ui/Diwata.png"
     $ act7_nodes = [
         MapNode("ate_rosa",      1800, 2000, "act7_npc_ate_rosa",      tooltip="Ate Rosa",      icon_image="ate_rosa.png",      locked=False),
         MapNode("kuya_neil",     2800, 2400, "act7_npc_kuya_neil",     tooltip="Kuya Neil",     icon_image="kuya_neil.png",     locked=True),
@@ -452,6 +505,7 @@ label act7_complete:
 ## ============================================================================
 
 label act8_map:
+    $ current_map_bg = "ui/dormRoom.png"
     $ act8_nodes = [
         MapNode("jaden_act8",    2100, 2600, "act8_npc_jaden",       tooltip="Jaden",         icon_image="jaden.png",        locked=False),
         MapNode("ate_linda",     1600, 3200, "act8_npc_ate_linda",   tooltip="Ate Linda",     icon_image="ate_linda.png",    locked=True),
@@ -514,6 +568,7 @@ label open_world:
     $ player_map_y = 2600
     $ player_facing = "down"
 
+    $ current_map_bg = "maps/banwa.png"
     $ openworld_nodes = [
         MapNode("Gate", 2500, 3200, "ow_gate", "Banwa Gate", False, "#44cc44", "manong_guard.png"),
         MapNode("HSU", 1800, 2000, "ow_hsu", "Health Services", False, "#4499ff", "hsu_nurse.png"),

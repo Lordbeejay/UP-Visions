@@ -11,7 +11,7 @@ default game_complete = False
 ## --- Act Task Requirements ---
 ## Each act has a set of task IDs the player must complete to advance
 define ACT1_TASKS = {"talk_jaden", "talk_manong_josh", "talk_aleng_maria", "talk_manong_chris", "talk_joseph_driver", "reach_box1"}
-define ACT2_TASKS = {"talk_ate_bea", "talk_kuya_mark", "talk_maam_reyes", "talk_sir_allan", "reach_enrollment"}
+define ACT2_TASKS = {"talk_ate_bea", "talk_kuya_mark", "go_to_newad", "talk_maam_reyes", "complete_flip_card"}
 define ACT3_TASKS = {"talk_mikhaela", "talk_jaden", "talk_caezar"}
 define ACT4_TASKS = {"talk_dorm_manager"}
 
@@ -25,6 +25,7 @@ define ACT8_TASKS = {"talk_jaden_act8", "talk_ate_linda", "talk_nanay_elena", "t
 default player_map_x = 640
 default player_map_y = 500
 default player_facing = "down"
+default current_map_bg = "maps/banwa.png"
 
 ## --- Task Names (for HUD display) ---
 define TASK_DESCRIPTIONS = {
@@ -36,9 +37,9 @@ define TASK_DESCRIPTIONS = {
     "reach_box1": "Head to BOX 1",
     "talk_ate_bea": "Talk to Ate Bea",
     "talk_kuya_mark": "Talk to Kuya Mark",
+    "go_to_newad": "Go to New Admin",
     "talk_maam_reyes": "Talk to Ma'am Reyes",
-    "talk_sir_allan": "Talk to Sir Allan",
-    "reach_enrollment": "Go to Enrollment Office",
+    "complete_flip_card": "Complete the Office Match Game",
     "talk_mikhaela": "Find Sarah",
     "talk_caezar": "Meet Caezar at Ceazar",
     "talk_dorm_manager": "Talk to the Dorm Manager",
@@ -66,7 +67,7 @@ define TASK_DESCRIPTIONS = {
 
 define ACT_TASK_ORDER = {
     1: ["talk_jaden", "talk_manong_josh", "talk_aleng_maria", "talk_manong_chris", "talk_joseph_driver", "reach_box1"],
-    2: ["talk_ate_bea", "talk_kuya_mark", "talk_maam_reyes", "talk_sir_allan", "reach_enrollment"],
+    2: ["talk_ate_bea", "talk_kuya_mark", "go_to_newad", "talk_maam_reyes", "complete_flip_card"],
     3: ["talk_jaden", "talk_mikhaela", "talk_caezar"],
     4: ["talk_dorm_manager"],
     5: ["talk_prof_lena", "talk_kuya_rico", "talk_ate_grace", "talk_classmate_dan", "attend_first_class"],
@@ -82,11 +83,11 @@ define TASK_LIST_TEXT = {
     "talk_manong_chris": "Talk to Manong Chris",
     "talk_joseph_driver": "Talk to Joseph (Driver)",
     "reach_box1": "Head to BOX 1",
-    "talk_ate_bea": "Talk to Ate Bea at BOX 1 entrance",
+    "talk_ate_bea": "Talk to Ate Bea at the Entrance",
     "talk_kuya_mark": "Talk to Kuya Mark about security",
-    "talk_maam_reyes": "Talk to Ma'am Reyes about offices",
-    "talk_sir_allan": "Talk to Sir Allan",
-    "reach_enrollment": "Go to the Enrollment Office",
+    "go_to_newad": "Head to New Admin building",
+    "talk_maam_reyes": "Find Ma'am Reyes inside New Admin",
+    "complete_flip_card": "Complete the Office Match Game",
     "talk_mikhaela": "Talk to Sarah",
     "talk_caezar": "Meet Caezar after talking to Jaden and Sarah",
     "talk_dorm_manager": "Talk to the Dorm Manager",
@@ -153,18 +154,17 @@ init python:
                 "talk_joseph_driver" in store.tasks_completed
             )
         ## Act 2 prerequisites
-        if task_id in ("talk_kuya_mark", "talk_maam_reyes"):
+        if task_id == "talk_kuya_mark":
             return "talk_ate_bea" in store.tasks_completed
-        if task_id == "talk_sir_allan":
-            return ("talk_kuya_mark" in store.tasks_completed or
-                    "talk_maam_reyes" in store.tasks_completed)
-        if task_id == "reach_enrollment":
+        if task_id == "go_to_newad":
             return (
                 "talk_ate_bea" in store.tasks_completed and
-                "talk_kuya_mark" in store.tasks_completed and
-                "talk_maam_reyes" in store.tasks_completed and
-                "talk_sir_allan" in store.tasks_completed
+                "talk_kuya_mark" in store.tasks_completed
             )
+        if task_id == "talk_maam_reyes":
+            return "go_to_newad" in store.tasks_completed
+        if task_id == "complete_flip_card":
+            return "talk_maam_reyes" in store.tasks_completed
         ## Act 3 prerequisites
         if task_id == "talk_caezar":
             return (
@@ -243,7 +243,7 @@ init python:
     def get_act_title(act_num):
         titles = {
             1: "ACT 1: Arrival in Miagao",
-            2: "ACT 2: Exploring BOX 1",
+            2: "ACT 2: Entering the University",
             3: "ACT 3: Social / Exploration",
             4: "ACT 4: Dorm Accommodation",
             5: "ACT 5: First Day of Classes",
@@ -482,6 +482,80 @@ init python:
         "UPV Gate, Plaza, Market, Municipal Hall, Highway",
         "Tol Joseph", "📌",
         full="Standard Miagao tricycle drop-off points: UPV Main Gate (for campus), Miagao Plaza (town center — your navigation anchor), Public Market (for groceries and cheap meals), Municipal Hall (for LGU documents), and the Highway Junction (for jeepneys to Iloilo City and other provinces). When lost or unsure: always say 'Plaza' as your destination. You can walk anywhere from there."
+    )
+
+
+    ## =========================================================================
+    ## ACT 2 INFO ITEMS — Ate Bea, Kuya Mark, Ma'am Reyes
+    ## =========================================================================
+
+    # --- ATE BEA ITEMS ---
+    ITEM_BOX1_INFO = InfoItem(
+        "box1_info",
+        "What is BOX 1?",
+        "Gateway building — all admin offices start here",
+        "Ate Bea", "🏢",
+        full="BOX 1 is the main administrative building and the first checkpoint when entering campus. It houses the Registrar, Cashier, OSA, and the Chancellor's Office upstairs. The name likely comes from its box shape or its role as the first 'box' you pass. Everything enrollment-related starts here."
+    )
+    ITEM_UPV_BUS = InfoItem(
+        "upv_bus",
+        "UPV Bus Schedule",
+        "Free shuttle: 5:30/6:00 AM to city, 5:00 PM back",
+        "Ate Bea", "🚌",
+        full="The UPV shuttle runs from Miagao to Iloilo City, departing at 5:30 AM and 6:00 AM on weekdays. Return trips leave around 5:00 PM. The bus is FREE for enrolled students — just show your validated Form 5 or UP ID. Schedules change every semester, so check the bulletin board or UPV Facebook page. Arrive 10 minutes early — the bus does not wait."
+    )
+    ITEM_FRESHIE_TIPS = InfoItem(
+        "freshie_tips",
+        "Freshie Survival Tips",
+        "Form 5, office hours, CRS, be polite to staff",
+        "Ate Bea", "💡",
+        full="Five survival tips for freshies: (1) Always carry your Form 5 — it's your proof of enrollment. (2) Respect office hours — don't show up at closing time. (3) Be polite to staff — a 'Good morning' goes a long way. (4) Learn the CRS (Computerized Registration System) — you'll use it every semester. (5) When in doubt, ask a fellow student."
+    )
+
+    # --- KUYA MARK ITEMS ---
+    ITEM_ID_POLICY = InfoItem(
+        "id_policy",
+        "Campus ID Policy",
+        "No ID, no entry — wear UP ID at all times",
+        "Kuya Mark", "🪪",
+        full="Strict ID policy on campus. Once you have your UP ID, wear it at all times inside campus. No ID means no entry at the main gate and most buildings. Freshies can use their Notice of Admission or validated Form 5 as a temporary pass. Keep it in a clear sleeve. Vehicles need a separate sticker from the Security Office. Forgot your ID? Sign the logbook and leave a valid ID — but don't make it a habit."
+    )
+    ITEM_SECURITY_RULES = InfoItem(
+        "security_rules",
+        "Security Protocols",
+        "Bag checks, zero tolerance, 10 PM curfew",
+        "Kuya Mark", "🛡️",
+        full="Campus security protocols: (1) Bags subject to inspection at building entrances, especially library and labs. (2) Zero tolerance for alcohol, weapons, illegal substances. (3) Curfew for dormers is 10 PM — need special permission after that. (4) Report incidents immediately to the Security Office near the gate. (5) During emergencies, follow evacuation signs to the open field near the flagpole. Save the security hotline number posted at every building entrance."
+    )
+    ITEM_RESTRICTED_AREAS = InfoItem(
+        "restricted_areas",
+        "Restricted Areas",
+        "Fishponds, Chancellor's floor, rooftops — off limits",
+        "Kuya Mark", "⛔",
+        full="Restricted campus areas: Fishponds and wet labs require written permission from the College of Fisheries. The Chancellor's Office floor needs an appointment — no walk-ins. Research vessels and marine stations are for faculty and authorized researchers only. All building rooftops are off-limits with no exceptions. Parts of the beachfront are restricted after 6 PM. Violation means ID confiscation, incident report, and possible disciplinary action through OSA."
+    )
+
+    # --- MA'AM REYES ITEMS ---
+    ITEM_OFFICE_DIRECTORY = InfoItem(
+        "office_directory",
+        "BOX 1 Office Directory",
+        "Registrar, Cashier, OSA (ground), Chancellor (2F)",
+        "Ma'am Reyes", "📋",
+        full="BOX 1 ground floor: Office of the University Registrar (enrollment, transcripts, certifications, Form 5), Cashier's Office (fees, refunds, financial transactions), Office of Student Affairs/OSA (scholarships, student orgs, discipline). Second floor: Chancellor's Office, Vice Chancellor offices. New Admin building: College offices, faculty rooms, Conference Room. As a student, Registrar and Cashier will be your most visited offices."
+    )
+    ITEM_OFFICE_HOURS = InfoItem(
+        "office_hours",
+        "Office Hours",
+        "M-F 8AM-12PM, 1PM-5PM; closed lunch 12-1",
+        "Ma'am Reyes", "🕐",
+        full="Office hours: Monday to Friday, 8:00 AM to 12:00 NN and 1:00 PM to 5:00 PM. Registrar and Cashier close for lunch 12-1 PM with no exceptions during peak enrollment. OSA may have extended hours during the first week of classes. Chancellor's Office is by appointment only — morning slots fill fast. Some offices operate Saturday 8 AM-12 PM only. Fully closed on holidays. Best time to avoid lines: 8 AM sharp."
+    )
+    ITEM_APPOINTMENTS = InfoItem(
+        "appointments_info",
+        "Appointments vs Walk-ins",
+        "Walk-in: Registrar, Cashier, OSA. Appointment: Chancellor",
+        "Ma'am Reyes", "📅",
+        full="Walk-in offices (no appointment needed): Registrar for Form 5, enrollment, certifications. Cashier for payments and receipts. OSA for scholarship inquiries and org matters (expect a wait). Appointment required: Chancellor's Office (email the administrative aide), Vice Chancellor offices, faculty consultations (coordinate with professor), and non-routine Medical Certificate requests through Health Services Unit."
     )
 
 
