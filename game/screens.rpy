@@ -1,434 +1,93 @@
 ﻿################################################################################
 ## Styles
 ################################################################################
-init offset = -1
+screen notebook_intro_screen():
+    modal True
+    zorder 200
 
-## Student Portal Colors
-define DARK_MAROON = "#5c1a1a"
-define LIGHT_PINK_BG = "#f0e6e6"
-define WHITE = "#ffffff"
-define TEXT_DARK = "#3a1a1a"
-define RED_BADGE = "#cc0000"
-define BUTTON_BG = "#f5eded"
-define BUTTON_BORDER = "#c8b0b0"
-define DISABLED_TEXT = "#cc4444"
+    add "#1a1a2e" alpha 0.97
 
+    # Centered notebook card — visually inspired by dialogue UI, not a dialogue window
+    frame:
+        xalign 0.5
+        yalign 0.5
+        xsize 680
+        ysize 560
+        padding (0, 0, 0, 0)
+        background Frame(Solid("#1a0a10f0"), 0, 0)
 
-style default:
-    properties gui.text_properties()
-    language gui.language
+        vbox:
+            spacing 0
 
-style input:
-    properties gui.text_properties("input", accent=True)
-    adjust_spacing False
-
-style hyperlink_text:
-    properties gui.text_properties("hyperlink", accent=True)
-    hover_underline True
-
-style gui_text:
-    properties gui.text_properties("interface")
-
-
-style button:
-    properties gui.button_properties("button")
-
-style button_text is gui_text:
-    properties gui.text_properties("button")
-    yalign 0.5
-
-
-style label_text is gui_text:
-    properties gui.text_properties("label", accent=True)
-
-style prompt_text is gui_text:
-    properties gui.text_properties("prompt")
-
-
-style bar:
-    ysize gui.bar_size
-    left_bar Frame("gui/bar/left.png", gui.bar_borders, tile=gui.bar_tile)
-    right_bar Frame("gui/bar/right.png", gui.bar_borders, tile=gui.bar_tile)
-
-style vbar:
-    xsize gui.bar_size
-    top_bar Frame("gui/bar/top.png", gui.vbar_borders, tile=gui.bar_tile)
-    bottom_bar Frame("gui/bar/bottom.png", gui.vbar_borders, tile=gui.bar_tile)
-
-style scrollbar:
-    ysize gui.scrollbar_size
-    base_bar Frame("gui/scrollbar/horizontal_[prefix_]bar.png", gui.scrollbar_borders, tile=gui.scrollbar_tile)
-    thumb Frame("gui/scrollbar/horizontal_[prefix_]thumb.png", gui.scrollbar_borders, tile=gui.scrollbar_tile)
-
-style vscrollbar:
-    xsize gui.scrollbar_size
-    base_bar Frame("gui/scrollbar/vertical_[prefix_]bar.png", gui.vscrollbar_borders, tile=gui.scrollbar_tile)
-    thumb Frame("gui/scrollbar/vertical_[prefix_]thumb.png", gui.vscrollbar_borders, tile=gui.scrollbar_tile)
-
-style slider:
-    ysize gui.slider_size
-    base_bar Frame("gui/slider/horizontal_[prefix_]bar.png", gui.slider_borders, tile=gui.slider_tile)
-    thumb "gui/slider/horizontal_[prefix_]thumb.png"
-
-style vslider:
-    xsize gui.slider_size
-    base_bar Frame("gui/slider/vertical_[prefix_]bar.png", gui.vslider_borders, tile=gui.slider_tile)
-    thumb "gui/slider/vertical_[prefix_]thumb.png"
-
-
-style frame:
-    padding gui.frame_borders.padding
-    background Frame("gui/frame.png", gui.frame_borders, tile=gui.frame_tile)
-
-
-
-################################################################################
-## In-game screens
-################################################################################
-
-
-## Say screen ##################################################################
-##
-## The say screen is used to display dialogue to the player. It takes two
-## parameters, who and what, which are the name of the speaking character and
-## the text to be displayed, respectively. (The who parameter can be None if no
-## name is given.)
-##
-## This screen must create a text displayable with id "what", as Ren'Py uses
-## this to manage text display. It can also create displayables with id "who"
-## and id "window" to apply style properties.
-##
-## https://www.renpy.org/doc/html/screen_special.html#say
-
-screen say(who, what):
-
-    $ _who_text = renpy.filter_text_tags(who, deny=["color"]) if who is not None else None
-    $ _speaker_portrait = get_speaker_portrait(_who_text)
-
-    ## Narration/act transition lines render as clean center text (no large box overlay).
-    if who is None:
-        text what id "what":
-            style "say_dialogue_center"
-            xalign 0.5
-            yalign 0.5
-
-    else:
-        window:
-            id "window"
-
-            ## Outer glow border
+            # Header (accented strip)
             frame:
-                xfill True
-                yfill True
-                padding (3, 3, 3, 3)
-                background Frame(Solid("#f6d79d33"), 0, 0)
-
-                ## Inner border accent
-                frame:
-                    xfill True
-                    yfill True
-                    padding (2, 2, 2, 2)
-                    background Frame(Solid("#f6d79d11"), 0, 0)
-
-                    ## Main dark panel
-                    frame:
-                        xfill True
-                        yfill True
-                        padding (0, 0, 0, 0)
-                        background Frame(Solid("#1a0a10f0"), 0, 0)
-
-                        fixed:
-
-                            ## Corner accents (top-left)
-                            frame:
-                                xpos 8
-                                ypos 8
-                                xsize 20
-                                ysize 2
-                                background Solid("#f6d79d66")
-                                padding (0, 0, 0, 0)
-                            frame:
-                                xpos 8
-                                ypos 8
-                                xsize 2
-                                ysize 20
-                                background Solid("#f6d79d66")
-                                padding (0, 0, 0, 0)
-
-                            ## Corner accents (top-right)
-                            frame:
-                                xalign 1.0
-                                xoffset -8
-                                ypos 8
-                                xsize 20
-                                ysize 2
-                                background Solid("#f6d79d66")
-                                padding (0, 0, 0, 0)
-                            frame:
-                                xalign 1.0
-                                xoffset -8
-                                ypos 8
-                                xsize 2
-                                ysize 20
-                                background Solid("#f6d79d66")
-                                padding (0, 0, 0, 0)
-
-                            ## Corner accents (bottom-left)
-                            frame:
-                                xpos 8
-                                yalign 1.0
-                                yoffset -8
-                                xsize 20
-                                ysize 2
-                                background Solid("#f6d79d66")
-                                padding (0, 0, 0, 0)
-                            frame:
-                                xpos 8
-                                yalign 1.0
-                                yoffset -28
-                                xsize 2
-                                ysize 20
-                                background Solid("#f6d79d66")
-                                padding (0, 0, 0, 0)
-
-                            ## Corner accents (bottom-right)
-                            frame:
-                                xalign 1.0
-                                xoffset -8
-                                yalign 1.0
-                                yoffset -8
-                                xsize 20
-                                ysize 2
-                                background Solid("#f6d79d66")
-                                padding (0, 0, 0, 0)
-                            frame:
-                                xalign 1.0
-                                xoffset -8
-                                yalign 1.0
-                                yoffset -28
-                                xsize 2
-                                ysize 20
-                                background Solid("#f6d79d66")
-                                padding (0, 0, 0, 0)
-
-                            ## Top inner highlight edge
-                            frame:
-                                xalign 0.5
-                                ypos 4
-                                xsize 600
-                                ysize 1
-                                background Solid("#f6d79d18")
-                                padding (0, 0, 0, 0)
-
-                            ## Bottom inner highlight edge
-                            frame:
-                                xalign 0.5
-                                yalign 1.0
-                                yoffset -4
-                                xsize 600
-                                ysize 1
-                                background Solid("#f6d79d18")
-                                padding (0, 0, 0, 0)
-
-                            ## Content area
-                            vbox:
-                                style "say_content_vbox"
-
-                                if who is not None:
-                                    ## Namebox with flanking ornaments
-                                    hbox:
-                                        xalign 0.5
-                                        spacing 10
-
-                                        ## Left ornament
-                                        hbox:
-                                            yalign 0.5
-                                            spacing 4
-                                            frame:
-                                                xsize 24
-                                                ysize 1
-                                                yalign 0.5
-                                                background Solid("#f6d79d44")
-                                                padding (0, 0, 0, 0)
-                                            frame:
-                                                xsize 5
-                                                ysize 5
-                                                yalign 0.5
-                                                background Solid("#f6d79d")
-                                                padding (0, 0, 0, 0)
-
-                                        window:
-                                            id "namebox"
-                                            style "namebox"
-                                            text _who_text id "who"
-
-                                        ## Right ornament
-                                        hbox:
-                                            yalign 0.5
-                                            spacing 4
-                                            frame:
-                                                xsize 5
-                                                ysize 5
-                                                yalign 0.5
-                                                background Solid("#f6d79d")
-                                                padding (0, 0, 0, 0)
-                                            frame:
-                                                xsize 24
-                                                ysize 1
-                                                yalign 0.5
-                                                background Solid("#f6d79d44")
-                                                padding (0, 0, 0, 0)
-
-                                text what id "what"
-
-        ## ── Portrait box (left side, separate from dialogue window) ──
-        frame:
-            xalign 0.0
-            yalign 1.0
-            xoffset 40
-            yoffset -56
-            xsize 220
-            ysize 310
-            padding (3, 3, 3, 3)
-            background Frame(Solid("#f6d79d33"), 0, 0)
-
-            frame:
-                xfill True
-                yfill True
-                padding (2, 2, 2, 2)
                 background Frame(Solid("#f6d79d11"), 0, 0)
+                xfill True
+                padding (24, 18, 24, 18)
+                hbox:
+                    spacing 12
+                    text "🔍" size 24
+                    vbox:
+                        spacing 2
+                        text "DETECTIVE NOTEBOOK" size 13 color gui.accent_color bold True
+                        text "Freshie Field Notes — Day 1" size 11 color "#6b7280"
 
-                frame:
+            # Content area (scrollable list)
+            frame:
+                xfill True
+                ysize 420
+                padding (18, 14, 18, 14)
+                background Solid("#0f0f1a")
+
+                viewport:
                     xfill True
-                    yfill True
-                    padding (0, 0, 0, 0)
-                    background Frame(Solid("#1a0a10f0"), 0, 0)
+                    ysize 420
+                    scrollbars "vertical"
+                    mousewheel True
 
-                    fixed:
-                        ## Corner accents (top-left)
-                        frame:
-                            xpos 6
-                            ypos 6
-                            xsize 14
-                            ysize 2
-                            background Solid("#f6d79d66")
-                            padding (0, 0, 0, 0)
-                        frame:
-                            xpos 6
-                            ypos 6
-                            xsize 2
-                            ysize 14
-                            background Solid("#f6d79d66")
-                            padding (0, 0, 0, 0)
+                    vbox:
+                        spacing 10
+                        xfill True
 
-                        ## Corner accents (top-right)
-                        frame:
-                            xalign 1.0
-                            xoffset -6
-                            ypos 6
-                            xsize 14
-                            ysize 2
-                            background Solid("#f6d79d66")
-                            padding (0, 0, 0, 0)
-                        frame:
-                            xalign 1.0
-                            xoffset -6
-                            ypos 6
-                            xsize 2
-                            ysize 14
-                            background Solid("#f6d79d66")
-                            padding (0, 0, 0, 0)
+                        text "Find answers to these questions by talking to the locals." size 12 color "#9ca3af" italic True
+                        null height 8
 
-                        ## Corner accents (bottom-left)
-                        frame:
-                            xpos 6
-                            yalign 1.0
-                            yoffset -6
-                            xsize 14
-                            ysize 2
-                            background Solid("#f6d79d66")
-                            padding (0, 0, 0, 0)
-                        frame:
-                            xpos 6
-                            yalign 1.0
-                            yoffset -22
-                            xsize 2
-                            ysize 14
-                            background Solid("#f6d79d66")
-                            padding (0, 0, 0, 0)
-
-                        ## Corner accents (bottom-right)
-                        frame:
-                            xalign 1.0
-                            xoffset -6
-                            yalign 1.0
-                            yoffset -6
-                            xsize 14
-                            ysize 2
-                            background Solid("#f6d79d66")
-                            padding (0, 0, 0, 0)
-                        frame:
-                            xalign 1.0
-                            xoffset -6
-                            yalign 1.0
-                            yoffset -22
-                            xsize 2
-                            ysize 14
-                            background Solid("#f6d79d66")
-                            padding (0, 0, 0, 0)
-
-                        ## Portrait image and title
-                        vbox:
-                            xfill True
-                            yfill True
-                            spacing 0
-
+                        for q in notebook_questions:
                             frame:
                                 xfill True
-                                ysize 240
-                                padding (0, 0, 0, 0)
-                                background Solid("#00000000")
-                                if _speaker_portrait is not None:
-                                    add _speaker_portrait:
-                                        xalign 0.5
-                                        yalign 0.5
-                                        fit "contain"
-                                        xsize 200
-                                        ysize 240
-                                else:
-                                    text "?" xalign 0.5 yalign 0.5 size 72 color "#f6d79d44"
+                                padding (10, 8, 10, 8)
+                                background Frame(Solid("#111128"), 0, 0)
 
-                            ## Title ribbon banner below portrait
-                            $ _speaker_title = get_speaker_title(_who_text)
-                            if _speaker_title is not None:
-                                frame:
-                                    xalign 0.5
-                                    ysize 40
-                                    xsize 200
-                                    padding (0, 0, 0, 0)
-                                    yoffset -8
-                                    add Solid("#5c1a1a"):
-                                        xysize (200, 40)
-                                    add Solid("#f6d79d"):
-                                        xysize (160, 32)
-                                        xpos 20
-                                        ypos 4
-                                    add Solid("#5c1a1a"):
-                                        xysize (20, 20)
-                                        xpos 0
-                                        ypos 20
-                                    add Solid("#5c1a1a"):
-                                        xysize (20, 20)
-                                        xpos 180
-                                        ypos 20
-                                    text _speaker_title:
-                                        xalign 0.5
-                                        text_align 0.5
-                                        size 15
-                                        color "#1a0a10"
-                                        bold True
-                                        yalign 0.5
-                                        outlines [(2, "#f6d79d33", 0, 0)]
+                                hbox:
+                                    spacing 12
+                                    xfill True
+                                    text "?" size 18 color "#a78bfa" yalign 0.5
+                                    vbox:
+                                        spacing 2
+                                        xfill True
+                                        text q.text size 13 color "#e2e8f0"
+                                        text "[ not yet discovered ]" substitute False size 11 color "#4b5563" italic True
+
+            # Footer button
+            frame:
+                background Frame(Solid("#1e1e3a"), 0, 0)
+                xfill True
+                padding (20, 12, 20, 12)
+                hbox:
+                    xfill True
+                    textbutton "Start Exploring →" style "notebook_btn" xalign 0.5 action Return()
+
+style notebook_btn:
+    background gui.accent_color
+    hover_background gui.hover_color
+    padding (20, 10, 20, 10)
+
+style notebook_btn_text:
+    color "#ffffff"
+    hover_color "#ffffff"
+    size 13
+    bold True
+
 
 
 ## Make the namebox available for styling through the Character object.
@@ -445,7 +104,6 @@ init python:
         "kuya mark": "images/npcs/kuya_mark.png",
         "maam reyes": "images/npcs/maam_reyes.png",
         "sir allan": "images/npcs/sir_allan.png",
-        "Sir Noel": "images/npcs/sir_allan.png",
         ## Act 3/4 NPCs
         "Sarah": "images/npcs/sarah.png",
         "Caezar": "images/npcs/caezar.png",
@@ -2979,72 +2637,104 @@ screen notebook_intro_screen():
 
     add "#1a1a2e" alpha 0.97
 
-    frame:
-        xalign 0.5
-        yalign 0.5
-        xsize 680
-        ysize 560
-        background "#0f0f1a"
-        padding (0,0,0,0)
+    window:
+        id "window"
 
-        vbox:
-            spacing 0
+        ## Outer glow border
+        frame:
+            xfill True
+            yfill True
+            padding (3, 3, 3, 3)
+            background Frame(Solid("#f6d79d33"), 0, 0)
 
-            ## Header
+            ## Inner border accent
             frame:
-                background "#1e1e3a"
                 xfill True
-                padding (32, 20, 32, 20)
-                hbox:
-                    spacing 12
-                    text "🔍" size 28
-                    vbox:
-                        spacing 2
-                        text "DETECTIVE NOTEBOOK" size 13 color "#a78bfa" bold True
-                        text "Freshie Field Notes — Day 1" size 11 color "#6b7280"
+                yfill True
+                padding (2, 2, 2, 2)
+                background Frame(Solid("#f6d79d11"), 0, 0)
 
-            ## Questions list
-            frame:
-                background "#111128"
-                xfill True
-                ysize 420
-                padding (28, 20, 28, 20)
+                ## Main dark panel
+                frame:
+                    xfill True
+                    yfill True
+                    padding (0, 0, 0, 0)
+                    background Frame(Solid("#1a0a10f0"), 0, 0)
 
-                vbox:
-                    spacing 10
-
-                    text "Find answers to these questions by talking to the locals." size 12 color "#9ca3af" italic True
-
-                    null height 8
-
-                    for q in notebook_questions:
+                    fixed:
+                        ## Centered notebook card
                         frame:
-                            background "#1a1a30"
-                            xfill True
-                            padding (16, 12, 16, 12)
-                            hbox:
-                                spacing 12
-                                xfill True
-                                text "?" size 18 color "#a78bfa" yalign 0.5
-                                vbox:
-                                    spacing 2
-                                    xfill True
-                                    text q.text size 13 color "#e2e8f0"
-                                    text "[ not yet discovered ]" substitute False size 11 color "#4b5563" italic True
+                            xalign 0.5
+                            yalign 0.5
+                            xsize 680
+                            ysize 560
+                            padding (0, 0, 0, 0)
+                            background Frame(Solid("#1a0a10f0"), 0, 0)
 
-            ## Button
-            frame:
-                background "#1e1e3a"
-                xfill True
-                padding (32, 16, 32, 16)
-                textbutton "Start Exploring →":
-                    xalign 0.5
-                    style "notebook_btn"
-                    action Return()
+                            vbox:
+                                spacing 0
+
+                                ## Header (uses same visual language as dialogue namebox)
+                                frame:
+                                    background Frame(Solid("#f6d79d11"), 0, 0)
+                                    xfill True
+                                    padding (28, 20, 28, 20)
+                                    hbox:
+                                        spacing 12
+                                        text "🔍" size 28
+                                        vbox:
+                                            spacing 2
+                                            text "DETECTIVE NOTEBOOK" size 13 color gui.accent_color bold True
+                                            text "Freshie Field Notes — Day 1" size 11 color "#6b7280"
+
+                                ## Content area (scrollable)
+                                frame:
+                                    xfill True
+                                    ysize 420
+                                    padding (20, 16, 20, 16)
+
+                                    viewport:
+                                        xfill True
+                                        ysize 420
+                                        scrollbars "vertical"
+                                        mousewheel True
+
+                                        vbox:
+                                            spacing 10
+                                            xfill True
+
+                                            text "Find answers to these questions by talking to the locals." size 12 color "#9ca3af" italic True
+                                            null height 8
+
+                                            for q in notebook_questions:
+                                                frame:
+                                                    xfill True
+                                                    padding (12, 10, 12, 10)
+                                                    background Frame(Solid("#111128"), 0, 0)
+
+                                                    hbox:
+                                                        spacing 12
+                                                        xfill True
+                                                        text "?" size 18 color "#a78bfa" yalign 0.5
+                                                        vbox:
+                                                            spacing 2
+                                                            xfill True
+                                                            text q.text size 13 color "#e2e8f0"
+                                                            text "[ not yet discovered ]" substitute False size 11 color "#4b5563" italic True
+
+                                ## Button
+                                frame:
+                                    background Frame(Solid("#1e1e3a"), 0, 0)
+                                    xfill True
+                                    padding (24, 12, 24, 12)
+                                    hbox:
+                                        xfill True
+                                        spacing 0
+                                        textbutton "Start Exploring →" style "notebook_btn" xalign 0.5 action Return()
 
 style notebook_btn:
-    background "#7C3AED"
-    hover_background "#6d28d9"
+    background gui.accent_color
+    hover_background gui.hover_color
     padding (24, 10, 24, 10)
 
 style notebook_btn_text:
@@ -3177,9 +2867,7 @@ screen inventory_screen():
                     xalign 0.5
                     spacing 24
                     text "[[I]] / [[ESC]] — Close" substitute False size 11 color "#95A5A6" italic True yalign 0.5
-                    textbutton "📖 Encyclopedia [[E]]" substitute False:
-                        style "inv_enc_btn"
-                        action [Hide("inventory_screen"), Show("encyclopedia_screen")]
+                    textbutton "📖 Encyclopedia [[E]]" substitute False action [Hide("inventory_screen"), Show("encyclopedia_screen")] style "inv_enc_btn"
 
 style inv_enc_btn:
     background "#2C3E50"
@@ -3827,721 +3515,3 @@ style gc_load_btn:
     color "#a78bfa"
     hover_color "#c4b5fd"
     size 11
-
-
-## ============================================================================
-## FLIP CARD MINI-GAME — Match offices with what they do
-## ============================================================================
-## Uses a grid of face-down cards. Player flips two at a time.
-## If they match (office name ↔ office function), they stay revealed.
-## All 6 pairs matched = game complete.
-## ============================================================================
-
-init python:
-
-    ## Card pairs: (office_name, office_function)
-    FLIP_CARD_PAIRS = [
-        ("Registrar", "Enrollment, Transcripts\n& Form 5"),
-        ("Cashier's Office", "Payment of Fees\n& Refunds"),
-        ("OSA", "Scholarships, Orgs\n& Discipline"),
-        ("Chancellor's Office", "Administrative\nLeadership"),
-        ("Security Office", "Campus Safety\n& ID Policies"),
-        ("Health Services", "Medical Checkups\n& Certificates"),
-    ]
-
-    ## Card colors for matched pairs (so each pair gets a distinct color)
-    FLIP_CARD_COLORS = [
-        "#4a90d9",  ## blue
-        "#d94a4a",  ## red
-        "#4ad97a",  ## green
-        "#d9a04a",  ## orange
-        "#9a4ad9",  ## purple
-        "#4ad9d9",  ## teal
-    ]
-
-    import random as _random
-
-    class FlipCardState:
-        def __init__(self):
-            self.reset()
-
-        def reset(self):
-            ## Build the card deck: 12 cards (6 pairs)
-            self.cards = []
-            for i, (name, func) in enumerate(FLIP_CARD_PAIRS):
-                self.cards.append({
-                    "id": i * 2,
-                    "pair_id": i,
-                    "text": name,
-                    "is_name": True,
-                    "flipped": False,
-                    "matched": False,
-                })
-                self.cards.append({
-                    "id": i * 2 + 1,
-                    "pair_id": i,
-                    "text": func,
-                    "is_name": False,
-                    "flipped": False,
-                    "matched": False,
-                })
-            _random.shuffle(self.cards)
-            self.first_pick = None
-            self.second_pick = None
-            self.matches_found = 0
-            self.total_pairs = len(FLIP_CARD_PAIRS)
-            self.attempts = 0
-            self.show_mismatch = False
-            self.game_complete = False
-
-        def flip_card(self, card_idx):
-            """Handle flipping a card."""
-            card = self.cards[card_idx]
-
-            ## Ignore if already matched or flipped
-            if card["matched"] or card["flipped"]:
-                return
-
-            ## Ignore if two cards already shown (waiting for reset)
-            if self.first_pick is not None and self.second_pick is not None:
-                return
-
-            card["flipped"] = True
-
-            if self.first_pick is None:
-                self.first_pick = card_idx
-            else:
-                self.second_pick = card_idx
-                self.attempts += 1
-                self._check_match()
-
-        def _check_match(self):
-            """Check if the two flipped cards match."""
-            c1 = self.cards[self.first_pick]
-            c2 = self.cards[self.second_pick]
-
-            if c1["pair_id"] == c2["pair_id"]:
-                ## Match found!
-                c1["matched"] = True
-                c2["matched"] = True
-                self.matches_found += 1
-                self.first_pick = None
-                self.second_pick = None
-                if self.matches_found >= self.total_pairs:
-                    self.game_complete = True
-            else:
-                ## Mismatch — will need to flip back
-                self.show_mismatch = True
-
-        def clear_mismatch(self):
-            """Flip mismatched cards back face-down."""
-            if self.show_mismatch and self.first_pick is not None and self.second_pick is not None:
-                self.cards[self.first_pick]["flipped"] = False
-                self.cards[self.second_pick]["flipped"] = False
-                self.first_pick = None
-                self.second_pick = None
-                self.show_mismatch = False
-
-    ## Global instance
-    flip_state = FlipCardState()
-
-
-screen flip_card_game():
-
-    ## Reset state when screen shows
-    on "show" action Function(flip_state.reset)
-
-    modal True
-    zorder 200
-
-    ## Dark overlay
-    add Solid("#0d0d20ee"):
-        xysize (1920, 1080)
-
-    ## Main container
-    vbox:
-        xalign 0.5
-        yalign 0.5
-        spacing 20
-
-        ## Title
-        text "OFFICE MATCH GAME":
-            xalign 0.5
-            size 36
-            color "#ffd700"
-            outlines [(3, "#1e0c12", 0, 0)]
-
-        text "Match each office with what it does!":
-            xalign 0.5
-            size 18
-            color "#f1debf"
-            outlines [(2, "#1e0c12", 0, 0)]
-
-        ## Score display
-        hbox:
-            xalign 0.5
-            spacing 30
-
-            text "Matches: [flip_state.matches_found]/[flip_state.total_pairs]":
-                size 16
-                color "#b8e6b0"
-                outlines [(2, "#1e0c12", 0, 0)]
-
-            text "Attempts: [flip_state.attempts]":
-                size 16
-                color "#f6d79d"
-                outlines [(2, "#1e0c12", 0, 0)]
-
-        null height 10
-
-        ## Card grid — 4 columns x 3 rows
-        grid 4 3:
-            xalign 0.5
-            spacing 12
-
-            for _ci in range(len(flip_state.cards)):
-                $ _card = flip_state.cards[_ci]
-
-                if _card["matched"]:
-                    ## Matched card — stays face up with pair color
-                    frame:
-                        xysize (220, 130)
-                        padding (10, 10, 10, 10)
-                        background Solid(FLIP_CARD_COLORS[_card["pair_id"]])
-
-                        vbox:
-                            xfill True
-                            yfill True
-                            xalign 0.5
-                            yalign 0.5
-
-                            if _card["is_name"]:
-                                text "📋":
-                                    size 22
-                                    xalign 0.5
-                                null height 4
-                            else:
-                                text "📝":
-                                    size 22
-                                    xalign 0.5
-                                null height 4
-
-                            text _card["text"]:
-                                size 13
-                                color "#ffffff"
-                                text_align 0.5
-                                xalign 0.5
-                                outlines [(1, "#00000088", 0, 0)]
-
-                elif _card["flipped"]:
-                    ## Flipped but not yet matched — show content
-                    frame:
-                        xysize (220, 130)
-                        padding (10, 10, 10, 10)
-                        background Solid("#2a1a3a")
-
-                        vbox:
-                            xfill True
-                            yfill True
-                            xalign 0.5
-                            yalign 0.5
-
-                            if _card["is_name"]:
-                                text "📋":
-                                    size 22
-                                    xalign 0.5
-                                null height 4
-                            else:
-                                text "📝":
-                                    size 22
-                                    xalign 0.5
-                                null height 4
-
-                            text _card["text"]:
-                                size 13
-                                color "#f1debf"
-                                text_align 0.5
-                                xalign 0.5
-
-                else:
-                    ## Face-down card — clickable
-                    button:
-                        xysize (220, 130)
-                        padding (10, 10, 10, 10)
-                        background Solid("#1e0c12")
-                        hover_background Solid("#3a1a2a")
-
-                        if flip_state.show_mismatch:
-                            action Function(flip_state.clear_mismatch)
-                        else:
-                            action Function(flip_state.flip_card, _ci)
-
-                        vbox:
-                            xfill True
-                            yfill True
-                            xalign 0.5
-                            yalign 0.5
-
-                            text "?":
-                                size 40
-                                color "#f6d79d"
-                                xalign 0.5
-                                yalign 0.5
-                                outlines [(2, "#1e0c12", 0, 0)]
-
-        null height 6
-
-        ## Mismatch hint
-        if flip_state.show_mismatch:
-            text "Not a match! Click any card to continue.":
-                xalign 0.5
-                size 16
-                color "#f87171"
-                outlines [(2, "#1e0c12", 0, 0)]
-
-        ## Game complete message
-        if flip_state.game_complete:
-            null height 10
-            text "All offices matched!":
-                xalign 0.5
-                size 24
-                color "#10b981"
-                outlines [(3, "#1e0c12", 0, 0)]
-
-            null height 10
-
-            textbutton "Continue":
-                xalign 0.5
-                text_size 20
-                text_color "#ffd700"
-                text_hover_color "#ffffff"
-                text_outlines [(2, "#1e0c12", 0, 0)]
-                action Return("completed")
-
-
-## ============================================================================
-## ENROLLMENT TETRIS — Drag subject blocks onto a weekly schedule grid
-## ============================================================================
-## Grid: 5 days (M-F) x 11 time slots (7AM-6PM, 1-hour rows)
-## 6 academic subjects (3 units each = 18 units total)
-## 2 non-unit subjects: PE, NSTP
-## Each subject block spans 1-2 hours (60-120 min)
-## Player clicks a subject from the palette, then clicks a grid cell to place it.
-## No overlaps allowed. All 8 subjects placed = game complete.
-## ============================================================================
-
-init python:
-
-    ## Subject definitions: (name, code, units, duration_hours, color)
-    TETRIS_SUBJECTS = [
-        ("Math 21",     "MATH 21",   3, 2, "#4a90d9"),   ## 120 min
-        ("Eng 1",       "ENG 1",     3, 2, "#d94a4a"),   ## 120 min
-        ("Fil 40",      "FIL 40",    3, 1, "#4ad97a"),   ## 60 min
-        ("STS",         "STS",       3, 2, "#d9a04a"),   ## 120 min
-        ("Kas 1",       "KAS 1",     3, 1, "#9a4ad9"),   ## 60 min
-        ("CS 11",       "CS 11",     3, 2, "#4ad9d9"),   ## 120 min
-        ("PE",          "PE",        0, 1, "#d97aaa"),   ## 60 min, non-unit
-        ("NSTP",        "NSTP",      0, 2, "#7a9ad9"),   ## 120 min, non-unit
-    ]
-
-    TETRIS_DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri"]
-    TETRIS_TIMES = [
-        "7:00", "8:00", "9:00", "10:00", "11:00",
-        "12:00", "1:00", "2:00", "3:00", "4:00", "5:00"
-    ]
-
-    class EnrollmentTetrisState:
-        def __init__(self):
-            self.reset()
-
-        def reset(self):
-            ## Grid: grid[day_idx][time_idx] = subject_index or -1
-            self.grid = [[-1 for _ in range(len(TETRIS_TIMES))] for _ in range(len(TETRIS_DAYS))]
-            ## Which subject is currently selected for placement
-            self.selected_subject = -1
-            ## Track which subjects have been placed (subject_idx -> list of (day, time) tuples)
-            self.placements = {}
-            ## Each subject needs to be placed on 2 different days (meeting pattern)
-            ## For simplicity: each subject is placed once (one block on one day)
-            self.placed_count = 0
-            self.total_subjects = len(TETRIS_SUBJECTS)
-            self.game_complete = False
-            self.error_msg = ""
-            self.total_units = 0
-
-        def select_subject(self, subj_idx):
-            """Select a subject from the palette to place."""
-            if subj_idx in self.placements:
-                self.error_msg = "Already placed!"
-                return
-            self.selected_subject = subj_idx
-            self.error_msg = ""
-
-        def place_at(self, day_idx, time_idx):
-            """Try to place the selected subject at the given grid cell."""
-            if self.selected_subject < 0:
-                self.error_msg = "Select a subject first!"
-                return
-
-            subj_idx = self.selected_subject
-            subj = TETRIS_SUBJECTS[subj_idx]
-            duration = subj[3]  ## hours
-
-            ## Check bounds
-            if time_idx + duration > len(TETRIS_TIMES):
-                self.error_msg = "Doesn't fit! Goes past 6:00 PM."
-                return
-
-            ## Check for overlaps
-            for t in range(time_idx, time_idx + duration):
-                if self.grid[day_idx][t] != -1:
-                    existing = TETRIS_SUBJECTS[self.grid[day_idx][t]]
-                    self.error_msg = "Conflict with " + existing[1] + "!"
-                    return
-
-            ## Place the subject
-            for t in range(time_idx, time_idx + duration):
-                self.grid[day_idx][t] = subj_idx
-
-            self.placements[subj_idx] = (day_idx, time_idx)
-            self.placed_count += 1
-            self.total_units += subj[2]
-            self.selected_subject = -1
-            self.error_msg = ""
-
-            if self.placed_count >= self.total_subjects:
-                self.game_complete = True
-
-        def remove_subject(self, subj_idx):
-            """Remove a placed subject from the grid."""
-            if subj_idx not in self.placements:
-                return
-            day_idx, time_idx = self.placements[subj_idx]
-            duration = TETRIS_SUBJECTS[subj_idx][3]
-            for t in range(time_idx, time_idx + duration):
-                if self.grid[day_idx][t] == subj_idx:
-                    self.grid[day_idx][t] = -1
-            self.total_units -= TETRIS_SUBJECTS[subj_idx][2]
-            del self.placements[subj_idx]
-            self.placed_count -= 1
-            self.game_complete = False
-            self.error_msg = ""
-
-    tetris_state = EnrollmentTetrisState()
-
-
-screen enrollment_tetris_game():
-
-    on "show" action Function(tetris_state.reset)
-
-    modal True
-    zorder 200
-
-    ## Dark overlay
-    add Solid("#0d0d20ee"):
-        xysize (1920, 1080)
-
-    hbox:
-        xalign 0.5
-        yalign 0.5
-        spacing 24
-
-        ## === LEFT: Subject Palette ===
-        vbox:
-            spacing 8
-            xsize 280
-
-            text "ENROLLMENT TETRIS":
-                size 22
-                color "#ffd700"
-                xalign 0.5
-                outlines [(2, "#1e0c12", 0, 0)]
-
-            text "Build your class schedule!":
-                size 13
-                color "#f1debf"
-                xalign 0.5
-                outlines [(1, "#1e0c12", 0, 0)]
-
-            null height 6
-
-            text "SUBJECTS":
-                size 14
-                color "#f6d79d"
-                outlines [(1, "#1e0c12", 0, 0)]
-
-            ## Subject list
-            for _si in range(len(TETRIS_SUBJECTS)):
-                $ _subj = TETRIS_SUBJECTS[_si]
-                $ _placed = _si in tetris_state.placements
-                $ _selected = tetris_state.selected_subject == _si
-
-                if _placed:
-                    ## Already placed — show with checkmark, click to remove
-                    button:
-                        xsize 270
-                        ysize 42
-                        background Solid(_subj[4] + "44")
-                        hover_background Solid(_subj[4] + "66")
-                        action Function(tetris_state.remove_subject, _si)
-                        padding (8, 4, 8, 4)
-
-                        hbox:
-                            spacing 6
-                            yalign 0.5
-                            text "✓":
-                                size 14
-                                color "#10b981"
-                            text _subj[1]:
-                                size 13
-                                color "#9f9f9f"
-                                strikethrough True
-                            if _subj[2] > 0:
-                                text "(" + str(_subj[2]) + "u)":
-                                    size 11
-                                    color "#9f9f9f88"
-                            else:
-                                text "(non-unit)":
-                                    size 11
-                                    color "#9f9f9f88"
-
-                elif _selected:
-                    ## Currently selected
-                    frame:
-                        xsize 270
-                        ysize 42
-                        background Solid(_subj[4])
-                        padding (8, 4, 8, 4)
-
-                        hbox:
-                            spacing 6
-                            yalign 0.5
-                            text "►":
-                                size 14
-                                color "#ffffff"
-                            text _subj[1]:
-                                size 13
-                                color "#ffffff"
-                                bold True
-                            if _subj[2] > 0:
-                                text "(" + str(_subj[2]) + "u, " + str(_subj[3]) + "hr)":
-                                    size 11
-                                    color "#ffffffcc"
-                            else:
-                                text "(non-unit, " + str(_subj[3]) + "hr)":
-                                    size 11
-                                    color "#ffffffcc"
-
-                else:
-                    ## Available to select
-                    button:
-                        xsize 270
-                        ysize 42
-                        background Solid("#1e0c12")
-                        hover_background Solid(_subj[4] + "44")
-                        action Function(tetris_state.select_subject, _si)
-                        padding (8, 4, 8, 4)
-
-                        hbox:
-                            spacing 6
-                            yalign 0.5
-
-                            frame:
-                                xsize 12
-                                ysize 12
-                                yalign 0.5
-                                background Solid(_subj[4])
-                                padding (0, 0, 0, 0)
-
-                            text _subj[1]:
-                                size 13
-                                color "#f1debf"
-                            if _subj[2] > 0:
-                                text "(" + str(_subj[2]) + "u, " + str(_subj[3]) + "hr)":
-                                    size 11
-                                    color "#f6d79d88"
-                            else:
-                                text "(non-unit, " + str(_subj[3]) + "hr)":
-                                    size 11
-                                    color "#f6d79d88"
-
-            null height 8
-
-            ## Units counter
-            hbox:
-                xalign 0.5
-                spacing 8
-                text "Units:":
-                    size 14
-                    color "#f6d79d"
-                    outlines [(1, "#1e0c12", 0, 0)]
-                text "[tetris_state.total_units]/18":
-                    size 14
-                    color "#b8e6b0"
-                    outlines [(1, "#1e0c12", 0, 0)]
-
-            text "[tetris_state.placed_count]/[tetris_state.total_subjects] placed":
-                size 12
-                color "#f6d79d88"
-                xalign 0.5
-
-            ## Error message
-            if tetris_state.error_msg:
-                null height 4
-                text "[tetris_state.error_msg]":
-                    size 13
-                    color "#f87171"
-                    xalign 0.5
-                    outlines [(1, "#1e0c12", 0, 0)]
-
-        ## === RIGHT: Schedule Grid ===
-        vbox:
-            spacing 0
-
-            ## Day headers
-            hbox:
-                spacing 0
-
-                ## Empty corner cell (time label column)
-                frame:
-                    xsize 60
-                    ysize 32
-                    background Solid("#1e0c12")
-                    padding (0, 0, 0, 0)
-                    text "Time":
-                        size 11
-                        color "#f6d79d"
-                        xalign 0.5
-                        yalign 0.5
-
-                for _day in TETRIS_DAYS:
-                    frame:
-                        xsize 120
-                        ysize 32
-                        background Solid(DARK_MAROON)
-                        padding (0, 0, 0, 0)
-                        text _day:
-                            size 13
-                            color "#ffffff"
-                            bold True
-                            xalign 0.5
-                            yalign 0.5
-
-            ## Time rows
-            for _ti in range(len(TETRIS_TIMES)):
-                hbox:
-                    spacing 0
-
-                    ## Time label
-                    frame:
-                        xsize 60
-                        ysize 48
-                        background Solid("#1a0a10")
-                        padding (4, 0, 4, 0)
-                        text TETRIS_TIMES[_ti]:
-                            size 11
-                            color "#f6d79d"
-                            xalign 0.5
-                            yalign 0.5
-
-                    ## Day cells
-                    for _di in range(len(TETRIS_DAYS)):
-                        $ _cell_val = tetris_state.grid[_di][_ti]
-
-                        if _cell_val >= 0:
-                            ## Occupied cell — show subject color and name
-                            $ _cs = TETRIS_SUBJECTS[_cell_val]
-                            ## Only show label on the first cell of the block
-                            $ _show_label = (_ti == 0 or tetris_state.grid[_di][_ti - 1] != _cell_val)
-
-                            frame:
-                                xsize 120
-                                ysize 48
-                                background Solid(_cs[4] + "cc")
-                                padding (4, 2, 4, 2)
-
-                                if _show_label:
-                                    vbox:
-                                        xalign 0.5
-                                        yalign 0.5
-                                        text _cs[1]:
-                                            size 12
-                                            color "#ffffff"
-                                            bold True
-                                            xalign 0.5
-                                            outlines [(1, "#00000088", 0, 0)]
-                                        if _cs[2] > 0:
-                                            text str(_cs[2]) + " units":
-                                                size 9
-                                                color "#ffffffaa"
-                                                xalign 0.5
-                                        else:
-                                            text "non-unit":
-                                                size 9
-                                                color "#ffffffaa"
-                                                xalign 0.5
-
-                        else:
-                            ## Empty cell — clickable if subject is selected
-                            if tetris_state.selected_subject >= 0:
-                                button:
-                                    xsize 120
-                                    ysize 48
-                                    background Solid("#1e0c1288")
-                                    hover_background Solid(TETRIS_SUBJECTS[tetris_state.selected_subject][4] + "44")
-                                    action Function(tetris_state.place_at, _di, _ti)
-                                    padding (0, 0, 0, 0)
-
-                                    ## Grid lines
-                                    frame:
-                                        xfill True
-                                        yfill True
-                                        background Solid("#2a1a2a22")
-                                        padding (0, 0, 0, 0)
-                            else:
-                                frame:
-                                    xsize 120
-                                    ysize 48
-                                    background Solid("#1e0c1288")
-                                    padding (0, 0, 0, 0)
-
-                                    frame:
-                                        xfill True
-                                        yfill True
-                                        background Solid("#2a1a2a22")
-                                        padding (0, 0, 0, 0)
-
-            ## Bottom instruction
-            null height 12
-
-            if tetris_state.selected_subject >= 0:
-                $ _sel_s = TETRIS_SUBJECTS[tetris_state.selected_subject]
-                text "Click a time slot to place " + _sel_s[1] + " (" + str(_sel_s[3]) + " hr block)":
-                    size 14
-                    color "#f6d79d"
-                    xalign 0.5
-                    outlines [(1, "#1e0c12", 0, 0)]
-            elif not tetris_state.game_complete:
-                text "Select a subject, then click the grid to place it. Click placed subjects to remove.":
-                    size 12
-                    color "#f6d79d88"
-                    xalign 0.5
-
-            ## Game complete
-            if tetris_state.game_complete:
-                null height 12
-                text "Schedule Complete! All subjects placed.":
-                    size 20
-                    color "#10b981"
-                    xalign 0.5
-                    outlines [(2, "#1e0c12", 0, 0)]
-
-                null height 8
-
-                textbutton "Continue":
-                    xalign 0.5
-                    text_size 20
-                    text_color "#ffd700"
-                    text_hover_color "#ffffff"
-                    text_outlines [(2, "#1e0c12", 0, 0)]
-                    action Return("completed")
