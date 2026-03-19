@@ -13,7 +13,7 @@ default game_complete = False
 define ACT1_TASKS = {"talk_jaden", "talk_manong_josh", "talk_aleng_maria", "talk_manong_chris", "talk_joseph_driver", "reach_box1"}
 define ACT2_TASKS = {"talk_ate_bea", "talk_kuya_mark", "go_to_newad", "talk_maam_reyes", "complete_flip_card"}
 define ACT3_TASKS = {"talk_sir_noel", "view_crs_portal", "complete_enrollment_tetris"}
-define ACT4_TASKS = {"talk_dorm_manager"}
+define ACT4_TASKS = {"talk_dorm_manager", "explore_dorm_room", "complete_room_setup"}
 
 ## --- Acts 5–8 Task Requirements ---
 define ACT5_TASKS = {"talk_prof_lena", "talk_kuya_rico", "talk_ate_grace", "talk_classmate_dan", "attend_first_class"}
@@ -44,6 +44,8 @@ define TASK_DESCRIPTIONS = {
     "view_crs_portal": "View the CRS Portal",
     "complete_enrollment_tetris": "Complete Enrollment Tetris",
     "talk_dorm_manager": "Talk to the Dorm Manager",
+    "explore_dorm_room": "Explore Your Dorm Room",
+    "complete_room_setup": "Complete Room Setup",
     "talk_prof_lena": "Talk to Prof. Lena",
     "talk_kuya_rico": "Talk to Kuya Rico",
     "talk_ate_grace": "Talk to Ate Grace",
@@ -70,7 +72,7 @@ define ACT_TASK_ORDER = {
     1: ["talk_jaden", "talk_manong_josh", "talk_aleng_maria", "talk_manong_chris", "talk_joseph_driver", "reach_box1"],
     2: ["talk_ate_bea", "talk_kuya_mark", "go_to_newad", "talk_maam_reyes", "complete_flip_card"],
     3: ["talk_sir_noel", "view_crs_portal", "complete_enrollment_tetris"],
-    4: ["talk_dorm_manager"],
+    4: ["talk_dorm_manager", "explore_dorm_room", "complete_room_setup"],
     5: ["talk_prof_lena", "talk_kuya_rico", "talk_ate_grace", "talk_classmate_dan", "attend_first_class"],
     6: ["talk_mika", "talk_kuya_tomas", "talk_ate_jenny", "talk_coach_ramon", "visit_org_fair"],
     7: ["talk_ate_rosa", "talk_kuya_neil", "talk_prof_santos", "talk_classmate_bea", "attend_study_session"],
@@ -92,7 +94,9 @@ define TASK_LIST_TEXT = {
     "talk_sir_noel": "Talk to Sir Noel about enrollment",
     "view_crs_portal": "View the CRS Student Portal",
     "complete_enrollment_tetris": "Complete Enrollment Tetris",
-    "talk_dorm_manager": "Talk to the Dorm Manager",
+    "talk_dorm_manager": "Talk to the Dorm Manager about check-in",
+    "explore_dorm_room": "Explore your dorm room",
+    "complete_room_setup": "Set up your dorm room with essentials",
     "talk_prof_lena": "Talk to Prof. Lena in the classroom",
     "talk_kuya_rico": "Ask Kuya Rico about buildings",
     "talk_ate_grace": "Talk to Ate Grace about student rights",
@@ -172,6 +176,11 @@ init python:
             return "talk_sir_noel" in store.tasks_completed
         if task_id == "complete_enrollment_tetris":
             return "view_crs_portal" in store.tasks_completed
+        ## Act 4 prerequisites
+        if task_id == "explore_dorm_room":
+            return "talk_dorm_manager" in store.tasks_completed
+        if task_id == "complete_room_setup":
+            return "explore_dorm_room" in store.tasks_completed
         ## Act 5 prerequisites
         if task_id in ("talk_kuya_rico", "talk_ate_grace"):
             return "talk_prof_lena" in store.tasks_completed
@@ -246,7 +255,7 @@ init python:
             1: "ACT 1: Arrival in Miagao",
             2: "ACT 2: Entering the University",
             3: "ACT 3: Enrollment",
-            4: "ACT 4: Dorm Accommodation",
+            4: "ACT 4: Dorm Life",
             5: "ACT 5: First Day of Classes",
             6: "ACT 6: Student Orgs & Campus Life",
             7: "ACT 7: Library & Academic Resources",
@@ -591,6 +600,39 @@ init python:
         "Avoid conflicts, check room locations, keep buffer time",
         "Sir Noel", "📅",
         full="Tips for building your class schedule: (1) Check for time conflicts — the CRS won't allow overlapping classes. (2) Consider room locations — give yourself at least 15 minutes between classes in different buildings. (3) Avoid 7:00 AM classes if you're not a morning person — attendance matters. (4) Keep at least one lunch break slot. (5) Balance heavy and light subjects across the week. (6) PE and NSTP schedules are fixed — build around them first."
+    )
+
+    ## =========================================================================
+    ## ACT 4 INFO ITEMS — Dorm Manager (Dormitory Life)
+    ## =========================================================================
+
+    ITEM_DORM_POINT_SYSTEM = InfoItem(
+        "dorm_point_system",
+        "Dorm Point System",
+        "Priority based on distance, income bracket, and year level",
+        "Dorm Manager", "📋",
+        full="The UPV dormitory uses a Point System to prioritize applicants. Points are based on: (1) Distance from permanent residence — farther = more points. Luzon/Mindanao/outside Panay gets maximum points. (2) Family income bracket — lower income = higher priority. (3) Year level — freshmen and graduating students get priority. The dorm is usually at 90%% capacity. If you don't qualify, you'll need to find a boarding house in Miagao town."
+    )
+    ITEM_DORM_RULES = InfoItem(
+        "dorm_rules",
+        "Dorm Rules & Curfew",
+        "10 PM curfew, no cooking appliances, visitors in lobby only",
+        "Dorm Manager", "🏠",
+        full="Key dormitory rules: (1) Curfew is 10:00 PM — gates are locked. First offense is a warning, second is community service, third is eviction. (2) No electric coils, heaters, or rice cookers in rooms — fire hazard. (3) Visitors are allowed in the lobby area only, never in the rooms. (4) Quiet hours are 10 PM to 6 AM. (5) Room inspections happen monthly — keep your space clean. (6) Report maintenance issues to the dorm office immediately."
+    )
+    ITEM_DORM_ESSENTIALS = InfoItem(
+        "dorm_essentials",
+        "Dorm Room Essentials",
+        "What to bring: bedding, fan, toiletries, study lamp, lock",
+        "Dorm Manager", "🎒",
+        full="Essential items for your dorm room: (1) Bedding — pillow, blanket, bed sheet (mattress provided). (2) Electric fan — no aircon in standard rooms. (3) Toiletries — soap, shampoo, toothbrush, towel. (4) Study lamp — for late-night studying without disturbing roommates. (5) Padlock — for your personal cabinet. (6) Extension cord — limited outlets per room. (7) Hangers and storage boxes — closet space is limited. (8) First aid kit — basic medicine for common ailments. Budget tip: buy from Miagao market, not Manila prices."
+    )
+    ITEM_DORM_TIPS = InfoItem(
+        "dorm_tips",
+        "Roommate & Dorm Life Tips",
+        "Communicate, share space, respect quiet hours",
+        "Dorm Manager", "🤝",
+        full="Tips for dorm life: (1) Introduce yourself to your roommate on day one — set expectations early. (2) Agree on shared items like cleaning supplies and snacks. (3) Use headphones after quiet hours. (4) Label your food in shared fridges. (5) Join dorm activities — movie nights, study groups, and floor events. (6) The dorm kitchen has a shared rice cooker and microwave — bring your own utensils. (7) Laundry schedule is posted on the bulletin board — don't miss your slot. (8) The dorm is your first community in UP — make the most of it."
     )
 
 
