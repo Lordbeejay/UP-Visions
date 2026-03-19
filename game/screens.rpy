@@ -4545,3 +4545,319 @@ screen enrollment_tetris_game():
                     text_hover_color "#ffffff"
                     text_outlines [(2, "#1e0c12", 0, 0)]
                     action Return("completed")
+
+
+## ============================================================================
+## DORM ROOM SETUP — Budget-based item selection mini-game
+## ============================================================================
+## Player has ₱2,500 budget and must buy all REQUIRED essentials.
+## Optional items can be bought if budget allows.
+## Game completes when all required items are purchased.
+## ============================================================================
+
+init python:
+
+    ## (name, price, icon, required, category, description)
+    DORM_SHOP_ITEMS = [
+        ## Required essentials
+        ("Bed Sheet & Pillow",    250, "🛏️", True,  "Bedding",    "Cotton bed sheet and a pillow"),
+        ("Blanket",               200, "🧶", True,  "Bedding",    "Light blanket for cool Miagao nights"),
+        ("Electric Fan",          450, "🌀", True,  "Appliance",  "Stand fan — no aircon in standard rooms"),
+        ("Study Lamp",            180, "💡", True,  "Study",      "Desk lamp for late-night studying"),
+        ("Padlock",                80, "🔒", True,  "Security",   "For your personal cabinet"),
+        ("Toiletries Kit",       150, "🧴", True,  "Personal",   "Soap, shampoo, toothbrush, toothpaste"),
+        ("Towel",                 100, "🛁", True,  "Personal",   "Bath towel — you'll need this day one"),
+        ("Extension Cord",       200, "🔌", True,  "Appliance",  "3-outlet extension — limited sockets"),
+        ## Optional nice-to-haves
+        ("Hangers (10 pcs)",      60, "👕", False, "Storage",    "For your clothes — closet space is tight"),
+        ("Storage Box",          120, "📦", False, "Storage",    "Stackable box for extra supplies"),
+        ("First Aid Kit",        180, "🩹", False, "Health",     "Basic medicine for headaches and colds"),
+        ("Tumbler",               90, "🥤", False, "Personal",   "Reusable water bottle — stay hydrated"),
+        ("Desk Organizer",       100, "📂", False, "Study",      "Keep your desk tidy"),
+        ("Slippers",              80, "🩴", False, "Personal",   "Indoor slippers for the room"),
+        ("Snack Stash",          150, "🍪", False, "Food",       "Biscuits and instant noodles for emergencies"),
+        ("Mosquito Net",         200, "🦟", False, "Health",     "Miagao mosquitos are no joke"),
+    ]
+
+    DORM_BUDGET = 2500
+
+    class DormSetupState:
+        def __init__(self):
+            self.reset()
+
+        def reset(self):
+            self.budget = DORM_BUDGET
+            self.purchased = set()  ## indices of purchased items
+            self.game_complete = False
+            self.error_msg = ""
+
+        def buy_item(self, idx):
+            """Buy an item from the shop."""
+            if idx in self.purchased:
+                self.error_msg = "Already purchased!"
+                return
+
+            item = DORM_SHOP_ITEMS[idx]
+            price = item[1]
+
+            if price > self.budget:
+                self.error_msg = "Not enough budget! (₱" + str(self.budget) + " left)"
+                return
+
+            self.budget -= price
+            self.purchased.add(idx)
+            self.error_msg = ""
+
+            ## Check if all required items are purchased
+            all_required = True
+            for i, itm in enumerate(DORM_SHOP_ITEMS):
+                if itm[3] and i not in self.purchased:  ## required but not bought
+                    all_required = False
+                    break
+
+            if all_required:
+                self.game_complete = True
+
+        def refund_item(self, idx):
+            """Refund a purchased item."""
+            if idx not in self.purchased:
+                return
+            item = DORM_SHOP_ITEMS[idx]
+            self.budget += item[1]
+            self.purchased.discard(idx)
+            self.game_complete = False
+            self.error_msg = ""
+
+        def required_remaining(self):
+            """Count how many required items are still needed."""
+            count = 0
+            for i, itm in enumerate(DORM_SHOP_ITEMS):
+                if itm[3] and i not in self.purchased:
+                    count += 1
+            return count
+
+        def total_spent(self):
+            return DORM_BUDGET - self.budget
+
+    dorm_setup_state = DormSetupState()
+
+
+screen dorm_room_setup_game():
+
+    on "show" action Function(dorm_setup_state.reset)
+
+    modal True
+    zorder 200
+
+    ## Background — dorm room
+    add "images/ui/dormRoom.png":
+        xysize (1920, 1080)
+        alpha 0.3
+
+    add Solid("#0d0d20cc"):
+        xysize (1920, 1080)
+
+    vbox:
+        xalign 0.5
+        yalign 0.5
+        spacing 12
+
+        ## Title
+        text "DORM ROOM SETUP":
+            xalign 0.5
+            size 28
+            color "#ffd700"
+            outlines [(3, "#1e0c12", 0, 0)]
+
+        text "Buy essentials for your room within budget!":
+            xalign 0.5
+            size 14
+            color "#f1debf"
+            outlines [(1, "#1e0c12", 0, 0)]
+
+        ## Budget bar
+        hbox:
+            xalign 0.5
+            spacing 30
+
+            hbox:
+                spacing 6
+                text "Budget:" size 16 color "#f6d79d" outlines [(1, "#1e0c12", 0, 0)]
+                if dorm_setup_state.budget >= 500:
+                    text "₱[dorm_setup_state.budget]" size 16 color "#10b981" bold True outlines [(1, "#1e0c12", 0, 0)]
+                elif dorm_setup_state.budget >= 200:
+                    text "₱[dorm_setup_state.budget]" size 16 color "#f6d79d" bold True outlines [(1, "#1e0c12", 0, 0)]
+                else:
+                    text "₱[dorm_setup_state.budget]" size 16 color "#f87171" bold True outlines [(1, "#1e0c12", 0, 0)]
+
+            hbox:
+                spacing 6
+                text "Spent:" size 14 color "#f6d79d88" outlines [(1, "#1e0c12", 0, 0)]
+                $ _spent = dorm_setup_state.total_spent()
+                text "₱[_spent]" size 14 color "#f6d79d88" outlines [(1, "#1e0c12", 0, 0)]
+
+            hbox:
+                spacing 6
+                $ _req_left = dorm_setup_state.required_remaining()
+                text "Required left:" size 14 color "#f6d79d88" outlines [(1, "#1e0c12", 0, 0)]
+                if _req_left > 0:
+                    text "[_req_left]" size 14 color "#f87171" bold True outlines [(1, "#1e0c12", 0, 0)]
+                else:
+                    text "0 ✓" size 14 color "#10b981" bold True outlines [(1, "#1e0c12", 0, 0)]
+
+        null height 4
+
+        ## Error message
+        if dorm_setup_state.error_msg:
+            text "[dorm_setup_state.error_msg]":
+                xalign 0.5
+                size 14
+                color "#f87171"
+                outlines [(1, "#1e0c12", 0, 0)]
+
+        ## Shop grid — 2 columns
+        hbox:
+            xalign 0.5
+            spacing 16
+
+            ## Required items column
+            vbox:
+                spacing 6
+                xsize 500
+
+                text "ESSENTIALS (Required)" size 14 color "#ff9966" outlines [(1, "#1e0c12", 0, 0)]
+
+                for _si in range(len(DORM_SHOP_ITEMS)):
+                    $ _item = DORM_SHOP_ITEMS[_si]
+                    if _item[3]:  ## required items only
+                        $ _bought = _si in dorm_setup_state.purchased
+
+                        if _bought:
+                            ## Purchased — show with checkmark, click to refund
+                            button:
+                                xsize 490
+                                ysize 50
+                                background Solid("#10b98133")
+                                hover_background Solid("#10b98155")
+                                action Function(dorm_setup_state.refund_item, _si)
+                                padding (10, 4, 10, 4)
+
+                                hbox:
+                                    spacing 8
+                                    yalign 0.5
+                                    text "✓" size 16 color "#10b981"
+                                    text _item[2] size 16  ## icon
+                                    vbox:
+                                        spacing 1
+                                        text _item[0] size 13 color "#10b981" bold True
+                                        text _item[5] size 10 color "#10b98188"
+                                    null width 1
+                                    text "₱" + str(_item[1]) size 12 color "#10b98188" yalign 0.5
+
+                        else:
+                            ## Available to buy
+                            button:
+                                xsize 490
+                                ysize 50
+                                background Solid("#1e0c12")
+                                hover_background Solid("#3a1a2a")
+                                action Function(dorm_setup_state.buy_item, _si)
+                                padding (10, 4, 10, 4)
+
+                                hbox:
+                                    spacing 8
+                                    yalign 0.5
+                                    text _item[2] size 16  ## icon
+                                    vbox:
+                                        spacing 1
+                                        text _item[0] size 13 color "#f1debf"
+                                        text _item[5] size 10 color "#f6d79d88"
+                                    null width 1
+                                    if _item[1] <= dorm_setup_state.budget:
+                                        text "₱" + str(_item[1]) size 13 color "#ffd700" bold True yalign 0.5
+                                    else:
+                                        text "₱" + str(_item[1]) size 13 color "#f8717188" yalign 0.5
+
+            ## Optional items column
+            vbox:
+                spacing 6
+                xsize 500
+
+                text "OPTIONAL (Nice-to-haves)" size 14 color "#99ccff" outlines [(1, "#1e0c12", 0, 0)]
+
+                for _si in range(len(DORM_SHOP_ITEMS)):
+                    $ _item = DORM_SHOP_ITEMS[_si]
+                    if not _item[3]:  ## optional items only
+                        $ _bought = _si in dorm_setup_state.purchased
+
+                        if _bought:
+                            button:
+                                xsize 490
+                                ysize 50
+                                background Solid("#4a90d933")
+                                hover_background Solid("#4a90d955")
+                                action Function(dorm_setup_state.refund_item, _si)
+                                padding (10, 4, 10, 4)
+
+                                hbox:
+                                    spacing 8
+                                    yalign 0.5
+                                    text "✓" size 16 color "#4a90d9"
+                                    text _item[2] size 16
+                                    vbox:
+                                        spacing 1
+                                        text _item[0] size 13 color "#4a90d9" bold True
+                                        text _item[5] size 10 color "#4a90d988"
+                                    null width 1
+                                    text "₱" + str(_item[1]) size 12 color "#4a90d988" yalign 0.5
+
+                        else:
+                            button:
+                                xsize 490
+                                ysize 50
+                                background Solid("#1e0c12")
+                                hover_background Solid("#2a1a3a")
+                                action Function(dorm_setup_state.buy_item, _si)
+                                padding (10, 4, 10, 4)
+
+                                hbox:
+                                    spacing 8
+                                    yalign 0.5
+                                    text _item[2] size 16
+                                    vbox:
+                                        spacing 1
+                                        text _item[0] size 13 color "#f1debf"
+                                        text _item[5] size 10 color "#f6d79d88"
+                                    null width 1
+                                    if _item[1] <= dorm_setup_state.budget:
+                                        text "₱" + str(_item[1]) size 13 color "#99ccff" bold True yalign 0.5
+                                    else:
+                                        text "₱" + str(_item[1]) size 13 color "#f8717188" yalign 0.5
+
+        null height 6
+
+        ## Hint text
+        if not dorm_setup_state.game_complete:
+            text "Buy all 8 essentials to set up your room. Click purchased items to refund.":
+                xalign 0.5
+                size 12
+                color "#f6d79d88"
+
+        ## Game complete
+        if dorm_setup_state.game_complete:
+            null height 4
+            text "Room Setup Complete! All essentials purchased.":
+                size 20
+                color "#10b981"
+                xalign 0.5
+                outlines [(2, "#1e0c12", 0, 0)]
+
+            null height 6
+
+            textbutton "Move In":
+                xalign 0.5
+                text_size 20
+                text_color "#ffd700"
+                text_hover_color "#ffffff"
+                text_outlines [(2, "#1e0c12", 0, 0)]
+                action Return("completed")

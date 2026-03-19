@@ -37,7 +37,7 @@ label start:
     $ player_map_x = 2300
     $ player_map_y = 3100
     $ player_facing = "up"
-    jump act3_map
+    jump act4_map
 
 
 ## ============================================================================
@@ -265,7 +265,7 @@ label act3_complete:
     scene expression "images/ui/UI_Miagao.png" with fade
     pause 0.3
     call screen act_transition("ACT 3 COMPLETE", "You've completed enrollment\nand built your class schedule!", "complete")
-    call screen act_transition("ACT 4", "Dorm Accommodation", "intro")
+    call screen act_transition("ACT 4", "Dorm Life", "intro")
 
     $ current_act = 4
     $ player_map_x = 2500
@@ -275,19 +275,30 @@ label act3_complete:
 
 
 ## ============================================================================
-## ACT 4 MAP — Dorm
+## ACT 4 MAP — Dorm Life (Check-in → Room Exploration → Room Setup Game)
 ## ============================================================================
 
 label act4_map:
     $ current_map_bg = "ui/Dorm.png"
     $ act4_nodes = [
-        MapNode("Dorm", 2500, 2500, "npc_dorm_manager", "Dormitory Office", False, "#ffaa77", "dorm_mgr.png"),
+        MapNode("dorm_office", 2500, 2500, "act4_npc_dorm_manager", tooltip="Dormitory Office", icon_image="dorm_mgr.png", locked=False),
     ]
 
     $ current_task_text = "Talk to the Dorm Manager"
 
 label act4_loop:
-    call screen map_screen("ui/Dorm.png", act4_nodes, current_task_text, 2.0)
+    ## After check-in, switch to room interior map
+    if "talk_dorm_manager" in tasks_completed and "explore_dorm_room" not in tasks_completed:
+        $ current_map_bg = "ui/dormRoom.png"
+        $ act4_nodes = [
+            MapNode("your_room", 2500, 2500, "act4_explore_room", tooltip="Your Room #207", icon_image="dorm_mgr.png", locked=False),
+        ]
+        $ current_task_text = "Explore your dorm room"
+
+    if "explore_dorm_room" in tasks_completed and "complete_room_setup" not in tasks_completed:
+        $ current_task_text = "Set up your dorm room!"
+
+    call screen map_screen(current_map_bg, act4_nodes, current_task_text, 2.0)
     $ _action, _node = _return
 
     if _action == "walk":
@@ -303,7 +314,7 @@ label act4_loop:
 label act4_complete:
     scene expression "images/ui/UI_Miagao.png" with fade
     pause 0.3
-    call screen act_transition("ACT 4 COMPLETE", "You've secured your dorm room!", "complete")
+    call screen act_transition("ACT 4 COMPLETE", "You've settled into your dorm\nand set up your room!", "complete")
     call screen act_transition("ACT 5", "First Day of Classes", "intro")
 
     $ current_act = 5
