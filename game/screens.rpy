@@ -1361,67 +1361,81 @@ style quick_button_text:
 screen navigation():
 
     vbox:
-        style_prefix "navigation"
+        style_prefix "up_nav"
 
-        xpos gui.navigation_xpos
+        ## This centers the entire menu perfectly inside your left sidebar
+        xalign 0.5
         yalign 0.5
+        spacing 24  
 
-        spacing 4
+        ## Retro Menu Header
+        text "SYSTEM" style "up_nav_header"
+        
+        ## Small decorative divider under the header
+        frame:
+            background Solid("#f6d79d")
+            xsize 100
+            ysize 4
+            xalign 0.5
+            padding (0,0,0,0)
+        
+        null height 20
 
-        if main_menu:
-
-            textbutton _("Start") action Start()
-
-        else:
-
-            textbutton _("History") action ShowMenu("history")
-
-            textbutton _("Save") action ShowMenu("save")
-
-        textbutton _("Load") action ShowMenu("load")
-
+        textbutton _("Return") action Return()
         textbutton _("Settings") action ShowMenu("preferences")
+        textbutton _("About") action ShowMenu("about")
+        textbutton _("Help") action ShowMenu("help")
 
-        if _in_replay:
+        if not main_menu:
+            null height 10
 
-            textbutton _("End Replay") action EndReplay(confirm=True)
+            ## Thin gold divider before the destructive action
+            frame:
+                background Solid("#f6d79d44")
+                xsize 100
+                ysize 1
+                xalign 0.5
+                padding (0,0,0,0)
 
-        elif not main_menu:
+            null height 10
 
             textbutton _("Main Menu") action MainMenu()
 
-        textbutton _("About") action ShowMenu("about")
 
-        if renpy.variant("pc") or (renpy.variant("web") and not renpy.variant("mobile")):
+## ============================================================================
+## 8-BIT UP AESTHETIC STYLES
+## ============================================================================
 
-            textbutton _("Help") action ShowMenu("help")
+style up_nav_header is text:
+    xalign 0.5
+    color "#f6d79d"
+    size 32
+    outlines [(3, "#1a0a10", 0, 0)]
+    ## 👇 UNCOMMENT THE LINE BELOW AND PUT YOUR FONT FILE PATH HERE 👇
+    # font "gui/fonts/8bit_font.ttf" 
 
-        if renpy.variant("pc"):
+style up_nav_button is button:
+    xalign 0.5
+    xsize 260
+    padding (10, 16, 10, 16)
+    ## Sharp, flat boxes for that retro pixel feel
+    background Solid("#1a0a1099")      # Dark translucent box
+    hover_background Solid("#f6d79d")  # Solid Sablay Gold on hover
+    selected_background Solid("#f6d79d")
 
-            textbutton _("Quit") action Quit(confirm=not main_menu)
-
-
-style navigation_button is gui_button:
-    size_group "navigation"
-    xsize 300
-    ysize 50
-    padding (20, 8, 20, 8)
-    idle_background Frame(Solid("#00000000"), 4, 4, 4, 4)
-    hover_background Frame(Solid("#00cc9922"), 4, 4, 4, 4)
-    selected_idle_background Frame(Solid("#00cc9933"), 4, 4, 4, 4)
-    selected_hover_background Frame(Solid("#00cc9944"), 4, 4, 4, 4)
-
-style navigation_button_text:
-    font "fonts/PressStart2P-Regular.ttf"
-    size 15
-    yalign 0.5
-    idle_color "#ffffff88"
-    hover_color "#00cc99"
-    selected_idle_color "#00cc99"
-    selected_hover_color "#ffffff"
-    outlines [ (2, "#000000", 0, 0) ]
-
-
+style up_nav_button_text is button_text:
+    xalign 0.5
+    text_align 0.5
+    color "#f1debf"             # Off-white/gold text
+    hover_color "#5c1a1a"       # UP Maroon text when hovered!
+    selected_color "#5c1a1a"    # UP Maroon text when selected!
+    size 20
+    outlines [(2, "#1a0a10", 0, 0)]
+    hover_outlines []           # Removes outline on hover for a clean retro look
+    selected_outlines []
+    
+    ## 👇 UNCOMMENT THE LINE BELOW AND PUT YOUR FONT FILE PATH HERE 👇
+    # font "gui/fonts/8bit_font.ttf"
 ## Main Menu screen ############################################################
 ##
 ## Used to display the main menu when Ren'Py starts.
@@ -1602,71 +1616,82 @@ screen game_menu(title, scroll=None, yinitial=0.0, spacing=0):
 
     style_prefix "game_menu"
 
-    if main_menu:
-        add gui.main_menu_background
-    else:
-        add gui.game_menu_background
+    ## Deep dark background for the whole screen
+    add Solid("#0e1b2a") # Faint dark blue/grey
+    add Solid("#1a0a10ed") # Dark overlay for better readability
+
+    ## Left Sidebar (UPV Maroon)
+    frame:
+        background Solid("#5c1a1a")
+        xsize 360
+        xalign 0.0
+        yfill True
+
+    ## Gold accent line separating the navigation from the settings content
+    frame:
+        background Solid("#f6d79d")
+        xsize 2
+        xpos 360
+        yfill True
 
     frame:
         style "game_menu_outer_frame"
 
         hbox:
-
-            ## Reserve space for the navigation section.
+            ## Window for the navigation menu (Left Side)
             frame:
                 style "game_menu_navigation_frame"
+                xsize 360
+                use navigation
 
+            ## Window for the inner content (Settings, Save slots, etc. on the Right Side)
             frame:
                 style "game_menu_content_frame"
 
                 if scroll == "viewport":
-
                     viewport:
                         yinitial yinitial
                         scrollbars "vertical"
                         mousewheel True
                         draggable True
                         pagekeys True
-
                         side_yfill True
 
                         vbox:
                             spacing spacing
-
                             transclude
-
                 elif scroll == "vpgrid":
-
                     vpgrid:
                         cols 1
                         yinitial yinitial
-
                         scrollbars "vertical"
                         mousewheel True
                         draggable True
                         pagekeys True
-
                         side_yfill True
-
                         spacing spacing
 
                         transclude
-
                 else:
-
                     transclude
 
-    use navigation
-
-    textbutton _("Return"):
-        style "return_button"
-
-        action Return()
-
-    label title
+    ## Custom Title Design (e.g. says "System Preferences" or "Save Game" at the top)
+    text title:
+        xpos 420
+        ypos 40
+        size 46
+        color "#f6d79d"
+        bold True
+        outlines [(2, "#1a0a10", 0, 0)]
 
     if main_menu:
         key "game_menu" action ShowMenu("main_menu")
+    else:
+        key "game_menu" action Hide()
+
+    if renpy.variant("mobile"):
+        $ return_action = ShowMenu("main_menu") if main_menu else Hide()
+        key "rollback" action return_action
 
 
 style game_menu_outer_frame is empty
@@ -1738,32 +1763,102 @@ screen about():
 
     tag menu
 
-    ## This use statement includes the game_menu screen inside this one. The
-    ## vbox child is then included inside the viewport inside the game_menu
-    ## screen.
     use game_menu(_("About"), scroll="viewport"):
 
         style_prefix "about"
 
         vbox:
+            spacing 36
+            xalign 0.5
+            xmaximum 850
 
-            label "[config.name!t]"
-            text _("Version [config.version!t]\n")
+            frame:
+                xfill True
+                background Frame(Solid("#1a0a10f0"), 0, 0)
+                padding (40, 30, 40, 30)
 
-            ## gui.about is usually set in options.rpy.
-            if gui.about:
-                text "[gui.about!t]\n"
+                vbox:
+                    spacing 20
 
-            text _("Made with {a=https://www.renpy.org/}Ren'Py{/a} [renpy.version_only].\n\n[renpy.license!t]")
+                    ## Section Header
+                    hbox:
+                        spacing 12
+                        yalign 0.5
+                        text "✦" size 26 color "#f6d79d" yalign 0.5 at tr_star_spin
+                        text _("Project Information") size 24 color "#f6d79d" bold True yalign 0.5
+                        
+                    ## UPV Maroon Divider
+                    frame:
+                        xsize 770 ysize 2 background Solid("#5c1a1a") padding (0,0,0,0)
+
+                    ## Core Game Info & Synopsis
+                    vbox:
+                        xoffset 36
+                        spacing 10
+                        text "[config.name!t]" size 32 color "#f6d79d" bold True outlines [(2, "#1a0a10", 0, 0)]
+                        text _("Version [config.version!t]") size 16 color "#f1debf" 
+                        
+                        null height 15
+                        
+                        ## Synopsis / Description
+                        text _("A point-and-click adventure set in UP Visayas - Miagao campus. Navigate your first day as an Iskolar ng Bayan, exploring the campus map, handling enrollment, and surviving the start of your university life."):
+                            size 18 
+                            color "#e2e8f0" 
+                            line_spacing 6
+                            xmaximum 700
+
+                    null height 15
+
+                    ## Secondary Thin Divider
+                    frame:
+                        xsize 770 ysize 1 background Solid("#5c1a1a") padding (0,0,0,0)
+
+                    null height 5
+
+                    ## Credits Section (Two Columns)
+                    vbox:
+                        xoffset 36
+                        spacing 20
+
+                        text "DEVELOPMENT TEAM" size 20 color "#f6d79d" bold True
+
+                        hbox:
+                            spacing 120  ## Space between the two columns
+                            
+                            ## Left Column
+                            vbox:
+                                spacing 16
+                                use credit_line("Project Lead / Programmer", "Your Name Here")
+                                use credit_line("Lead Writer", "Your Name Here")
+                                use credit_line("UI / UX Design", "Your Name Here")
+                                
+                            ## Right Column
+                            vbox:
+                                spacing 16
+                                use credit_line("Background & Sprite Art", "Artist Name / Assets")
+                                use credit_line("Music & Sound Effects", "Composer / Source")
+                                use credit_line("Special Thanks", "The UPV Community")
+
+                    null height 15
+                    frame:
+                        xsize 770 ysize 1 background Solid("#5c1a1a") padding (0,0,0,0)
+                    null height 5
+
+                    ## Engine Text / Legal (Pulls from options.rpy)
+                    vbox:
+                        xoffset 36
+                        if gui.about:
+                            text "[gui.about!t]" size 14 color "#9ca3af" line_spacing 4
 
 
-style about_label is gui_label
-style about_label_text is gui_label_text
-style about_text is gui_text
-
-style about_label_text:
-    size gui.label_text_size
-
+## ============================================================================
+## HELPER SCREEN FOR CREDITS
+## ============================================================================
+## This makes it super easy to add perfectly aligned credits!
+screen credit_line(role, name):
+    vbox:
+        text role size 14 color "#f6d79d" bold True
+        text name size 18 color "#f1debf"
 
 ## Load and Save screens #######################################################
 ##
@@ -1774,143 +1869,435 @@ style about_label_text:
 ## https://www.renpy.org/doc/html/screen_special.html#save https://
 ## www.renpy.org/doc/html/screen_special.html#load
 
+## ============================================================================
+## SAVE SCREEN — uses game_menu sidebar (Return / Settings / About / Help)
+## ============================================================================
+
 screen save():
-
     tag menu
+    use game_menu(_("Save Game")):
 
-    use file_slots(_("Save"))
+        vbox:
+            xalign 0.5
+            yalign 0.38
+            spacing 24
 
-
-screen load():
-
-    tag menu
-
-    use file_slots(_("Load"))
-
-
-screen file_slots(title):
-
-    default page_name_value = FilePageNameInputValue(pattern=_("Page {}"), auto=_("Automatic saves"), quick=_("Quick saves"))
-
-    use game_menu(title):
-
-        fixed:
-
-            ## This ensures the input will get the enter event before any of the
-            ## buttons do.
-            order_reverse True
-
-            ## The page name, which can be edited by clicking on a button.
-            button:
-                style "page_label"
-
-                key_events True
+            ## Section ornament
+            hbox:
                 xalign 0.5
-                action page_name_value.Toggle()
+                spacing 10
+                frame:
+                    xsize 80 ysize 1 yalign 0.5
+                    background Solid("#f6d79d44") padding (0,0,0,0)
+                frame:
+                    xsize 6 ysize 6 yalign 0.5
+                    background Solid("#f6d79d88") padding (0,0,0,0)
+                text "✦  SAVE YOUR PROGRESS  ✦":
+                    size 13 color "#f6d79d88" bold True yalign 0.5
+                frame:
+                    xsize 6 ysize 6 yalign 0.5
+                    background Solid("#f6d79d88") padding (0,0,0,0)
+                frame:
+                    xsize 80 ysize 1 yalign 0.5
+                    background Solid("#f6d79d44") padding (0,0,0,0)
 
-                input:
-                    style "page_label_text"
-                    value page_name_value
-
-            ## The grid of file slots.
-            grid gui.file_slot_cols gui.file_slot_rows:
-                style_prefix "slot"
-
+            ## Cards
+            hbox:
                 xalign 0.5
-                yalign 0.5
+                spacing 20
 
-                spacing gui.slot_spacing
-
-                for i in range(gui.file_slot_cols * gui.file_slot_rows):
-
-                    $ slot = i + 1
+                for slot in range(1, 4):
+                    $ slot_label = "0" + str(slot)
 
                     button:
-                        action FileAction(slot)
+                        action FileSave(slot)
+                        xsize 310
+                        ysize 420
+                        padding (0, 0, 0, 0)
+                        background Solid("#1a0a10")
+                        hover_background Solid("#2a0d18")
 
-                        has vbox
+                        vbox:
+                            xfill True
+                            spacing 0
 
-                        add FileScreenshot(slot) xalign 0.5
+                            ## Top glow bar
+                            frame:
+                                xfill True ysize 3 padding (0,0,0,0)
+                                background If(FileLoadable(slot), Solid("#f6d79d"), Solid("#2a1020"))
 
-                        text FileTime(slot, format=_("{#file_time}%A, %B %d %Y, %H:%M"), empty=_("empty slot")):
-                            style "slot_time_text"
+                            ## Thumbnail
+                            frame:
+                                xfill True ysize 190 padding (0,0,0,0)
+                                background Solid("#0a0408")
+                                if FileLoadable(slot):
+                                    add FileScreenshot(slot) size (310, 190)
+                                else:
+                                    vbox:
+                                        xalign 0.5 yalign 0.5 spacing 10
+                                        hbox:
+                                            xalign 0.5 spacing 6
+                                            frame:
+                                                xsize 30 ysize 1 yalign 0.5
+                                                background Solid("#2a1020") padding (0,0,0,0)
+                                            frame:
+                                                xsize 5 ysize 5 yalign 0.5
+                                                background Solid("#2a1020") padding (0,0,0,0)
+                                            frame:
+                                                xsize 30 ysize 1 yalign 0.5
+                                                background Solid("#2a1020") padding (0,0,0,0)
+                                        text "✦":
+                                            xalign 0.5 size 28 color "#2a1020"
+                                        text "NO SAVE DATA":
+                                            xalign 0.5 size 9 color "#2a1020" bold True
+                                        hbox:
+                                            xalign 0.5 spacing 6
+                                            frame:
+                                                xsize 30 ysize 1 yalign 0.5
+                                                background Solid("#2a1020") padding (0,0,0,0)
+                                            frame:
+                                                xsize 5 ysize 5 yalign 0.5
+                                                background Solid("#2a1020") padding (0,0,0,0)
+                                            frame:
+                                                xsize 30 ysize 1 yalign 0.5
+                                                background Solid("#2a1020") padding (0,0,0,0)
 
-                        text FileSaveName(slot):
-                            style "slot_name_text"
+                            ## Shadow strip
+                            frame:
+                                xfill True ysize 4 padding (0,0,0,0)
+                                background Solid("#00000088")
+
+                            ## Slot identity band
+                            frame:
+                                xfill True ysize 52 background Solid("#110609")
+                                padding (18, 0, 18, 0)
+                                hbox:
+                                    xfill True yalign 0.5
+                                    frame:
+                                        xsize 3 ysize 26 yalign 0.5
+                                        background If(FileLoadable(slot), Solid("#f6d79d"), Solid("#3a1020"))
+                                        padding (0,0,0,0)
+                                    null width 12
+                                    text "SLOT  [slot_label]":
+                                        size 18 color "#f6d79d" bold True yalign 0.5
+                                    frame:
+                                        xalign 1.0 xsize 8 ysize 8 yalign 0.5
+                                        background If(FileLoadable(slot), Solid("#f6d79d"), Solid("#2a1020"))
+                                        padding (0,0,0,0)
+
+                            ## Thin maroon rule
+                            frame:
+                                xfill True ysize 1 padding (0,0,0,0)
+                                background Solid("#3a0a14")
+
+                            ## Info panel
+                            frame:
+                                xfill True ysize 138 background Solid("#120709")
+                                padding (18, 14, 18, 14)
+                                vbox:
+                                    xfill True spacing 8
+                                    if FileLoadable(slot):
+                                        hbox:
+                                            spacing 6 yalign 0.5
+                                            frame:
+                                                xsize 3 ysize 14 yalign 0.5
+                                                background Solid("#c8a87a") padding (0,0,0,0)
+                                            text "ACT  [current_act]":
+                                                size 10 color "#c8a87a" bold True yalign 0.5
+                                        text FileSaveName(slot):
+                                            size 16 color "#f6d79d" bold True
+                                            outlines [(1, "#000000", 0, 0)]
+                                        text FileTime(slot,
+                                            format=_("{#file_time}%b %d, %Y  —  %H:%M"),
+                                            empty=_("")):
+                                            size 11 color "#5a3040" line_spacing 4
+                                    else:
+                                        null height 12
+                                        text "— Empty Slot —":
+                                            size 14 color "#2a1020" italic True
+                                        text "Click to save here":
+                                            size 11 color "#2a1020"
+
+                            ## DEL strip
+                            frame:
+                                xfill True ysize 32 padding (0,0,0,0)
+                                if FileLoadable(slot):
+                                    background Solid("#1e060e")
+                                    hbox:
+                                        xalign 0.5 yalign 0.5 spacing 8
+                                        frame:
+                                            xsize 1 ysize 10 yalign 0.5
+                                            background Solid("#3a1828") padding (0,0,0,0)
+                                        text "DEL  to delete":
+                                            size 9 color "#3a1828" bold True yalign 0.5
+                                        frame:
+                                            xsize 1 ysize 10 yalign 0.5
+                                            background Solid("#3a1828") padding (0,0,0,0)
+                                else:
+                                    background Solid("#0e0508")
 
                         key "save_delete" action FileDelete(slot)
 
-            ## Buttons to access other pages.
-            vbox:
-                style_prefix "page"
-
-                xalign 0.5
-                yalign 1.0
-
-                hbox:
-                    xalign 0.5
-
-                    spacing gui.page_spacing
-
-                    textbutton _("<") action FilePagePrevious()
-                    key "save_page_prev" action FilePagePrevious()
-
-                    if config.has_autosave:
-                        textbutton _("{#auto_page}A") action FilePage("auto")
-
-                    if config.has_quicksave:
-                        textbutton _("{#quick_page}Q") action FilePage("quick")
-
-                    ## range(1, 10) gives the numbers from 1 to 9.
-                    for page in range(1, 10):
-                        textbutton "[page]" action FilePage(page)
-
-                    textbutton _(">") action FilePageNext()
-                    key "save_page_next" action FilePageNext()
-
-                if config.has_sync:
-                    if CurrentScreenName() == "save":
-                        textbutton _("Upload Sync"):
-                            action UploadSync()
-                            xalign 0.5
-                    else:
-                        textbutton _("Download Sync"):
-                            action DownloadSync()
-                            xalign 0.5
+            ## Footer
+            hbox:
+                xalign 0.5 spacing 8
+                frame:
+                    xsize 50 ysize 1 yalign 0.5
+                    background Solid("#3a1828") padding (0,0,0,0)
+                text "Press DEL on a filled slot to delete it":
+                    size 11 color "#3a1828" yalign 0.5
+                frame:
+                    xsize 50 ysize 1 yalign 0.5
+                    background Solid("#3a1828") padding (0,0,0,0)
 
 
-style page_label is gui_label
-style page_label_text is gui_label_text
-style page_button is gui_button
-style page_button_text is gui_button_text
+## ============================================================================
+## LOAD SCREEN — fullscreen, no sidebar, only a Return button
+## ============================================================================
 
-style slot_button is gui_button
-style slot_button_text is gui_button_text
-style slot_time_text is slot_button_text
-style slot_name_text is slot_button_text
+screen load():
+    tag menu
 
-style page_label:
-    xpadding 75
-    ypadding 5
+    ## Background
+    add Solid("#0e1b2a")
+    add Solid("#1a0a10ed")
+
+    ## Left maroon accent strip
+    frame:
+        background Solid("#5c1a1a")
+        xsize 6 xalign 0.0 yfill True
+    frame:
+        background Solid("#f6d79d")
+        xsize 2 xpos 6 yfill True
+
+    ## Return button — top left
+    textbutton "◀  Return":
+        action Return()
+        xpos 28 ypos 28
+        text_size 13
+        text_color "#f6d79d66"
+        text_hover_color "#f6d79d"
+        text_bold True
+        background Solid("#00000000")
+        hover_background Solid("#00000000")
+        padding (10, 8, 10, 8)
+
+    if main_menu:
+        key "game_menu" action ShowMenu("main_menu")
+    else:
+        key "game_menu" action Return()
+
+    ## Title
+    text "CONTINUE":
+        xalign 0.5 ypos 44
+        size 44 color "#f6d79d" bold True
+        outlines [(2, "#1a0a10", 0, 0)]
+
+    ## Spinning star ornament
+    text "✦":
+        xalign 0.5 ypos 100
+        size 16 color "#f6d79d66"
+        at tr_star_spin
+
+    vbox:
+        xalign 0.5
+        yalign 0.54
+        spacing 26
+
+        ## Section ornament
+        hbox:
+            xalign 0.5 spacing 10
+            frame:
+                xsize 100 ysize 1 yalign 0.5
+                background Solid("#f6d79d44") padding (0,0,0,0)
+            frame:
+                xsize 6 ysize 6 yalign 0.5
+                background Solid("#f6d79d88") padding (0,0,0,0)
+            text "✦  CHOOSE YOUR SAVE FILE  ✦":
+                size 13 color "#f6d79d88" bold True yalign 0.5
+            frame:
+                xsize 6 ysize 6 yalign 0.5
+                background Solid("#f6d79d88") padding (0,0,0,0)
+            frame:
+                xsize 100 ysize 1 yalign 0.5
+                background Solid("#f6d79d44") padding (0,0,0,0)
+
+        ## Cards — wider since no sidebar
+        hbox:
+            xalign 0.5
+            spacing 28
+
+            for slot in range(1, 4):
+                $ slot_label = "0" + str(slot)
+
+                button:
+                    action FileLoad(slot)
+                    sensitive FileLoadable(slot)
+                    xsize 400
+                    ysize 430
+                    padding (0, 0, 0, 0)
+                    background Solid("#1a0a10")
+                    hover_background Solid("#2a0d18")
+                    insensitive_background Solid("#0e0508")
+
+                    vbox:
+                        xfill True
+                        spacing 0
+
+                        ## Top glow bar
+                        frame:
+                            xfill True ysize 3 padding (0,0,0,0)
+                            background If(FileLoadable(slot), Solid("#f6d79d"), Solid("#1a0a10"))
+
+                        ## Thumbnail
+                        frame:
+                            xfill True ysize 222 padding (0,0,0,0)
+                            background Solid("#0a0408")
+                            if FileLoadable(slot):
+                                add FileScreenshot(slot) size (400, 222)
+                            else:
+                                vbox:
+                                    xalign 0.5 yalign 0.5 spacing 10
+                                    hbox:
+                                        xalign 0.5 spacing 6
+                                        frame:
+                                            xsize 40 ysize 1 yalign 0.5
+                                            background Solid("#1e0a10") padding (0,0,0,0)
+                                        frame:
+                                            xsize 5 ysize 5 yalign 0.5
+                                            background Solid("#1e0a10") padding (0,0,0,0)
+                                        frame:
+                                            xsize 40 ysize 1 yalign 0.5
+                                            background Solid("#1e0a10") padding (0,0,0,0)
+                                    text "✦":
+                                        xalign 0.5 size 32 color "#1e0a10"
+                                    text "NO SAVE DATA":
+                                        xalign 0.5 size 9 color "#1e0a10" bold True
+                                    hbox:
+                                        xalign 0.5 spacing 6
+                                        frame:
+                                            xsize 40 ysize 1 yalign 0.5
+                                            background Solid("#1e0a10") padding (0,0,0,0)
+                                        frame:
+                                            xsize 5 ysize 5 yalign 0.5
+                                            background Solid("#1e0a10") padding (0,0,0,0)
+                                        frame:
+                                            xsize 40 ysize 1 yalign 0.5
+                                            background Solid("#1e0a10") padding (0,0,0,0)
+
+                        ## Shadow strip
+                        frame:
+                            xfill True ysize 4 padding (0,0,0,0)
+                            background Solid("#00000088")
+
+                        ## Slot identity band
+                        frame:
+                            xfill True ysize 52 background Solid("#110609")
+                            padding (20, 0, 20, 0)
+                            hbox:
+                                xfill True yalign 0.5
+                                frame:
+                                    xsize 3 ysize 26 yalign 0.5
+                                    background If(FileLoadable(slot), Solid("#f6d79d"), Solid("#2a1020"))
+                                    padding (0,0,0,0)
+                                null width 14
+                                text "SLOT  [slot_label]":
+                                    size 20 color "#f6d79d" bold True yalign 0.5
+                                frame:
+                                    xalign 1.0 xsize 8 ysize 8 yalign 0.5
+                                    background If(FileLoadable(slot), Solid("#f6d79d"), Solid("#2a1020"))
+                                    padding (0,0,0,0)
+
+                        ## Maroon rule
+                        frame:
+                            xfill True ysize 1 padding (0,0,0,0)
+                            background Solid("#3a0a14")
+
+                        ## Info panel
+                        frame:
+                            xfill True ysize 134 background Solid("#120709")
+                            padding (20, 14, 20, 14)
+                            vbox:
+                                xfill True spacing 8
+                                if FileLoadable(slot):
+                                    hbox:
+                                        spacing 6 yalign 0.5
+                                        frame:
+                                            xsize 3 ysize 14 yalign 0.5
+                                            background Solid("#c8a87a") padding (0,0,0,0)
+                                        text "ACT  [current_act]":
+                                            size 10 color "#c8a87a" bold True yalign 0.5
+                                    text FileSaveName(slot):
+                                        size 18 color "#f6d79d" bold True
+                                        outlines [(1, "#000000", 0, 0)]
+                                    text FileTime(slot,
+                                        format=_("{#file_time}%b %d, %Y  —  %H:%M"),
+                                        empty=_("")):
+                                        size 12 color "#5a3040" line_spacing 4
+                                else:
+                                    null height 14
+                                    text "— Empty —":
+                                        size 15 color "#2a1020" italic True
+
+                        ## Bottom strip
+                        frame:
+                            xfill True ysize 14 padding (0,0,0,0)
+                            if FileLoadable(slot):
+                                background Solid("#1e0a10")
+                                text "▶  Load":
+                                    xalign 0.5 yalign 0.5
+                                    size 8 color "#f6d79d44" bold True
+                            else:
+                                background Solid("#0e0508")
+
+        ## Footer
+        hbox:
+            xalign 0.5 spacing 8
+            frame:
+                xsize 70 ysize 1 yalign 0.5
+                background Solid("#3a1828") padding (0,0,0,0)
+            text "Greyed-out slots have no save data":
+                size 11 color "#3a1828" yalign 0.5
+            frame:
+                xsize 70 ysize 1 yalign 0.5
+                background Solid("#3a1828") padding (0,0,0,0)
+
+
+## ============================================================================
+## FILE SLOT STYLES
+## ============================================================================
+
+style up_slot_num_text is text:
     xalign 0.5
+    size 26
+    color "#f6d79d"
+    bold True
 
-style page_label_text:
-    textalign 0.5
-    layout "subtitle"
-    hover_color gui.hover_color
+style up_slot_numlabel_text is text:
+    xalign 0.5
+    size 9
+    color "#5c3040"
 
-style page_button:
-    properties gui.button_properties("page_button")
+style up_slot_badge_text is text:
+    size 10
+    color "#c8a87a"
 
-style page_button_text:
-    properties gui.text_properties("page_button")
+style up_slot_name_text is text:
+    xalign 0.0
+    size 15
+    color "#f6d79d"
+    bold True
+    outlines [(1, "#000000", 0, 0)]
 
-style slot_button:
-    properties gui.button_properties("slot_button")
+style up_slot_time_text is text:
+    xalign 0.0
+    size 11
+    color "#7a5060"
+    line_spacing 4
 
-style slot_button_text:
-    properties gui.text_properties("slot_button")
-
+style up_slot_delkey_text is text:
+    size 9
+    color "#3a1828"
 
 ## Preferences screen ##########################################################
 ##
@@ -1923,149 +2310,171 @@ screen preferences():
 
     tag menu
 
-    use game_menu(_("Settings"), scroll="viewport"):
-
-        style_prefix "pref"
+    use game_menu(_("System Preferences"), scroll="viewport"):
 
         vbox:
             spacing 36
+            xalign 0.5
+            xmaximum 850  # Keeps the settings centered and readable
 
             # ═══════════════════════════════════════
-            # DISPLAY SECTION
+            # DISPLAY SETTINGS
             # ═══════════════════════════════════════
             frame:
                 xfill True
-                background Frame(Solid("#0e1b2a99"), 6, 6, 6, 6)
-                padding (30, 20, 30, 20)
+                background Frame(Solid("#1a0a10f0"), 0, 0) # Deep dark background matching dialogue boxes
+                padding (40, 30, 40, 30)
 
                 vbox:
-                    spacing 14
+                    spacing 20
 
+                    ## Section Header
                     hbox:
                         spacing 12
-                        text ">" style "pref_icon_text"
-                        label _("Display") style "pref_section_label"
+                        yalign 0.5
+                        text "✦" size 26 color "#f6d79d" yalign 0.5 at tr_star_spin
+                        text _("Display") size 24 color "#f6d79d" bold True yalign 0.5
+                        
+                    ## UPV Maroon Divider
+                    frame:
+                        xsize 770 ysize 2 background Solid("#5c1a1a") padding (0,0,0,0)
 
                     if renpy.variant("pc") or renpy.variant("web"):
                         hbox:
-                            spacing 16
-                            xoffset 28
-                            textbutton _("Window") action Preference("display", "window") style "pref_pill_btn"
-                            textbutton _("Fullscreen") action Preference("display", "fullscreen") style "pref_pill_btn"
+                            spacing 20
+                            xoffset 36
+                            textbutton _("Windowed") action Preference("display", "window") style "up_pref_btn"
+                            textbutton _("Fullscreen") action Preference("display", "fullscreen") style "up_pref_btn"
 
             # ═══════════════════════════════════════
-            # SKIP SECTION
-            # ═══════════════════════════════════════
-            frame:
-                xfill True
-                background Frame(Solid("#0e1b2a99"), 6, 6, 6, 6)
-                padding (30, 20, 30, 20)
-
-                vbox:
-                    spacing 14
-
-                    hbox:
-                        spacing 12
-                        text ">>" style "pref_icon_text"
-                        label _("Skip") style "pref_section_label"
-
-                    hbox:
-                        spacing 12
-                        xoffset 28
-                        textbutton _("Unseen Text") action Preference("skip", "toggle") style "pref_chip_btn"
-                        textbutton _("After Choices") action Preference("after choices", "toggle") style "pref_chip_btn"
-                        textbutton _("Transitions") action InvertSelected(Preference("transitions", "toggle")) style "pref_chip_btn"
-
-            # ═══════════════════════════════════════
-            # TEXT SECTION
+            # DIALOGUE & SKIPPING
             # ═══════════════════════════════════════
             frame:
                 xfill True
-                background Frame(Solid("#0e1b2a99"), 6, 6, 6, 6)
-                padding (30, 20, 30, 20)
+                background Frame(Solid("#1a0a10f0"), 0, 0)
+                padding (40, 30, 40, 30)
 
                 vbox:
-                    spacing 18
+                    spacing 20
 
                     hbox:
                         spacing 12
-                        text "Aa" style "pref_icon_text"
-                        label _("Text") style "pref_section_label"
+                        yalign 0.5
+                        text "✦" size 26 color "#f6d79d" yalign 0.5 at tr_star_spin
+                        text _("Reading & Pacing") size 24 color "#f6d79d" bold True yalign 0.5
+                        
+                    frame:
+                        xsize 770 ysize 2 background Solid("#5c1a1a") padding (0,0,0,0)
 
-                    # Text Speed
+                    hbox:
+                        spacing 20
+                        xoffset 36
+                        textbutton _("Skip Unseen") action Preference("skip", "toggle") style "up_pref_btn"
+                        textbutton _("Skip After Choices") action Preference("after choices", "toggle") style "up_pref_btn"
+                        textbutton _("Skip Transitions") action InvertSelected(Preference("transitions", "toggle")) style "up_pref_btn"
+
+                    null height 10
+
                     vbox:
-                        xoffset 28
-                        spacing 8
-                        text _("Text Speed") style "pref_slider_label_text"
+                        xoffset 36
+                        spacing 10
+                        text _("Text Speed") size 16 color "#e2e8f0" bold True
                         hbox:
                             spacing 16
-                            bar value Preference("text speed") style "pref_styled_bar"
-                            text _("FAST") style "pref_bar_hint_text"
+                            bar value Preference("text speed") style "slider" xsize 400
+                            text _("Fast") size 14 color "#6b7280" yalign 0.5
 
-                    # Auto-Forward
                     vbox:
-                        xoffset 28
-                        spacing 8
-                        text _("Auto-Forward Time") style "pref_slider_label_text"
+                        xoffset 36
+                        spacing 10
+                        text _("Auto-Forward Time") size 16 color "#e2e8f0" bold True
                         hbox:
                             spacing 16
-                            bar value Preference("auto-forward time") style "pref_styled_bar"
-                            text _("SLOW") style "pref_bar_hint_text"
+                            bar value Preference("auto-forward time") style "slider" xsize 400
+                            text _("Slow") size 14 color "#6b7280" yalign 0.5
 
             # ═══════════════════════════════════════
-            # AUDIO SECTION
+            # AUDIO LEVELS
             # ═══════════════════════════════════════
             frame:
                 xfill True
-                background Frame(Solid("#0e1b2a99"), 6, 6, 6, 6)
-                padding (30, 20, 30, 20)
+                background Frame(Solid("#1a0a10f0"), 0, 0)
+                padding (40, 30, 40, 30)
 
                 vbox:
-                    spacing 18
+                    spacing 20
 
                     hbox:
                         spacing 12
-                        text "♪" style "pref_icon_text"
-                        label _("Audio") style "pref_section_label"
+                        yalign 0.5
+                        text "✦" size 26 color "#f6d79d" yalign 0.5 at tr_star_spin
+                        text _("Audio Levels") size 24 color "#f6d79d" bold True yalign 0.5
+                        
+                    frame:
+                        xsize 770 ysize 2 background Solid("#5c1a1a") padding (0,0,0,0)
 
                     if config.has_music:
                         vbox:
-                            xoffset 28
-                            spacing 8
-                            text _("Music") style "pref_slider_label_text"
-                            bar value Preference("music volume") style "pref_styled_bar_music"
+                            xoffset 36
+                            spacing 10
+                            text _("Music Volume") size 16 color "#e2e8f0" bold True
+                            bar value Preference("music volume") style "slider" xsize 400
 
                     if config.has_sound:
                         vbox:
-                            xoffset 28
-                            spacing 8
+                            xoffset 36
+                            spacing 10
                             hbox:
-                                spacing 16
-                                text _("Sound") style "pref_slider_label_text"
+                                xminimum 400
+                                text _("Sound Effects Volume") size 16 color "#e2e8f0" bold True yalign 0.5
                                 if config.sample_sound:
-                                    textbutton _("[ Test ]") action Play("sound", config.sample_sound) style "pref_test_btn"
-                            bar value Preference("sound volume") style "pref_styled_bar_sfx"
+                                    textbutton _("Test") action Play("sound", config.sample_sound) style "up_pref_test_btn" xalign 1.0
+                            bar value Preference("sound volume") style "slider" xsize 400
 
                     if config.has_voice:
                         vbox:
-                            xoffset 28
-                            spacing 8
+                            xoffset 36
+                            spacing 10
                             hbox:
-                                spacing 16
-                                text _("Voice") style "pref_slider_label_text"
+                                xminimum 400
+                                text _("Voice Volume") size 16 color "#e2e8f0" bold True yalign 0.5
                                 if config.sample_voice:
-                                    textbutton _("[ Test ]") action Play("voice", config.sample_voice) style "pref_test_btn"
-                            bar value Preference("voice volume") style "pref_styled_bar_voice"
+                                    textbutton _("Test") action Play("voice", config.sample_voice) style "up_pref_test_btn" xalign 1.0
+                            bar value Preference("voice volume") style "slider" xsize 400
 
                     if config.has_music or config.has_sound or config.has_voice:
-                        null height 6
+                        null height 10
                         hbox:
-                            xoffset 28
-                            textbutton _("Mute All") action Preference("all mute", "toggle") style "pref_mute_btn"
+                            xoffset 36
+                            textbutton _("Mute All Audio") action Preference("all mute", "toggle") style "up_pref_btn"
 
-# ═══════════════════════════════════════════════════
-# SETTINGS STYLES
-# ═══════════════════════════════════════════════════
+## ============================================================================
+## CUSTOM STYLES FOR THE PREFERENCES SCREEN
+## ============================================================================
+style up_pref_btn is button:
+    background Frame(Solid("#5c1a1a99"), 4, 4, 4, 4)       # Deep Maroon Background
+    hover_background Frame(Solid("#f6d79d"), 4, 4, 4, 4)   # Gold on hover
+    selected_background Frame(Solid("#f6d79d"), 4, 4, 4, 4)# Gold when selected
+    padding (20, 10, 20, 10)
+
+style up_pref_btn_text is button_text:
+    color "#f1debf"             # Light gold text
+    hover_color "#1a0a10"       # Dark text on hover
+    selected_color "#1a0a10"    # Dark text when selected
+    size 16
+    bold True
+
+style up_pref_test_btn is button:
+    background Frame(Solid("#f6d79d22"), 4, 4, 4, 4)
+    hover_background Frame(Solid("#f6d79d"), 4, 4, 4, 4)
+    padding (12, 4, 12, 4)
+    yalign 0.5
+
+style up_pref_test_btn_text is button_text:
+    color "#f6d79d"
+    hover_color "#1a0a10"
+    size 14
+    bold True
 
 # Section header icon (>, >>, Aa, ♪)
 style pref_icon_text:
@@ -2296,7 +2705,6 @@ style history_label_text:
 screen help():
 
     tag menu
-
     default device = "keyboard"
 
     use game_menu(_("Help"), scroll="viewport"):
@@ -2304,150 +2712,113 @@ screen help():
         style_prefix "help"
 
         vbox:
-            spacing 23
+            spacing 24
+            xalign 0.5
+            xmaximum 850
 
+            ## Retro Tabs for switching devices
             hbox:
-
-                textbutton _("Keyboard") action SetScreenVariable("device", "keyboard")
-                textbutton _("Mouse") action SetScreenVariable("device", "mouse")
-
+                xalign 0.5
+                spacing 20
+                textbutton _("Keyboard") action SetScreenVariable("device", "keyboard") style "up_tab_btn"
+                textbutton _("Mouse") action SetScreenVariable("device", "mouse") style "up_tab_btn"
                 if GamepadExists():
-                    textbutton _("Gamepad") action SetScreenVariable("device", "gamepad")
+                    textbutton _("Gamepad") action SetScreenVariable("device", "gamepad") style "up_tab_btn"
 
-            if device == "keyboard":
-                use keyboard_help
-            elif device == "mouse":
-                use mouse_help
-            elif device == "gamepad":
-                use gamepad_help
+            ## Content Box
+            frame:
+                xfill True
+                background Frame(Solid("#1a0a10f0"), 0, 0)
+                padding (40, 30, 40, 30)
+
+                vbox:
+                    spacing 20
+                    
+                    ## UPV Maroon Divider
+                    frame:
+                        xsize 770 ysize 2 background Solid("#5c1a1a") padding (0,0,0,0)
+
+                    if device == "keyboard":
+                        use keyboard_help
+                    elif device == "mouse":
+                        use mouse_help
+                    elif device == "gamepad":
+                        use gamepad_help
 
 
 screen keyboard_help():
-
-    hbox:
-        label _("Enter")
-        text _("Advances dialogue and activates the interface.")
-
-    hbox:
-        label _("Space")
-        text _("Advances dialogue without selecting choices.")
-
-    hbox:
-        label _("Arrow Keys")
-        text _("Navigate the interface.")
-
-    hbox:
-        label _("Escape")
-        text _("Accesses the game menu.")
-
-    hbox:
-        label _("Ctrl")
-        text _("Skips dialogue while held down.")
-
-    hbox:
-        label _("Tab")
-        text _("Toggles dialogue skipping.")
-
-    hbox:
-        label _("Page Up")
-        text _("Rolls back to earlier dialogue.")
-
-    hbox:
-        label _("Page Down")
-        text _("Rolls forward to later dialogue.")
-
-    hbox:
-        label "H"
-        text _("Hides the user interface.")
-
-    hbox:
-        label "S"
-        text _("Takes a screenshot.")
-
-    hbox:
-        label "V"
-        text _("Toggles assistive {a=https://www.renpy.org/l/voicing}self-voicing{/a}.")
-
-    hbox:
-        label "Shift+A"
-        text _("Opens the accessibility menu.")
-
+    vbox:
+        spacing 16
+        xoffset 36
+        use help_section(_("Enter"), _("Advances dialogue and activates the interface."))
+        use help_section(_("Space"), _("Advances dialogue without selecting choices."))
+        use help_section(_("Arrow Keys"), _("Navigate the interface."))
+        use help_section(_("Escape"), _("Accesses the game menu."))
+        use help_section(_("Ctrl"), _("Skips dialogue while held down."))
+        use help_section(_("Tab"), _("Toggles dialogue skipping."))
+        use help_section(_("Page Up"), _("Rolls back to earlier dialogue."))
+        use help_section(_("Page Down"), _("Rolls forward to later dialogue."))
+        use help_section("H", _("Hides the user interface."))
+        use help_section("S", _("Takes a screenshot."))
+        use help_section("V", _("Toggles assistive self-voicing."))
 
 screen mouse_help():
-
-    hbox:
-        label _("Left Click")
-        text _("Advances dialogue and activates the interface.")
-
-    hbox:
-        label _("Middle Click")
-        text _("Hides the user interface.")
-
-    hbox:
-        label _("Right Click")
-        text _("Accesses the game menu.")
-
-    hbox:
-        label _("Mouse Wheel Up")
-        text _("Rolls back to earlier dialogue.")
-
-    hbox:
-        label _("Mouse Wheel Down")
-        text _("Rolls forward to later dialogue.")
-
+    vbox:
+        spacing 16
+        xoffset 36
+        use help_section(_("Left Click"), _("Advances dialogue and activates the interface."))
+        use help_section(_("Middle Click"), _("Hides the user interface."))
+        use help_section(_("Right Click"), _("Accesses the game menu."))
+        use help_section(_("Mouse Wheel Up\nClick Rollback Side"), _("Rolls back to earlier dialogue."))
+        use help_section(_("Mouse Wheel Down"), _("Rolls forward to later dialogue."))
 
 screen gamepad_help():
+    vbox:
+        spacing 16
+        xoffset 36
+        use help_section(_("Right Trigger\nA/Bottom Button"), _("Advances dialogue and activates the interface."))
+        use help_section(_("Left Trigger\nLeft Shoulder"), _("Rolls back to earlier dialogue."))
+        use help_section(_("Right Shoulder"), _("Rolls forward to later dialogue."))
+        use help_section(_("D-Pad, Sticks"), _("Navigate the interface."))
+        use help_section(_("Start, Guide"), _("Accesses the game menu."))
+        use help_section(_("Y/Top Button"), _("Hides the user interface."))
+        textbutton _("Calibrate") action GamepadCalibrate() style "up_pref_test_btn" xalign 0.0
 
+## Helper screen to format the two-column retro text
+screen help_section(key_name, description):
     hbox:
-        label _("Right Trigger\nA/Bottom Button")
-        text _("Advances dialogue and activates the interface.")
-
-    hbox:
-        label _("Left Trigger\nLeft Shoulder")
-        text _("Rolls back to earlier dialogue.")
-
-    hbox:
-        label _("Right Shoulder")
-        text _("Rolls forward to later dialogue.")
-
-    hbox:
-        label _("D-Pad, Sticks")
-        text _("Navigate the interface.")
-
-    hbox:
-        label _("Start, Guide, B/Right Button")
-        text _("Accesses the game menu.")
-
-    hbox:
-        label _("Y/Top Button")
-        text _("Hides the user interface.")
-
-    textbutton _("Calibrate") action GamepadCalibrate()
+        xfill True
+        text key_name:
+            xsize 220
+            color "#f6d79d"
+            bold True
+            size 16
+        text description:
+            color "#f1debf"
+            size 16
+            xmaximum 500
 
 
-style help_button is gui_button
-style help_button_text is gui_button_text
-style help_label is gui_label
-style help_label_text is gui_label_text
-style help_text is gui_text
+## ============================================================================
+## CUSTOM STYLES FOR HELP TABS
+## ============================================================================
 
-style help_button:
-    properties gui.button_properties("help_button")
-    xmargin 12
+style up_tab_btn is button:
+    xalign 0.5
+    padding (20, 10, 20, 10)
+    ## Sharp flat boxes for retro tabs
+    background Solid("#1a0a1099")      
+    hover_background Solid("#5c1a1a")  # UP Maroon on hover
+    selected_background Solid("#f6d79d") # Sablay Gold when active
 
-style help_button_text:
-    properties gui.text_properties("help_button")
-
-style help_label:
-    xsize 375
-    right_padding 30
-
-style help_label_text:
-    size gui.text_size
-    xalign 1.0
-    textalign 1.0
-
-
+style up_tab_btn_text is button_text:
+    xalign 0.5
+    text_align 0.5
+    color "#f1debf"             
+    hover_color "#f6d79d"       # Gold text on maroon background when hovered
+    selected_color "#1a0a10"    # Dark text on gold background when selected
+    size 18
+    bold True
 
 ################################################################################
 ## Additional screens

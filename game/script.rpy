@@ -1,4 +1,4 @@
-## ============================================================================
+﻿## ============================================================================
 ## MIAGAO FRESHMAN GUIDE — Main Game Script
 ## ============================================================================
 ## A point-and-click adventure set in UP Visayas - Miagao campus.
@@ -28,17 +28,16 @@ label start:
 
     call screen act_transition("MIAGAO FRESHMAN GUIDE", "A point-and-click adventure\nNavigate your first day at UP Visayas", mode="welcome")
 
-    ## --- ACT 4 ---
+   ## --- ACT 1 ---
     scene expression "images/ui/UI_Miagao.png" with fade
-    call screen act_transition("ACT 4", "Dorm Accommodation", mode="intro")
+    call screen act_transition("ACT 1", "Banwa Exploration", mode="intro")
 
     $ current_act = 1
     $ tasks_completed = set()
-    $ player_map_x = 2300
-    $ player_map_y = 3100
+    $ player_map_x = 2500  # Set to the Gate/Guard starting coordinates
+    $ player_map_y = 3200
     $ player_facing = "up"
-    jump act4_map
-
+    jump act1_map
 
 ## ============================================================================
 ## ACT 1 MAP — Banwa (Gate / HSU / Admin / Medical)
