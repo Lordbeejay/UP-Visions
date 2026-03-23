@@ -68,7 +68,7 @@ label act1_loop:
     $ _action, _node = _return
 
     if _action == "walk":
-        call walk_to_node(_node)
+        call walk_to_node(_node, nodes=act1_nodes)
         call expression _node.target_label
 
         ## unlock logic below...
@@ -142,7 +142,7 @@ label act2_entrance_loop:
     $ _action, _node = _return
 
     if _action == "walk":
-        call walk_to_node(_node)
+        call walk_to_node(_node, nodes=act2_entrance_nodes)
         call expression _node.target_label
 
         if "talk_ate_bea" in tasks_completed:
@@ -177,7 +177,7 @@ label act2_newad_loop:
     $ _action, _node = _return
 
     if _action == "walk":
-        call walk_to_node(_node)
+        call walk_to_node(_node, nodes=act2_newad_nodes)
         call expression _node.target_label
 
         ## After entering, transition to phase 3
@@ -203,7 +203,7 @@ label act2_inside_loop:
     $ _action, _node = _return
 
     if _action == "walk":
-        call walk_to_node(_node)
+        call walk_to_node(_node, nodes=act2_inside_nodes)
         call expression _node.target_label
 
         if "talk_maam_reyes" in tasks_completed:
@@ -245,7 +245,7 @@ label act3_loop:
     $ _action, _node = _return
 
     if _action == "walk":
-        call walk_to_node(_node)
+        call walk_to_node(_node, nodes=act3_nodes)
         call expression _node.target_label
 
         if "talk_sir_noel" in tasks_completed:
@@ -301,7 +301,7 @@ label act4_loop:
     $ _action, _node = _return
 
     if _action == "walk":
-        call walk_to_node(_node)
+        call walk_to_node(_node, nodes=act4_nodes)
         call expression _node.target_label
 
         if is_act_complete():
@@ -343,7 +343,7 @@ label act5_loop:
     $ _action, _node = _return
 
     if _action == "walk":
-        call walk_to_node(_node)
+        call walk_to_node(_node, nodes=act5_nodes)
         call expression _node.target_label
 
         if "talk_prof_lena" in tasks_completed:
@@ -402,7 +402,7 @@ label act6_loop:
     $ _action, _node = _return
 
     if _action == "walk":
-        call walk_to_node(_node)
+        call walk_to_node(_node, nodes=act6_nodes)
         call expression _node.target_label
 
         if "talk_mika" in tasks_completed:
@@ -461,7 +461,7 @@ label act7_loop:
     $ _action, _node = _return
 
     if _action == "walk":
-        call walk_to_node(_node)
+        call walk_to_node(_node, nodes=act7_nodes)
         call expression _node.target_label
 
         if "talk_ate_rosa" in tasks_completed:
@@ -520,7 +520,7 @@ label act8_loop:
     $ _action, _node = _return
 
     if _action == "walk":
-        call walk_to_node(_node)
+        call walk_to_node(_node, nodes=act8_nodes)
         call expression _node.target_label
 
         if "talk_jaden_act8" in tasks_completed:
@@ -586,7 +586,7 @@ label open_world_loop:
     $ _action, _node = _return
 
     if _action == "walk":
-        call walk_to_node(_node)
+        call walk_to_node(_node, nodes=openworld_nodes)
         call expression _node.target_label
 
     jump open_world_loop
