@@ -10,6 +10,18 @@
 ## ============================================================================
 ## --- Map zoom constant ---
 define MAP_ZOOM = 0.144
+default jaden_second_talk = False
+default talked_jaden = False
+default talked_josh = False
+default talked_maria = False
+default talked_chris = False
+default talked_joseph = False
+default gc_unlocked = False
+default gc_revealed = []
+default gc_open_count = 0
+default collected_items = []
+default quiz_score = 0
+
 
 label start:
     ## stop the fucking music when entering game
@@ -57,7 +69,7 @@ label act1_map:
         MapNode("aleng_maria",   3000, 2200, "act1_npc_aleng_maria",   tooltip="Aleng Maria",     icon_image="alengmaria.png",    locked=True),
         MapNode("manong_chris",  3600, 3000, "act1_npc_manong_chris",  tooltip="Manong Chris",    icon_image="manongchris.png",   locked=True),
         MapNode("joseph_driver", 2500, 3800, "act1_npc_joseph_driver", tooltip="Joseph (Driver)", icon_image="manong_driver.png",  locked=True),
-        MapNode("box1",          4200, 1800, "act1_prebox1_gate",      tooltip="BOX 1",           icon_image="box1.png",           locked=True),
+        MapNode("box1",          4200, 1800, "act1_prebox1_gate",      tooltip="BOX 1",           icon_image="Arrow.png",           locked=True, icon_zoom=1.5),
     ]
 
     $ current_task_text = "Talk to Jaden near the Banwa entrance"
@@ -115,7 +127,8 @@ label act1_complete:
     pause 0.3
     call screen act_transition("ACT 1 COMPLETE", "You've learned the lay of the land.\nMiagao is starting to feel like home.", "complete")
     call screen act_transition("ACT 2", "Entering the University", "intro")
-
+    scene black
+    
     $ current_act = 2
     $ player_map_x = 2500
     $ player_map_y = 2800
@@ -133,7 +146,7 @@ label act2_map:
     $ act2_entrance_nodes = [
         MapNode("ate_bea",    1600, 2600, "act2_npc_ate_bea",    tooltip="Ate Bea",     icon_image="ate_bea.png",    locked=False),
         MapNode("kuya_mark",  3200, 2200, "act2_npc_kuya_mark",  tooltip="Kuya Mark",   icon_image="kuya_mark.png",  locked=True),
-        MapNode("newad_gate", 2500, 1200, "act2_go_to_newad",    tooltip="New Admin",   icon_image="box1.png",       locked=True),
+        MapNode("newad_gate", 2500, 1200, "act2_go_to_newad",    tooltip="New Admin",   icon_image="npcs/Arrow.png",       locked=True),
     ]
     $ current_task_text = "Talk to Ate Bea at the Entrance"
 
@@ -168,7 +181,7 @@ label act2_newad_map:
     $ player_facing = "up"
 
     $ act2_newad_nodes = [
-        MapNode("enter_inside", 2500, 1800, "act2_enter_inside", tooltip="Enter New Admin", icon_image="box1.png", locked=False),
+        MapNode("enter_inside", 2500, 1800, "act2_enter_inside", tooltip="Enter New Admin", icon_image="npcs/Arrow.png", locked=False),
     ]
     $ current_task_text = "Enter the New Admin building"
 
@@ -334,7 +347,7 @@ label act5_map:
         MapNode("kuya_rico",     2800, 2200, "act5_npc_kuya_rico",     tooltip="Kuya Rico",      icon_image="kuya_rico.png",     locked=True),
         MapNode("ate_grace",     3200, 2800, "act5_npc_ate_grace",     tooltip="Ate Grace",      icon_image="ate_grace.png",     locked=True),
         MapNode("classmate_dan", 2200, 3200, "act5_npc_classmate_dan", tooltip="Dan",            icon_image="classmate_dan.png", locked=True),
-        MapNode("first_class",   2500, 1400, "act5_first_class",       tooltip="First Class",    icon_image="box1.png",          locked=True),
+        MapNode("first_class",   2500, 1400, "act5_first_class",       tooltip="First Class",    icon_image="npcs/Arrow.png",          locked=True),
     ]
     $ current_task_text = "Talk to Prof. Lena in the classroom"
 
@@ -393,7 +406,7 @@ label act6_map:
         MapNode("kuya_tomas",   2800, 1900, "act6_npc_kuya_tomas",   tooltip="Kuya Tomas",    icon_image="kuya_tomas.png",   locked=True),
         MapNode("ate_jenny",    2200, 2800, "act6_npc_ate_jenny",    tooltip="Ate Jenny",     icon_image="ate_jenny.png",    locked=True),
         MapNode("coach_ramon",  3400, 2600, "act6_npc_coach_ramon",  tooltip="Coach Ramon",   icon_image="coach_ramon.png",  locked=True),
-        MapNode("org_fair",     2500, 1500, "act6_org_fair",         tooltip="Org Fair",      icon_image="box1.png",         locked=True),
+        MapNode("org_fair",     2500, 1500, "act6_org_fair",         tooltip="Org Fair",      icon_image="npcs/Arrow.png",         locked=True),
     ]
     $ current_task_text = "Talk to Mika at the org fair"
 
@@ -452,7 +465,7 @@ label act7_map:
         MapNode("kuya_neil",     2800, 2400, "act7_npc_kuya_neil",     tooltip="Kuya Neil",     icon_image="kuya_neil.png",     locked=True),
         MapNode("prof_santos",   3200, 1800, "act7_npc_prof_santos",   tooltip="Prof. Santos",  icon_image="prof_santos.png",   locked=True),
         MapNode("classmate_bea", 2200, 3000, "act7_npc_classmate_bea", tooltip="Bea",           icon_image="classmate_bea.png", locked=True),
-        MapNode("study_session", 2500, 1400, "act7_study_session",     tooltip="Study Session",  icon_image="box1.png",          locked=True),
+        MapNode("study_session", 2500, 1400, "act7_study_session",     tooltip="Study Session",  icon_image="npcs/Arrow.png",          locked=True),
     ]
     $ current_task_text = "Talk to Ate Rosa at the library"
 
@@ -511,7 +524,7 @@ label act8_map:
         MapNode("ate_linda",     1600, 3200, "act8_npc_ate_linda",   tooltip="Ate Linda",     icon_image="ate_linda.png",    locked=True),
         MapNode("nanay_elena",   3300, 1900, "act8_npc_nanay_elena", tooltip="Nanay Elena",   icon_image="nanay_elena.png",  locked=True),
         MapNode("prof_reyes",    2800, 1600, "act8_npc_prof_reyes",  tooltip="Prof. Reyes",   icon_image="prof_reyes.png",   locked=True),
-        MapNode("end_of_week",   2500, 2200, "act8_end_of_week",     tooltip="Campus Oval",   icon_image="box1.png",         locked=True),
+        MapNode("end_of_week",   2500, 2200, "act8_end_of_week",     tooltip="Campus Oval",   icon_image="npcs/Arrow.png",         locked=True),
     ]
     $ current_task_text = "Catch up with Jaden"
 

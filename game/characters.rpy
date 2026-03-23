@@ -4,53 +4,53 @@
 
 ## --- NPC Character Definitions ---
 ## Color palette: warm earth tones matching Miagao pixel art
-define player_char = Character("You", color="#6e1f2a", what_color="#ffffff")
-define guard = Character("Manong Guard", color="#6e1f2a", what_color="#ffffff")
-define driver = Character("Manong Driver", color="#6e1f2a", what_color="#ffffff")
-define manongjosh = Character("Local", color="#6e1f2a", what_color="#ffffff")
-define physician = Character("School Physician", color="#6e1f2a", what_color="#ffffff")
-define dentist = Character("School Dentist", color="#6e1f2a", what_color="#ffffff")
-define sir_ruel = Character("Sir Ruel", color="#6e1f2a", what_color="#ffffff")
-define ms_santos = Character("Ms. Santos", color="#6e1f2a", what_color="#ffffff")
-define sarah = Character("Sarah", color="#6e1f2a", what_color="#ffffff")
-define mikhaela = Character("Sarah", color="#6e1f2a", what_color="#ffffff")
-define jaden = Character("Jaden", color="#6e1f2a", what_color="#ffffff")
-define caezar = Character("Caezar", color="#6e1f2a", what_color="#ffffff")
-define dorm_mgr = Character("Dorm Manager", color="#6e1f2a", what_color="#ffffff")
-define narrator_char = Character(None, what_color="#cccccc")
-define aleng_maria = Character("Aleng Maria", color="#6e1f2a", what_color="#ffffff")
-define joseph_driver = Character("Joseph", color="#6e1f2a", what_color="#ffffff")
-define manong_chris = Character("Manong Chris", color="#6e1f2a", what_color="#ffffff")
-define manong_josh = Character("Manong Josh", color="#6e1f2a", what_color="#ffffff")
-define joseph = Character("Joseph", color="#6e1f2a", what_color="#ffffff")
-define ate_bea = Character("ate bea", color="#6e1f2a", what_color="#ffffff")
-define kuya_mark = Character("kuya mark", color="#6e1f2a", what_color="#ffffff")
-define maam_reyes = Character("maam reyes", color="#6e1f2a", what_color="#ffffff")
-define sir_allan = Character("sir allan", color="#6e1f2a", what_color="#ffffff")
-define sir_noel = Character("Sir Noel", color="#6e1f2a", what_color="#ffffff")
+define player_char = Character("You", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define guard = Character("Manong Guard", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define driver = Character("Manong Driver", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define manongjosh = Character("Local", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define physician = Character("School Physician", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define dentist = Character("School Dentist", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define sir_ruel = Character("Sir Ruel", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define ms_santos = Character("Ms. Santos", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define sarah = Character("Sarah", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define mikhaela = Character("Sarah", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define jaden = Character("Jaden", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define caezar = Character("Caezar", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define dorm_mgr = Character("Dorm Manager", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define narrator_char = Character(None, what_color="#cccccc", what_sound="audio/click.wav")
+define aleng_maria = Character("Aleng Maria", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define joseph_driver = Character("Joseph", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define manong_chris = Character("Manong Chris", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define manong_josh = Character("Manong Josh", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define joseph = Character("Joseph", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define ate_bea = Character("ate bea", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define kuya_mark = Character("kuya mark", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define maam_reyes = Character("maam reyes", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define sir_allan = Character("sir allan", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define sir_noel = Character("Sir Noel", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
 
 ## --- Act 5 Characters ---
-define prof_lena = Character("Prof. Lena", color="#6e1f2a", what_color="#ffffff")
-define kuya_rico = Character("Kuya Rico", color="#6e1f2a", what_color="#ffffff")
-define ate_grace = Character("Ate Grace", color="#6e1f2a", what_color="#ffffff")
-define dan = Character("Dan", color="#6e1f2a", what_color="#ffffff")
+define prof_lena = Character("Prof. Lena", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define kuya_rico = Character("Kuya Rico", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define ate_grace = Character("Ate Grace", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define dan = Character("Dan", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
 
 ## --- Act 6 Characters ---
-define mika = Character("Mika", color="#6e1f2a", what_color="#ffffff")
-define kuya_tomas = Character("Kuya Tomas", color="#6e1f2a", what_color="#ffffff")
-define ate_jenny = Character("Ate Jenny", color="#6e1f2a", what_color="#ffffff")
-define coach_ramon = Character("Coach Ramon", color="#6e1f2a", what_color="#ffffff")
+define mika = Character("Mika", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define kuya_tomas = Character("Kuya Tomas", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define ate_jenny = Character("Ate Jenny", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define coach_ramon = Character("Coach Ramon", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
 
 ## --- Act 7 Characters ---
-define ate_rosa = Character("Ate Rosa", color="#6e1f2a", what_color="#ffffff")
-define kuya_neil = Character("Kuya Neil", color="#6e1f2a", what_color="#ffffff")
-define prof_santos = Character("Prof. Santos", color="#6e1f2a", what_color="#ffffff")
-define bea = Character("Bea", color="#6e1f2a", what_color="#ffffff")
+define ate_rosa = Character("Ate Rosa", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define kuya_neil = Character("Kuya Neil", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define prof_santos = Character("Prof. Santos", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define bea = Character("Bea", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
 
 ## --- Act 8 Characters ---
-define ate_linda = Character("Ate Linda", color="#6e1f2a", what_color="#ffffff")
-define nanay_elena = Character("Nanay Elena", color="#6e1f2a", what_color="#ffffff")
-define prof_reyes = Character("Prof. Reyes", color="#6e1f2a", what_color="#ffffff")
+define ate_linda = Character("Ate Linda", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define nanay_elena = Character("Nanay Elena", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define prof_reyes = Character("Prof. Reyes", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
 
 ## --- NPC Sprite Images ---
 ## Ren'Py auto-names files in subdirectories with a space prefix (e.g. "npcs manong_guard").
@@ -68,8 +68,8 @@ image caezar = "images/npcs/caezar.png"
 image dorm_mgr = "images/npcs/dorm_mgr.png"
 image aleng_maria_sprite = "images/npcs/alengmaria.png"
 image manong_josh = "images/npcs/manongjosh.png"      ## already have file, just add this
-image manong_chris = "images/npcs/manong_chris.png"
-image joseph_driver = "images/npcs/joseph_driver.png"
+image manong_chris = "images/npcs/manongchris.png"
+image joseph_driver = "images/npcs/manong_driver.png"
 image ate_bea = "images/npcs/ate_bea.png"
 image kuya_mark = "images/npcs/kuya_mark.png"
 image maam_reyes = "images/npcs/maam_reyes.png"
