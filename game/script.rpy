@@ -40,16 +40,16 @@ label start:
 
     call screen act_transition("MIAGAO FRESHMAN GUIDE", "A point-and-click adventure\nNavigate your first day at UP Visayas", mode="welcome")
 
-   ## --- ACT 1 ---
-    scene expression "images/ui/UI_Miagao.png" with fade
-    call screen act_transition("ACT 1", "Banwa Exploration", mode="intro")
+    ## --- ACT 2 ---
+    scene black
+    call screen act_transition("ACT 2", "Entering the University", mode="intro")
 
-    $ current_act = 1
+    $ current_act = 2
     $ tasks_completed = set()
-    $ player_map_x = 2500  # Set to the Gate/Guard starting coordinates
-    $ player_map_y = 3200
+    $ player_map_x = 2500
+    $ player_map_y = 2800
     $ player_facing = "up"
-    jump act1_map
+    jump act2_map
 
 ## ============================================================================
 ## ACT 1 MAP — Banwa (Gate / HSU / Admin / Medical)
@@ -123,8 +123,7 @@ label act1_loop:
 
 
 label act1_complete:
-    scene expression "images/ui/UI_Miagao.png" with fade
-    pause 0.3
+    scene black
     call screen act_transition("ACT 1 COMPLETE", "You've learned the lay of the land.\nMiagao is starting to feel like home.", "complete")
     call screen act_transition("ACT 2", "Entering the University", "intro")
     scene black
@@ -142,16 +141,16 @@ label act1_complete:
 
 ## --- PHASE 1: Entrance map with Ate Bea and Kuya Mark ---
 label act2_map:
-    $ current_map_bg = "maps/Entrance.png"
+    $ current_map_bg = "maps/Entrance_Box1.png"
     $ act2_entrance_nodes = [
-        MapNode("ate_bea",    1600, 2600, "act2_npc_ate_bea",    tooltip="Ate Bea",     icon_image="ate_bea.png",    locked=False),
-        MapNode("kuya_mark",  3200, 2200, "act2_npc_kuya_mark",  tooltip="Kuya Mark",   icon_image="kuya_mark.png",  locked=True),
-        MapNode("newad_gate", 2500, 1200, "act2_go_to_newad",    tooltip="New Admin",   icon_image="npcs/Arrow.png",       locked=True),
+        MapNode("ate_bea",    2000, 2600, "act2_npc_ate_bea",    tooltip="Ate Bea",     icon_image="ate_bea.png",    locked=False),
+        MapNode("kuya_mark",  2800, 3900, "act2_npc_kuya_mark",  tooltip="Kuya Mark",   icon_image="kuya_mark.png",  locked=True),
+        MapNode("newad_gate", 2500, 1200, "act2_go_to_newad",    tooltip="New Admin",   icon_image="Arrow.png",       locked=True, icon_zoom=2.0),
     ]
     $ current_task_text = "Talk to Ate Bea at the Entrance"
 
 label act2_entrance_loop:
-    call screen map_screen("maps/Entrance.png", act2_entrance_nodes, current_task_text, 1.0)
+    call screen map_screen("maps/Entrance_Box1.png", act2_entrance_nodes, current_task_text, 1.0)
     $ _action, _node = _return
 
     if _action == "walk":
@@ -229,8 +228,7 @@ label act2_inside_loop:
 
 
 label act2_complete:
-    scene expression "images/ui/UI_Miagao.png" with fade
-    pause 0.3
+    scene black
     call screen act_transition("ACT 2 COMPLETE", "You've navigated enrollment\nand met the campus staff!", "complete")
     call screen act_transition("ACT 3", "Enrollment", "intro")
 
@@ -274,8 +272,7 @@ label act3_loop:
 
 
 label act3_complete:
-    scene expression "images/ui/UI_Miagao.png" with fade
-    pause 0.3
+    scene black
     call screen act_transition("ACT 3 COMPLETE", "You've completed enrollment\nand built your class schedule!", "complete")
     call screen act_transition("ACT 4", "Dorm Life", "intro")
 
@@ -324,8 +321,7 @@ label act4_loop:
 
 
 label act4_complete:
-    scene expression "images/ui/UI_Miagao.png" with fade
-    pause 0.3
+    scene black
     call screen act_transition("ACT 4 COMPLETE", "You've settled into your dorm\nand set up your room!", "complete")
     call screen act_transition("ACT 5", "First Day of Classes", "intro")
 
@@ -383,8 +379,7 @@ label act5_loop:
 
 
 label act5_complete:
-    scene expression "images/ui/UI_Miagao.png" with fade
-    pause 0.3
+    scene black
     call screen act_transition("ACT 5 COMPLETE", "You survived your first day of classes!", "complete")
     call screen act_transition("ACT 6", "Student Orgs & Campus Life", "intro")
 
@@ -442,8 +437,7 @@ label act6_loop:
 
 
 label act6_complete:
-    scene expression "images/ui/UI_Miagao.png" with fade
-    pause 0.3
+    scene black
     call screen act_transition("ACT 6 COMPLETE", "You've explored campus life and organizations!", "complete")
     call screen act_transition("ACT 7", "Library & Academic Resources", "intro")
 
@@ -501,8 +495,7 @@ label act7_loop:
 
 
 label act7_complete:
-    scene expression "images/ui/UI_Miagao.png" with fade
-    pause 0.3
+    scene black
     call screen act_transition("ACT 7 COMPLETE", "You've discovered the library and academic resources!", "complete")
     call screen act_transition("ACT 8", "Finding Your Place", "intro")
 
@@ -560,8 +553,7 @@ label act8_loop:
 
 
 label act8_complete:
-    scene expression "images/ui/UI_Miagao.png" with fade
-    pause 0.3
+    scene black
     call screen act_transition("ACT 8 COMPLETE", "You've found your place at UP Visayas.", "complete")
 
     jump open_world
@@ -572,8 +564,7 @@ label act8_complete:
 ## ============================================================================
 
 label open_world:
-    scene expression "images/ui/UI_Miagao.png" with fade
-    pause 0.3
+    scene black
     call screen act_transition("OPEN WORLD", "Classes start next week. Explore freely!", "intro")
 
     $ current_act = 9

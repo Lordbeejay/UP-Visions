@@ -362,10 +362,9 @@ label walk_to_node(target_node, map_bg=None, nodes=None):
 
     ## Show the map background so it stays visible during the walk animation
     show expression ("images/" + map_bg) as walk_map_bg:
-        xpos 0
-        ypos 0
-        xsize 1920
-        ysize 1080
+        xalign 0.5
+        yalign 0.5
+        zoom 1.0
 
     if nodes is not None:
         show screen map_nodes_overlay(nodes)
