@@ -37,7 +37,7 @@ label start:
     $ player_map_x = 2300
     $ player_map_y = 3100
     $ player_facing = "up"
-    jump act4_map
+    jump act1_map
 
 
 ## ============================================================================
