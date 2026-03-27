@@ -438,8 +438,8 @@ init python:
         "Jaden": "images/npcs/jaden.png",
         "Manong Josh": "images/npcs/manongjosh.png",
         "Aleng Maria": "images/npcs/alengmaria.png",
-        "Manong Chris": "images/npcs/manong_chris.png",
-        "Joseph": "images/npcs/joseph_driver.png",
+        "Manong Chris": "images/npcs/manongchris.png",
+        "Joseph": "images/npcs/manong_driver.png",
         ## Act 2
         "ate bea": "images/npcs/ate_bea.png",
         "kuya mark": "images/npcs/kuya_mark.png",
@@ -1687,7 +1687,7 @@ screen game_menu(title, scroll=None, yinitial=0.0, spacing=0):
         outlines [(2, "#1a0a10", 0, 0)]
 
     if main_menu:
-        key "game_menu" action ShowMenu("main_menu")
+        key "game_menu" action Hide()
     else:
         key "game_menu" action Hide()
 

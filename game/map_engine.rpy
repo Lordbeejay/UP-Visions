@@ -149,6 +149,8 @@ screen map_screen(map_bg, nodes, task_text="", map_scale=1.0):
         xpos _px
         ypos _py
         zoom 2.5
+        xanchor 0.5
+        yanchor 0.5
 
     ## --- ACT + TASK LIST PANEL (top left) ---
 
@@ -320,22 +322,52 @@ transform task_item_bob:
         easeout 1.2 yoffset 0
         repeat
 
+screen map_nodes_overlay(nodes):
+    for node in nodes:
+        $ _sx = int(node.x * MAP_SCALE_X)
+        $ _sy = int(node.y * MAP_SCALE_Y)
+
+        if not node.locked:
+            if getattr(node, "icon_image", None):
+                add ("npcs/" + node.icon_image):
+                    zoom getattr(node, "icon_zoom", 0.12)
+                    xpos _sx - 40
+                    ypos _sy - 70
+            text node.tooltip:
+                xpos _sx - 40
+                ypos _sy - 10
+                size 12
+                color "#ffffff"
+                outlines [(3, "#000000", 0, 0)]
+        else:
+            if getattr(node, "icon_image", None):
+                add ("npcs/" + node.icon_image):
+                    zoom getattr(node, "icon_zoom", 0.12)
+                    xpos _sx - 40
+                    ypos _sy - 70
+                    matrixcolor BrightnessMatrix(-0.5)
+            text "🔒":
+                xpos _sx - 40
+                ypos _sy - 10
+                size 12
 
 ## ============================================================================
 ## WALK LABEL
 ## ============================================================================
 
-label walk_to_node(target_node, map_bg=None):
+label walk_to_node(target_node, map_bg=None, nodes=None):
     ## Use the global current_map_bg if no explicit map_bg is passed
     if map_bg is None:
         $ map_bg = current_map_bg
 
     ## Show the map background so it stays visible during the walk animation
-    scene expression ("images/" + map_bg):
-        xpos 0
-        ypos 0
-        xsize 1920
-        ysize 1080
+    show expression ("images/" + map_bg) as walk_map_bg:
+        xalign 0.5
+        yalign 0.5
+        zoom 1.0
+
+    if nodes is not None:
+        show screen map_nodes_overlay(nodes)
 
     $ _dir = get_direction(player_map_x, player_map_y, target_node.x, target_node.y)
     $ _dur = calc_walk_duration(player_map_x, player_map_y, target_node.x, target_node.y)
@@ -349,6 +381,8 @@ label walk_to_node(target_node, map_bg=None):
     show expression ("player_walk_" + _dir) as player_sprite:
         pos (_start_x, _start_y)
         zoom 2.5
+        xanchor 0.5
+        yanchor 0.5
         linear _dur pos (_end_x, _end_y)
 
     $ renpy.pause(_dur, hard=True)
@@ -358,6 +392,9 @@ label walk_to_node(target_node, map_bg=None):
     $ player_facing = _dir
 
     hide player_sprite
+    hide walk_map_bg
+    hide screen map_nodes_overlay
     $ target_node.mark_visited()
+
 
     return
