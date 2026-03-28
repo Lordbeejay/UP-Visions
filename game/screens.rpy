@@ -751,232 +751,417 @@ transform tr_star_spin:
 
 screen act_transition(title, subtitle, mode="complete"):
 
-    ## Full overlay — gradient-like with layered solids
-    add Solid("#000000bb") at tr_overlay_fade
+    ## ── WELCOME MODE: "You just arrived in Miagao" ─────────────────────────
+    ## Postcard/arrival-stamp layout — wider panel, layered border glow,
+    ## stamp ribbon across the top, hand-lettered feel.
+    if mode == "welcome":
 
-    ## Outer decorative frame (border glow effect)
-    frame:
-        xalign 0.5
-        yalign 0.5
-        xminimum 680
-        xmaximum 780
-        padding (4, 4, 4, 4)
-        background Frame(Solid("#f6d79d44"), 0, 0)
-        at tr_panel_rise
+        ## Deep vignette overlay
+        add Solid("#000000e8") at tr_overlay_fade
 
-        ## Main panel
+        ## Outermost glow ring — amber
         frame:
-            xfill True
-            padding (48, 40, 48, 40)
-            background Frame(Solid("#1e0c12f0"), 0, 0)
+            xalign 0.5
+            yalign 0.5
+            xminimum 860
+            xmaximum 900
+            padding (5, 5, 5, 5)
+            background Frame(Solid("#f6d79d55"), 0, 0)
+            at tr_panel_rise
 
-            vbox:
-                xalign 0.5
-                spacing 0
+            ## Mid glow ring — deeper gold
+            frame:
+                xfill True
+                padding (3, 3, 3, 3)
+                background Frame(Solid("#c8921888"), 0, 0)
 
-                ## Top ornament: triple line
-                hbox:
+                ## Main panel — warm dark parchment
+                frame:
+                    xfill True
+                    padding (0, 0, 0, 0)
+                    background Frame(Solid("#1a0a0ef8"), 0, 0)
+
+                    vbox:
+                        spacing 0
+
+                        ## ── Stamp ribbon top ────────────────────────────────
+                        frame:
+                            xfill True
+                            padding (0, 0, 0, 0)
+                            background Solid("#2a0e0e")
+
+                            hbox:
+                                xfill True
+                                xalign 0.5
+                                yalign 0.5
+                                spacing 0
+
+                                ## Left decorative border stripe
+                                frame:
+                                    xsize 6
+                                    ysize 44
+                                    background Solid("#f6d79d")
+                                    padding (0, 0, 0, 0)
+                                frame:
+                                    xsize 3
+                                    ysize 44
+                                    background Solid("#2a0e0e")
+                                    padding (0, 0, 0, 0)
+                                frame:
+                                    xsize 3
+                                    ysize 44
+                                    background Solid("#f6d79d88")
+                                    padding (0, 0, 0, 0)
+
+                                ## Stamp label
+                                text "✈  YOU HAVE ARRIVED":
+                                    xalign 0.5
+                                    xfill True
+                                    text_align 0.5
+                                    size 13
+                                    color "#f6d79d"
+                                    bold True
+                                    outlines [(1, "#1a0a0e", 0, 0)]
+                                    yalign 0.5
+                                    at tr_subtitle_fade
+
+                                ## Right decorative border stripe (mirror)
+                                frame:
+                                    xsize 3
+                                    ysize 44
+                                    background Solid("#f6d79d88")
+                                    padding (0, 0, 0, 0)
+                                frame:
+                                    xsize 3
+                                    ysize 44
+                                    background Solid("#2a0e0e")
+                                    padding (0, 0, 0, 0)
+                                frame:
+                                    xsize 6
+                                    ysize 44
+                                    background Solid("#f6d79d")
+                                    padding (0, 0, 0, 0)
+
+                        ## ── Perforated edge ─────────────────────────────────
+                        ## Simulated stamp serration — row of small gold squares
+                        hbox:
+                            xfill True
+                            xalign 0.5
+                            spacing 4
+                            at tr_divider_grow
+                            ## 55 dots across ~860px panel
+                            for _dot_i in range(55):
+                                frame:
+                                    xsize 8
+                                    ysize 8
+                                    background Solid("#f6d79d33")
+                                    padding (0,0,0,0)
+
+                        null height 32
+
+                        ## ── Location stamp ──────────────────────────────────
+                        text "◈  MIAGAO, ILOILO  ◈":
+                            xalign 0.5
+                            size 12
+                            color "#c89218bb"
+                            bold True
+                            outlines [(1, "#1a0a0e", 0, 0)]
+                            at tr_subtitle_fade
+
+                        null height 10
+
+                        ## ── Grand title ─────────────────────────────────────
+                        text title:
+                            xalign 0.5
+                            text_align 0.5
+                            size 56
+                            color "#ffd700"
+                            outlines [(5, "#1a0a0e", 0, 0), (3, "#8b691488", 3, 3), (1, "#f6d79d44", -1, -1)]
+                            at tr_title_reveal
+
+                        null height 4
+
+                        ## ── Double rule under title ──────────────────────────
+                        hbox:
+                            xalign 0.5
+                            spacing 0
+                            at tr_divider_grow
+                            frame:
+                                xsize 340
+                                ysize 2
+                                background Solid("#f6d79d")
+                                padding (0,0,0,0)
+                        null height 2
+                        hbox:
+                            xalign 0.5
+                            spacing 0
+                            frame:
+                                xsize 220
+                                ysize 1
+                                background Solid("#f6d79d55")
+                                padding (0,0,0,0)
+
+                        null height 20
+
+                        ## ── Subtitle ─────────────────────────────────────────
+                        if subtitle:
+                            text subtitle:
+                                xalign 0.5
+                                text_align 0.5
+                                size 20
+                                color "#f1debf"
+                                outlines [(2, "#1a0a0e", 0, 0)]
+                                line_spacing 8
+                                at tr_subtitle_fade
+
+                        null height 32
+
+                        ## ── Bottom perforated edge ───────────────────────────
+                        hbox:
+                            xfill True
+                            xalign 0.5
+                            spacing 4
+                            at tr_divider_grow
+                            for _dot_i in range(55):
+                                frame:
+                                    xsize 8
+                                    ysize 8
+                                    background Solid("#f6d79d33")
+                                    padding (0,0,0,0)
+
+                        ## ── Footer ribbon ────────────────────────────────────
+                        frame:
+                            xfill True
+                            padding (0, 0, 0, 0)
+                            background Solid("#2a0e0e")
+
+                            text "UP VISAYAS — ISKOLAR NG BAYAN":
+                                xalign 0.5
+                                size 10
+                                color "#f6d79d66"
+                                bold True
+                                yalign 0.5
+                                at tr_subtitle_fade
+
+        ## Click or key to dismiss
+        key "dismiss" action Return()
+        ## Slightly longer so the player can read the arrival moment
+        timer 3.2 action Return()
+
+    ## ── ALL OTHER MODES ───────────────────────────────────────────────────────
+    else:
+
+        ## Full overlay — gradient-like with layered solids
+        add Solid("#000000bb") at tr_overlay_fade
+
+        ## Outer decorative frame (border glow effect)
+        frame:
+            xalign 0.5
+            yalign 0.5
+            xminimum 680
+            xmaximum 780
+            padding (4, 4, 4, 4)
+            background Frame(Solid("#f6d79d44"), 0, 0)
+            at tr_panel_rise
+
+            ## Main panel
+            frame:
+                xfill True
+                padding (48, 40, 48, 40)
+                background Frame(Solid("#1e0c12f0"), 0, 0)
+
+                vbox:
                     xalign 0.5
-                    spacing 8
-                    at tr_divider_grow
+                    spacing 0
 
-                    frame:
-                        xsize 60
-                        ysize 2
-                        yalign 0.5
-                        background Solid("#f6d79d88")
-                        padding (0, 0, 0, 0)
-                    frame:
-                        xsize 12
-                        ysize 12
-                        yalign 0.5
-                        background Solid("#f6d79d")
-                        padding (0, 0, 0, 0)
-                    frame:
-                        xsize 120
-                        ysize 2
-                        yalign 0.5
-                        background Solid("#f6d79d")
-                        padding (0, 0, 0, 0)
-                    frame:
-                        xsize 12
-                        ysize 12
-                        yalign 0.5
-                        background Solid("#f6d79d")
-                        padding (0, 0, 0, 0)
-                    frame:
-                        xsize 60
-                        ysize 2
-                        yalign 0.5
-                        background Solid("#f6d79d88")
-                        padding (0, 0, 0, 0)
-
-                null height 24
-
-                ## Completion star or intro label
-                if mode == "complete":
-                    text "★":
+                    ## Top ornament: triple line
+                    hbox:
                         xalign 0.5
-                        size 40
-                        color "#f6d79d"
-                        outlines [(2, "#1e0c12", 0, 0)]
-                        at tr_star_spin
-                elif mode == "welcome":
-                    text "✦":
+                        spacing 8
+                        at tr_divider_grow
+
+                        frame:
+                            xsize 60
+                            ysize 2
+                            yalign 0.5
+                            background Solid("#f6d79d88")
+                            padding (0, 0, 0, 0)
+                        frame:
+                            xsize 12
+                            ysize 12
+                            yalign 0.5
+                            background Solid("#f6d79d")
+                            padding (0, 0, 0, 0)
+                        frame:
+                            xsize 120
+                            ysize 2
+                            yalign 0.5
+                            background Solid("#f6d79d")
+                            padding (0, 0, 0, 0)
+                        frame:
+                            xsize 12
+                            ysize 12
+                            yalign 0.5
+                            background Solid("#f6d79d")
+                            padding (0, 0, 0, 0)
+                        frame:
+                            xsize 60
+                            ysize 2
+                            yalign 0.5
+                            background Solid("#f6d79d88")
+                            padding (0, 0, 0, 0)
+
+                    null height 24
+
+                    ## Icon / label
+                    if mode == "complete":
+                        text "★":
+                            xalign 0.5
+                            size 40
+                            color "#f6d79d"
+                            outlines [(2, "#1e0c12", 0, 0)]
+                            at tr_star_spin
+                    elif mode == "ending":
+                        text "★":
+                            xalign 0.5
+                            size 36
+                            color "#ffd700"
+                            outlines [(2, "#1e0c12", 0, 0)]
+                            at tr_star_spin
+                    elif mode == "credits":
+                        text "◇":
+                            xalign 0.5
+                            size 20
+                            color "#f6d79d66"
+                            at tr_subtitle_fade
+                    else:
+                        text "— NEW CHAPTER —":
+                            xalign 0.5
+                            size 14
+                            color "#f6d79d99"
+                            outlines [(1, "#1e0c12", 0, 0)]
+                            at tr_subtitle_fade
+
+                    null height 12
+
+                    ## Main title
+                    if mode == "complete":
+                        text title:
+                            xalign 0.5
+                            text_align 0.5
+                            size 38
+                            color "#b8e6b0"
+                            outlines [(4, "#1e0c12", 0, 0), (2, "#3a7a3a55", 2, 2)]
+                            at tr_title_reveal
+                    elif mode == "ending":
+                        text title:
+                            xalign 0.5
+                            text_align 0.5
+                            size 40
+                            color "#ffd700"
+                            outlines [(4, "#1e0c12", 0, 0), (2, "#8b6914aa", 2, 2)]
+                            at tr_title_reveal
+                    elif mode == "credits":
+                        text title:
+                            xalign 0.5
+                            text_align 0.5
+                            size 18
+                            color "#888888"
+                            outlines [(2, "#1e0c12", 0, 0)]
+                            at tr_title_reveal
+                    else:
+                        text title:
+                            xalign 0.5
+                            text_align 0.5
+                            size 46
+                            color "#ffd700"
+                            outlines [(4, "#1e0c12", 0, 0), (2, "#8b6914aa", 2, 2)]
+                            at tr_title_reveal
+
+                    null height 8
+
+                    ## Center divider
+                    hbox:
                         xalign 0.5
-                        size 36
-                        color "#ffd700"
-                        outlines [(2, "#1e0c12", 0, 0)]
-                        at tr_star_spin
-                elif mode == "ending":
-                    text "★":
+                        spacing 6
+                        at tr_divider_grow
+
+                        frame:
+                            xsize 80
+                            ysize 1
+                            yalign 0.5
+                            background Solid("#f6d79d66")
+                            padding (0, 0, 0, 0)
+                        frame:
+                            xsize 6
+                            ysize 6
+                            yalign 0.5
+                            background Solid("#f6d79d")
+                            padding (0, 0, 0, 0)
+                        frame:
+                            xsize 80
+                            ysize 1
+                            yalign 0.5
+                            background Solid("#f6d79d66")
+                            padding (0, 0, 0, 0)
+
+                    null height 14
+
+                    ## Subtitle
+                    if subtitle:
+                        text subtitle:
+                            xalign 0.5
+                            text_align 0.5
+                            size 22
+                            color "#f1debf"
+                            outlines [(2, "#1e0c12", 0, 0)]
+                            line_spacing 6
+                            at tr_subtitle_fade
+
+                    null height 24
+
+                    ## Bottom ornament: triple line (mirrors top)
+                    hbox:
                         xalign 0.5
-                        size 36
-                        color "#ffd700"
-                        outlines [(2, "#1e0c12", 0, 0)]
-                        at tr_star_spin
-                elif mode == "credits":
-                    text "◇":
-                        xalign 0.5
-                        size 20
-                        color "#f6d79d66"
-                        at tr_subtitle_fade
-                else:
-                    text "— NEW CHAPTER —":
-                        xalign 0.5
-                        size 14
-                        color "#f6d79d99"
-                        outlines [(1, "#1e0c12", 0, 0)]
-                        at tr_subtitle_fade
+                        spacing 8
+                        at tr_divider_grow
 
-                null height 12
+                        frame:
+                            xsize 60
+                            ysize 2
+                            yalign 0.5
+                            background Solid("#f6d79d88")
+                            padding (0, 0, 0, 0)
+                        frame:
+                            xsize 12
+                            ysize 12
+                            yalign 0.5
+                            background Solid("#f6d79d")
+                            padding (0, 0, 0, 0)
+                        frame:
+                            xsize 120
+                            ysize 2
+                            yalign 0.5
+                            background Solid("#f6d79d")
+                            padding (0, 0, 0, 0)
+                        frame:
+                            xsize 12
+                            ysize 12
+                            yalign 0.5
+                            background Solid("#f6d79d")
+                            padding (0, 0, 0, 0)
+                        frame:
+                            xsize 60
+                            ysize 2
+                            yalign 0.5
+                            background Solid("#f6d79d88")
+                            padding (0, 0, 0, 0)
 
-                ## Main title
-                if mode == "complete":
-                    text title:
-                        xalign 0.5
-                        text_align 0.5
-                        size 38
-                        color "#b8e6b0"
-                        outlines [(4, "#1e0c12", 0, 0), (2, "#3a7a3a55", 2, 2)]
-                        at tr_title_reveal
-                elif mode == "welcome":
-                    text title:
-                        xalign 0.5
-                        text_align 0.5
-                        size 42
-                        color "#ffd700"
-                        outlines [(4, "#1e0c12", 0, 0), (2, "#8b6914aa", 2, 2)]
-                        at tr_title_reveal
-                elif mode == "ending":
-                    text title:
-                        xalign 0.5
-                        text_align 0.5
-                        size 40
-                        color "#ffd700"
-                        outlines [(4, "#1e0c12", 0, 0), (2, "#8b6914aa", 2, 2)]
-                        at tr_title_reveal
-                elif mode == "credits":
-                    text title:
-                        xalign 0.5
-                        text_align 0.5
-                        size 18
-                        color "#888888"
-                        outlines [(2, "#1e0c12", 0, 0)]
-                        at tr_title_reveal
-                else:
-                    text title:
-                        xalign 0.5
-                        text_align 0.5
-                        size 46
-                        color "#ffd700"
-                        outlines [(4, "#1e0c12", 0, 0), (2, "#8b6914aa", 2, 2)]
-                        at tr_title_reveal
+        ## Click or key to dismiss
+        key "dismiss" action Return()
 
-                null height 8
-
-                ## Center divider
-                hbox:
-                    xalign 0.5
-                    spacing 6
-                    at tr_divider_grow
-
-                    frame:
-                        xsize 80
-                        ysize 1
-                        yalign 0.5
-                        background Solid("#f6d79d66")
-                        padding (0, 0, 0, 0)
-                    frame:
-                        xsize 6
-                        ysize 6
-                        yalign 0.5
-                        background Solid("#f6d79d")
-                        padding (0, 0, 0, 0)
-                    frame:
-                        xsize 80
-                        ysize 1
-                        yalign 0.5
-                        background Solid("#f6d79d66")
-                        padding (0, 0, 0, 0)
-
-                null height 14
-
-                ## Subtitle
-                if subtitle:
-                    text subtitle:
-                        xalign 0.5
-                        text_align 0.5
-                        size 22
-                        color "#f1debf"
-                        outlines [(2, "#1e0c12", 0, 0)]
-                        line_spacing 6
-                        at tr_subtitle_fade
-
-                null height 24
-
-                ## Bottom ornament: triple line (mirrors top)
-                hbox:
-                    xalign 0.5
-                    spacing 8
-                    at tr_divider_grow
-
-                    frame:
-                        xsize 60
-                        ysize 2
-                        yalign 0.5
-                        background Solid("#f6d79d88")
-                        padding (0, 0, 0, 0)
-                    frame:
-                        xsize 12
-                        ysize 12
-                        yalign 0.5
-                        background Solid("#f6d79d")
-                        padding (0, 0, 0, 0)
-                    frame:
-                        xsize 120
-                        ysize 2
-                        yalign 0.5
-                        background Solid("#f6d79d")
-                        padding (0, 0, 0, 0)
-                    frame:
-                        xsize 12
-                        ysize 12
-                        yalign 0.5
-                        background Solid("#f6d79d")
-                        padding (0, 0, 0, 0)
-                    frame:
-                        xsize 60
-                        ysize 2
-                        yalign 0.5
-                        background Solid("#f6d79d88")
-                        padding (0, 0, 0, 0)
-
-    ## Click or key to dismiss
-    key "dismiss" action Return()
-
-    ## Auto-dismiss
-    timer 2.0 action Return()
+        ## Auto-dismiss
+        timer 2.0 action Return()
 
 
 style choice_vbox is vbox
@@ -3350,81 +3535,259 @@ screen notebook_intro_screen():
     modal True
     zorder 200
 
-    add "#1a1a2e" alpha 0.97
+    ## Emoji assigned per question index — swap these to match your actual q.text order
+    ## Q0 → transport/arrival, Q1 → food/community, Q2 → language/locals,
+    ## Q3 → campus/landmark, Q4 → fees/admin, Q5 → general/town
+    python:
+        _nb_icons = ["🛺", "🍚", "🗣️", "🏛️", "📋", "🏘️"]
 
+    add Solid("#0d0406") alpha 0.96
+
+    ## Outermost glow ring
     frame:
         xalign 0.5
         yalign 0.5
-        xsize 680
-        ysize 560
-        background "#0f0f1a"
-        padding (0,0,0,0)
+        xsize 720
+        padding (4, 4, 4, 4)
+        background Frame(Solid("#f6d79d55"), 0, 0)
 
-        vbox:
-            spacing 0
+        frame:
+            xfill True
+            padding (2, 2, 2, 2)
+            background Frame(Solid("#c8921833"), 0, 0)
 
-            ## Header
             frame:
-                background "#1e1e3a"
                 xfill True
-                padding (32, 20, 32, 20)
-                hbox:
-                    spacing 12
-                    text "🔍" size 28
-                    vbox:
-                        spacing 2
-                        text "DETECTIVE NOTEBOOK" size 13 color "#a78bfa" bold True
-                        text "Freshie Field Notes — Day 1" size 11 color "#6b7280"
-
-            ## Questions list
-            frame:
-                background "#111128"
-                xfill True
-                ysize 420
-                padding (28, 20, 28, 20)
+                padding (0, 0, 0, 0)
+                background Solid("#1a0a0ef8")
 
                 vbox:
-                    spacing 10
+                    spacing 0
 
-                    text "Find answers to these questions by talking to the locals." size 12 color "#9ca3af" italic True
+                    ## ── Header bar ─────────────────────────────────────────────
+                    frame:
+                        background Solid("#2a0e0e")
+                        xfill True
+                        padding (28, 16, 28, 16)
 
-                    null height 8
-
-                    for q in notebook_questions:
-                        frame:
-                            background "#1a1a30"
+                        hbox:
                             xfill True
-                            padding (16, 12, 16, 12)
-                            hbox:
-                                spacing 12
-                                xfill True
-                                text "?" size 18 color "#a78bfa" yalign 0.5
-                                vbox:
-                                    spacing 2
-                                    xfill True
-                                    text q.text size 13 color "#e2e8f0"
-                                    text "[ not yet discovered ]" substitute False size 11 color "#4b5563" italic True
+                            yalign 0.5
+                            spacing 0
 
-            ## Button
-            frame:
-                background "#1e1e3a"
-                xfill True
-                padding (32, 16, 32, 16)
-                textbutton "Start Exploring →":
-                    xalign 0.5
-                    style "notebook_btn"
-                    action Return()
+                            ## Left L-bracket accent
+                            vbox:
+                                yalign 0.5
+                                spacing 0
+                                frame:
+                                    xsize 20
+                                    ysize 2
+                                    background Solid("#f6d79d")
+                                    padding (0,0,0,0)
+                                null height 2
+                                frame:
+                                    xsize 2
+                                    ysize 16
+                                    background Solid("#f6d79d")
+                                    padding (0,0,0,0)
+
+                            null width 10
+
+                            ## Center: icon + title
+                            hbox:
+                                xfill True
+                                xalign 0.5
+                                yalign 0.5
+                                spacing 12
+                                text "🔍":
+                                    size 24
+                                    yalign 0.5
+                                vbox:
+                                    yalign 0.5
+                                    spacing 2
+                                    text "DETECTIVE NOTEBOOK":
+                                        size 16
+                                        color "#f6d79d"
+                                        bold True
+                                        outlines [(1, "#1a0a0e", 0, 0)]
+                                    text "Field Notes — Day 1  ·  Miagao, Iloilo":
+                                        size 11
+                                        color "#c89218cc"
+                                        italic True
+
+                            null width 10
+
+                            ## Right L-bracket accent (mirrored)
+                            vbox:
+                                yalign 0.5
+                                xalign 1.0
+                                spacing 0
+                                frame:
+                                    xsize 20
+                                    ysize 2
+                                    xalign 1.0
+                                    background Solid("#f6d79d")
+                                    padding (0,0,0,0)
+                                null height 2
+                                frame:
+                                    xsize 2
+                                    ysize 16
+                                    xalign 1.0
+                                    background Solid("#f6d79d")
+                                    padding (0,0,0,0)
+
+                    ## Gold separator
+                    frame:
+                        xfill True
+                        ysize 1
+                        background Solid("#f6d79d44")
+                        padding (0,0,0,0)
+
+                    ## ── Instruction strip ──────────────────────────────────────
+                    frame:
+                        background Solid("#1e0c10")
+                        xfill True
+                        padding (28, 10, 28, 10)
+                        hbox:
+                            spacing 8
+                            yalign 0.5
+                            text "◈":
+                                size 10
+                                color "#c89218"
+                                yalign 0.5
+                            text "Talk to every local — each one holds a clue.":
+                                size 12
+                                color "#c89218cc"
+                                italic True
+                                yalign 0.5
+                            text "◈":
+                                size 10
+                                color "#c89218"
+                                yalign 0.5
+
+                    ## Gold separator
+                    frame:
+                        xfill True
+                        ysize 1
+                        background Solid("#f6d79d22")
+                        padding (0,0,0,0)
+
+                    ## ── Questions list ─────────────────────────────────────────
+                    frame:
+                        background Solid("#130609")
+                        xfill True
+                        padding (24, 18, 24, 18)
+
+                        vbox:
+                            spacing 8
+
+                            python:
+                                _nb_total = len(notebook_questions)
+
+                            for _nb_i in range(_nb_total):
+                                python:
+                                    _nb_q    = notebook_questions[_nb_i]
+                                    _nb_icon = _nb_icons[_nb_i] if _nb_i < len(_nb_icons) else "📌"
+                                    _nb_num  = str(_nb_i + 1)
+
+                                ## Question card
+                                frame:
+                                    background Solid("#1e0a10")
+                                    xfill True
+                                    padding (0, 0, 0, 0)
+
+                                    hbox:
+                                        spacing 0
+                                        xfill True
+
+                                        ## Left accent stripe
+                                        frame:
+                                            xsize 4
+                                            ysize 52
+                                            background Solid("#f6d79d66")
+                                            padding (0,0,0,0)
+
+                                        ## Number badge
+                                        frame:
+                                            xsize 36
+                                            ysize 52
+                                            background Solid("#2a0e0e")
+                                            padding (0,0,0,0)
+                                            text _nb_num:
+                                                xalign 0.5
+                                                yalign 0.5
+                                                size 13
+                                                color "#f6d79d66"
+                                                bold True
+
+                                        ## Emoji
+                                        frame:
+                                            xsize 44
+                                            ysize 52
+                                            background Solid("#00000000")
+                                            padding (0,0,0,0)
+                                            text _nb_icon:
+                                                xalign 0.5
+                                                yalign 0.5
+                                                size 20
+
+                                        ## Question text + status
+                                        frame:
+                                            xfill True
+                                            ysize 52
+                                            background Solid("#00000000")
+                                            padding (0, 0, 16, 0)
+                                            vbox:
+                                                yalign 0.5
+                                                spacing 3
+                                                text _nb_q.text:
+                                                    size 13
+                                                    color "#f1debf"
+                                                    outlines [(1, "#1a0a0e", 0, 0)]
+                                                text "● not yet discovered":
+                                                    substitute False
+                                                    size 10
+                                                    color "#f6d79d33"
+                                                    italic True
+
+                    ## Gold separator
+                    frame:
+                        xfill True
+                        ysize 1
+                        background Solid("#f6d79d44")
+                        padding (0,0,0,0)
+
+                    ## ── Footer ─────────────────────────────────────────────────
+                    frame:
+                        background Solid("#2a0e0e")
+                        xfill True
+                        padding (28, 14, 28, 14)
+
+                        hbox:
+                            xfill True
+                            yalign 0.5
+
+                            text "[_nb_total] questions to solve":
+                                size 11
+                                color "#f6d79d55"
+                                yalign 0.5
+
+                            textbutton "Begin Exploring  →":
+                                xalign 1.0
+                                style "notebook_btn"
+                                action Return()
 
 style notebook_btn:
-    background "#7C3AED"
-    hover_background "#6d28d9"
-    padding (24, 10, 24, 10)
+    background "#5c1a1a"
+    hover_background "#7a2020"
+    padding (28, 11, 28, 11)
 
 style notebook_btn_text:
-    color "#ffffff"
-    hover_color "#ffffff"
+    color "#f6d79d"
+    hover_color "#ffd700"
     size 13
     bold True
+    outlines [(1, "#1a0a0e", 0, 0)]
 
 ## ----------------------------------------------------------------------------
 ## SCREEN: ITEM PICKUP NOTIFICATION
@@ -3788,7 +4151,7 @@ screen quiz_screen():
     modal True
     zorder 200
 
-    add "#0a0a1a" alpha 0.98
+    add Solid("#0d0406") alpha 0.98
 
     default quiz_state = {
         "current_q": 0,
@@ -3803,159 +4166,458 @@ screen quiz_screen():
 screen quiz_inner(state):
 
     python:
-        q       = notebook_questions[state["current_q"]]
-        total_q = len(notebook_questions)
-        items   = collected_items[:]
+        q         = notebook_questions[state["current_q"]]
+        total_q   = len(notebook_questions)
+        items     = collected_items[:]
+        _q_icons  = ["🛺", "🍚", "🗣️", "🏛️", "📋", "🏘️"]
+        _q_icon   = _q_icons[state["current_q"]] if state["current_q"] < len(_q_icons) else "📌"
+        _progress = state["current_q"] + 1
+        _pct_done = int((_progress / total_q) * 100)
 
+    ## ── Full-screen vignette ───────────────────────────────────────────────────
+    ## Outer border glow — double ring
     frame:
         xalign 0.5
         yalign 0.5
-        xsize 700
-        background "#0f0f1a"
-        padding (0, 0, 0, 0)
+        xsize 960
+        padding (4, 4, 4, 4)
+        background Frame(Solid("#f6d79d44"), 0, 0)
 
-        vbox:
-            spacing 0
+        frame:
+            xfill True
+            padding (2, 2, 2, 2)
+            background Frame(Solid("#c8921822"), 0, 0)
 
-            ## Top bar
             frame:
-                background "#1e1e3a"
                 xfill True
-                padding (24, 16, 24, 16)
-                hbox:
-                    xfill True
-                    vbox:
-                        text "🔍  NOTEBOOK QUIZ" size 13 color "#a78bfa" bold True
-                        text "Question [state['current_q']+1] of [total_q]" size 11 color "#6b7280"
-                    text "Score: [state['score']]/[total_q]" size 13 color "#10b981" bold True xalign 1.0 yalign 0.5
-
-            ## Progress bar
-            frame:
-                background "#111128"
-                xfill True
-                ysize 6
                 padding (0, 0, 0, 0)
-                frame:
-                    background "#7C3AED"
-                    xsize int(700 * (state["current_q"] / total_q))
-                    ysize 6
+                background Solid("#1a0a0ef8")
 
-            ## Question
-            frame:
-                background "#111128"
-                xfill True
-                padding (32, 24, 32, 16)
                 vbox:
-                    spacing 8
-                    text "QUESTION" size 10 color "#a78bfa" bold True
-                    text q.text size 16 color "#f1f5f9" bold True
-                    text "Select the info item that answers this question:" size 12 color "#9ca3af" italic True
+                    spacing 0
 
-                    if state["feedback"] == "correct":
-                        frame:
-                            background "#064e3b"
+                    ## ── TOP HEADER BAR ────────────────────────────────────────
+                    frame:
+                        background Solid("#2a0e0e")
+                        xfill True
+                        padding (20, 12, 20, 12)
+
+                        hbox:
                             xfill True
-                            padding (12, 8, 12, 8)
-                            text "✓  Correct! That information answers this question." size 12 color "#10b981"
+                            yalign 0.5
+                            spacing 0
 
-                    elif state["feedback"] == "wrong":
-                        frame:
-                            background "#450a0a"
-                            xfill True
-                            padding (12, 8, 12, 8)
-                            text "✗  Not quite. Hint: [q.hint]" size 12 color "#f87171"
-
-            ## Items grid
-            frame:
-                background "#0d0d20"
-                xfill True
-                padding (16, 12, 16, 12)
-
-                vpgrid:
-                    cols 2
-                    xfill True
-                    spacing 8
-
-                    for item in items:
-                        python:
-                            is_chosen  = (state["chosen"] == item.item_id)
-                            bg_color   = "#2e1065" if is_chosen else "#1a1a2e"
-                            border_col = "#7C3AED" if is_chosen else "#1e1e3a"
-
-                        button:
-                            background bg_color
-                            xfill True
-                            padding (12, 10, 12, 10)
-                            if state["feedback"] is None:
-                                action [
-                                    SetDict(state, "chosen", item.item_id),
-                                ]
-                            else:
-                                action NullAction()
-                            hbox:
-                                spacing 10
+                            ## Left: title block
+                            vbox:
                                 yalign 0.5
-                                text item.icon size 18 yalign 0.5
-                                vbox:
-                                    spacing 2
-                                    text item.label size 12 color "#e2e8f0" bold True
-                                    text item.short size 10 color "#94a3b8"
+                                spacing 2
+                                hbox:
+                                    spacing 8
+                                    text "🔍":
+                                        size 14
+                                        yalign 0.5
+                                    text "DETECTIVE NOTEBOOK  —  FINAL QUIZ":
+                                        size 13
+                                        color "#f6d79d"
+                                        bold True
+                                        outlines [(1, "#1a0a0e", 0, 0)]
+                                        yalign 0.5
+                                text "Review what you've learned from the locals of Miagao":
+                                    size 10
+                                    color "#c89218aa"
+                                    italic True
 
-            ## Confirm button
-            frame:
-                background "#1e1e3a"
-                xfill True
-                padding (24, 14, 24, 14)
+                            ## Right: score badge
+                            frame:
+                                xalign 1.0
+                                yalign 0.5
+                                background Solid("#1a0a0e")
+                                padding (14, 6, 14, 6)
+                                hbox:
+                                    spacing 6
+                                    yalign 0.5
+                                    text "SCORE":
+                                        size 9
+                                        color "#f6d79d88"
+                                        bold True
+                                        yalign 0.5
+                                    text "[state['score']]/[total_q]":
+                                        size 16
+                                        color "#ffd700"
+                                        bold True
+                                        outlines [(1, "#1a0a0e", 0, 0)]
+                                        yalign 0.5
 
-                if state["feedback"] is None:
-                    textbutton "Confirm Answer →":
-                        xalign 0.5
-                        style "quiz_btn"
-                        sensitive (state["chosen"] is not None)
-                        action [
-                            Function(save_quiz_answer, state["current_q"], state["chosen"]),
-                            If(
-                                state["chosen"] == q.correct_item_id,
-                                [
-                                    SetDict(state, "feedback", "correct"),
-                                    SetDict(state, "score", state["score"] + 1),
-                                ],
-                                SetDict(state, "feedback", "wrong")
-                            )
-                        ]
+                    ## ── PROGRESS TRACK ────────────────────────────────────────
+                    frame:
+                        background Solid("#130609")
+                        xfill True
+                        padding (20, 10, 20, 10)
 
-                else:
-                    python:
-                        next_label = "Next Question →" if state["current_q"] < total_q - 1 else "Finish Quiz ✓"
+                        hbox:
+                            xfill True
+                            yalign 0.5
+                            spacing 12
 
-                    textbutton next_label:
-                        xalign 0.5
-                        style "quiz_btn"
-                        action [
-                            If(
-                                state["current_q"] < total_q - 1,
-                                [
-                                    SetDict(state, "current_q", state["current_q"] + 1),
-                                    SetDict(state, "feedback",  None),
-                                    SetDict(state, "chosen",    None),
-                                ],
-                                [
-                                    SetVariable("quiz_score", state["score"]),
-                                    Return(state["score"])
-                                ]
-                            )
-                        ]
+                            ## Step pips
+                            hbox:
+                                spacing 6
+                                yalign 0.5
+                                for _pi in range(total_q):
+                                    python:
+                                        if _pi < state["current_q"]:
+                                            _pip_bg = "#f6d79d"
+                                            _pip_sz = 10
+                                        elif _pi == state["current_q"]:
+                                            _pip_bg = "#ffd700"
+                                            _pip_sz = 14
+                                        else:
+                                            _pip_bg = "#f6d79d22"
+                                            _pip_sz = 10
+                                    frame:
+                                        xsize _pip_sz
+                                        ysize _pip_sz
+                                        yalign 0.5
+                                        background Solid(_pip_bg)
+                                        padding (0,0,0,0)
+                                    if _pi < total_q - 1:
+                                        frame:
+                                            xsize 20
+                                            ysize 1
+                                            yalign 0.5
+                                            background Solid("#f6d79d22")
+                                            padding (0,0,0,0)
+
+                            text "Question [_progress] of [total_q]":
+                                xalign 1.0
+                                size 11
+                                color "#f6d79d88"
+                                yalign 0.5
+
+                    ## Gold rule
+                    frame:
+                        xfill True
+                        ysize 1
+                        background Solid("#f6d79d33")
+                        padding (0,0,0,0)
+
+                    ## ── MAIN BODY: two-panel layout ───────────────────────────
+                    hbox:
+                        xfill True
+                        spacing 0
+
+                        ## LEFT PANEL — Case file / question ─────────────────────
+                        frame:
+                            xsize 340
+                            ysize 340
+                            background Solid("#130609")
+                            padding (0, 0, 0, 0)
+
+                            vbox:
+                                spacing 0
+                                xfill True
+
+                                ## Case number stamp
+                                frame:
+                                    background Solid("#1e0a10")
+                                    xfill True
+                                    padding (20, 10, 20, 10)
+                                    hbox:
+                                        spacing 10
+                                        yalign 0.5
+                                        frame:
+                                            xsize 2
+                                            ysize 28
+                                            background Solid("#f6d79d")
+                                            padding (0,0,0,0)
+                                        vbox:
+                                            yalign 0.5
+                                            spacing 1
+                                            text "CASE  #0[_progress]":
+                                                size 9
+                                                color "#f6d79d88"
+                                                bold True
+                                                outlines [(1, "#1a0a0e", 0, 0)]
+                                            text "OPEN FOR REVIEW":
+                                                size 9
+                                                color "#c89218aa"
+                                                italic True
+
+                                ## Big emoji
+                                frame:
+                                    background Solid("#130609")
+                                    xfill True
+                                    padding (20, 20, 20, 8)
+                                    text _q_icon:
+                                        xalign 0.5
+                                        size 56
+
+                                ## Question text
+                                frame:
+                                    background Solid("#130609")
+                                    xfill True
+                                    padding (24, 8, 24, 16)
+                                    vbox:
+                                        spacing 6
+                                        text "THE QUESTION":
+                                            size 9
+                                            color "#c89218"
+                                            bold True
+                                            outlines [(1, "#1a0a0e", 0, 0)]
+                                        text q.text:
+                                            size 15
+                                            color "#f1debf"
+                                            bold True
+                                            outlines [(2, "#1a0a0e", 0, 0)]
+                                            line_spacing 4
+
+                                ## Feedback banner
+                                if state["feedback"] == "correct":
+                                    frame:
+                                        background Solid("#0d2e1a")
+                                        xfill True
+                                        padding (20, 10, 20, 10)
+                                        hbox:
+                                            spacing 8
+                                            yalign 0.5
+                                            text "✓":
+                                                size 18
+                                                color "#b8e6b0"
+                                                bold True
+                                                yalign 0.5
+                                            vbox:
+                                                yalign 0.5
+                                                spacing 1
+                                                text "Correct!":
+                                                    size 12
+                                                    color "#b8e6b0"
+                                                    bold True
+                                                text "Good detective work.":
+                                                    size 10
+                                                    color "#b8e6b0aa"
+                                                    italic True
+
+                                elif state["feedback"] == "wrong":
+                                    frame:
+                                        background Solid("#2e0a0a")
+                                        xfill True
+                                        padding (20, 10, 20, 10)
+                                        hbox:
+                                            spacing 8
+                                            yalign 0.5
+                                            text "✗":
+                                                size 18
+                                                color "#f87171"
+                                                bold True
+                                                yalign 0.5
+                                            vbox:
+                                                yalign 0.5
+                                                spacing 1
+                                                text "Not quite.":
+                                                    size 12
+                                                    color "#f87171"
+                                                    bold True
+                                                text "Hint: [q.hint]":
+                                                    size 10
+                                                    color "#f8717188"
+                                                    italic True
+
+                                elif state["feedback"] is None:
+                                    frame:
+                                        background Solid("#1e0a10")
+                                        xfill True
+                                        padding (20, 10, 20, 10)
+                                        text "Pick the clue that answers this.":
+                                            size 10
+                                            color "#f6d79d55"
+                                            italic True
+                                            xalign 0.5
+
+                        ## Vertical divider
+                        frame:
+                            xsize 1
+                            ysize 340
+                            background Solid("#f6d79d22")
+                            padding (0,0,0,0)
+
+                        ## RIGHT PANEL — Evidence items ──────────────────────────
+                        frame:
+                            xfill True
+                            ysize 340
+                            background Solid("#1a0a0e")
+                            padding (14, 14, 14, 14)
+
+                            vbox:
+                                spacing 8
+                                xfill True
+
+                                ## Section label
+                                hbox:
+                                    spacing 8
+                                    yalign 0.5
+                                    frame:
+                                        xsize 3
+                                        ysize 14
+                                        yalign 0.5
+                                        background Solid("#f6d79d")
+                                        padding (0,0,0,0)
+                                    text "EVIDENCE COLLECTED":
+                                        size 10
+                                        color "#f6d79d88"
+                                        bold True
+                                        yalign 0.5
+                                        outlines [(1, "#1a0a0e", 0, 0)]
+
+                                ## Evidence grid
+                                vpgrid:
+                                    cols 2
+                                    xfill True
+                                    spacing 6
+
+                                    for item in items:
+                                        python:
+                                            is_chosen  = (state["chosen"] == item.item_id)
+                                            card_bg    = "#2e1810" if is_chosen else "#130609"
+                                            tab_col    = "#ffd700" if is_chosen else "#f6d79d33"
+                                            lbl_col    = "#ffd700" if is_chosen else "#f1debf"
+                                            src_col    = "#f6d79daa" if is_chosen else "#f6d79d44"
+
+                                        button:
+                                            background card_bg
+                                            hover_background "#1e0c10"
+                                            xfill True
+                                            padding (0, 0, 0, 0)
+                                            if state["feedback"] is None:
+                                                action SetDict(state, "chosen", item.item_id)
+                                            else:
+                                                action NullAction()
+
+                                            hbox:
+                                                spacing 0
+                                                xfill True
+
+                                                ## Selection tab
+                                                frame:
+                                                    xsize 3
+                                                    ysize 56
+                                                    background Solid(tab_col)
+                                                    padding (0,0,0,0)
+
+                                                frame:
+                                                    xfill True
+                                                    padding (10, 8, 10, 8)
+                                                    background Solid("#00000000")
+
+                                                    vbox:
+                                                        spacing 2
+                                                        xfill True
+
+                                                        hbox:
+                                                            spacing 6
+                                                            yalign 0.5
+                                                            text item.icon:
+                                                                size 16
+                                                                yalign 0.5
+                                                            text item.label:
+                                                                size 12
+                                                                color lbl_col
+                                                                bold True
+                                                                outlines [(1, "#1a0a0e", 0, 0)]
+                                                                yalign 0.5
+
+                                                        text item.short:
+                                                            size 9
+                                                            color src_col
+                                                            line_spacing 2
+
+                    ## Gold rule
+                    frame:
+                        xfill True
+                        ysize 1
+                        background Solid("#f6d79d33")
+                        padding (0,0,0,0)
+
+                    ## ── ACTION BAR ────────────────────────────────────────────
+                    frame:
+                        background Solid("#2a0e0e")
+                        xfill True
+                        padding (24, 14, 24, 14)
+
+                        hbox:
+                            xfill True
+                            yalign 0.5
+                            spacing 0
+
+                            ## Left: hint text
+                            if state["feedback"] is None:
+                                if state["chosen"] is None:
+                                    text "← Select a piece of evidence from the right panel":
+                                        size 11
+                                        color "#f6d79d44"
+                                        italic True
+                                        yalign 0.5
+                                else:
+                                    text "Evidence selected — confirm when ready":
+                                        size 11
+                                        color "#c89218cc"
+                                        italic True
+                                        yalign 0.5
+                            else:
+                                text "":
+                                    size 11
+
+                            ## Right: action button
+                            if state["feedback"] is None:
+                                textbutton "Confirm Answer  →":
+                                    xalign 1.0
+                                    style "quiz_btn"
+                                    sensitive (state["chosen"] is not None)
+                                    action [
+                                        Function(save_quiz_answer, state["current_q"], state["chosen"]),
+                                        If(
+                                            state["chosen"] == q.correct_item_id,
+                                            [
+                                                SetDict(state, "feedback", "correct"),
+                                                SetDict(state, "score", state["score"] + 1),
+                                            ],
+                                            SetDict(state, "feedback", "wrong")
+                                        )
+                                    ]
+                            else:
+                                python:
+                                    _btn_lbl = "Next Question  →" if state["current_q"] < total_q - 1 else "Close the Case  ✓"
+
+                                textbutton _btn_lbl:
+                                    xalign 1.0
+                                    style "quiz_btn"
+                                    action [
+                                        If(
+                                            state["current_q"] < total_q - 1,
+                                            [
+                                                SetDict(state, "current_q", state["current_q"] + 1),
+                                                SetDict(state, "feedback",  None),
+                                                SetDict(state, "chosen",    None),
+                                            ],
+                                            [
+                                                SetVariable("quiz_score", state["score"]),
+                                                Return(state["score"])
+                                            ]
+                                        )
+                                    ]
 
 style quiz_btn:
-    background "#7C3AED"
-    hover_background "#6d28d9"
-    insensitive_background "#2d2d4a"
-    padding (28, 10, 28, 10)
-    color "#ffffff"
-    insensitive_color "#4b5563"
-    hover_color "#ffffff"
+    background "#5c1a1a"
+    hover_background "#7a2020"
+    insensitive_background "#2a1010"
+    padding (32, 11, 32, 11)
+
+style quiz_btn_text:
+    color "#f6d79d"
+    hover_color "#ffd700"
+    insensitive_color "#f6d79d44"
     size 13
     bold True
+    outlines [(1, "#1a0a0e", 0, 0)]
 
 ## ----------------------------------------------------------------------------
 ## SCREEN: QUIZ RESULTS
@@ -3965,84 +4627,285 @@ screen quiz_results_screen(score):
     modal True
     zorder 200
 
-    add "#000000" alpha 0.95
+    add Solid("#0d0406") alpha 0.96
+
+    python:
+        _r_icons = ["🛺", "🍚", "🗣️", "🏛️", "📋", "🏘️"]
 
     frame:
         xalign 0.5
         yalign 0.5
-        xsize 520
-        background "#0f0f1a"
-        padding (0, 0, 0, 0)
+        xsize 680
+        padding (4, 4, 4, 4)
+        background Frame(Solid("#f6d79d44"), 0, 0)
 
-        vbox:
-            spacing 0
+        frame:
+            xfill True
+            padding (2, 2, 2, 2)
+            background Frame(Solid("#c8921822"), 0, 0)
 
             frame:
-                background "#1e1e3a"
                 xfill True
-                padding (32, 24, 32, 20)
+                padding (0, 0, 0, 0)
+                background Solid("#1a0a0ef8")
+
                 vbox:
-                    spacing 8
-                    xalign 0.5
-                    text "🔍  CASE CLOSED" size 22 color "#a78bfa" bold True xalign 0.5
+                    spacing 0
 
-                    python:
-                        total = len(notebook_questions)
-                        total_q = len(notebook_questions)
-                        pct   = int((score / total) * 100)
-                        if pct == 100:
-                            grade   = "PERFECT DETECTIVE"
-                            g_color = "#10b981"
-                            g_msg   = "You absorbed everything. Miagao has no secrets from you."
-                        elif pct >= 66:
-                            grade   = "GOOD INSTINCTS"
-                            g_color = "#f59e0b"
-                            g_msg   = "Solid work. A few gaps — but you'll fill them in time."
-                        else:
-                            grade   = "STILL LEARNING"
-                            g_color = "#f87171"
-                            g_msg   = "You missed some locals. Their knowledge would have helped."
+                    ## ── VERDICT HEADER ───────────────────────────────────────
+                    frame:
+                        background Solid("#2a0e0e")
+                        xfill True
+                        padding (28, 20, 28, 20)
 
-                    text "[score]/[total_q]  ([pct]%%)" size 36 color g_color bold True xalign 0.5
-                    text grade size 13 color g_color bold True xalign 0.5
-                    null height 4
-                    text g_msg size 12 color "#9ca3af" italic True xalign 0.5
-
-            frame:
-                background "#111128"
-                xfill True
-                padding (24, 16, 24, 16)
-                vbox:
-                    spacing 6
-                    for i in range(len(notebook_questions)):
-                        python:
-                            q2   = notebook_questions[i]
-                            ok   = q2.answered and (q2.chosen_item_id == q2.correct_item_id)
-                            ic   = "✓" if ok else "✗"
-                            tcol = "#10b981" if ok else "#f87171"
-                        hbox:
-                            spacing 10
-                            text ic size 13 color tcol yalign 0.5
-                            text q2.text size 12 color "#cbd5e1" yalign 0.5
-
-            frame:
-                background "#1e1e3a"
-                xfill True
-                padding (24, 14, 24, 14)
-
-                if score >= 4:
-                    textbutton "Continue to BOX 1 →":
-                        xalign 0.5
-                        style "notebook_btn"
-                        action Return()
-                else:
-                    vbox:
-                        spacing 8
-                        text "You need at least 4/6 correct to enter BOX 1." size 12 color "#f87171" italic True xalign 0.5
-                        textbutton "Try Again":
+                        vbox:
+                            spacing 0
                             xalign 0.5
-                            style "quiz_btn"
-                            action Return(-1)
+
+                            ## Top ornament
+                            hbox:
+                                xalign 0.5
+                                spacing 6
+                                frame:
+                                    xsize 60
+                                    ysize 1
+                                    yalign 0.5
+                                    background Solid("#f6d79d55")
+                                    padding (0,0,0,0)
+                                frame:
+                                    xsize 6
+                                    ysize 6
+                                    yalign 0.5
+                                    background Solid("#f6d79d")
+                                    padding (0,0,0,0)
+                                frame:
+                                    xsize 60
+                                    ysize 1
+                                    yalign 0.5
+                                    background Solid("#f6d79d55")
+                                    padding (0,0,0,0)
+
+                            null height 14
+
+                            text "🔍  CASE CLOSED":
+                                size 22
+                                color "#f6d79d"
+                                bold True
+                                xalign 0.5
+                                outlines [(2, "#1a0a0e", 0, 0)]
+
+                            null height 14
+
+                            python:
+                                total   = len(notebook_questions)
+                                total_q = total
+                                pct     = int((score / total) * 100)
+                                stars   = "★★★" if pct == 100 else "★★☆" if pct >= 66 else "★☆☆"
+                                if pct == 100:
+                                    grade   = "PERFECT DETECTIVE"
+                                    g_color = "#b8e6b0"
+                                    g_msg   = "Miagao holds no secrets from you."
+                                elif pct >= 66:
+                                    grade   = "GOOD INSTINCTS"
+                                    g_color = "#ffd700"
+                                    g_msg   = "Solid work. A few gaps — you'll fill them in time."
+                                else:
+                                    grade   = "STILL LEARNING"
+                                    g_color = "#f87171"
+                                    g_msg   = "You missed some locals. Their knowledge would have helped."
+
+                            ## Score block
+                            frame:
+                                xalign 0.5
+                                background Solid("#1a0a0e")
+                                padding (28, 14, 28, 14)
+
+                                vbox:
+                                    spacing 6
+                                    xalign 0.5
+
+                                    text stars:
+                                        xalign 0.5
+                                        size 24
+                                        color g_color
+                                        outlines [(1, "#1a0a0e", 0, 0)]
+
+                                    text "[score]/[total_q]":
+                                        size 48
+                                        color g_color
+                                        bold True
+                                        xalign 0.5
+                                        outlines [(3, "#1a0a0e", 0, 0)]
+
+                                    text grade:
+                                        size 12
+                                        color g_color
+                                        bold True
+                                        xalign 0.5
+                                        outlines [(1, "#1a0a0e", 0, 0)]
+
+                            null height 10
+
+                            text g_msg:
+                                size 12
+                                color "#f6d79daa"
+                                italic True
+                                xalign 0.5
+                                text_align 0.5
+
+                            null height 14
+
+                            ## Bottom ornament
+                            hbox:
+                                xalign 0.5
+                                spacing 6
+                                frame:
+                                    xsize 60
+                                    ysize 1
+                                    yalign 0.5
+                                    background Solid("#f6d79d55")
+                                    padding (0,0,0,0)
+                                frame:
+                                    xsize 6
+                                    ysize 6
+                                    yalign 0.5
+                                    background Solid("#f6d79d")
+                                    padding (0,0,0,0)
+                                frame:
+                                    xsize 60
+                                    ysize 1
+                                    yalign 0.5
+                                    background Solid("#f6d79d55")
+                                    padding (0,0,0,0)
+
+                    ## Thin rule
+                    frame:
+                        xfill True
+                        ysize 1
+                        background Solid("#f6d79d33")
+                        padding (0,0,0,0)
+
+                    ## ── QUESTION BREAKDOWN ────────────────────────────────────
+                    frame:
+                        background Solid("#130609")
+                        xfill True
+                        padding (20, 16, 20, 16)
+
+                        vbox:
+                            spacing 6
+
+                            hbox:
+                                spacing 6
+                                yalign 0.5
+                                frame:
+                                    xsize 3
+                                    ysize 12
+                                    yalign 0.5
+                                    background Solid("#f6d79d")
+                                    padding (0,0,0,0)
+                                text "CASE REVIEW":
+                                    size 10
+                                    color "#f6d79d88"
+                                    bold True
+                                    yalign 0.5
+
+                            null height 4
+
+                            for i in range(len(notebook_questions)):
+                                python:
+                                    q2      = notebook_questions[i]
+                                    ok      = q2.answered and (q2.chosen_item_id == q2.correct_item_id)
+                                    verdict = "✓" if ok else "✗"
+                                    tcol    = "#b8e6b0" if ok else "#f87171"
+                                    card_bg = "#0d2e1a" if ok else "#2e0a0a"
+                                    r_icon  = _r_icons[i] if i < len(_r_icons) else "📌"
+
+                                frame:
+                                    background Solid(card_bg)
+                                    xfill True
+                                    padding (0, 0, 0, 0)
+
+                                    hbox:
+                                        spacing 0
+                                        xfill True
+
+                                        ## Verdict stripe
+                                        frame:
+                                            xsize 3
+                                            ysize 40
+                                            background Solid(tcol)
+                                            padding (0,0,0,0)
+
+                                        ## Emoji
+                                        frame:
+                                            xsize 40
+                                            ysize 40
+                                            background Solid("#00000000")
+                                            padding (0,0,0,0)
+                                            text r_icon:
+                                                xalign 0.5
+                                                yalign 0.5
+                                                size 16
+
+                                        ## Question text
+                                        frame:
+                                            xfill True
+                                            padding (0, 0, 12, 0)
+                                            background Solid("#00000000")
+                                            hbox:
+                                                xfill True
+                                                yalign 0.5
+                                                spacing 8
+                                                text q2.text:
+                                                    xfill True
+                                                    size 11
+                                                    color "#f1debf"
+                                                    yalign 0.5
+                                                text verdict:
+                                                    size 14
+                                                    color tcol
+                                                    bold True
+                                                    yalign 0.5
+
+                    ## Thin rule
+                    frame:
+                        xfill True
+                        ysize 1
+                        background Solid("#f6d79d33")
+                        padding (0,0,0,0)
+
+                    ## ── FOOTER ────────────────────────────────────────────────
+                    frame:
+                        background Solid("#2a0e0e")
+                        xfill True
+                        padding (24, 16, 24, 16)
+
+                        if score >= 4:
+                            hbox:
+                                xfill True
+                                yalign 0.5
+                                text "The path ahead is clear.":
+                                    size 11
+                                    color "#f6d79d55"
+                                    italic True
+                                    yalign 0.5
+                                textbutton "Continue to BOX 1  →":
+                                    xalign 1.0
+                                    style "notebook_btn"
+                                    action Return()
+                        else:
+                            hbox:
+                                xfill True
+                                yalign 0.5
+                                text "Need 4/6 to proceed. Review the locals' clues.":
+                                    size 11
+                                    color "#f87171aa"
+                                    italic True
+                                    yalign 0.5
+                                textbutton "Try Again  ↺":
+                                    xalign 1.0
+                                    style "quiz_btn"
+                                    action Return(-1)
 
 ## ----------------------------------------------------------------------------
 ## SCREEN: PHONE / GROUP CHAT UI
