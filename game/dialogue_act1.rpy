@@ -55,6 +55,8 @@ label act1_start:
 
 label act1_npc_jaden:
     
+
+    scene expression "images/ui/UI_Miagao.png"
     window show
 
     jaden "Oh! Hey. You're a freshie too, right? I can tell by the confused look."
@@ -171,6 +173,8 @@ label act1_npc_jaden_second:
 
 label act1_npc_manong_josh:
     
+
+    scene expression "images/ui/UI_Miagao.png"
     window show
 
     manong_josh "Ay, estudyante ka? Bagong-abot?"
@@ -243,6 +247,8 @@ label act1_josh_end:
 ## ============================================================================
 
 label act1_npc_aleng_maria:
+
+    scene expression "images/ui/UI_Miagao.png"
     window show
 
     aleng_maria "Uy, estudyante! Gutom ka na? Kain na dali!"
@@ -331,6 +337,8 @@ label act1_maria_end:
 ## ============================================================================
 
 label act1_npc_manong_chris:
+
+    scene expression "images/ui/UI_Miagao.png"
     window show
 
     manong_chris "Ay, bag-o ka diri? Taga-diin ka?"
@@ -415,6 +423,8 @@ label act1_chris_end:
 
 label act1_npc_joseph_driver:
     
+
+    scene expression "images/ui/UI_Miagao.png"
     window show
 
     joseph "Sakay! Saan? Saan?"
