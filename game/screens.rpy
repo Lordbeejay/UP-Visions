@@ -1687,9 +1687,9 @@ screen game_menu(title, scroll=None, yinitial=0.0, spacing=0):
         outlines [(2, "#1a0a10", 0, 0)]
 
     if main_menu:
-        key "game_menu" action Hide()
+        key "game_menu" action ShowMenu("main_menu")
     else:
-        key "game_menu" action Hide()
+        key "game_menu" action Return()
 
     if renpy.variant("mobile"):
         $ return_action = ShowMenu("main_menu") if main_menu else Hide()
