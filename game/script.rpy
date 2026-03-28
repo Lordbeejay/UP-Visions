@@ -40,13 +40,7 @@ label start:
 
     call screen act_transition("MIAGAO FRESHMAN GUIDE", "A point-and-click adventure\nNavigate your first day at UP Visayas", mode="welcome")
 
-    ## --- ACT 1 ---
-    $ current_act = 1
-    $ tasks_completed = set()
-    $ player_map_x = 2500
-    $ player_map_y = 3200  # Start at Banwa entrance
-    $ player_facing = "up"
-    jump act1_map
+    jump act1_start
 
 ## ============================================================================
 ## ACT 1 MAP — Banwa (Gate / HSU / Admin / Medical)
