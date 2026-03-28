@@ -40,7 +40,14 @@ label start:
 
     call screen act_transition("MIAGAO FRESHMAN GUIDE", "A point-and-click adventure\nNavigate your first day at UP Visayas", mode="welcome")
 
-    jump act1_start
+    call screen act_transition("ACT 2", "Entering the University", "intro")
+    scene expression "images/maps/Entrance.png"
+    $ current_act = 2
+    $ tasks_completed = set()
+    $ player_map_x = 2500
+    $ player_map_y = 2800
+    $ player_facing = "up"
+    jump act2_map
 
 ## ============================================================================
 ## ACT 1 MAP — Banwa (Gate / HSU / Admin / Medical)
@@ -117,7 +124,7 @@ label act1_complete:
     scene black
     call screen act_transition("ACT 1 COMPLETE", "You've learned the lay of the land.\nMiagao is starting to feel like home.", "complete")
     call screen act_transition("ACT 2", "Entering the University", "intro")
-    scene black
+    scene expression "images/maps/Entrance.png"
     
     $ current_act = 2
     $ player_map_x = 2500
@@ -145,6 +152,7 @@ label act2_entrance_loop:
     $ _action, _node = _return
 
     if _action == "walk":
+        scene black
         call walk_to_node(_node, nodes=act2_entrance_nodes)
         call expression _node.target_label
 

@@ -8,6 +8,7 @@
 ## KEY INFO: What is BOX 1, Bus schedules, tips
 ## ============================================================================
 label act2_npc_ate_bea:
+    scene expression "images/maps/Entrance.png"
     window show
     ate_bea "Oh, you look lost. First time sa BOX 1?"
     player_char "Is it that obvious?"
@@ -93,6 +94,7 @@ label act2_bea_end:
 ## KEY INFO: ID policies, security protocols, restricted areas
 ## ============================================================================
 label act2_npc_kuya_mark:
+    scene expression "images/maps/Entrance.png"
     window show
     kuya_mark "Good morning. Transaction?"
     player_char "Good morning, Kuya. I'm a freshie — I wanted to ask about the campus rules."
@@ -207,6 +209,7 @@ label act2_enter_inside:
 ## KEY INFO: Offices in BOX 1, office hours, appointments vs walk-ins
 ## ============================================================================
 label act2_npc_maam_reyes:
+    scene expression "images/maps/Entrance.png"
     window show
     maam_reyes "Good morning! How can I help you?"
     player_char "Good morning, Ma'am. I'm a freshie. I wanted to know more about the offices here."
