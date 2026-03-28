@@ -40,16 +40,13 @@ label start:
 
     call screen act_transition("MIAGAO FRESHMAN GUIDE", "A point-and-click adventure\nNavigate your first day at UP Visayas", mode="welcome")
 
-    ## --- ACT 2 ---
-    scene black
-    call screen act_transition("ACT 2", "Entering the University", mode="intro")
-
-    $ current_act = 2
+    ## --- ACT 1 ---
+    $ current_act = 1
     $ tasks_completed = set()
     $ player_map_x = 2500
-    $ player_map_y = 2800
+    $ player_map_y = 3200  # Start at Banwa entrance
     $ player_facing = "up"
-    jump act2_map
+    jump act1_map
 
 ## ============================================================================
 ## ACT 1 MAP — Banwa (Gate / HSU / Admin / Medical)
@@ -64,7 +61,7 @@ label start:
 label act1_map:
     $ current_map_bg = "maps/banwa.png"
     $ act1_nodes = [
-        MapNode("jaden",         1200, 1400, "act1_npc_jaden",         tooltip="Jaden",           icon_image="jaden.png",          locked=False),
+        MapNode("jaden",         1300, 3000, "act1_npc_jaden",         tooltip="Jaden",           icon_image="jaden.png",          locked=False),
         MapNode("manong_josh",   2100, 2600, "act1_npc_manong_josh",   tooltip="Manong Josh",     icon_image="manongjosh.png",    locked=True),
         MapNode("aleng_maria",   3000, 2200, "act1_npc_aleng_maria",   tooltip="Aleng Maria",     icon_image="alengmaria.png",    locked=True),
         MapNode("manong_chris",  3600, 3000, "act1_npc_manong_chris",  tooltip="Manong Chris",    icon_image="manongchris.png",   locked=True),
