@@ -54,7 +54,7 @@ label act1_start:
 ## ============================================================================
 
 label act1_npc_jaden:
-    show jaden at right with dissolve
+    
     window show
 
     jaden "Oh! Hey. You're a freshie too, right? I can tell by the confused look."
@@ -135,7 +135,7 @@ label act1_npc_jaden_second:
     if not talked_jaden:
         jump act1_npc_jaden
 
-    show jaden at right with dissolve
+    
     jaden "Oh, you again! Did you find everyone?"
 
     if len(collected_items) < 5:
@@ -170,7 +170,7 @@ label act1_npc_jaden_second:
 ## ============================================================================
 
 label act1_npc_manong_josh:
-    show manong_josh at right with dissolve
+    
     window show
 
     manong_josh "Ay, estudyante ka? Bagong-abot?"
@@ -243,7 +243,6 @@ label act1_josh_end:
 ## ============================================================================
 
 label act1_npc_aleng_maria:
-    show aleng_maria_sprite at right with dissolve
     window show
 
     aleng_maria "Uy, estudyante! Gutom ka na? Kain na dali!"
@@ -332,7 +331,6 @@ label act1_maria_end:
 ## ============================================================================
 
 label act1_npc_manong_chris:
-    show manong_chris at right with dissolve
     window show
 
     manong_chris "Ay, bag-o ka diri? Taga-diin ka?"
@@ -416,7 +414,7 @@ label act1_chris_end:
 ## ============================================================================
 
 label act1_npc_joseph_driver:
-    show joseph_driver at right with dissolve
+    
     window show
 
     joseph "Sakay! Saan? Saan?"
