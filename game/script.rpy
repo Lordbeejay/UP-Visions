@@ -49,7 +49,7 @@ label start:
     $ player_map_x = 2500
     $ player_map_y = 2800
     $ player_facing = "up"
-    jump act2_map
+    jump act1_map
 
 ## ============================================================================
 ## ACT 1 MAP — Banwa (Gate / HSU / Admin / Medical)
@@ -174,7 +174,7 @@ label act2_entrance_loop:
 
 ## --- PHASE 2: New Admin exterior — enter inside ---
 label act2_newad_map:
-    $ current_map_bg = "maps/NewAd.png"
+    $ current_map_bg = "maps/Box1.png"
     $ player_map_x = 2500
     $ player_map_y = 3200
     $ player_facing = "up"
@@ -185,7 +185,7 @@ label act2_newad_map:
     $ current_task_text = "Enter the New Admin building"
 
 label act2_newad_loop:
-    call screen map_screen("maps/NewAd.png", act2_newad_nodes, current_task_text, 1.0)
+    call screen map_screen("maps/Box1.png", act2_newad_nodes, current_task_text, 1.0)
     $ _action, _node = _return
 
     if _action == "walk":
@@ -343,6 +343,7 @@ label act5_map:
         MapNode("kuya_rico",     2800, 2200, "act5_npc_kuya_rico",     tooltip="Kuya Rico",      icon_image="kuya_rico.png",     locked=True),
         MapNode("ate_grace",     3200, 2800, "act5_npc_ate_grace",     tooltip="Ate Grace",      icon_image="ate_grace.png",     locked=True),
         MapNode("classmate_dan", 2200, 3200, "act5_npc_classmate_dan", tooltip="Dan",            icon_image="classmate_dan.png", locked=True),
+        MapNode("ria_hsu",       1400, 2800, "act5_npc_ria_hsu",       tooltip="Ria (Dormmate)", icon_image="ria.png",           locked=True),
         MapNode("first_class",   2500, 1400, "act5_first_class",       tooltip="First Class",    icon_image="npcs/Arrow.png",          locked=True),
     ]
     $ current_task_text = "Talk to Prof. Lena in the classroom"
@@ -363,13 +364,18 @@ label act5_loop:
         if "talk_kuya_rico" in tasks_completed or "talk_ate_grace" in tasks_completed:
             $ act5_nodes[3].locked = False
 
+        if "talk_classmate_dan" in tasks_completed:
+            $ act5_nodes[4].locked = False
+            $ current_task_text = "Your dormmate Ria doesn't look well — check on her"
+
         if (
             "talk_prof_lena" in tasks_completed and
             "talk_kuya_rico" in tasks_completed and
             "talk_ate_grace" in tasks_completed and
-            "talk_classmate_dan" in tasks_completed
+            "talk_classmate_dan" in tasks_completed and
+            "help_ria_hsu" in tasks_completed
         ):
-            $ act5_nodes[4].locked = False
+            $ act5_nodes[5].locked = False
             $ current_task_text = "Attend your first class"
 
         if is_act_complete():

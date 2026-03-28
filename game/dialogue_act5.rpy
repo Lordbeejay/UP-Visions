@@ -9,6 +9,8 @@ label act5_start:
     $ talked_kuya_rico = False
     $ talked_ate_grace = False
     $ talked_classmate_dan = False
+    $ talked_ria_hsu = False
+    $ talked_hsu_services = False
     jump act5_map
 
 ## ============================================================================
@@ -291,6 +293,163 @@ label act5_dan_end:
     dan "Strength in numbers, right? See you in Kas 1!"
     $ talked_classmate_dan = True
     $ complete_task("talk_classmate_dan")
+    window hide
+    return
+
+## ============================================================================
+## NPC 5 — RIA (Dormmate) & NURSE SANTOS (HSU)
+## KEY INFO: Health Services Unit, campus health resources, when to visit HSU
+## STORY: Ria (your dormmate from Act 4) isn't feeling well. You help her
+##        get to the HSU and learn about the campus health services.
+## ============================================================================
+label act5_npc_ria_hsu:
+    window show
+    narrator_char "(You're walking back from class when you spot a familiar face sitting on a bench near the CAS corridor.)"
+    narrator_char "(It's your dormmate from Room 207 — Ria. She doesn't look well.)"
+    player_char "Ria? Hey, are you okay?"
+    ria "Oh... hey, roomie. I'm fine, I just..."
+    narrator_char "(She presses her hand to her forehead. She's pale and sweating.)"
+    ria "I've had this headache since last night. And I feel really dizzy."
+    ria "I think it's the heat. Or maybe I haven't been eating right since I got here."
+
+    menu:
+        "You should go to the Health Services Unit.":
+            jump act5_ria_suggest_hsu
+        "Have you eaten anything today?":
+            jump act5_ria_eaten
+        "Do you want me to get you water first?":
+            jump act5_ria_water
+
+label act5_ria_eaten:
+    ria "I had crackers this morning... I didn't want to spend on breakfast."
+    ria "Back home, my mom always cooked. Here, I keep forgetting to eat properly."
+    player_char "Ria, you can't skip meals like that. Especially in this heat."
+    ria "I know, I know. I just didn't expect adjusting to be this hard."
+    player_char "Come on. Let's get you to the Health Services Unit. They can check on you."
+    jump act5_ria_go_hsu
+
+label act5_ria_water:
+    player_char "Wait here. I'll get you some water."
+    narrator_char "(You grab a bottle of water from a nearby store and bring it back.)"
+    ria "Thanks... you didn't have to do that."
+    player_char "We're roommates. Of course I do."
+    ria "I've been feeling off since yesterday. I thought it would pass."
+    player_char "It's been a whole day? You need to see a doctor. Let's go to the HSU."
+    jump act5_ria_go_hsu
+
+label act5_ria_suggest_hsu:
+    ria "The HSU? Where even is that?"
+    player_char "The Health Services Unit — it's inside the campus. I saw it on the map during orientation."
+    ria "I don't know... maybe I'll just rest in the dorm."
+    player_char "Ria, you look really pale. What if it's something serious? Let me take you there."
+    ria "..."
+    ria "Okay. Thanks, roomie. I don't think I can walk there alone anyway."
+    jump act5_ria_go_hsu
+
+label act5_ria_go_hsu:
+    narrator_char "(You help Ria up and walk with her toward the Health Services Unit.)"
+    narrator_char "(It's a short walk, but Ria leans on your shoulder the whole way.)"
+    narrator_char "(You arrive at the HSU — a small, clean building with a waiting area outside.)"
+
+    player_char "We're here. Let's get you inside."
+
+    narrator_char "(Inside, a nurse in a white uniform greets you at the front desk.)"
+
+    hsu_nurse "Good afternoon. What seems to be the problem?"
+    player_char "My dormmate hasn't been feeling well. Headache, dizziness, she hasn't been eating properly."
+    hsu_nurse "Come sit down, dear. Let me take your temperature and blood pressure."
+
+    narrator_char "(Nurse Santos guides Ria to a chair and begins checking her vitals.)"
+
+    hsu_nurse "Temperature is slightly elevated — 37.8. Blood pressure is a bit low."
+    hsu_nurse "When was the last time you had a full meal?"
+    ria "Um... yesterday lunch, I think."
+    hsu_nurse "That explains a lot. You're likely dehydrated and your blood sugar is low."
+    hsu_nurse "This is very common with freshmen. The stress of adjusting, the heat, irregular meals."
+
+    menu:
+        "What services does the HSU offer?":
+            jump act5_hsu_services
+        "Is she going to be okay?":
+            jump act5_hsu_ria_okay
+        "How can students avoid this?":
+            jump act5_hsu_prevention
+
+label act5_hsu_services:
+    hsu_nurse "The Health Services Unit provides free basic medical services to all enrolled UP students."
+    hsu_nurse "We handle consultations, first aid, blood pressure monitoring, and basic lab tests."
+    hsu_nurse "We also issue medical certificates — you'll need one for PE classes and certain scholarship requirements."
+    hsu_nurse "Our services include dental checkups too. The dentist is available on specific days."
+    hsu_nurse "For emergencies, we stabilize the patient here and coordinate transfer to the Miagao District Hospital or Western Visayas Medical Center in Iloilo City."
+    player_char "So students can just walk in anytime?"
+    hsu_nurse "Yes. Walk-in basis, Monday to Friday, 8 AM to 5 PM. No appointment needed for basic consultations."
+    hsu_nurse "Just bring your student ID and your Form 5 as proof of enrollment."
+    hsu_nurse "We also keep records from your entrance medical exam, so we already have your baseline health data."
+    menu:
+        "Is Ria going to be okay?":
+            jump act5_hsu_ria_okay
+        "How can students avoid getting sick like this?":
+            jump act5_hsu_prevention
+        "(Thank you, Ma'am.)":
+            jump act5_hsu_treatment
+
+label act5_hsu_ria_okay:
+    hsu_nurse "She'll be fine. It's not serious — but it could have been if she waited longer."
+    hsu_nurse "Dehydration and low blood sugar can lead to fainting, and in this heat, that's dangerous."
+    hsu_nurse "I'm going to give her an oral rehydration solution and some crackers for now."
+    hsu_nurse "She needs to rest here for about 30 minutes while we monitor her."
+    ria "I'm sorry for the trouble..."
+    hsu_nurse "Don't apologize. That's what we're here for."
+    hsu_nurse "The worst thing a student can do is ignore symptoms and tough it out alone."
+    menu:
+        "What services does the HSU offer?":
+            jump act5_hsu_services
+        "How can students avoid this?":
+            jump act5_hsu_prevention
+        "(I'm glad she's okay.)":
+            jump act5_hsu_treatment
+
+label act5_hsu_prevention:
+    hsu_nurse "Prevention is simple but students always forget."
+    hsu_nurse "One — eat three meals a day. I know budgeting is hard, but the carinderias near campus sell affordable meals."
+    hsu_nurse "Two — drink water. Not just softdrinks or coffee. Actual water. At least 8 glasses a day, more in this heat."
+    hsu_nurse "Three — sleep. I know dorm life is exciting, but your body needs 7 to 8 hours."
+    hsu_nurse "Four — don't skip your medical exam. The entrance physical isn't just paperwork. It catches conditions early."
+    hsu_nurse "Five — if something feels wrong, come here. Don't wait for it to get worse."
+    hsu_nurse "I've seen students collapse during flag ceremony because they skipped breakfast. Don't be that student."
+    player_char "That's really good advice. I'll make sure we both follow it."
+    menu:
+        "What services does the HSU offer?" if not talked_hsu_services:
+            $ talked_hsu_services = True
+            jump act5_hsu_services
+        "(Thank you for everything.)":
+            jump act5_hsu_treatment
+
+label act5_hsu_treatment:
+    narrator_char "(Nurse Santos gives Ria an oral rehydration drink and some biscuits.)"
+    narrator_char "(After about 30 minutes, the color returns to Ria's face.)"
+
+    hsu_nurse "Feeling better?"
+    ria "Much better. Thank you, Ma'am."
+    hsu_nurse "Good. Make sure you eat dinner tonight — a proper meal, not just crackers."
+    hsu_nurse "And if you feel dizzy again, come back immediately. Don't hesitate."
+
+    narrator_char "(You and Ria step outside the HSU.)"
+
+    ria "Hey... thanks for bringing me here. I was going to just sleep it off in the dorm."
+    player_char "That's what dormmates are for, right?"
+    ria "I didn't even know the HSU existed. I thought you had to go all the way to Iloilo for a doctor."
+    player_char "Nope. It's right here on campus. Free consultations too."
+    ria "I'll remember that. And... I'll try to eat properly from now on."
+    ria "Maybe we can go to the carinderia together? I don't really know anyone else here yet."
+    player_char "Deal. Breakfast and dinner — no more skipping meals."
+    ria "Deal."
+
+    narrator_char "(You walk back toward the dorms together. It's a small moment, but it feels important.)"
+    narrator_char "(Looking out for each other — that's how you survive freshman year.)"
+
+    $ talked_ria_hsu = True
+    $ complete_task("help_ria_hsu")
     window hide
     return
 

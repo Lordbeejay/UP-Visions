@@ -34,6 +34,8 @@ define prof_lena = Character("Prof. Lena", color="#6e1f2a", what_color="#ffffff"
 define kuya_rico = Character("Kuya Rico", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
 define ate_grace = Character("Ate Grace", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
 define dan = Character("Dan", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define ria = Character("Ria", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define hsu_nurse = Character("Nurse Santos", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
 
 ## --- Act 6 Characters ---
 define mika = Character("Mika", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
@@ -81,6 +83,8 @@ image prof_lena_sprite = "images/npcs/prof_lena.png"
 image kuya_rico_sprite = "images/npcs/kuya_rico.png"
 image ate_grace_sprite = "images/npcs/ate_grace.png"
 image classmate_dan_sprite = "images/npcs/classmate_dan.png"
+image ria_sprite = "images/npcs/ria.png"
+image hsu_nurse_sprite = "images/npcs/hsu_nurse.png"
 
 ## --- Act 6 NPC Sprites ---
 image mika_sprite = "images/npcs/mika.png"
