@@ -85,6 +85,16 @@ label act2_bea_tips:
 
 label act2_bea_end:
     ate_bea "By the way, you should also talk to Kuya Mark — the guard near the gate. He knows all the security rules."
+    if "sq_up_jargon" not in subquests_completed:
+        menu:
+            "★ Before you go — can you quiz me on UP academic jargon? DRP, INC, LOA...":
+                jump sq_up_jargon
+            "(Alright, thanks Ate Bea!)":
+                jump act2_bea_complete
+    else:
+        jump act2_bea_complete
+
+label act2_bea_complete:
     $ complete_task("talk_ate_bea")
     window hide
     return
@@ -177,6 +187,16 @@ label act2_mark_restricted:
 label act2_mark_end:
     kuya_mark "Any more questions, come find me at the Security Office near the main gate. I'm here 6 AM to 6 PM."
     kuya_mark "If you need to process anything admin-related, head to the New Admin building. Ma'am Reyes can help you there."
+    if "sq_student_rights" not in subquests_completed:
+        menu:
+            "★ Kuya Mark — do you know the student rights under the UP handbook?":
+                jump sq_student_rights
+            "(Noted, thanks Kuya Mark.)":
+                jump act2_mark_complete
+    else:
+        jump act2_mark_complete
+
+label act2_mark_complete:
     $ complete_task("talk_kuya_mark")
     window hide
     return

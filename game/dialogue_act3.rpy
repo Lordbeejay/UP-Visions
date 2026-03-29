@@ -134,6 +134,15 @@ label act3_noel_show_portal:
         player_char "Thanks, Sir Noel! That really helped me understand how scheduling works."
         sir_noel "Anytime. My office is Room 203, New Admin. Door's always open during consultation hours."
         $ complete_task("complete_enrollment_tetris")
+        if "sq_crs_tactics" not in subquests_completed or "sq_academic_load" not in subquests_completed:
+            sir_noel "One more thing — while you're here, do you want to test what you've really learned?"
+            menu:
+                "★ CRS tactics — quiz me on survival strategies for enlistment." if "sq_crs_tactics" not in subquests_completed:
+                    jump sq_crs_tactics
+                "★ Academic load — quiz me on units, NSTP, and standing." if "sq_academic_load" not in subquests_completed:
+                    jump sq_academic_load
+                "(I'm good, thanks Sir Noel.)":
+                    pass
         window hide
 
     return

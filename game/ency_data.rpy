@@ -105,7 +105,33 @@ init python:
             "MISC",
             "The internal drive and academic goal that keeps a student moving forward despite the 'shitty' challenges of college life.",
             #icon="gui/icons/vision.png"
-        )
+        ),
+
+        # --- SUPPORT SERVICES ---
+        "health_services_unit": EncyEntry(
+            "health_services_unit",
+            "Health Services Unit (HSU)",
+            "PROCESS",
+            "The UPV campus clinic providing FREE outpatient medical and dental care for all enrolled students. Services include consultations, first aid, basic laboratory tests, tooth extraction and cleaning, and issuance of medical certificates. Open Mon–Fri, 8 AM–5 PM. Serious cases are referred to Miagao District Hospital or Western Visayas Medical Center. Bring your student ID.",
+        ),
+        "scholarship_service": EncyEntry(
+            "scholarship_service",
+            "Scholarship Service",
+            "PROCESS",
+            "The UPV office that administers all student financial assistance — STFAP, university and college scholarships, DOST, CHED, and private grants. The STFAP (Socialized Tuition and Financial Assistance Program) assigns brackets A to E9 based on family income; Bracket E9 means zero tuition. University Scholarship requires a GWA of 1.20 or better. Submit STFAP documents within the first two weeks of each semester. Never miss the deadline.",
+        ),
+        "tlrc": EncyEntry(
+            "tlrc",
+            "TLRC — Teaching and Learning Resource Center",
+            "PROCESS",
+            "UPV's FREE academic support center for all enrolled students. Offers peer tutoring (matched by subject), Supplemental Instruction for high-failure courses, academic writing workshops (APA format, paper structure, anti-plagiarism), and study skills seminars. Writing consultations are available for draft review. Request a tutor via the Tutoring Request Form at the TLRC office. Come early — don't wait until you're already failing.",
+        ),
+        "gcsu": EncyEntry(
+            "gcsu",
+            "GCSU — Guidance and Counseling Services Unit",
+            "PROCESS",
+            "UPV's professional counseling unit providing FREE, strictly confidential services for all students under Republic Act 9258. Services include individual counseling, group counseling, psychological assessments (RIASEC, aptitude tests), career guidance, academic counseling, and crisis intervention. Walk-ins are accepted; appointments are preferred. The GCSU is not a last resort — it is a first resource. Use it early.",
+        ),
     }
 
     # Initialize persistent unlocks (keeps entries unlocked across save files)

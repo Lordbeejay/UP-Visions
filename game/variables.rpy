@@ -6,6 +6,7 @@
 default current_act = 1
 default current_task_text = ""
 default tasks_completed = set()
+default subquests_completed = set()
 default game_complete = False
 
 ## --- Act Task Requirements ---
@@ -16,10 +17,10 @@ define ACT3_TASKS = {"talk_sir_noel", "view_crs_portal", "complete_enrollment_te
 define ACT4_TASKS = {"talk_dorm_manager", "explore_dorm_room", "complete_room_setup"}
 
 ## --- Acts 5–8 Task Requirements ---
-define ACT5_TASKS = {"talk_prof_lena", "talk_kuya_rico", "talk_ate_grace", "talk_classmate_dan", "attend_first_class"}
-define ACT6_TASKS = {"talk_mika", "talk_kuya_tomas", "talk_ate_jenny", "talk_coach_ramon", "visit_org_fair"}
-define ACT7_TASKS = {"talk_ate_rosa", "talk_kuya_neil", "talk_prof_santos", "talk_classmate_bea", "attend_study_session"}
-define ACT8_TASKS = {"talk_jaden_act8", "talk_ate_linda", "talk_nanay_elena", "talk_prof_reyes", "end_of_first_week"}
+define ACT5_TASKS = {"talk_prof_lena", "talk_kuya_rico", "talk_ate_grace", "talk_classmate_dan", "attend_first_class", "visit_hsu"}
+define ACT6_TASKS = {"talk_mika", "talk_kuya_tomas", "talk_ate_jenny", "talk_coach_ramon", "visit_org_fair", "visit_scholarship_service"}
+define ACT7_TASKS = {"talk_ate_rosa", "talk_kuya_neil", "talk_prof_santos", "talk_classmate_bea", "attend_study_session", "visit_tlrc"}
+define ACT8_TASKS = {"talk_jaden_act8", "talk_ate_linda", "talk_nanay_elena", "talk_prof_reyes", "end_of_first_week", "visit_gcsu"}
 
 ## --- Player Map Position ---
 default player_map_x = 640
@@ -66,6 +67,10 @@ define TASK_DESCRIPTIONS = {
     "talk_nanay_elena": "Talk to Nanay Elena",
     "talk_prof_reyes": "Talk to Prof. Reyes",
     "end_of_first_week": "End of First Week",
+    "visit_hsu": "Visit the Health Services Unit",
+    "visit_scholarship_service": "Visit the Scholarship Service",
+    "visit_tlrc": "Visit the TLRC",
+    "visit_gcsu": "Visit the Guidance & Counseling Office",
 }
 
 define ACT_TASK_ORDER = {
@@ -73,10 +78,10 @@ define ACT_TASK_ORDER = {
     2: ["talk_ate_bea", "talk_kuya_mark", "go_to_newad", "talk_maam_reyes", "complete_flip_card"],
     3: ["talk_sir_noel", "view_crs_portal", "complete_enrollment_tetris"],
     4: ["talk_dorm_manager", "explore_dorm_room", "complete_room_setup"],
-    5: ["talk_prof_lena", "talk_kuya_rico", "talk_ate_grace", "talk_classmate_dan", "attend_first_class"],
-    6: ["talk_mika", "talk_kuya_tomas", "talk_ate_jenny", "talk_coach_ramon", "visit_org_fair"],
-    7: ["talk_ate_rosa", "talk_kuya_neil", "talk_prof_santos", "talk_classmate_bea", "attend_study_session"],
-    8: ["talk_jaden_act8", "talk_ate_linda", "talk_nanay_elena", "talk_prof_reyes", "end_of_first_week"],
+    5: ["talk_prof_lena", "talk_kuya_rico", "talk_ate_grace", "talk_classmate_dan", "attend_first_class", "visit_hsu"],
+    6: ["talk_mika", "talk_kuya_tomas", "talk_ate_jenny", "talk_coach_ramon", "visit_org_fair", "visit_scholarship_service"],
+    7: ["talk_ate_rosa", "talk_kuya_neil", "talk_prof_santos", "talk_classmate_bea", "attend_study_session", "visit_tlrc"],
+    8: ["talk_jaden_act8", "talk_ate_linda", "talk_nanay_elena", "talk_prof_reyes", "end_of_first_week", "visit_gcsu"],
 }
 
 define TASK_LIST_TEXT = {
@@ -125,6 +130,11 @@ init python:
         """Mark a task as complete and update the current task text."""
         store.tasks_completed.add(task_id)
         renpy.notify("✅ Task Complete!")
+
+    def complete_subquest(sq_id):
+        """Mark an optional subquest as complete."""
+        store.subquests_completed.add(sq_id)
+        renpy.notify("★ Subquest Complete!")
 
     def get_current_tasks():
         """Get the set of remaining tasks for the current act."""
@@ -633,6 +643,122 @@ init python:
         "Communicate, share space, respect quiet hours",
         "Dorm Manager", "🤝",
         full="Tips for dorm life: (1) Introduce yourself to your roommate on day one — set expectations early. (2) Agree on shared items like cleaning supplies and snacks. (3) Use headphones after quiet hours. (4) Label your food in shared fridges. (5) Join dorm activities — movie nights, study groups, and floor events. (6) The dorm kitchen has a shared rice cooker and microwave — bring your own utensils. (7) Laundry schedule is posted on the bulletin board — don't miss your slot. (8) The dorm is your first community in UP — make the most of it."
+    )
+
+
+    ## --- SUBQUEST REWARD ITEMS ---
+
+    ITEM_OBLATION_PLEDGE = InfoItem(
+        "oblation_pledge",
+        "The Oblation & Iskolar ng Bayan",
+        "Created by Guillermo Tolentino, 1935 — symbol of service to the nation",
+        "Jaden", "🗿",
+        full="The Oblation was sculpted by National Artist Guillermo Tolentino in 1935. The figure with outstretched arms and upward-facing gaze symbolizes the Filipino youth's selfless offering to the nation — not to any individual or government, but to the Filipino people. Every UP campus has a replica. As an Iskolar ng Bayan (Scholar of the Nation), your education is subsidized by Philippine taxpayers. Your obligation: to use that education in service. The UP motto 'Honor and Excellence' gives that service its standard."
+    )
+    ITEM_MIAGAO_HERITAGE = InfoItem(
+        "miagao_heritage",
+        "Miagao Heritage",
+        "Baroque church completed 1797 — UNESCO World Heritage Site",
+        "Manong Josh", "⛪",
+        full="The Santo Tomas de Villanueva Parish Church of Miagao was completed in 1797 during Spanish colonial rule. It is a UNESCO World Heritage Site and a National Cultural Treasure. Its baroque façade uniquely blends European architecture with indigenous Filipino motifs — coconut trees, papaya plants, and Santo Tomas dressed in local attire. The church survived invasions, earthquakes, and typhoons across three centuries. It is a symbol of Miagao's resilience and cultural identity. As a UPV student, you live in the shadow of this heritage. Respect it."
+    )
+    ITEM_UP_JARGON = InfoItem(
+        "up_jargon",
+        "UP Academic Jargon",
+        "DRP, INC, LOA, GWA, MAO — know these before they happen to you",
+        "Ate Bea", "📖",
+        full="Essential UP academic terms: GWA (Grade Weighted Average) — your semester-end average weighted by units. DRP (Dropped) — official withdrawal from a course before the deadline; not a failing grade. INC (Incomplete) — unfinished requirements; you have one year to complete them or they become a 5.0. LOA (Leave of Absence) — an approved one-semester pause in enrollment; you remain a UP student. 4.00 — conditional failure; you may take a removal exam. 5.00 — outright failure; retake the subject. MAO (Maximum Allowable Absence) — more than 20% of class meetings triggers automatic DRP."
+    )
+    ITEM_STUDENT_RIGHTS = InfoItem(
+        "student_rights",
+        "UP Student Rights",
+        "Quality education, due process, academic freedom — know your rights",
+        "Kuya Mark", "⚖️",
+        full="Under the UP Student Handbook: (1) Right to quality education — professors must follow the syllabus, hold classes, and grade fairly. (2) Right to due process in discipline — you must be informed of charges and given a chance to respond. (3) Right to academic freedom — your intellectual inquiry is protected. (4) Right to a grievance process — unjust grades or treatment can be appealed: professor → department chair → dean → OSA. (5) Right to organize — recognized student organizations are protected from arbitrary dissolution. (6) Rights apply to ALL students equally, regardless of scholarship or STFAP bracket."
+    )
+    ITEM_CRS_TACTICS = InfoItem(
+        "crs_tactics",
+        "CRS Battle Tactics",
+        "Backup classes, adjustment period, prerequisites — survive enlistment",
+        "Sir Noel", "💻",
+        full="CRS (Computerized Registration System) survival guide: (1) Always prepare backup classes before enlistment opens. Popular subjects fill in seconds. (2) Use the adjustment period to add, drop, or switch sections after initial enlistment. (3) Prerequisites are system-enforced — you cannot enlist in an upper-level course without completing the lower one. (4) If a class is full, check again on the first day of classes — some students drop. (5) Use wired internet (ethernet) during enlistment — WiFi is unreliable under load. (6) Overrides are only for graduating students with documented curriculum needs. (7) Know your curriculum map from semester one."
+    )
+    ITEM_ACADEMIC_LOAD = InfoItem(
+        "academic_load",
+        "Academic Load Guide",
+        "15–18 units standard; NSTP required; overload needs dean approval",
+        "Sir Noel", "📋",
+        full="Academic load rules: Standard full load is 15–18 units per semester; maximum is 21 units with dean approval for students in good standing. NSTP (National Service Training Program) is required for all first and second year students under RA 9163 — 3 units per semester for two semesters; choose CWTS (Civic Welfare Training Service) or LTS (Literacy Training Service). Taking fewer than 15 units is part-time enrollment — check if your scholarship requires full-time status. Academic probation may result from a GWA below 2.00 for two consecutive semesters. Know your curriculum flowchart from day one."
+    )
+    ITEM_DORM_CODE = InfoItem(
+        "dorm_code",
+        "Dorm Code of Conduct",
+        "Visitors in common areas only, curfew 10 PM, due process for disputes",
+        "Dorm Manager", "🏠",
+        full="Key UPV dormitory policies: (1) Visitor rule — guests are restricted to common areas only; no visitors in rooms after 8 PM. (2) Main gate curfew — 10 PM on weekdays; inform the dorm manager if you'll be late. (3) Noise — quiet hours from 10 PM; respect shared study time. (4) Room inspection — every two weeks; keep your space clean. (5) No cooking in rooms — use the communal kitchen only (fire safety). (6) Roommate disputes — resolve directly first; escalate to dorm manager for mediation before going to OSA. (7) Emergency protocol — during typhoons or university closures, inform the dorm manager before leaving campus."
+    )
+    ITEM_SURVIVAL_KIT = InfoItem(
+        "survival_kit",
+        "Freshie Survival Kit",
+        "Medicine, power bank, community — the three things you really need",
+        "Nanay Elena", "🎒",
+        full="The real freshman survival kit: PHYSICAL — basic medicines (paracetamol, antacid, antihistamine, ORS, thermometer), a 20,000 mAh power bank, printed backup notes before exam week, and a flashlight for outages. PRACTICAL — a padlock, extension cord, study lamp, and reusable water bottle (the heat causes more clinic visits than anything else). SOCIAL — the most important item: at least one real friend or community here in Miagao. Every physical problem has a solution. Loneliness is healed only by belonging. A dorm room full of supplies and empty of connection is not surviving — it's just existing."
+    )
+    ITEM_GRADING_GUIDE = InfoItem(
+        "grading_guide",
+        "UP Grading System",
+        "1.0 highest → 3.0 passing → 4.0 conditional → 5.0 fail",
+        "Prof. Lena", "📊",
+        full="UP numerical grading scale: 1.00 (Excellent/Outstanding) → 1.25, 1.50, 1.75 (Very Good to Good) → 2.00, 2.25, 2.50 (Satisfactory) → 2.75 (Passing) → 3.00 (Lowest passing grade) → 4.00 (Conditional failure — removal exam allowed) → 5.00 (Failure — retake required). Special marks: INC (Incomplete — complete within one year or becomes 5.0), DRP (Dropped — official withdrawal). Academic distinctions: University Scholar (GWA ≤ 1.20), College Scholar (GWA ≤ 1.45), Dean's Lister (GWA ≤ 1.75, recognition only). Scholarship maintenance usually requires GWA ≤ 2.00 — check your specific grant conditions."
+    )
+    ITEM_MAO_POLICY = InfoItem(
+        "mao_policy",
+        "MAO — Maximum Allowable Absence",
+        "More than 20% of class meetings = automatic DRP",
+        "Kuya Rico", "📅",
+        full="The Maximum Allowable Absence (MAO) rule: A student who incurs absences of MORE than 20% of the total prescribed class meetings shall be dropped from the course (recorded as DRP — not 5.0). For a 3-unit MWF class across 18 weeks (~54 meetings), this means approximately 10–11 absences. HOWEVER: many professors set STRICTER absence limits in their syllabus (e.g., 6 absences = DRP). Always read the syllabus. Tardiness: no universal UP tardiness-to-absence conversion exists, but individual professors may apply one. Being dropped for MAO can affect scholarship status even though it appears as DRP, not 5.0."
+    )
+    ITEM_ORG_CULTURE = InfoItem(
+        "org_culture",
+        "Student Organization Culture",
+        "OSA-registered, 15 members minimum, anti-hazing laws strictly apply",
+        "Mika", "🌿",
+        full="Student organization requirements at UPV: Minimum 15 student members, a written constitution and by-laws, a faculty adviser, and OSA (Office of Student Affairs) approval. Unrecognized orgs cannot officially use campus facilities or collect fees. Membership fees: typically ₱50–200/semester, set in the org's constitution. HAZING: Republic Act 8049 and RA 11053 (Expanded Anti-Hazing Act) strictly prohibit physical and psychological hazing during recruitment or initiation. Violations result in criminal charges — not just school suspension. Report hazing to the OSA immediately. You have the right to join or not join any org without coercion."
+    )
+    ITEM_UPV_EVENTS = InfoItem(
+        "upv_events",
+        "UPV Events Calendar",
+        "Lantern Parade, Pahampang, Arts Month, Loyalty Day — attend all of these",
+        "Ate Jenny", "🗓️",
+        full="Major UPV campus events every student should experience: LANTERN PARADE — pre-Christmas competition where colleges and orgs build giant lanterns and parade them across campus. PAHAMPANG — the annual inter-college sports festival; basketball, volleyball, swimming, track and field. ARTS MONTH — cultural performances, visual art exhibits, literary events; usually held in February–March. LOYALTY DAY — annual celebration of UP's founding on June 18, 1908; awards, alumni recognition, student performances. FRESHIE WEEK — your week; orientation, org fair, campus tours. GRADUATION — when all of this becomes real. Attend these events — they are not distractions. They are the education."
+    )
+    ITEM_APA_GUIDE = InfoItem(
+        "apa_guide",
+        "APA 7th Edition Quick Guide",
+        "In-text: (Author, Year) | Reference: Author, I. (Year). Title. Journal, Vol, Pages.",
+        "Bea", "📝",
+        full="APA 7th Edition essentials: IN-TEXT CITATION — (Last Name, Year) for paraphrase; (Last Name, Year, p. #) for direct quote. REFERENCE LIST format for journal article: Last, F. (Year). Title in sentence case. Journal Name in Title Case and Italics, Volume(Issue), pages. https://doi.org/xxxxx. PLAGIARISM: includes copy-paste, too-close paraphrasing, submitting others' work, and self-plagiarism. Turnitin detects all forms. PRACTICAL RULE: If the idea is not yours, cite it. When in doubt, cite it. Always write in your own voice — summarize, don't transcribe. Get the TLRC's one-page APA cheat sheet for quick reference during paper-writing."
+    )
+    ITEM_UP_MANDATES = InfoItem(
+        "up_mandates",
+        "UP's Three Mandates",
+        "Instruction, Research, Extension — all three define what UP is",
+        "Prof. Santos", "🔬",
+        full="Under the UP Charter (Republic Act 9500, 2008), the University of the Philippines has three core mandates: (1) INSTRUCTION — quality tertiary education across arts, sciences, and professions. (2) RESEARCH — generation of new knowledge; UP is the leading research university in the Philippines. (3) EXTENSION — applying university knowledge to benefit communities, especially marginalized ones. UPV's strength lies in marine science and fisheries research (via CFOS), directly serving Western Visayas coastal communities. As an Iskolar ng Bayan, you're expected to contribute to all three before graduation — through your coursework, thesis, and professional life."
+    )
+    ITEM_UPV_IDENTITY = InfoItem(
+        "upv_identity",
+        "UP Visayas Identity",
+        "Established 1979 | Campuses: Miagao, Iloilo City, Tacloban | 4 colleges",
+        "Jaden", "🎓",
+        full="UP Visayas was established as a constituent university in 1979, growing from the College of Fisheries founded in 1947. Main campus: Miagao, Iloilo. Satellite campuses: UPV-Iloilo City College (UPV-ICC) and UPV Tacloban College (UPV-TC) in Leyte. Four colleges at Miagao: CAS (College of Arts and Sciences) — GE and liberal arts; CFOS (College of Fisheries and Ocean Sciences) — marine science flagship, one of Southeast Asia's leading fisheries institutes; CM (College of Management) — business, economics, management; CTE (College of Technology and Environmental Management) — engineering and environmental programs. UPV's regional identity is inseparable from the sea."
+    )
+    ITEM_HONOR_EXCELLENCE = InfoItem(
+        "honor_excellence",
+        "Honor and Excellence",
+        "UP's motto: integrity in work, excellence in service — not just in grades",
+        "Prof. Reyes", "🏅",
+        full="UP's motto 'Honor and Excellence' defines the standard for every Iskolar ng Bayan. HONOR means academic integrity: submitting your own work, citing sources, refusing to cheat even under pressure, and speaking up when you witness injustice. It means being a person whose word means something. EXCELLENCE means the quality of your work, your character, and how you use your education in service. A 1.0 GWA with no moral backbone serves no one. Excellence is not just a grade — it is a way of living. The Oblation statue embodies both: arms raised, not grasping, but offering. That is the UP ideal."
     )
 
 

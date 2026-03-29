@@ -155,7 +155,15 @@ label act6_tomas_stfap:
 
 label act6_tomas_end:
     kuya_tomas "Education is a right, not a privilege. UP believes that. Use every resource available to you."
-    kuya_tomas "My office is right here in BOX 1, ground floor. Come back anytime."
+    kuya_tomas "The Scholarship Service office is right here — all scholarship processing, renewals, and certifications handled in one place."
+    kuya_tomas "My door is always open. Actually — would you like to sit down properly and go through the process right now?"
+    menu:
+        "(Yes — walk me through the Scholarship Service properly.)":
+            jump act6_visit_scholarship
+        "(I'll come back another time, Kuya.)":
+            jump act6_tomas_complete
+
+label act6_tomas_complete:
     $ talked_kuya_tomas = True
     $ complete_task("talk_kuya_tomas")
     window hide
@@ -201,17 +209,39 @@ label act6_jenny_osa:
     ate_jenny "Student organization registration — all orgs must register with us every semester."
     ate_jenny "Scholarship processing and verification — we work with the Cashier's Office on this."
     ate_jenny "Student discipline — cases of misconduct, harassment, and violations go through us."
-    ate_jenny "Counseling services — we have a guidance counselor on staff. Confidential and free."
+    ate_jenny "Counseling services — through the GCSU. That's a big one."
     ate_jenny "Event permits — any org or student body event on campus needs OSA clearance."
     ate_jenny "Student welfare — dormitory concerns, emergency assistance, and student aid."
-    player_char "You do counseling too?"
-    ate_jenny "Yes. And I want to emphasize — there's no shame in using it."
-    ate_jenny "A lot of students struggle silently. Homesickness, academic pressure, personal issues."
-    ate_jenny "Our counselor is trained and compassionate. Walk-ins are accepted, but appointments are preferred."
+    player_char "What's the GCSU?"
+    ate_jenny "The Guidance and Counseling Services Unit. It's one of the most important support services at UPV."
     menu:
+        "Tell me more about the GCSU.":
+            jump act6_jenny_gcsu
         "Where's the Student Handbook?":
             jump act6_jenny_handbook
         "(Good to know.)":
+            jump act6_jenny_end
+
+label act6_jenny_gcsu:
+    ate_jenny "The GCSU provides professional counseling to all enrolled students — completely free and confidential."
+    ate_jenny "They handle a lot of things:"
+    ate_jenny "Individual counseling — for personal problems, family issues, anxiety, depression, or anything you're going through."
+    ate_jenny "Academic counseling — if you're struggling with your grades, unsure about shifting programs, or feeling lost academically."
+    ate_jenny "Career guidance — aptitude assessments, career planning, even mock interviews for graduating students."
+    ate_jenny "Group counseling — they organize sessions on stress management, time management, and adjustment to college life."
+    ate_jenny "Crisis intervention — if someone is in emotional distress or danger, the GCSU responds immediately."
+    player_char "Is it really confidential? I'd feel embarrassed."
+    ate_jenny "One hundred percent. Whatever you say stays between you and the counselor. That's professional ethics."
+    ate_jenny "And there is NOTHING embarrassing about seeking help. The strongest students are the ones who ask for support."
+    ate_jenny "Homesickness, burnout, relationship problems, family pressure — these are all valid reasons to visit."
+    ate_jenny "Last semester, a student was about to drop out because of anxiety. The GCSU helped them through it. They graduated."
+    ate_jenny "You can walk in during office hours or set an appointment. The GCSU office is at the Student Affairs area."
+    player_char "I'll remember that. Thank you, Ate."
+    ate_jenny "Please do. And if you notice a friend struggling — gently suggest they visit too."
+    menu:
+        "Where's the Student Handbook?":
+            jump act6_jenny_handbook
+        "(That's really important to know.)":
             jump act6_jenny_end
 
 label act6_jenny_handbook:
@@ -303,6 +333,129 @@ label act6_ramon_end:
     coach_ramon "The gym is open 6 AM to 8 PM on weekdays. Free for students. No excuses!"
     $ talked_coach_ramon = True
     $ complete_task("talk_coach_ramon")
+    window hide
+    return
+
+## ============================================================================
+## SUPPORT SERVICE VISIT — Scholarship Service
+## Reference: UP Visayas Student Handbook — Financial Assistance & STFAP
+## ============================================================================
+label act6_visit_scholarship:
+    window show
+    narrator_char "(You sit across from Kuya Tomas at his desk. Bulletin boards behind him are covered in scholarship announcements, deadlines, and bracket tables.)"
+    narrator_char "(A laminated sign reads: 'Scholarship Service — Office of Student Affairs. We process STFAP, University Scholarships, and all external financial assistance.'"
+    kuya_tomas "Alright. Let me show you exactly what we do here and what you need to know."
+    kuya_tomas "The Scholarship Service is the unit responsible for all student financial assistance at UPV."
+    kuya_tomas "Think of us as the office that makes sure education doesn't stop because of money."
+    menu:
+        "Explain the STFAP — how does it work?":
+            jump act6_schol_stfap
+        "What documents do I need to apply?":
+            jump act6_schol_documents
+        "What are the STFAP brackets?":
+            jump act6_schol_brackets
+        "How do university and college scholarships work?":
+            jump act6_schol_academic
+
+label act6_schol_stfap:
+    kuya_tomas "STFAP — Socialized Tuition and Financial Assistance Program — is UP's core equity mechanism."
+    kuya_tomas "The University of the Philippines was built on the principle that no Filipino should be denied higher education because of poverty."
+    kuya_tomas "STFAP implements that principle: your tuition is set based on your family's ability to pay."
+    kuya_tomas "Every enrolled student is assigned a bracket — from A down to E9 — based on their household income and assets."
+    kuya_tomas "Bracket A is the full standard assessment. Bracket E9 means zero tuition. The lower the bracket, the less you pay."
+    player_char "Who decides my bracket?"
+    kuya_tomas "You do, through your submitted documents. Our office evaluates them and conducts an interview if necessary."
+    kuya_tomas "The key rule: SUBMIT HONESTLY. Misrepresentation — inflating poverty, hiding assets — is a disciplinary offense."
+    kuya_tomas "If discovered, your scholarship is cancelled, you repay the difference, and you face academic sanctions."
+    kuya_tomas "But if you're genuinely from a low-income family, DO NOT be ashamed to apply. That's exactly what STFAP is for."
+    kuya_tomas "The application period opens at the start of each semester. Watch for announcements — the window is only two weeks."
+    menu:
+        "What documents do I need?":
+            jump act6_schol_documents
+        "What exactly are the brackets?":
+            jump act6_schol_brackets
+        "What about academic scholarships?":
+            jump act6_schol_academic
+        "(I understand the STFAP now.)":
+            jump act6_schol_end
+
+label act6_schol_documents:
+    kuya_tomas "Here's the document checklist for STFAP application. I'll walk you through it."
+    kuya_tomas "One — STFAP Application Form. Get it here or download from the UP website."
+    kuya_tomas "Two — Income Tax Return (ITR) for the latest taxable year. Both parents, if employed."
+    kuya_tomas "If your parents are self-employed or in informal work — a Sworn Affidavit of Income, notarized."
+    kuya_tomas "If your family is below the tax threshold — a Certificate of Tax Exemption from the BIR."
+    kuya_tomas "Three — Proof of assets: land title or tax declaration for property, OR an affidavit that you own none."
+    kuya_tomas "Vehicle registration if your family owns a vehicle. Bank certificates for savings accounts."
+    kuya_tomas "Four — Certificate of Employment or business permit for parents, if applicable."
+    kuya_tomas "Five — PSA Birth Certificate and your parents' PSA Marriage Certificate."
+    kuya_tomas "Six — latest electric bill or water bill — shows actual household usage and provides address verification."
+    player_char "What if I can't get some of these documents in time?"
+    kuya_tomas "Come to us and explain your situation. We can advise you on alternatives."
+    kuya_tomas "For instance, if your father is an OFW, we accept a contract copy and remittance records in place of an ITR."
+    kuya_tomas "Single-parent households have a different document set. Come see us — we handle cases individually."
+    kuya_tomas "The most important thing: DO NOT miss the deadline trying to get the perfect set of documents."
+    kuya_tomas "Submit what you have and note what's missing. We'll work with you."
+    menu:
+        "What are the STFAP brackets?":
+            jump act6_schol_brackets
+        "Tell me about academic scholarships.":
+            jump act6_schol_academic
+        "(I'll start gathering documents.)":
+            jump act6_schol_end
+
+label act6_schol_brackets:
+    kuya_tomas "Let me show you the bracket table."
+    narrator_char "(He slides a laminated chart across the desk. You study it carefully.)"
+    kuya_tomas "Bracket A — full tuition at the standard assessed rate. This is the DEFAULT if you don't file STFAP."
+    kuya_tomas "Never skip filing just because you think you're Bracket A. You might qualify for something lower."
+    kuya_tomas "Brackets B and C — reduced tuition. Partial exemptions based on income thresholds."
+    kuya_tomas "Bracket D — significantly reduced. Tuition drops to around ₱300 per unit or lower."
+    kuya_tomas "Brackets E1 through E4 — very low to near-zero tuition. These cover families earning below the poverty line."
+    kuya_tomas "Brackets E5 through E9 — ZERO tuition. Families with very limited income pay nothing."
+    player_char "Are there any cash benefits for the lower brackets?"
+    kuya_tomas "Yes. Brackets E5 to E9 may also include a monthly living allowance — around ₱1,000 to ₱4,000 depending on the sub-bracket."
+    kuya_tomas "This is separate from any external scholarship stipend you may receive."
+    kuya_tomas "You CAN receive STFAP benefits and a DOST or private scholarship simultaneously — they don't cancel each other out."
+    kuya_tomas "Important: your bracket must be renewed every academic year. If your family's situation changes significantly, you must update it."
+    menu:
+        "How do academic scholarships work?":
+            jump act6_schol_academic
+        "What documents do I need?":
+            jump act6_schol_documents
+        "(That's very clear.)":
+            jump act6_schol_end
+
+label act6_schol_academic:
+    kuya_tomas "Academic scholarships at UP are automatic — no application needed. They're based entirely on your GWA."
+    kuya_tomas "University Scholar — GWA of 1.20 or better at the end of the semester, with NO grade of 5.00 or INC."
+    kuya_tomas "University Scholars are exempted from ALL tuition and miscellaneous fees. Full exemption."
+    kuya_tomas "College Scholar — GWA of 1.45 or better. Same conditions apply — no 5.00 or INC."
+    kuya_tomas "College Scholars receive a partial to full exemption depending on their college's rules."
+    kuya_tomas "Dean's Lister — GWA of 1.75 or better. Academic recognition; no tuition benefit but it carries prestige."
+    player_char "Can I be both a University Scholar AND receive STFAP benefits?"
+    kuya_tomas "Yes! These are independent systems. University Scholar removes tuition fees through academic merit."
+    kuya_tomas "STFAP sets your tuition based on income. If you're a University Scholar, your tuition is already zero — so STFAP still applies to miscellaneous fees."
+    kuya_tomas "And you can stack external scholarships on top of all of these. UP doesn't limit scholarship stacking."
+    kuya_tomas "The catch: most scholarships require you to MAINTAIN a minimum GWA — usually 2.00 or better."
+    kuya_tomas "Fall below, and you get one semester of probation. Don't recover — scholarship is suspended or revoked."
+    player_char "What does the Scholarship Service do beyond STFAP and academic scholarships?"
+    kuya_tomas "We process and verify ALL types — government grants like DOST and CHED, private foundation awards, LGU assistance."
+    kuya_tomas "We issue official certifications: enrollment verification, good moral character, certified true copies of grades."
+    kuya_tomas "These are what scholarship sponsors need to release your stipend or renew your grant."
+    kuya_tomas "We also post new scholarship announcements on our bulletin board first — before social media. Check it every week."
+    jump act6_schol_end
+
+label act6_schol_end:
+    narrator_char "(Kuya Tomas hands you a folder: STFAP Application Form, Document Checklist, and the Bracket Table.)"
+    kuya_tomas "This is your starter pack. Read everything. Come back with questions."
+    kuya_tomas "Remember — financial hardship is not a barrier at UP. It is something we are designed to address."
+    kuya_tomas "Use the system. It exists for you."
+    narrator_char "(Encyclopedia unlocked: Scholarship Service.)"
+    $ persistent.encyclopedia_unlocks.add("scholarship_service")
+    $ talked_kuya_tomas = True
+    $ complete_task("talk_kuya_tomas")
+    $ complete_task("visit_scholarship_service")
     window hide
     return
 

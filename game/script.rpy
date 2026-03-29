@@ -45,9 +45,9 @@ label start:
     $ current_act = 2
     $ tasks_completed = set()
     $ player_map_x = 2500
-    $ player_map_y = 2800
+    $ player_map_y = 4600
     $ player_facing = "up"
-    jump act2_map
+    jump act1_map
 
 ## ============================================================================
 ## ACT 1 MAP — Banwa (Gate / HSU / Admin / Medical)
@@ -59,18 +59,48 @@ label start:
 ## - Medical buildings: center-left (2000, 2300)
 ## ============================================================================
 
+## --- Navigation helper variable for multi-map Act 1 ---
+default act1_nav_target = None
+
+## --- ACT 1 PHASE 1: Banwa (center map) ---
+## Jaden is here. Arrows lead to Tindahan (left) and Marillac (right).
+## BOX 1 unlocks after all NPCs across all maps are talked to.
 label act1_map:
     $ current_map_bg = "maps/banwa.png"
+    $ act1_nav_target = None
     $ act1_nodes = [
-        MapNode("jaden",         1300, 3000, "act1_npc_jaden",         tooltip="Jaden",           icon_image="jaden.png",          locked=False),
-        MapNode("manong_josh",   2100, 2600, "act1_npc_manong_josh",   tooltip="Manong Josh",     icon_image="manongjosh.png",    locked=True),
-        MapNode("aleng_maria",   3000, 2200, "act1_npc_aleng_maria",   tooltip="Aleng Maria",     icon_image="alengmaria.png",    locked=True),
-        MapNode("manong_chris",  3600, 3000, "act1_npc_manong_chris",  tooltip="Manong Chris",    icon_image="manongchris.png",   locked=True),
-        MapNode("joseph_driver", 2500, 3800, "act1_npc_joseph_driver", tooltip="Joseph (Driver)", icon_image="manong_driver.png",  locked=True),
-        MapNode("box1",          4200, 1800, "act1_prebox1_gate",      tooltip="BOX 1",           icon_image="Arrow.png",           locked=True, icon_zoom=1.5),
+        MapNode("jaden",         2500, 4600, "act1_npc_jaden",     tooltip="Jaden",              icon_image="jaden.png",        locked=False),
+        MapNode("go_tindahan",   100,  2500, "act1_go_tindahan",   tooltip="← Tindahan",         icon_image="Arrow.png",        locked=True, icon_zoom=1.5),
+        MapNode("go_marillac",   4900, 2500, "act1_go_marillac",   tooltip="Marillac →",         icon_image="Arrow.png",        locked=True, icon_zoom=1.5),
+        MapNode("box1",          3860, 1500, "act1_prebox1_gate",  tooltip="BOX 1",              icon_image="Arrow.png",        locked=True, icon_zoom=1.5),
     ]
 
-    $ current_task_text = "Talk to Jaden near the Banwa entrance"
+    ## Re-apply unlock states when returning from other maps
+    if "talk_jaden" in tasks_completed:
+        $ act1_nodes[0].target_label = "act1_npc_jaden_second"
+        $ act1_nodes[1].locked = False
+        $ act1_nodes[2].locked = False
+
+    if (
+        "talk_jaden"         in tasks_completed and
+        "talk_manong_josh"   in tasks_completed and
+        "talk_aleng_maria"   in tasks_completed and
+        "talk_manong_chris"  in tasks_completed and
+        "talk_joseph_driver" in tasks_completed
+    ):
+        $ act1_nodes[3].locked = False
+
+    if "talk_jaden" not in tasks_completed:
+        $ current_task_text = "Talk to Jaden near the Banwa entrance"
+    elif (
+        "talk_manong_josh"   not in tasks_completed or
+        "talk_aleng_maria"   not in tasks_completed or
+        "talk_manong_chris"  not in tasks_completed or
+        "talk_joseph_driver" not in tasks_completed
+    ):
+        $ current_task_text = "Explore Tindahan and Marillac to meet the locals"
+    else:
+        $ current_task_text = "Talk to Jaden again, then head to BOX 1"
 
 label act1_loop:
     call screen map_screen("maps/banwa.png", act1_nodes, current_task_text, 1.0)
@@ -81,18 +111,12 @@ label act1_loop:
         call walk_to_node(_node, nodes=act1_nodes)
         call expression _node.target_label
 
-        ## unlock logic below...
+        ## unlock logic after talking to Jaden
         if "talk_jaden" in tasks_completed:
             $ act1_nodes[1].locked = False
             $ act1_nodes[2].locked = False
-            ## Switch Jaden's target to second talk (unlocks GC)
             $ act1_nodes[0].target_label = "act1_npc_jaden_second"
-
-        if "talk_manong_josh" in tasks_completed or "talk_aleng_maria" in tasks_completed:
-            $ act1_nodes[3].locked = False
-
-        if "talk_manong_chris" in tasks_completed:
-            $ act1_nodes[4].locked = False
+            $ current_task_text = "Explore Tindahan and Marillac to meet the locals"
 
         if (
             "talk_jaden"         in tasks_completed and
@@ -101,8 +125,16 @@ label act1_loop:
             "talk_manong_chris"  in tasks_completed and
             "talk_joseph_driver" in tasks_completed
         ):
-            $ act1_nodes[5].locked = False
+            $ act1_nodes[3].locked = False
             $ current_task_text = "Talk to Jaden again, then head to BOX 1"
+
+        ## Navigation to other maps
+        if act1_nav_target == "tindahan":
+            $ act1_nav_target = None
+            jump act1_tindahan_map
+        if act1_nav_target == "marillac":
+            $ act1_nav_target = None
+            jump act1_marillac_map
 
         if is_act_complete():
             jump act1_complete
@@ -117,6 +149,114 @@ label act1_loop:
             call screen inventory_screen()
 
     jump act1_loop
+
+
+## --- ACT 1 PHASE 2: Tindahan (left map) ---
+## Aleng Maria (food/budget) and Joseph Driver (transport) are here.
+label act1_tindahan_map:
+    $ current_map_bg = "ui/overhead_tindahan.png"
+    $ act1_nav_target = None
+    $ act1_tindahan_nodes = [
+        MapNode("aleng_maria",   1500, 2400, "act1_npc_aleng_maria",   tooltip="Aleng Maria",     icon_image="alengmaria.png",    locked=False),
+        MapNode("joseph_driver", 2800, 2400, "act1_npc_joseph_driver", tooltip="Joseph (Driver)", icon_image="manong_driver.png",  locked=True),
+        MapNode("go_banwa_r",    4900, 2400, "act1_go_banwa",          tooltip="Banwa →",         icon_image="Arrow.png",          locked=False, icon_zoom=1.5),
+    ]
+
+    ## Unlock Joseph after talking to Aleng Maria
+    if "talk_aleng_maria" in tasks_completed:
+        $ act1_tindahan_nodes[1].locked = False
+
+    if "talk_aleng_maria" not in tasks_completed:
+        $ current_task_text = "Talk to Aleng Maria at the Tindahan"
+    elif "talk_joseph_driver" not in tasks_completed:
+        $ current_task_text = "Talk to Joseph the tricycle driver"
+    else:
+        $ current_task_text = "Head back to Banwa →"
+
+label act1_tindahan_loop:
+    call screen map_screen("ui/overhead_tindahan.png", act1_tindahan_nodes, current_task_text, 1.0)
+    $ _action, _node = _return
+
+    if _action == "walk":
+        call walk_to_node(_node, nodes=act1_tindahan_nodes)
+        call expression _node.target_label
+
+        if "talk_aleng_maria" in tasks_completed:
+            $ act1_tindahan_nodes[1].locked = False
+            $ current_task_text = "Talk to Joseph the tricycle driver"
+
+        if "talk_aleng_maria" in tasks_completed and "talk_joseph_driver" in tasks_completed:
+            $ current_task_text = "Head back to Banwa →"
+
+        ## Navigation back to Banwa
+        if act1_nav_target == "banwa":
+            $ act1_nav_target = None
+            jump act1_map
+
+    ## Phone toggle (P key) — universal
+    if _action == "phone":
+        call phone_check
+
+    ## Inventory toggle (I key) — universal
+    if _action == "inventory":
+        if inventory_unlocked:
+            call screen inventory_screen()
+
+    jump act1_tindahan_loop
+
+
+## --- ACT 1 PHASE 3: Marillac (right map) ---
+## Manong Josh (landmarks) and Manong Chris (culture/language) are here.
+label act1_marillac_map:
+    $ current_map_bg = "ui/overhead_marillac.png"
+    $ act1_nav_target = None
+    $ act1_marillac_nodes = [
+        MapNode("manong_josh",   3650, 1500, "act1_npc_manong_josh",   tooltip="Manong Josh",     icon_image="manongjosh.png",    locked=False),
+        MapNode("manong_chris",  3650, 3500, "act1_npc_manong_chris",  tooltip="Manong Chris",    icon_image="manongchris.png",   locked=True),
+        MapNode("go_banwa_l",    325,  650,  "act1_go_banwa",          tooltip="← Banwa",         icon_image="Arrow.png",          locked=False, icon_zoom=1.5),
+    ]
+
+    ## Unlock Manong Chris after talking to Manong Josh
+    if "talk_manong_josh" in tasks_completed:
+        $ act1_marillac_nodes[1].locked = False
+
+    if "talk_manong_josh" not in tasks_completed:
+        $ current_task_text = "Talk to Manong Josh near Marillac"
+    elif "talk_manong_chris" not in tasks_completed:
+        $ current_task_text = "Talk to Manong Chris about local culture"
+    else:
+        $ current_task_text = "← Head back to Banwa"
+
+label act1_marillac_loop:
+    call screen map_screen("ui/overhead_marillac.png", act1_marillac_nodes, current_task_text, 1.0)
+    $ _action, _node = _return
+
+    if _action == "walk":
+        call walk_to_node(_node, nodes=act1_marillac_nodes)
+        call expression _node.target_label
+
+        if "talk_manong_josh" in tasks_completed:
+            $ act1_marillac_nodes[1].locked = False
+            $ current_task_text = "Talk to Manong Chris about local culture"
+
+        if "talk_manong_josh" in tasks_completed and "talk_manong_chris" in tasks_completed:
+            $ current_task_text = "← Head back to Banwa"
+
+        ## Navigation back to Banwa
+        if act1_nav_target == "banwa":
+            $ act1_nav_target = None
+            jump act1_map
+
+    ## Phone toggle (P key) — universal
+    if _action == "phone":
+        call phone_check
+
+    ## Inventory toggle (I key) — universal
+    if _action == "inventory":
+        if inventory_unlocked:
+            call screen inventory_screen()
+
+    jump act1_marillac_loop
 
 
 
