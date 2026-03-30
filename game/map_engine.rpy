@@ -243,8 +243,8 @@ screen map_screen(map_bg, nodes, task_text="", map_scale=1.0):
 
     ## Key bindings for phone, inventory, encyclopedia — overlays so the map stays visible
     key "p" action If(phone_unlocked, Show("phone_screen"), NullAction())
-    key "i" action If(inventory_unlocked, Show("inventory_screen"), NullAction())
     key "e" action If(inventory_unlocked, Show("encyclopedia_screen"), NullAction())
+    key "d" action If(inventory_unlocked, Show("dictionary_screen"), NullAction())
 
     ## Black background behind everything
     add Solid("#000000"):
@@ -499,6 +499,163 @@ screen map_screen(map_bg, nodes, task_text="", map_scale=1.0):
                         yalign 0.5
                         background Solid("#f6d79d66")
                         padding (0, 0, 0, 0)
+
+    ## --- QUICK-ACCESS TOOLBAR (top center) ---
+    ## Same construction as the task box above: outer glow + dark panel + gold ornaments.
+
+    frame:
+        xalign 0.5
+        ypos 14
+        padding (3, 3, 3, 3)
+        background Frame(Solid("#f6d79d22"), 0, 0)
+
+        frame:
+            xfill True
+            padding (20, 10, 20, 10)
+            background Frame(Solid("#1e0c12ee"), 0, 0)
+
+            vbox:
+                xfill True
+                spacing 0
+
+                ## Top ornament line
+                hbox:
+                    xalign 0.5
+                    spacing 6
+
+                    frame:
+                        xsize 30 ysize 2 yalign 0.5
+                        background Solid("#f6d79d66") padding (0, 0, 0, 0)
+                    frame:
+                        xsize 6 ysize 6 yalign 0.5
+                        background Solid("#f6d79d") padding (0, 0, 0, 0)
+                    frame:
+                        xsize 60 ysize 2 yalign 0.5
+                        background Solid("#f6d79d") padding (0, 0, 0, 0)
+                    frame:
+                        xsize 6 ysize 6 yalign 0.5
+                        background Solid("#f6d79d") padding (0, 0, 0, 0)
+                    frame:
+                        xsize 30 ysize 2 yalign 0.5
+                        background Solid("#f6d79d66") padding (0, 0, 0, 0)
+
+                null height 8
+
+                ## Button row
+                hbox:
+                    xalign 0.5
+                    spacing 20
+
+                    ## [E]ncyclopedia
+                    button:
+                        background Solid("#00000000")
+                        hover_background Solid("#f6d79d14")
+                        insensitive_background Solid("#00000000")
+                        padding (10, 4, 10, 4)
+                        action If(inventory_unlocked, Show("encyclopedia_screen"), NullAction())
+                        sensitive inventory_unlocked
+
+                        hbox:
+                            spacing 5
+                            yalign 0.5
+                            frame:
+                                xsize 18 ysize 18 yalign 0.5
+                                padding (0, 0, 0, 0)
+                                background Solid("#5c1a1a")
+                                text "E":
+                                    xalign 0.5 yalign 0.5
+                                    size 11 bold True
+                                    color "#ffd700"
+                                    outlines [(1, "#1e0c12", 0, 0)]
+                            text "ncyclopedia":
+                                yalign 0.5 size 15
+                                color ("#f1debf" if inventory_unlocked else "#f1debf44")
+                                outlines [(2, "#1e0c12", 0, 0)]
+
+                    ## Thin gold divider
+                    frame:
+                        xsize 1 ysize 20 yalign 0.5
+                        background Solid("#f6d79d44") padding (0, 0, 0, 0)
+
+                    ## [D]ictionary
+                    button:
+                        background Solid("#00000000")
+                        hover_background Solid("#f6d79d14")
+                        insensitive_background Solid("#00000000")
+                        padding (10, 4, 10, 4)
+                        action If(inventory_unlocked, Show("dictionary_screen"), NullAction())
+                        sensitive inventory_unlocked
+
+                        hbox:
+                            spacing 5
+                            yalign 0.5
+                            frame:
+                                xsize 18 ysize 18 yalign 0.5
+                                padding (0, 0, 0, 0)
+                                background Solid("#5c1a1a")
+                                text "D":
+                                    xalign 0.5 yalign 0.5
+                                    size 11 bold True
+                                    color "#ffd700"
+                                    outlines [(1, "#1e0c12", 0, 0)]
+                            text "ictionary":
+                                yalign 0.5 size 15
+                                color ("#f1debf" if inventory_unlocked else "#f1debf44")
+                                outlines [(2, "#1e0c12", 0, 0)]
+
+                    ## Thin gold divider
+                    frame:
+                        xsize 1 ysize 20 yalign 0.5
+                        background Solid("#f6d79d44") padding (0, 0, 0, 0)
+
+                    ## [P]hone
+                    button:
+                        background Solid("#00000000")
+                        hover_background Solid("#f6d79d14")
+                        insensitive_background Solid("#00000000")
+                        padding (10, 4, 10, 4)
+                        action If(phone_unlocked, Show("phone_screen"), NullAction())
+                        sensitive phone_unlocked
+
+                        hbox:
+                            spacing 5
+                            yalign 0.5
+                            frame:
+                                xsize 18 ysize 18 yalign 0.5
+                                padding (0, 0, 0, 0)
+                                background Solid("#5c1a1a")
+                                text "P":
+                                    xalign 0.5 yalign 0.5
+                                    size 11 bold True
+                                    color "#ffd700"
+                                    outlines [(1, "#1e0c12", 0, 0)]
+                            text "hone":
+                                yalign 0.5 size 15
+                                color ("#f1debf" if phone_unlocked else "#f1debf44")
+                                outlines [(2, "#1e0c12", 0, 0)]
+
+                null height 8
+
+                ## Bottom ornament line (mirrors top)
+                hbox:
+                    xalign 0.5
+                    spacing 6
+
+                    frame:
+                        xsize 30 ysize 2 yalign 0.5
+                        background Solid("#f6d79d66") padding (0, 0, 0, 0)
+                    frame:
+                        xsize 6 ysize 6 yalign 0.5
+                        background Solid("#f6d79d") padding (0, 0, 0, 0)
+                    frame:
+                        xsize 60 ysize 2 yalign 0.5
+                        background Solid("#f6d79d") padding (0, 0, 0, 0)
+                    frame:
+                        xsize 6 ysize 6 yalign 0.5
+                        background Solid("#f6d79d") padding (0, 0, 0, 0)
+                    frame:
+                        xsize 30 ysize 2 yalign 0.5
+                        background Solid("#f6d79d66") padding (0, 0, 0, 0)
 
 transform task_item_bob:
     yoffset 0

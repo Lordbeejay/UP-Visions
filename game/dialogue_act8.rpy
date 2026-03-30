@@ -5,6 +5,7 @@
 
 ## --- ACT 8 INIT ---
 label act8_start:
+    # play music moved to end of previous act
     $ talked_jaden_act8 = False
     $ talked_ate_linda = False
     $ talked_nanay_elena = False
@@ -472,3 +473,4 @@ label act8_end_of_week:
 ## ============================================================================
 ## END OF ACT 8 DIALOGUES
 ## ============================================================================
+    # No next act music to play

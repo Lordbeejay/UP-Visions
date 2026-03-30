@@ -1,5 +1,28 @@
 ﻿################################################################################
-## Styles
+# Top Navigation Bar: Encyclopedia, Dictionary, Phone
+################################################################################
+screen top_navbar(selected=None):
+    frame:
+        xalign 0.5
+        yalign 0.0
+        xsize 420
+        ysize 56
+        background Solid(DARK_MAROON)
+        padding (8, 8, 8, 8)
+        frame:
+            xfill True
+            yfill True
+            background Solid("#fff4")
+            hbox:
+                xalign 0.5
+                spacing 24
+                
+                textbutton "Encyclopedia" action ToggleScreen("encyclopedia_screen") style "nav_btn"
+                textbutton "Dictionary [D]" action ToggleScreen("dictionary_screen") style "nav_btn"
+                textbutton "Phone" action ToggleScreen("phone_screen") style "nav_btn"
+
+    ## Keyboard shortcut
+    key "d" action ToggleScreen("dictionary_screen")
 ################################################################################
 init offset = -1
 
@@ -3240,7 +3263,7 @@ screen notify(message):
 
     frame at notify_appear:
         xalign 0.5
-        ypos 20
+        ypos 110
         xminimum 320
         padding (3, 3, 3, 3)
         background Frame(Solid("#f6d79d55"), 0, 0)
@@ -3972,14 +3995,17 @@ transform item_pickup_anim:
 ## SCREEN: INVENTORY (can be toggled, I key)
 ## ----------------------------------------------------------------------------
 
-screen inventory_screen():
+screen dictionary_screen():
     modal True
     zorder 150
 
+    # Direct keybindings for closing the dictionary
+    key "d" action Hide("dictionary_screen")
+    key "game_menu" action Hide("dictionary_screen") # Esc key
+
+    # (Optional: keep these if you want to close other overlays from here)
     key "K_p" action Hide("phone_screen")
     key "K_i" action Hide("inventory_screen")
-    key "K_ESCAPE" action Hide("inventory_screen")
-    key "K_e" action [Hide("inventory_screen"), Show("encyclopedia_screen")]
 
     add Solid("#0d0406") alpha 0.92
 
@@ -4137,12 +4163,8 @@ screen inventory_screen():
                             hbox:
                                 spacing 20
                                 yalign 0.5
-                                text "[[I]] / [[ESC]] — Close" substitute False size 10 color "#f6d79d55" italic True yalign 0.5
+                                text "[[I]] / [[D]] / [[ESC]] — Close" substitute False size 10 color "#f6d79d55" italic True yalign 0.5
                                 text "Scroll with mouse wheel" size 10 color "#f6d79d33" italic True yalign 0.5
-                            textbutton "📖  Encyclopedia  [[E]]" substitute False:
-                                xalign 1.0
-                                style "inv_enc_btn"
-                                action [Hide("inventory_screen"), Show("encyclopedia_screen")]
 
 style inv_enc_btn:
     background "#5c1a1a"
@@ -4165,7 +4187,6 @@ screen encyclopedia_screen():
     zorder 155
 
     key "K_e" action Hide("encyclopedia_screen")
-    key "K_i" action [Hide("encyclopedia_screen"), Show("inventory_screen")]
     key "K_ESCAPE" action Hide("encyclopedia_screen")
 
     default enc_selected = ""
@@ -4444,12 +4465,7 @@ screen encyclopedia_screen():
                                 spacing 20
                                 yalign 0.5
                                 text "[[E]] / [[ESC]] — Close" substitute False size 10 color "#f6d79d55" italic True yalign 0.5
-                                text "[[I]] — Dictionary" substitute False size 10 color "#f6d79d33" italic True yalign 0.5
                                 text "Scroll with mouse wheel" size 10 color "#f6d79d33" italic True yalign 0.5
-                            textbutton "📖  Dictionary  [[I]]" substitute False:
-                                xalign 1.0
-                                style "inv_enc_btn"
-                                action [Hide("encyclopedia_screen"), Show("inventory_screen")]
 
 ## ----------------------------------------------------------------------------
 ## SCREEN: QUIZ MINIGAME
@@ -5277,7 +5293,7 @@ screen phone_screen():
                         spacing 2
                         yalign 0.5
                         text "UPV Freshies 2024" size 12 color "#ffd700" bold True
-                        text "Batch [gc_open_count]/[len(gc_all_messages)]  •  4 members" size 9 color "#c8921888"
+                        text "Batch [gc_open_count]/[len(gc_messages)]  •  4 members" size 9 color "#c8921888"
                     text "⋮" size 16 color "#c8921866" xalign 1.0 yalign 0.5
 
             ## Thin gold rule
@@ -5313,7 +5329,7 @@ screen phone_screen():
 
                     for idx in gc_revealed:
                         python:
-                            msg   = gc_all_messages[idx // 3][idx % 3]
+                            msg   = gc_messages[idx // 4][idx % 4]
                             align = 1.0 if msg.is_player else 0.0
 
                         if msg.is_player:
@@ -5366,8 +5382,8 @@ screen phone_screen():
                 vbox:
                     spacing 6
 
-                    if gc_open_count < len(gc_all_messages):
-                        textbutton "Next Batch →  ([gc_open_count + 1]/[len(gc_all_messages)])":
+                    if gc_open_count < len(gc_messages):
+                        textbutton "Next Batch →  ([gc_open_count + 1]/[len(gc_messages)])":
                             xalign 0.5
                             style "gc_load_btn"
                             action [

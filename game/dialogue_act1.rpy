@@ -642,6 +642,8 @@ label act1_box1_arrive:
     $ complete_task("reach_box1")
     $ complete_task("act1_complete")
 
+    stop music fadeout 1.0
+    play music "audio/Act2.mp3" fadein 1.0
     window hide
     return
 
