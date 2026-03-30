@@ -24,8 +24,12 @@ default quiz_score = 0
 
 
 label start:
-    ## stop the fucking music when entering game
-    stop music fadeout 1.0  # FUCKING STOP the main menu theme
+
+    ## Stop the main menu theme (the one from options.rpy)
+    stop music fadeout 1.0
+
+    ## START ACT 1 MUSIC HERE
+    play music "audio/Act1.mp3" fadein 1.0
 
     ## Hide the dialogue window for map exploration
     window hide

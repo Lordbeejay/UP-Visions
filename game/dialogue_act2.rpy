@@ -8,6 +8,8 @@
 ## KEY INFO: What is BOX 1, Bus schedules, tips
 ## ============================================================================
 label act2_npc_ate_bea:
+    ## Play Act 2 music
+    play music "audio/Something Wrong with my Dog.mp3"
     scene expression "images/maps/Entrance.png"
     window show
     ate_bea "Oh, you look lost. First time sa BOX 1?"

@@ -1743,8 +1743,8 @@ screen main_menu():
             align (0.5, 0.5)
             spacing 0
 
-            textbutton _("NEW GAME") action Start() style "mm_btn" at btn_appear(0.7), btn_hover_lift
-            textbutton _("CONTINUE") action ShowMenu("load") style "mm_btn" at btn_appear(0.85), btn_hover_lift
+            textbutton _("NEW GAME") action [Stop('music', fadeout=1.0), Start()] style "mm_btn" at btn_appear(0.7), btn_hover_lift
+            textbutton _("CONTINUE") action [Stop('music', fadeout=1.0), ShowMenu("load")] style "mm_btn" at btn_appear(0.85), btn_hover_lift
             textbutton _("SETTINGS") action ShowMenu("preferences") style "mm_btn" at btn_appear(1.0), btn_hover_lift
             textbutton _("ABOUT") action ShowMenu("about") style "mm_btn" at btn_appear(1.15), btn_hover_lift
             textbutton _("QUIT") action Quit(confirm=not main_menu) style "mm_btn_quit" at btn_appear(1.3), btn_hover_lift
@@ -3023,33 +3023,123 @@ screen confirm(message, yes_action, no_action):
 
     ## Ensure other screens do not get input while this screen is displayed.
     modal True
-
     zorder 200
 
-    style_prefix "confirm"
-
-    add "gui/overlay/confirm.png"
+    add Solid("#0d0406") alpha 0.82 at confirm_overlay_in
 
     frame:
+        xalign 0.5
+        yalign 0.5
+        padding (0, 0, 0, 0)
+        background Solid("#00000000")
+        at confirm_panel_in
 
-        vbox:
-            xalign .5
-            yalign .5
-            spacing 45
+        frame:
+            padding (3, 3, 3, 3)
+            background Frame(Solid("#f6d79d44"), 0, 0)
 
-            label _(message):
-                style "confirm_prompt"
-                xalign 0.5
+            frame:
+                padding (2, 2, 2, 2)
+                background Frame(Solid("#c8921833"), 0, 0)
 
-            hbox:
-                xalign 0.5
-                spacing 150
+                frame:
+                    xminimum 420
+                    xmaximum 520
+                    padding (0, 0, 0, 0)
+                    background Solid("#1a0a0ef8")
 
-                textbutton _("Yes") action yes_action
-                textbutton _("No") action no_action
+                    vbox:
+                        spacing 0
+
+                        ## Header bar
+                        frame:
+                            background Solid("#2a0e0e")
+                            xfill True
+                            padding (24, 14, 24, 14)
+                            hbox:
+                                spacing 10
+                                yalign 0.5
+                                text "\u26a0" size 14 color "#ffd700" yalign 0.5
+                                text "CONFIRM ACTION" size 13 color "#ffd700" bold True yalign 0.5
+
+                        ## Gold rule
+                        frame:
+                            background Solid("#f6d79d33")
+                            xfill True
+                            ysize 1
+                            padding (0, 0, 0, 0)
+
+                        ## Message body
+                        frame:
+                            background Solid("#0d0406")
+                            xfill True
+                            padding (32, 28, 32, 24)
+                            vbox:
+                                spacing 0
+                                xalign 0.5
+                                text _(message):
+                                    xalign 0.5
+                                    text_align 0.5
+                                    size 15
+                                    color "#f1debf"
+                                    bold True
+                                    line_spacing 4
+
+                        ## Gold rule
+                        frame:
+                            background Solid("#f6d79d22")
+                            xfill True
+                            ysize 1
+                            padding (0, 0, 0, 0)
+
+                        ## Action buttons
+                        frame:
+                            background Solid("#130609")
+                            xfill True
+                            padding (24, 16, 24, 16)
+                            hbox:
+                                xalign 0.5
+                                spacing 20
+
+                                ## Yes - crimson confirm
+                                button:
+                                    xsize 160
+                                    padding (0, 12, 0, 12)
+                                    background Solid("#5c1a1a")
+                                    hover_background Solid("#7c2222")
+                                    action yes_action
+                                    hbox:
+                                        xalign 0.5
+                                        spacing 8
+                                        yalign 0.5
+                                        text "\u2713" size 14 color "#ffd700" yalign 0.5
+                                        text _("Yes") size 14 color "#ffd700" bold True yalign 0.5
+
+                                ## No - dark dismiss
+                                button:
+                                    xsize 160
+                                    padding (0, 12, 0, 12)
+                                    background Solid("#2a1018")
+                                    hover_background Solid("#3c1828")
+                                    action no_action
+                                    hbox:
+                                        xalign 0.5
+                                        spacing 8
+                                        yalign 0.5
+                                        text "\u2717" size 14 color "#c8921888" yalign 0.5
+                                        text _("No") size 14 color "#f6d79d88" bold True yalign 0.5
 
     ## Right-click and escape answer "no".
     key "game_menu" action no_action
+
+
+transform confirm_overlay_in:
+    alpha 0.0
+    easein 0.18 alpha 1.0
+
+transform confirm_panel_in:
+    alpha 0.0 zoom 0.95 yoffset 12
+    easein 0.22 alpha 1.0 zoom 1.0 yoffset 0
 
 
 style confirm_frame is gui_frame
@@ -3059,20 +3149,26 @@ style confirm_button is gui_medium_button
 style confirm_button_text is gui_medium_button_text
 
 style confirm_frame:
-    background Frame([ "gui/confirm_frame.png", "gui/frame.png"], gui.confirm_frame_borders, tile=gui.frame_tile)
-    padding gui.confirm_frame_borders.padding
+    background Solid("#00000000")
     xalign .5
     yalign .5
 
 style confirm_prompt_text:
     textalign 0.5
     layout "subtitle"
+    color "#f1debf"
+    size 15
 
 style confirm_button:
-    properties gui.button_properties("confirm_button")
+    background "#5c1a1a"
+    hover_background "#7c2222"
+    padding (20, 10, 20, 10)
 
 style confirm_button_text:
-    properties gui.text_properties("confirm_button")
+    color "#ffd700"
+    hover_color "#ffffff"
+    size 14
+    bold True
 
 
 ## Skip indicator screen #######################################################
@@ -3144,47 +3240,53 @@ screen notify(message):
 
     frame at notify_appear:
         xalign 0.5
-        ypos 80
+        ypos 20
         xminimum 320
         padding (3, 3, 3, 3)
-        background Frame(Solid("#f6d79d44"), 0, 0)
+        background Frame(Solid("#f6d79d55"), 0, 0)
 
         frame:
             xfill True
-            padding (28, 16, 28, 16)
-            background Frame(Solid("#1e0c12ee"), 0, 0)
+            padding (2, 2, 2, 2)
+            background Frame(Solid("#c8921833"), 0, 0)
 
-            hbox:
-                xalign 0.5
-                spacing 10
+            frame:
+                xfill True
+                padding (20, 12, 20, 12)
+                background Solid("#1a0a0ef5")
 
-                text "★":
-                    size 20
-                    color "#ffd700"
-                    outlines [(2, "#1e0c12", 0, 0)]
+                hbox:
+                    xalign 0.5
+                    spacing 10
                     yalign 0.5
 
-                text "[message!tq]":
-                    size 20
-                    color "#b8e6b0"
-                    outlines [(2, "#1e0c12", 0, 0)]
-                    yalign 0.5
+                    text "★":
+                        size 13
+                        color "#ffd700"
+                        outlines [(1, "#1a0a0e", 0, 0)]
+                        yalign 0.5
 
-                text "★":
-                    size 20
-                    color "#ffd700"
-                    outlines [(2, "#1e0c12", 0, 0)]
-                    yalign 0.5
+                    text "[message!tq]":
+                        size 14
+                        color "#f1debf"
+                        outlines [(1, "#1a0a0e", 0, 0)]
+                        yalign 0.5
+
+                    text "★":
+                        size 13
+                        color "#ffd700"
+                        outlines [(1, "#1a0a0e", 0, 0)]
+                        yalign 0.5
 
     timer 3.0 action Hide('notify')
 
 
 transform notify_appear:
     on show:
-        alpha 0 yoffset -20
-        easein 0.35 alpha 1.0 yoffset 0
+        alpha 0 yoffset -16
+        easein 0.28 alpha 1.0 yoffset 0
     on hide:
-        easeout 0.4 alpha 0.0 yoffset -20
+        easeout 0.32 alpha 0.0 yoffset -16
 
 
 ## NVL screen ##################################################################
@@ -3798,29 +3900,73 @@ screen item_pickup_screen(item):
     zorder 300
     modal False
 
+    ## Outer glow border - same triple-frame as other UI panels
     frame:
         xalign 0.5
         yalign 0.0
-        yoffset 80
-        background "#1e1e3a"
-        padding (20, 14, 24, 14)
+        yoffset 24
+        padding (3, 3, 3, 3)
+        background Frame(Solid("#f6d79d55"), 0, 0)
         at item_pickup_anim
 
-        hbox:
-            spacing 12
-            yalign 0.5
-            text item.icon size 22 yalign 0.5
-            vbox:
-                spacing 2
-                text "INFO ITEM COLLECTED" size 10 color "#a78bfa" bold True
-                text item.label size 13 color "#f1f5f9" bold True
-                text item.short size 11 color "#94a3b8"
+        frame:
+            padding (2, 2, 2, 2)
+            background Frame(Solid("#c8921833"), 0, 0)
+
+            frame:
+                padding (0, 0, 0, 0)
+                background Solid("#1a0a0ef2")
+
+                hbox:
+                    spacing 0
+
+                    ## Gold left accent bar
+                    frame:
+                        xsize 4
+                        ysize 62
+                        background Solid("#ffd700")
+                        padding (0, 0, 0, 0)
+
+                    ## Content
+                    frame:
+                        padding (16, 14, 20, 14)
+                        background Solid("#00000000")
+                        hbox:
+                            spacing 14
+                            yalign 0.5
+
+                            ## Icon badge
+                            frame:
+                                xysize (38, 38)
+                                yalign 0.5
+                                background Solid("#3c1a28")
+                                text item.icon size 20 xalign 0.5 yalign 0.5
+
+                            ## Text block
+                            vbox:
+                                spacing 4
+                                yalign 0.5
+
+                                ## Label row
+                                hbox:
+                                    spacing 6
+                                    yalign 0.5
+                                    frame:
+                                        xsize 3
+                                        ysize 10
+                                        yalign 0.5
+                                        background Solid("#ffd700")
+                                        padding (0, 0, 0, 0)
+                                    text "\u2605  INFO ITEM COLLECTED" size 9 color "#c89218" bold True yalign 0.5
+
+                                text item.label size 13 color "#ffd700" bold True
+                                text item.short size 11 color "#f1debf88"
 
 transform item_pickup_anim:
-    alpha 0.0 yoffset -20
-    ease 0.3 alpha 1.0 yoffset 0
-    pause 2.0
-    ease 0.4 alpha 0.0 yoffset -10
+    alpha 0.0 yoffset -16
+    ease 0.25 alpha 1.0 yoffset 0
+    pause 2.2
+    ease 0.35 alpha 0.0 yoffset -10
 
 ## ----------------------------------------------------------------------------
 ## SCREEN: INVENTORY (can be toggled, I key)
