@@ -4,6 +4,7 @@
 
 init python:
     import math
+    from collections import deque
 
     class MapNode:
         """A clickable location on the map."""
@@ -46,6 +47,190 @@ init python:
     def map_to_screen(mx, my):
         """Convert map coordinates (5000x5000 space) to screen pixels (1920x1080)."""
         return (int(mx * MAP_SCALE_X), int(my * MAP_SCALE_Y))
+
+    ## ======================================================================
+    ## ROAD WAYPOINT SYSTEM — keeps the character walking on roads only
+    ## ======================================================================
+    ## HOW TO ADJUST:
+    ##   1. "waypoints" = list of (x, y) road intersection points (5000x5000 coords)
+    ##      To convert from screen pixels: map_x = pixel_x / 0.384, map_y = pixel_y / 0.216
+    ##   2. "edges" = pairs of waypoint indices that are connected by a road
+    ##      e.g. (0, 1) means waypoint 0 and waypoint 1 have a road between them
+    ##   3. Add your map key (same string you pass to map_screen) to enable road blocking
+    ##   4. Maps NOT listed here have no blocking — character walks in a straight line
+    ## ======================================================================
+
+    MAP_ROAD_GRAPHS = {
+
+        ## --- BANWA (Act 1 center map) ---
+        ## Roads wrap AROUND the church — no path through the center.
+        ## Character walks left road or right road to go top ↔ bottom.
+        ##
+        ##   Layout:
+        ##       0 ===================== 1
+        ##       |      [CHURCH]         |
+        ##       2      [BLOCKED]        3 -- box1 area
+        ##       |                       4
+        ##       |                       |
+        ##  exit 5 -- 6                  7 -- 8 exit
+        ##       |                       |
+        ##       9 ===== 10 ============ 11
+        ##
+        "maps/banwa.png": {
+            "waypoints": [
+                (1120, 450),   # 0   top-left intersection
+                (3860, 450),   # 1   top-right intersection
+                (1120, 1500),  # 2   left road, upper
+                (3860, 1500),  # 3   right road, upper (box1)
+                (3860, 2500),  # 4   right road, mid
+                (100,  2500),  # 5   left edge exit (→ tindahan)
+                (1120, 2500),  # 6   left road, mid
+                (4900, 2500),  # 7   right edge exit (→ marillac)
+                (1120, 4600),  # 8   bottom-left
+                (2500, 4600),  # 9   bottom-center (Jaden)
+                (3860, 4600),  # 10  bottom-right
+            ],
+            "edges": [
+                ## top road — horizontal (same y=450)
+                (0, 1),
+                ## left vertical road (same x=1120)
+                (0, 2), (2, 6), (6, 8),
+                ## right vertical road (same x=3860)
+                (1, 3), (3, 4), (4, 10),
+                ## left exit — horizontal (same y=2500)
+                (5, 6),
+                ## right exit — horizontal (same y=2500)
+                (4, 7),
+                ## bottom road — horizontal (same y=4600)
+                (8, 9), (9, 10),
+            ],
+        },
+
+        ## --- TINDAHAN (Act 1 left map) ---
+        ## Roads run between building blocks. No cutting through stores.
+        ##
+        ##   Layout:
+        ##       0 ======= 1 ======= 2
+        ##       |         |         |
+        ##       3 == A == 4 == J == 5 -- 6 exit
+        ##       |                   |
+        ##       7 ================= 8
+        ##
+        "ui/overhead_tindahan.png": {
+            "waypoints": [
+                (520,  700),   # 0   top-left
+                (2500, 700),   # 1   top-center
+                (3780, 700),   # 2   top-right
+                (520,  2400),  # 3   mid-left
+                (1500, 2400),  # 4   mid — Aleng Maria
+                (2800, 2400),  # 5   mid — Joseph Driver
+                (3780, 2400),  # 6   mid-right
+                (4900, 2400),  # 7   right exit (→ banwa)
+                (520,  4700),  # 8   bottom-left
+                (3780, 4700),  # 9   bottom-right
+            ],
+            "edges": [
+                ## top road — horizontal (same y=700)
+                (0, 1), (1, 2),
+                ## left vertical (same x=520)
+                (0, 3), (3, 8),
+                ## center vertical (same x=2500)
+                (1, 4),
+                ## right vertical (same x=3780)
+                (2, 6), (6, 9),
+                ## mid road — horizontal (same y=2400)
+                (3, 4), (4, 5), (5, 6), (6, 7),
+                ## bottom road — horizontal (same y=4700)
+                (8, 9),
+            ],
+        },
+
+        ## --- MARILLAC (Act 1 right map) ---
+        ## Right vertical road + top horizontal road + bottom connection.
+        ## Building on the left side — can't walk through it.
+        ##
+        ##   Layout:
+        ##       0 exit ============ 1
+        ##                           |
+        ##                           2  Manong Josh
+        ##                           |
+        ##                           3
+        ##                           |
+        ##                           4  Manong Chris
+        ##                           |
+        ##       6 ================= 5
+        ##
+        "ui/overhead_marillac.png": {
+            "waypoints": [
+                (325,  650),   # 0   top-left exit (→ banwa)
+                (3650, 650),   # 1   top-right intersection
+                (3650, 1500),  # 2   right road — Manong Josh
+                (3650, 2500),  # 3   right road, mid
+                (3650, 3500),  # 4   right road — Manong Chris
+                (3650, 4400),  # 5   bottom-right
+                (325,  4400),  # 6   bottom-left
+            ],
+            "edges": [
+                ## top road — horizontal (same y=650)
+                (0, 1),
+                ## right vertical road (same x=3650)
+                (1, 2), (2, 3), (3, 4), (4, 5),
+                ## bottom road — horizontal (same y=4400)
+                (5, 6),
+            ],
+        },
+    }
+
+    def find_nearest_waypoint(x, y, waypoints):
+        """Find index of the closest waypoint to (x, y)."""
+        best = 0
+        best_d = float('inf')
+        for i, (wx, wy) in enumerate(waypoints):
+            d = (x - wx)**2 + (y - wy)**2
+            if d < best_d:
+                best_d = d
+                best = i
+        return best
+
+    def find_road_path(sx, sy, ex, ey, map_name):
+        """Return list of (x,y) points to walk through, following road waypoints.
+        If the map has no road graph, returns a direct path."""
+        if map_name not in MAP_ROAD_GRAPHS:
+            return [(ex, ey)]
+
+        graph = MAP_ROAD_GRAPHS[map_name]
+        wps = graph["waypoints"]
+        edges = graph["edges"]
+
+        swp = find_nearest_waypoint(sx, sy, wps)
+        ewp = find_nearest_waypoint(ex, ey, wps)
+
+        if swp == ewp:
+            return [(ex, ey)]
+
+        # build adjacency
+        adj = [[] for _ in range(len(wps))]
+        for a, b in edges:
+            adj[a].append(b)
+            adj[b].append(a)
+
+        # BFS shortest path
+        queue = deque([(swp, [swp])])
+        visited = {swp}
+        while queue:
+            cur, path = queue.popleft()
+            if cur == ewp:
+                # return waypoint coords (include start wp so we walk to the road first)
+                result = [wps[i] for i in path]
+                result.append((ex, ey))
+                return result
+            for nb in adj[cur]:
+                if nb not in visited:
+                    visited.add(nb)
+                    queue.append((nb, path + [nb]))
+
+        # no path found — walk direct
+        return [(ex, ey)]
 
 
 ## ============================================================================
@@ -369,32 +554,44 @@ label walk_to_node(target_node, map_bg=None, nodes=None):
     if nodes is not None:
         show screen map_nodes_overlay(nodes)
 
-    $ _dir = get_direction(player_map_x, player_map_y, target_node.x, target_node.y)
-    $ _dur = calc_walk_duration(player_map_x, player_map_y, target_node.x, target_node.y)
+    ## Get road-aware path (list of waypoints to walk through)
+    $ _road_path = find_road_path(player_map_x, player_map_y, target_node.x, target_node.y, map_bg)
 
-    ## Calculate screen positions for walk animation
-    $ _start_x = int(player_map_x * MAP_SCALE_X) - 60
-    $ _start_y = int(player_map_y * MAP_SCALE_Y) - 100
-    $ _end_x = int(target_node.x * MAP_SCALE_X) - 60
-    $ _end_y = int(target_node.y * MAP_SCALE_Y) - 100
+    ## Walk through each segment of the path
+    $ _walk_i = 0
+    while _walk_i < len(_road_path):
+        $ _wp_x, _wp_y = _road_path[_walk_i]
+        $ _seg_dist = math.sqrt((player_map_x - _wp_x)**2 + (player_map_y - _wp_y)**2)
 
-    show expression ("player_walk_" + _dir) as player_sprite:
-        pos (_start_x, _start_y)
-        zoom 2.5
-        xanchor 0.5
-        yanchor 0.5
-        linear _dur pos (_end_x, _end_y)
+        if _seg_dist < 30:
+            ## Skip tiny segments (already there)
+            $ player_map_x = _wp_x
+            $ player_map_y = _wp_y
+            $ _walk_i += 1
+        else:
+            $ _dir = get_direction(player_map_x, player_map_y, _wp_x, _wp_y)
+            $ _dur = calc_walk_duration(player_map_x, player_map_y, _wp_x, _wp_y)
+            $ _sx = int(player_map_x * MAP_SCALE_X) - 60
+            $ _sy = int(player_map_y * MAP_SCALE_Y) - 100
+            $ _ex = int(_wp_x * MAP_SCALE_X) - 60
+            $ _ey = int(_wp_y * MAP_SCALE_Y) - 100
 
-    $ renpy.pause(_dur, hard=True)
+            show expression ("player_walk_" + _dir) as player_sprite:
+                pos (_sx, _sy)
+                zoom 2.5
+                xanchor 0.5
+                yanchor 0.5
+                linear _dur pos (_ex, _ey)
 
-    $ player_map_x = target_node.x
-    $ player_map_y = target_node.y
-    $ player_facing = _dir
+            $ renpy.pause(_dur, hard=True)
+            $ player_map_x = _wp_x
+            $ player_map_y = _wp_y
+            $ player_facing = _dir
+            $ _walk_i += 1
 
     hide player_sprite
     hide walk_map_bg
     hide screen map_nodes_overlay
     $ target_node.mark_visited()
-
 
     return

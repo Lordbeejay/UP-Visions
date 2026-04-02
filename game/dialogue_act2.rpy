@@ -8,6 +8,7 @@
 ## KEY INFO: What is BOX 1, Bus schedules, tips
 ## ============================================================================
 label act2_npc_ate_bea:
+    scene expression "images/maps/Entrance.png"
     window show
     ate_bea "Oh, you look lost. First time sa BOX 1?"
     player_char "Is it that obvious?"
@@ -84,6 +85,16 @@ label act2_bea_tips:
 
 label act2_bea_end:
     ate_bea "By the way, you should also talk to Kuya Mark — the guard near the gate. He knows all the security rules."
+    if "sq_up_jargon" not in subquests_completed:
+        menu:
+            "★ Before you go — can you quiz me on UP academic jargon? DRP, INC, LOA...":
+                jump sq_up_jargon
+            "(Alright, thanks Ate Bea!)":
+                jump act2_bea_complete
+    else:
+        jump act2_bea_complete
+
+label act2_bea_complete:
     $ complete_task("talk_ate_bea")
     window hide
     return
@@ -93,6 +104,7 @@ label act2_bea_end:
 ## KEY INFO: ID policies, security protocols, restricted areas
 ## ============================================================================
 label act2_npc_kuya_mark:
+    scene expression "images/maps/Entrance.png"
     window show
     kuya_mark "Good morning. Transaction?"
     player_char "Good morning, Kuya. I'm a freshie — I wanted to ask about the campus rules."
@@ -175,6 +187,16 @@ label act2_mark_restricted:
 label act2_mark_end:
     kuya_mark "Any more questions, come find me at the Security Office near the main gate. I'm here 6 AM to 6 PM."
     kuya_mark "If you need to process anything admin-related, head to the New Admin building. Ma'am Reyes can help you there."
+    if "sq_student_rights" not in subquests_completed:
+        menu:
+            "★ Kuya Mark — do you know the student rights under the UP handbook?":
+                jump sq_student_rights
+            "(Noted, thanks Kuya Mark.)":
+                jump act2_mark_complete
+    else:
+        jump act2_mark_complete
+
+label act2_mark_complete:
     $ complete_task("talk_kuya_mark")
     window hide
     return
@@ -207,6 +229,7 @@ label act2_enter_inside:
 ## KEY INFO: Offices in BOX 1, office hours, appointments vs walk-ins
 ## ============================================================================
 label act2_npc_maam_reyes:
+    scene expression "images/maps/Entrance.png"
     window show
     maam_reyes "Good morning! How can I help you?"
     player_char "Good morning, Ma'am. I'm a freshie. I wanted to know more about the offices here."

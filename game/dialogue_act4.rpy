@@ -135,6 +135,14 @@ label act4_dorm_key:
     dorm_mgr "Head to your room and get settled in."
 
     $ complete_task("talk_dorm_manager")
+    if "sq_dorm_code" not in subquests_completed or "sq_dorm_survival" not in subquests_completed:
+        menu:
+            "★ Walk me through the dorm rules properly." if "sq_dorm_code" not in subquests_completed:
+                jump sq_dorm_code
+            "★ Help me check if I have everything I need." if "sq_dorm_survival" not in subquests_completed:
+                jump sq_dorm_survival
+            "(Okay, heading to my room now.)":
+                pass
     window hide
     return
 

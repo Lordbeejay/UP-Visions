@@ -54,6 +54,11 @@ define ate_linda = Character("Ate Linda", color="#6e1f2a", what_color="#ffffff",
 define nanay_elena = Character("Nanay Elena", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
 define prof_reyes = Character("Prof. Reyes", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
 
+## --- Support Services Characters ---
+define guidance_counselor = Character("Ma'am Garcia", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define tlrc_coord = Character("TLRC Coordinator", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define peer_tutor = Character("Peer Tutor", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+
 ## --- NPC Sprite Images ---
 ## Ren'Py auto-names files in subdirectories with a space prefix (e.g. "npcs manong_guard").
 ## We define them explicitly here so `show manong_guard` works in dialogue scenes.

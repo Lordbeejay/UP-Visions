@@ -220,6 +220,8 @@ label act7_santos_advice:
     prof_santos "Start building your academic vocabulary. Read journals, not just textbooks."
     prof_santos "Form study groups. Discussion sharpens understanding better than solo reading."
     prof_santos "Visit your professors during consultation hours. They WANT to help. Most are lonely in their offices."
+    prof_santos "And use the TLRC — the Teaching and Learning Resource Center. They have peer tutors and academic workshops."
+    prof_santos "I've referred struggling students there before. Many of them turned their grades around completely."
     prof_santos "And most importantly — don't be afraid to not know. Ignorance is temporary. Apathy is the real enemy."
     player_char "That's really inspiring, Prof."
     prof_santos "You're at the University of the Philippines. You've earned your place. Now grow into it."
@@ -249,6 +251,8 @@ label act7_npc_classmate_bea:
             jump act7_bea_tips
         "How are college exams different from high school?":
             jump act7_bea_exams
+        "Have you heard of the TLRC?":
+            jump act7_bea_tlrc
 
 label act7_bea_group:
     bea "We meet twice a week — Tuesdays and Thursdays after last class."
@@ -296,6 +300,35 @@ label act7_bea_exams:
     bea "It is. But once you adjust, it actually makes you smarter. You'll notice the difference within a semester."
     jump act7_bea_end
 
+label act7_bea_tlrc:
+    bea "The TLRC? YES! I just found out about it last week. It's amazing."
+    bea "TLRC stands for Teaching and Learning Resource Center."
+    bea "It's a support unit at UPV that helps students who are struggling academically."
+    bea "They offer peer tutoring — upperclassmen who got high marks in a subject volunteer to tutor freshmen."
+    bea "They also have review sessions before midterms and finals. Free and open to all students."
+    bea "And learning workshops — study skills, time management, how to write academic papers."
+    player_char "Where is it?"
+    bea "It's in the CAS Building area. They have a small office and a learning commons room."
+    bea "You can walk in and ask for a tutor, or check their schedule for group review sessions."
+    bea "They even have diagnostic assessments — if you don't know WHY you're struggling, they help figure it out."
+    bea "Like, is it your study habits? Reading comprehension? Test anxiety? They'll work with you on it."
+    player_char "That's exactly what I need. I've been struggling with the reading load."
+    bea "Same! I signed up for their academic writing workshop next week."
+    bea "The TLRC is honestly one of UPV's best-kept secrets. Most freshmen don't discover it until second semester."
+    bea "But now you know. Use it!"
+    bea "Actually — it's right in this building. Do you want to visit together right now?"
+    menu:
+        "(Yes, let's visit the TLRC now.)":
+            jump act7_visit_tlrc
+        "How does the study group work?":
+            jump act7_bea_group
+        "Any study tips?":
+            jump act7_bea_tips
+        "How are exams different?":
+            jump act7_bea_exams
+        "(Maybe later. Thanks!)":
+            jump act7_bea_end
+
 label act7_bea_end:
     bea "So, study group? Tuesday, 4 PM, library study room 2?"
     bea "I'll add you to the group chat."
@@ -304,6 +337,145 @@ label act7_bea_end:
     $ complete_task("talk_classmate_bea")
     window hide
     return
+
+## ============================================================================
+## SUPPORT SERVICE VISIT — Teaching and Learning Resource Center (TLRC)
+## Reference: UP Visayas Student Handbook — Academic Support Services
+## ============================================================================
+label act7_visit_tlrc:
+    window show
+    narrator_char "(Bea leads you down the CAS corridor to a bright room at the end of the hall.)"
+    narrator_char "(A banner above the door reads: 'TLRC — Teaching and Learning Resource Center. Free academic support for all UPV students.'"
+    narrator_char "(Inside: whiteboards covered in formulas, study carrels, shelves of supplementary materials, and student tutors bent over workbooks.)"
+    tlrc_coord "Good afternoon! New visitors — freshmen?"
+    bea "First time for both of us. We heard about the TLRC and wanted to see it properly."
+    tlrc_coord "Perfect timing! I'm the TLRC Coordinator. Come in, I'll walk you through everything."
+    tlrc_coord "The TLRC exists for one reason: to make sure no UP student fails because they didn't have help."
+    tlrc_coord "What would you like to know first?"
+    menu:
+        "What services does the TLRC offer?":
+            jump act7_tlrc_services
+        "How does peer tutoring work?":
+            jump act7_tlrc_tutoring
+        "Do you have academic writing support?":
+            jump act7_tlrc_writing
+        "How do I request a tutor?":
+            jump act7_tlrc_request
+
+label act7_tlrc_services:
+    tlrc_coord "Let me give you the full picture. The TLRC offers four main services."
+    tlrc_coord "One — Peer Tutoring. Trained student tutors, matched to your subject, meet with you one-on-one or in small groups."
+    tlrc_coord "Two — Supplemental Instruction. For courses with historically high failure rates — think advanced math, chemistry, statistics."
+    tlrc_coord "We assign an SI Leader — a student who excelled in that subject — to run weekly facilitated review sessions."
+    tlrc_coord "Three — Academic Writing Support. Workshops on research paper writing, APA citation, argumentation, and anti-plagiarism practices."
+    tlrc_coord "Four — Study Skills Seminars. Time management, active reading, test preparation, memory techniques. Open to all."
+    player_char "What are these Supplemental Instruction sessions like?"
+    tlrc_coord "The SI Leader doesn't reteach the lecture. They facilitate discussion, work through problem sets, and answer questions."
+    tlrc_coord "The difference from regular studying: it's structured, collaborative, and guided by someone who already mastered the material."
+    tlrc_coord "Research shows students who attend SI sessions consistently score higher on exams."
+    tlrc_coord "The schedule is posted on our bulletin board and the UPV student portal at the start of each semester."
+    bea "I didn't know there were sessions for gateway courses. I'm definitely coming for math."
+    menu:
+        "How does peer tutoring work?":
+            jump act7_tlrc_tutoring
+        "Tell me about writing support.":
+            jump act7_tlrc_writing
+        "How do I request a tutor?":
+            jump act7_tlrc_request
+        "(This is very useful!)":
+            jump act7_tlrc_end
+
+label act7_tlrc_tutoring:
+    tlrc_coord "Our peer tutors are upper-class students — juniors and seniors — who excelled in specific subjects."
+    tlrc_coord "They go through a selection process: minimum GWA, a subject proficiency evaluation, and a tutoring skills training."
+    tlrc_coord "Each tutor is matched to the subjects they're strongest in. We don't assign a chemistry tutor to math."
+    tlrc_coord "Sessions are held here at the TLRC — one-on-one or groups of two to three students."
+    tlrc_coord "Sessions are focused: you bring specific problems, the tutor guides you through reasoning them out."
+    player_char "Do tutors do my homework for me?"
+    tlrc_coord "No — and that's intentional. Peer tutors are here to build YOUR understanding, not to replace it."
+    tlrc_coord "They'll ask guiding questions, explain concepts in different ways, and work through examples with you."
+    tlrc_coord "After a few sessions, you should be able to work independently. That's the goal."
+    bea "That sounds so much better than just copying notes."
+    tlrc_coord "Exactly. The research is clear: guided practice builds deeper retention than passive review."
+    tlrc_coord "We currently have tutors for: General Chemistry, College Algebra, Statistics, Basic Economics, Research Methods, and academic English writing."
+    tlrc_coord "For specialized upper-division courses, availability varies by semester. Check with us at the start of each term."
+    menu:
+        "What about writing support?":
+            jump act7_tlrc_writing
+        "How do I request a tutor?":
+            jump act7_tlrc_request
+        "What other services do you offer?":
+            jump act7_tlrc_services
+        "(Great, I'll come for statistics.)":
+            jump act7_tlrc_end
+
+label act7_tlrc_writing:
+    tlrc_coord "Academic writing is the single biggest adjustment challenge for UP freshmen. And rightfully so."
+    tlrc_coord "High school writing was formulaic. College writing demands critical thinking, argumentation, and proper citation."
+    tlrc_coord "Our Academic Writing Workshop is a structured program that covers:"
+    tlrc_coord "Research paper anatomy — how to write an introduction with a clear thesis, a literature review, methodology, analysis, and conclusion."
+    tlrc_coord "APA 7th Edition citation format — in-text citations, reference lists, DOI formatting. Every faculty member now requires APA."
+    tlrc_coord "Argumentation and evidence — how to construct a logical argument supported by credible academic sources."
+    tlrc_coord "Paraphrasing and summarizing — how to use sources without plagiarizing."
+    player_char "Can the TLRC review my paper before I submit it?"
+    tlrc_coord "Yes — that's our writing consultation service. Bring a draft at least two days before your deadline."
+    tlrc_coord "Our writing consultants review for structure, clarity, citation format, and coherence."
+    tlrc_coord "We don't evaluate content — that's your professor's role. We evaluate the writing itself."
+    tlrc_coord "We'll leave comments on your draft, then sit with you to discuss the revisions."
+    bea "I need this before my first research paper due date."
+    tlrc_coord "Sign up early. Slots fill up fast before midterms and finals."
+    tlrc_coord "We also have an anti-plagiarism seminar — highly recommended for freshmen who don't fully understand what counts as plagiarism."
+    tlrc_coord "Turnitin is used by most UP professors. You want to understand the rules before you accidentally break them."
+    menu:
+        "How do I request a tutor?":
+            jump act7_tlrc_request
+        "What other services do you offer?":
+            jump act7_tlrc_services
+        "(I'll sign up for the workshop.)":
+            jump act7_tlrc_end
+
+label act7_tlrc_request:
+    tlrc_coord "Requesting a tutor is straightforward. Here's the process:"
+    tlrc_coord "Step one — fill out a Tutoring Request Form. You can get it here or download it from the portal."
+    tlrc_coord "List: the subject, specific topics you're struggling with, your available schedule, and your preferred session mode — solo or group."
+    tlrc_coord "Step two — we match you with a compatible tutor within two to three working days."
+    tlrc_coord "Step three — the tutor contacts you to confirm the schedule. Sessions are logged by us."
+    tlrc_coord "There's no limit on the number of sessions. Come as often as you need."
+    player_char "Is there any cost?"
+    tlrc_coord "Zero. Completely free. Peer tutors are volunteers or compensated through the university's student support budget."
+    tlrc_coord "The TLRC is a service of UPV — funded to support your academic success."
+    tlrc_coord "Would you like to observe a session happening right now? One of our tutors is working with a group."
+    menu:
+        "(Yes, let me observe.)":
+            jump act7_tlrc_demo
+        "(No thanks — I'll come back to request a tutor.)":
+            jump act7_tlrc_end
+
+label act7_tlrc_demo:
+    narrator_char "(The coordinator leads you to a carrel where a third-year student is working with two freshmen on algebra.)"
+    peer_tutor "Okay — before I solve this, tell me: what does it mean when the equation has two variables?"
+    narrator_char "(The freshmen look at each other, then venture an answer. The tutor listens carefully.)"
+    peer_tutor "Close. Let me show you another way to think about it..."
+    narrator_char "(Twenty minutes pass. By the end, both students are working problems independently.)"
+    peer_tutor "Good! Now try this one on your own. I'll be right here if you get stuck."
+    narrator_char "(You watch as the tutor observes without interrupting, letting them work through the problem.)"
+    bea "(whispering) You can see it — the moment it clicks for them."
+    player_char "(whispering) Yeah. That's different from just being told the answer."
+    narrator_char "(The coordinator catches your eye and smiles, as if to say: this is what we do.)"
+    jump act7_tlrc_end
+
+label act7_tlrc_end:
+    tlrc_coord "Our office hours are Monday to Friday, 8 AM to 5 PM."
+    tlrc_coord "Workshop schedule, SI session timetable, and tutor availability are updated every semester on our bulletin board."
+    tlrc_coord "One last thing — don't wait until you're failing to come here."
+    tlrc_coord "The students who benefit most from the TLRC are the ones who come early, before the problem becomes a crisis."
+    bea "Noted. I'm signing up for the writing workshop this week."
+    player_char "(You feel like you've found a secret advantage — one that most freshmen overlook.)"
+    narrator_char "(Encyclopedia unlocked: Teaching and Learning Resource Center (TLRC).)"
+    $ persistent.encyclopedia_unlocks.add("tlrc")
+    $ complete_task("visit_tlrc")
+    window hide
+    jump act7_bea_end
 
 ## ============================================================================
 ## ACT 7 COMPLETION — Study Session
