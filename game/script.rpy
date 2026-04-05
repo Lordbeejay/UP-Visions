@@ -48,6 +48,19 @@ label start:
     $ player_map_y = 4600
     $ player_facing = "up"
     jump act5_map
+    ## --- ACT 3 ---
+    scene bg Miagao with fade
+    show text "{size=+6}{color=#ffd700}ACT 3{/color}{/size}\n{color=#ffffff}Social / Exploration{/color}" at truecenter
+    pause 2.0
+    hide text
+
+    $ current_act = 3
+    $ tasks_completed = set()
+    $ player_map_x = 2300
+    $ player_map_y = 3100
+    $ player_facing = "up"
+    jump act3_map
+
 
 ## ============================================================================
 ## ACT 1 MAP — Banwa (Gate / HSU / Admin / Medical)
@@ -386,6 +399,9 @@ label act3_map:
     $ current_map_bg = "maps/NewAd_Office.png"
     $ act3_nodes = [
         MapNode("sir_noel", 2500, 2200, "act3_npc_sir_noel", tooltip="Sir Noel", icon_image="sir_allan.png", locked=False, icon_zoom=0.25),
+        MapNode("Kiosk", 2300, 3100, "npc_mikhaela", "Kiosk (Mikhaela)", False, "#ff99cc", "sarah.png"),
+        MapNode("Path", 2100, 2600, "act3_npc_jaden", "Main Path (Jaden)", False, "#99ccff", "jaden.png"),
+        MapNode("Lover's", 1600, 1800, "npc_caezar", "Lover's Lane", True, "#ccff99", "caezar.png"),
     ]
 
     $ current_task_text = "Talk to Sir Noel about enrollment"
