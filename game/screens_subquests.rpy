@@ -421,66 +421,100 @@ screen sq_quiz_game():
                                 color "#f1debf"
                                 line_spacing 3
 
-                ## Answer buttons
+                ## Answer buttons — scrollable so all choices are reachable
                 frame:
                     background Solid("#0d0406")
                     xfill True
-                    padding (20, 12, 20, 16)
-                    vbox:
-                        spacing 8
+                    padding (20, 12, 20, 4)
 
-                        for _ai in range(len(_answers)):
-                            $ _atxt = _answers[_ai][0]
-                            $ _acor = _answers[_ai][1]
-                            $ _fb   = sq_quiz_state.show_feedback
-                            $ _picked = sq_quiz_state.chosen == _ai
+                    viewport:
+                        id "choices_vp"
+                        xfill True
+                        ysize 240
+                        mousewheel True
+                        draggable True
+                        scrollbars "vertical"
 
-                            if _fb:
-                                if _acor:
-                                    frame:
-                                        xfill True padding (14, 10, 14, 10)
-                                        background Solid("#10b98133")
-                                        hbox:
-                                            spacing 8 yalign 0.5
-                                            text "✓" size 14 color "#10b981" yalign 0.5
-                                            text "[_atxt]" size 14 color "#10b981" yalign 0.5
-                                elif _picked:
-                                    frame:
-                                        xfill True padding (14, 10, 14, 10)
-                                        background Solid("#f8717122")
-                                        hbox:
-                                            spacing 8 yalign 0.5
-                                            text "✗" size 14 color "#f87171" yalign 0.5
-                                            text "[_atxt]" size 14 color "#f87171" yalign 0.5
-                                else:
-                                    frame:
-                                        xfill True padding (14, 10, 14, 10)
-                                        background Solid("#1a0a0e")
-                                        text "[_atxt]" size 14 color "#4a3a3a"
-                            else:
-                                button:
-                                    xfill True padding (14, 10, 14, 10)
-                                    background Solid("#2a1018")
-                                    hover_background Solid("#3c1a28")
-                                    action Function(sq_quiz_state.answer, _ai)
-                                    hbox:
-                                        spacing 8 yalign 0.5
-                                        frame:
-                                            xysize (20, 20) yalign 0.5
-                                            background Solid("#3c1a28")
-                                            text str(_ai + 1) + "." size 11 color "#c89218" xalign 0.5 yalign 0.5
-                                        text "[_atxt]" size 14 color "#f1debf" yalign 0.5
+                        # Add an invisible frame to handle the spacing
+                        frame:
+                            background None
+                            padding (0, 0, 16, 0)  # Adds 16px of padding on the right for the scrollbar
+                            
+                            vbox:
+                                spacing 8
+                                xfill True
+                                # right_margin 12 <--- REMOVE THIS LINE
 
-                        if sq_quiz_state.show_feedback:
-                            null height 4
-                            textbutton ("See Results \u2192" if _sq_cur + 1 >= _sq_total else "Next \u2192"):
-                                xalign 1.0
-                                action Function(sq_quiz_state.advance)
-                                text_size 14
-                                text_color "#ffd700"
-                                background Solid("#5c1a1a")
-                                hover_background Solid("#7c2222")
-                                padding (16, 8, 16, 8)
+                                for _ai in range(len(_answers)):
+                                    $ _atxt   = _answers[_ai][0]
+                                    $ _acor   = _answers[_ai][1]
+                                    $ _fb     = sq_quiz_state.show_feedback
+                                    $ _picked = sq_quiz_state.chosen == _ai
+                                    $ _lbls   = ["A", "B", "C", "D", "E", "F", "G", "H"]
+                                    $ _lbl    = _lbls[_ai] if _ai < len(_lbls) else str(_ai + 1)
+
+                                    if _fb:
+                                        if _acor:
+                                            frame:
+                                                xfill True padding (14, 11, 14, 11)
+                                                background Solid("#10b98133")
+                                                hbox:
+                                                    spacing 10 yalign 0.5
+                                                    frame:
+                                                        xysize (28, 28) yalign 0.5
+                                                        background Solid("#10b981")
+                                                        text "✓" size 13 color "#ffffff" xalign 0.5 yalign 0.5
+                                                    text "[_atxt]" size 14 color "#10b981" yalign 0.5
+                                        elif _picked:
+                                            frame:
+                                                xfill True padding (14, 11, 14, 11)
+                                                background Solid("#f8717133")
+                                                hbox:
+                                                    spacing 10 yalign 0.5
+                                                    frame:
+                                                        xysize (28, 28) yalign 0.5
+                                                        background Solid("#f87171")
+                                                        text "✗" size 13 color "#ffffff" xalign 0.5 yalign 0.5
+                                                    text "[_atxt]" size 14 color "#f87171" yalign 0.5
+                                        else:
+                                            frame:
+                                                xfill True padding (14, 11, 14, 11)
+                                                background Solid("#140810")
+                                                hbox:
+                                                    spacing 10 yalign 0.5
+                                                    frame:
+                                                        xysize (28, 28) yalign 0.5
+                                                        background Solid("#1e1020")
+                                                        text "[_lbl]" size 12 color "#3a2a3a" bold True xalign 0.5 yalign 0.5
+                                                    text "[_atxt]" size 14 color "#3a2a3a" yalign 0.5
+                                    else:
+                                        button:
+                                            xfill True padding (14, 11, 14, 11)
+                                            background Solid("#1e0c18")
+                                            hover_background Solid("#3c1a30")
+                                            action Function(sq_quiz_state.answer, _ai)
+                                            hbox:
+                                                spacing 10 yalign 0.5
+                                                frame:
+                                                    xysize (28, 28) yalign 0.5
+                                                    background Solid("#3c1a28")
+                                                    text "[_lbl]" size 12 color "#c89218" bold True xalign 0.5 yalign 0.5
+                                                text "[_atxt]" size 14 color "#f1debf" yalign 0.5
+
+                ## Next / See Results button — outside the viewport
+                if sq_quiz_state.show_feedback:
+                    frame:
+                        background Solid("#0d0406")
+                        xfill True
+                        padding (20, 4, 20, 16)
+                        textbutton ("See Results \u2192" if _sq_cur + 1 >= _sq_total else "Next \u2192"):
+                            xalign 1.0
+                            action Function(sq_quiz_state.advance)
+                            text_size 14
+                            text_color "#ffd700"
+                            background Solid("#5c1a1a")
+                            hover_background Solid("#7c2222")
+                            padding (18, 10, 18, 10)
 
 
 ## ============================================================================

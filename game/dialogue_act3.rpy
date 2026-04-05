@@ -8,6 +8,7 @@
 ## KEY INFO: Enrollment process, CRS walkthrough, units & schedule
 ## ============================================================================
 label act3_npc_sir_noel:
+    # play music moved to end of previous act
     window show
     sir_noel "Ah, you must be one of the freshmen. Come in, come in."
     sir_noel "I'm Sir Noel, one of the faculty advisers for enrollment. You're here to learn how enrollment works?"
@@ -242,3 +243,5 @@ label npc_caezar_response:
 ## ============================================================================
 ## END OF ACT 3 DIALOGUES
 ## ============================================================================
+stop music fadeout 1.0
+play music "audio/Act4.mp3" fadein 1.0

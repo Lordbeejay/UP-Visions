@@ -5,6 +5,7 @@
 
 ## --- ACT 6 INIT ---
 label act6_start:
+    # play music moved to end of previous act
     $ talked_mika = False
     $ talked_kuya_tomas = False
     $ talked_ate_jenny = False
@@ -583,3 +584,4 @@ label act6_org_fair:
 ## ============================================================================
 ## END OF ACT 6 DIALOGUES
 ## ============================================================================
+play music "audio/Act7.mp3" fadein 1.0

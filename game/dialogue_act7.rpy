@@ -5,6 +5,7 @@
 
 ## --- ACT 7 INIT ---
 label act7_start:
+    # play music moved to end of previous act
     $ talked_ate_rosa = False
     $ talked_kuya_neil = False
     $ talked_prof_santos = False
@@ -505,3 +506,4 @@ label act7_study_session:
 ## ============================================================================
 ## END OF ACT 7 DIALOGUES
 ## ============================================================================
+play music "audio/Act8.mp3" fadein 1.0

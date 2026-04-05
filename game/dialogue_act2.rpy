@@ -1,13 +1,21 @@
+
 ## ============================================================================
 ## ACT 2 DIALOGUES — Entrance → New Admin → Inside New Admin
 ## KEY THEME: Security & Permits, Offices, Office Hours
 ## ============================================================================
+
+label act2:
+    # play music moved to end of Act 1
+    # ...existing code for act2...
+
 
 ## ============================================================================
 ## NPC 1 — ATE BEA (Upperclassman Guide) — at Entrance
 ## KEY INFO: What is BOX 1, Bus schedules, tips
 ## ============================================================================
 label act2_npc_ate_bea:
+    ## Play Act 2 music
+    play music "audio/Something Wrong with my Dog.mp3"
     scene expression "images/maps/Entrance.png"
     window show
     ate_bea "Oh, you look lost. First time sa BOX 1?"
@@ -332,6 +340,7 @@ label act2_reyes_end:
         $ complete_task("complete_flip_card")
         window hide
 
+    play music "audio/Act3.mp3" fadein 1.0
     return
 
 ## ============================================================================

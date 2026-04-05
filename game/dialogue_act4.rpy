@@ -8,6 +8,7 @@
 ## KEY INFO: Point system, curfew, dorm rules, room assignment
 ## ============================================================================
 label act4_npc_dorm_manager:
+    # play music moved to end of previous act
     window show
 
     dorm_mgr "Good afternoon. You're one of the new freshmen?"
@@ -186,3 +187,4 @@ label act4_explore_room:
 ## ============================================================================
 ## END OF ACT 4 DIALOGUES
 ## ============================================================================
+play music "audio/Act5.mp3" fadein 1.0
