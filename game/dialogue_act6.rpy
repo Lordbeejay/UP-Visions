@@ -83,6 +83,12 @@ label act6_mika_end:
     mika "And don't forget — org fair is only this week. Don't miss it!"
     $ talked_mika = True
     $ complete_task("talk_mika")
+    if "sq_org_culture" not in subquests_completed:
+        menu:
+            "★ Before I go — test me on org rules and the OSA.":
+                jump sq_org_culture
+            "(Thanks, Mika!)":
+                pass
     window hide
     return
 
@@ -263,6 +269,12 @@ label act6_jenny_end:
     ate_jenny "And enjoy Freshie Week! It only happens once."
     $ talked_ate_jenny = True
     $ complete_task("talk_ate_jenny")
+    if "sq_upv_events" not in subquests_completed:
+        menu:
+            "★ Quiz me on the UPV campus events calendar.":
+                jump sq_upv_events
+            "(Thanks, Ate Jenny!)":
+                pass
     window hide
     return
 
@@ -457,6 +469,102 @@ label act6_schol_end:
     $ talked_kuya_tomas = True
     $ complete_task("talk_kuya_tomas")
     $ complete_task("visit_scholarship_service")
+    window hide
+    return
+
+## ============================================================================
+## NPC 5 — DAN (Returning from Act 5 — Financial Stress / GCSU Referral)
+## KEY INFO: Financial hardship, GCSU preventive counseling, New Admin scholarship
+## ============================================================================
+label act6_npc_dan:
+    window show
+    narrator_char "(You spot Dan from your Kas 1 class sitting alone on a bench near the CAS corridor. He's staring at his phone — not really looking at anything.)"
+    player_char "Dan? Hey."
+    dan "Oh — hey."
+    player_char "You look rough. What's going on?"
+    dan "I'm fine. It's nothing."
+    player_char "You're sitting alone staring at your phone during Freshie Week. That's not nothing."
+    dan "..."
+    dan "My allowance didn't come in. My parents are dealing with something back home and they couldn't send anything this month."
+    dan "I've got fifty pesos left. I don't know how I'm going to eat, buy printing supplies, pay for the commute back to the dorm..."
+    player_char "Have you talked to anyone about it? The guidance office, maybe?"
+    dan "The guidance office? That's for people who are — I don't know. Mentally falling apart or something."
+    player_char "It's not only for that. Ate Jenny was just telling me the GCSU handles academic stress, financial problems, all of it."
+    player_char "They also connect students to emergency financial assistance."
+    dan "Emergency financial assistance? That's a thing here?"
+    player_char "Apparently. Come on — let's go find out."
+    dan "...You'd come with me?"
+    player_char "You walked me to the HSU in Act 5. I owe you one."
+    jump act6_visit_gcsu_dan
+
+label act6_visit_gcsu_dan:
+    narrator_char "(The Guidance and Counseling Services Unit. A quiet room near the Office of Student Affairs. A small sign on the door: 'GCSU — All sessions are confidential. Walk-ins welcome.')"
+    narrator_char "(Inside: calm lighting, a few chairs, some plants on the windowsill. A counselor looks up from her desk with a steady, welcoming expression.)"
+    guidance_counselor "Good afternoon. Come in — both of you. I'm Ma'am Garcia."
+    guidance_counselor "Please, sit. Take a breath. There's no rush here."
+    dan "Hi, Ma'am. I'm — I'm not sure if this is the right place, but my classmate said—"
+    guidance_counselor "This is exactly the right place. Whatever brought you here is valid."
+    guidance_counselor "Take your time."
+    dan "I'm a first-semester freshman. My allowance from home didn't come in this month. My family is going through something."
+    dan "I have fifty pesos left. I don't know how to get through the next few weeks. And I didn't know who to tell."
+    guidance_counselor "Thank you for saying that out loud. I know it takes courage."
+    guidance_counselor "What you're feeling right now — the stress, the uncertainty, the shame of asking for help — those are real. And you are not alone in feeling them."
+    guidance_counselor "Financial pressure is one of the most common reasons freshmen struggle in their first semester. Most suffer in silence. You didn't. That matters."
+    dan "I kept thinking I should be able to handle it myself."
+    guidance_counselor "That belief — that you have to manage everything alone — is one we want to gently work through today."
+    guidance_counselor "Asking for help is not weakness. It is one of the wisest things a person can do."
+    guidance_counselor "Let's start simply. Can you take a slow breath with me?"
+    guidance_counselor "In... hold... and out."
+    narrator_char "(A quiet moment passes. You watch Dan breathe. Something in his posture settles — just slightly.)"
+    guidance_counselor "Good. Let me tell you what the GCSU can offer."
+    guidance_counselor "We provide preventive counseling — sessions like this one, designed to help students before a difficulty becomes a crisis."
+    guidance_counselor "We also do individual follow-up sessions, group support, stress management workshops, and crisis intervention when things become serious."
+    guidance_counselor "Today I want to do two things with you."
+    guidance_counselor "First — remind you that this situation is temporary, and it says nothing about your capability."
+    guidance_counselor "Second — connect you with the office that can help you get through this month."
+    dan "There's an office for that?"
+    guidance_counselor "Yes. The Scholarship Service at the New Administration Building."
+    guidance_counselor "They handle emergency financial assistance — a Student Emergency Fund that can cover meals, photocopying, and basic transport while you stabilize."
+    guidance_counselor "They also process STFAP re-bracketing. If your family's financial situation changed, you can request a reassessment — which may lower your tuition next semester."
+    guidance_counselor "And they can show you scholarship programs with monthly stipends you may still qualify to apply for."
+    player_char "So there's actually quite a lot available."
+    guidance_counselor "More than most students know about. That's exactly why this referral system exists."
+    guidance_counselor "I'm writing you a referral letter to the Scholarship Service now. It helps them prioritize urgent cases."
+    guidance_counselor "Bring it to the New Admin Building. Ask for Kuya Tomas. Tell him I sent you."
+    dan "I... thank you, Ma'am. I really didn't think anyone here would care about something like this."
+    guidance_counselor "We care. That is what this office is for."
+    guidance_counselor "Come back and see me, even after this is resolved, Dan. Adjusting to college life is hard — with or without financial pressure."
+    guidance_counselor "My door is always open."
+    narrator_char "(Ma'am Garcia seals a referral envelope and hands it to Dan along with a small pamphlet: 'GCSU — Because You Matter.')"
+    narrator_char "(Dan holds it carefully. Like it means something. Because it does.)"
+    jump act6_dan_new_admin
+
+label act6_dan_new_admin:
+    narrator_char "(You walk with Dan to the New Administration Building. Kuya Tomas is at his desk. He reads the referral letter, sets it down, and opens a folder.)"
+    kuya_tomas "Referral from Ma'am Garcia. Sit down."
+    kuya_tomas "Okay — let's talk about what we can do."
+    kuya_tomas "First — the Student Emergency Assistance Fund. This covers immediate needs: meals, photocopying, basic transport. Up to ₱1,500, processed in 24 to 48 hours."
+    kuya_tomas "I'll flag your case as urgent. You should have something by end of week."
+    dan "That would really help."
+    kuya_tomas "Second — STFAP re-bracketing. If your family's financial situation changed this semester, we reassess your bracket."
+    kuya_tomas "A lower bracket means lower tuition. Some brackets include a monthly living allowance — ₱1,000 to ₱4,000 depending on your assessment."
+    kuya_tomas "Third — here's a list of scholarship programs with applications open this month."
+    narrator_char "(He slides a printed sheet across the desk. Dan scans it. His eyes stop at the stipend amounts.)"
+    dan "Some of these give ₱3,000 a month?"
+    kuya_tomas "Some give more. The key is applying on time. Deadlines are strict — one day late means disqualification."
+    kuya_tomas "Fill out this form. Student number, contact details, and a brief description of your situation. We'll start the emergency fund process today."
+    player_char "Is there anything else he should know?"
+    kuya_tomas "Keep a folder — grades, income certificate, all your documents. When scholarship season opens, you grab it and go. No scrambling."
+    kuya_tomas "And check this bulletin board every week. New scholarship announcements go up every Monday."
+    kuya_tomas "You're not the first student in this chair. You won't be the last."
+    kuya_tomas "UP has been doing this for over a hundred years. We don't let students fall through the cracks."
+    narrator_char "(Dan fills out the form. His hands are steady.)"
+    narrator_char "(An hour ago he was on a bench with fifty pesos and no path forward.)"
+    narrator_char "(Now he has an emergency fund in motion, a scholarship list, and a follow-up session at the GCSU.)"
+    player_char "(This is what a support system looks like when it actually works.)"
+    narrator_char "(Encyclopedia unlocked: GCSU — Guidance and Counseling Services Unit.)"
+    $ persistent.encyclopedia_unlocks.add("gcsu")
+    $ complete_task("talk_dan_gcsu")
     window hide
     return
 
