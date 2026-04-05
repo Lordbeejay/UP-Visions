@@ -22,13 +22,12 @@ default gc_open_count = 0
 default collected_items = []
 default quiz_score = 0
 
-
 label start:
 
     ## Stop the main menu theme (the one from options.rpy)
     stop music fadeout 1.0
 
-    ## START ACT 1 MUSIC HERE
+    ## You can change this to an Act 5 specific track if you have one
     play music "audio/Act1.mp3" fadein 1.0
 
     ## Hide the dialogue window for map exploration
@@ -44,13 +43,20 @@ label start:
 
     call screen act_transition("MIAGAO FRESHMAN GUIDE", "A point-and-click adventure\nNavigate your first day at UP Visayas", mode="welcome")
 
-    call screen act_transition("ACT 1", "Welcome to Banwa!", "intro")
-    scene expression "images/maps/banwa.png"
-    $ current_act = 1
+    # Updated to Act 5 transition
+    call screen act_transition("ACT 5", "First Day of Classes", "intro") 
+    
+    # Updated to Act 5 background
+    scene expression "ui/CL3.png" 
+    
+    $ current_act = 5
     $ tasks_completed = set()
-    $ player_map_x = 2500
-    $ player_map_y = 3200
+    
+    # Updated to Act 5 starting coordinates
+    $ player_map_x = 2500 
+    $ player_map_y = 2600
     $ player_facing = "up"
+    
     $ inventory_unlocked = True
     $ persistent.encyclopedia_unlocks = set([entry_id for entry_id in all_entries])
 
@@ -58,8 +64,9 @@ label start:
     call screen notebook_intro_screen()
     ## ────────────────────────────────────────────────────────────────────
 
-    jump act1_map
-
+    # Jump directly to Act 5
+    jump act5_map
+    
 ## ============================================================================
 ## ACT 1 MAP — Banwa (Gate / HSU / Admin / Medical)
 ## ============================================================================
