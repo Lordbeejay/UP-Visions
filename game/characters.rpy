@@ -4,29 +4,61 @@
 
 ## --- NPC Character Definitions ---
 ## Color palette: warm earth tones matching Miagao pixel art
-define player_char = Character("You", color="#88ccff", what_color="#ffffff")
-define guard = Character("Manong Guard", color="#c8ffc8", what_color="#ffffff")
-define driver = Character("Manong Driver", color="#ffd700", what_color="#ffffff")
-define manongjosh = Character("Local", color="#ff9999", what_color="#ffffff")
-define physician = Character("School Physician", color="#99ccff", what_color="#ffffff")
-define dentist = Character("School Dentist", color="#99ffcc", what_color="#ffffff")
-define sir_ruel = Character("Sir Ruel", color="#ff8866", what_color="#ffffff")
-define ms_santos = Character("Ms. Santos", color="#cc99ff", what_color="#ffffff")
-define sarah = Character("Sarah", color="#ffcc99", what_color="#ffffff")
-define mikhaela = Character("Mikhaela", color="#ff99cc", what_color="#ffffff")
-define jaden = Character("Jaden", color="#99ccff", what_color="#ffffff")
-define caezar = Character("Caezar", color="#ccff99", what_color="#ffffff")
-define dorm_mgr = Character("Dorm Manager", color="#ffaa77", what_color="#ffffff")
-define narrator_char = Character(None, what_color="#cccccc")
-define aleng_maria = Character("Aleng Maria", color="#ffaa88", what_color="#ffffff")
-define joseph_driver = Character("Joseph", color="#ffd700", what_color="#ffffff")
-define manong_chris = Character("Manong Chris", color="#aaddff", what_color="#ffffff")
-define manong_josh = Character("Manong Josh", color="#ffd7a0", what_color="#ffffff")
-define joseph = Character("Joseph", color="#ffd700", what_color="#ffffff")
-define ate_bea = Character("ate bea", color="#ffd700", what_color="#ffffff")
-define kuya_mark = Character("kuya mark", color="#aaddff", what_color="#ffffff")
-define maam_reyes = Character("maam reyes", color="#ffd7a0", what_color="#ffffff")
-define sir_allan = Character("sir allan", color="#ffd700", what_color="#ffffff")
+define player_char = Character("You", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define guard = Character("Manong Guard", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define driver = Character("Manong Driver", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define manongjosh = Character("Local", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define physician = Character("School Physician", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define dentist = Character("School Dentist", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define sir_ruel = Character("Sir Ruel", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define ms_santos = Character("Ms. Santos", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define sarah = Character("Sarah", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define mikhaela = Character("Sarah", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define jaden = Character("Jaden", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define caezar = Character("Caezar", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define dorm_mgr = Character("Dorm Manager", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define narrator_char = Character(None, what_color="#cccccc", what_sound="audio/click.wav")
+define aleng_maria = Character("Aleng Maria", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define joseph_driver = Character("Joseph", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define manong_chris = Character("Manong Chris", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define manong_josh = Character("Manong Josh", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define joseph = Character("Joseph", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define ate_bea = Character("ate bea", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define kuya_mark = Character("kuya mark", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define maam_reyes = Character("maam reyes", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define sir_allan = Character("sir allan", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define sir_noel = Character("Sir Noel", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+
+## --- Act 5 Characters ---
+define prof_lena = Character("Prof. Lena", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define kuya_rico = Character("Kuya Rico", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define ate_grace = Character("Ate Grace", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define dan = Character("Dan", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define ria = Character("Ria", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define hsu_nurse = Character("Nurse Santos", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+
+## --- Act 6 Characters ---
+define mika = Character("Mika", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define kuya_tomas = Character("Kuya Tomas", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define ate_jenny = Character("Ate Jenny", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define coach_ramon = Character("Coach Ramon", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+
+## --- Act 7 Characters ---
+define ate_rosa = Character("Ate Rosa", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define kuya_neil = Character("Kuya Neil", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define prof_santos = Character("Prof. Santos", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define bea = Character("Bea", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+
+## --- Act 8 Characters ---
+define ate_linda = Character("Ate Linda", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define nanay_elena = Character("Nanay Elena", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define prof_reyes = Character("Prof. Reyes", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+
+## --- Support Services Characters ---
+define guidance_counselor = Character("Ma'am Garcia", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define tlrc_coord = Character("TLRC Coordinator", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define peer_tutor = Character("Peer Tutor", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+
 ## --- NPC Sprite Images ---
 ## Ren'Py auto-names files in subdirectories with a space prefix (e.g. "npcs manong_guard").
 ## We define them explicitly here so `show manong_guard` works in dialogue scenes.
@@ -37,22 +69,51 @@ image dentist = "images/npcs/dentist.png"
 image sir_ruel = "images/npcs/sir_ruel.png"
 image ms_santos = "images/npcs/ms_santos.png"
 image sarah = "images/npcs/sarah.png"
-image mikhaela = "images/npcs/mikhaela.png"
+image mikhaela = "images/npcs/sarah.png"
 image jaden = "images/npcs/jaden.png"
 image caezar = "images/npcs/caezar.png"
 image dorm_mgr = "images/npcs/dorm_mgr.png"
 image aleng_maria_sprite = "images/npcs/alengmaria.png"
 image manong_josh = "images/npcs/manongjosh.png"      ## already have file, just add this
-image manong_chris = "images/npcs/manong_chris.png"
-image joseph_driver = "images/npcs/joseph_driver.png"
+image manong_chris = "images/npcs/manongchris.png"
+image joseph_driver = "images/npcs/manong_driver.png"
 image ate_bea = "images/npcs/ate_bea.png"
 image kuya_mark = "images/npcs/kuya_mark.png"
 image maam_reyes = "images/npcs/maam_reyes.png"
 image sir_allan = "images/npcs/sir_allan.png"
+image sir_noel = "images/npcs/sir_allan.png"  ## placeholder — reuses sir_allan portrait
+
+## --- Act 5 NPC Sprites ---
+image prof_lena_sprite = "images/npcs/prof_lena.png"
+image kuya_rico_sprite = "images/npcs/kuya_rico.png"
+image ate_grace_sprite = "images/npcs/ate_grace.png"
+image classmate_dan_sprite = "images/npcs/classmate_dan.png"
+image ria_sprite = "images/npcs/ria.png"
+image hsu_nurse_sprite = "images/npcs/hsu_nurse.png"
+
+## --- Act 6 NPC Sprites ---
+image mika_sprite = "images/npcs/mika.png"
+image kuya_tomas_sprite = "images/npcs/kuya_tomas.png"
+image ate_jenny_sprite = "images/npcs/ate_jenny.png"
+image coach_ramon_sprite = "images/npcs/coach_ramon.png"
+
+## --- Act 7 NPC Sprites ---
+image ate_rosa_sprite = "images/npcs/ate_rosa.png"
+image kuya_neil_sprite = "images/npcs/kuya_neil.png"
+image prof_santos_sprite = "images/npcs/prof_santos.png"
+image classmate_bea_sprite = "images/npcs/classmate_bea.png"
+
+## --- Act 8 NPC Sprites ---
+image jaden_sprite = "images/npcs/jaden.png"
+image ate_linda_sprite = "images/npcs/ate_linda.png"
+image nanay_elena_sprite = "images/npcs/nanay_elena.png"
+image prof_reyes_sprite = "images/npcs/prof_reyes.png"
+
 ## --- Scene Backgrounds ---
 image bg gate_entrance = Solid("#2a3a2a")
 image bg miagao_campus = "images/ui/Entrance.png"
 image bg Miagao = "images/ui/UI_Miagao.png"  
+image bg act3_dialogue = "images/ui/act3_dialogue_bg.png"
 ## --- Player Sprite Images ---
 ## These use spritesheets from the Unity project's Player1 folder.
 ## Each spritesheet is a horizontal strip of 8 frames, 48x48 pixels each.

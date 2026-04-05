@@ -66,7 +66,7 @@ define config.has_voice = True
 ## the player is at the main menu. This file will continue playing into the
 ## game, until it is stopped or another file is played.
 
-# define config.main_menu_music = "main-menu-theme.ogg"
+define config.main_menu_music = "audio/main_menu.mp3"
 
 
 ## Transitions #################################################################
@@ -156,6 +156,20 @@ define config.save_directory = "TAPOSON1week-1772072475"
 
 define config.window_icon = "gui/window_icon.png"
 
+
+## Encyclopedia ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+init python:
+    def hyper_encyclopedia(link_id):
+        # Automatically unlock the entry if the player clicks it
+        if link_id in all_entries:
+            persistent.encyclopedia_unlocks.add(link_id)
+            # Show the screen with that entry selected
+            renpy.show_screen("encyclopedia", current_ency_entry=all_entries[link_id])
+            renpy.restart_interaction()
+
+    # Link the tag {a=ency:ID} to this function
+    config.hyperlink_handlers["ency"] = hyper_encyclopedia
 
 ## Build configuration #########################################################
 ##
