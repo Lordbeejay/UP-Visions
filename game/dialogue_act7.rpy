@@ -239,7 +239,22 @@ label act7_santos_end:
                 jump sq_up_mandates
             "(Thank you, Prof. Santos.)":
                 pass
-    window hide
+    # Randomize star quiz menu (if more options are added in the future)
+    # Example for future expansion:
+    # python:
+    #     import random
+    #     _star_choices = [
+    #         ("★ One more thing — quiz me on UP's three mandates.", "sq_up_mandates"),
+    #         ("(Thank you, Prof. Santos.)", None)
+    #     ]
+    #     random.shuffle(_star_choices)
+    # menu:
+    #     for _text, _jump in _star_choices:
+    #         _text:
+    #             if _jump is not None:
+    #                 jump expression _jump
+    #             else:
+    #                 pass
     return
 
 ## ============================================================================

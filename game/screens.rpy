@@ -3982,8 +3982,8 @@ screen item_pickup_screen(item):
                                         padding (0, 0, 0, 0)
                                     text "\u2605  INFO ITEM COLLECTED" size 9 color "#c89218" bold True yalign 0.5
 
-                                text item.label size 13 color "#ffd700" bold True
-                                text item.short size 11 color "#f1debf88"
+                                text item.name size 13 color "#ffd700" bold True
+                                text item.desc size 11 color "#f1debf88"
 
 transform item_pickup_anim:
     alpha 0.0 yoffset -16
@@ -4121,11 +4121,11 @@ screen dictionary_screen():
                                                                 text _itm.icon size 16 xalign 0.5 yalign 0.5
                                                             vbox:
                                                                 spacing 2
-                                                                text _itm.label size 14 color "#ffd700" bold True
-                                                                text "— " + _itm.source size 10 color "#c8921888" italic True
+                                                                text _itm.name size 14 color "#ffd700" bold True
+                                                                text "— " + _itm.act size 10 color "#c8921888" italic True
 
                                                         ## Definition
-                                                        text _itm.short size 12 color "#f1debf" line_spacing 3
+                                                        text _itm.desc size 12 color "#f1debf" line_spacing 3
 
                                                         ## Bottom rule
                                                         null height 4
@@ -4194,17 +4194,61 @@ screen encyclopedia_screen():
     add Solid("#0d0406") alpha 0.92
 
     python:
-        _enc_order = ["Jaden", "Manong Josh", "Aleng Maria", "Manong Chris", "Tol Joseph"]
-        _enc_has   = [s for s in _enc_order if any(i.source == s for i in collected_items)]
-        _enc_extra = [s for s in dict.fromkeys(i.source for i in collected_items) if s not in _enc_order]
+        _enc_order = [
+            ## Act 1 — Arrival in Miagao
+            "Jaden", "Manong Josh", "Aleng Maria", "Manong Chris", "Tol Joseph",
+            ## Act 2 — Entering the University
+            "Ate Bea", "Kuya Mark", "Ma'am Reyes",
+            ## Act 3 — Enrollment
+            "Sir Noel",
+            ## Act 4 — Dorm Life
+            "Dorm Manager",
+            ## Act 5 — First Day of Classes
+            "Prof. Lena", "Kuya Rico", "Ate Grace", "Dan",
+            ## Act 6 — Org Fair & Campus Life
+            "Mika", "Kuya Tomas", "Ate Jenny", "Coach Ramon",
+            ## Act 7 — Library & Academic Resources
+            "Ate Rosa", "Kuya Neil", "Prof. Santos", "Bea",
+            ## Act 8 — Finding Your Place
+            "Nanay Elena", "Prof. Reyes",
+        ]
+        _enc_has   = [s for s in _enc_order if any(i.act == s for i in collected_items)]
+        _enc_extra = [s for s in dict.fromkeys(i.act for i in collected_items) if s not in _enc_order]
         _enc_srcs  = _enc_has + _enc_extra
 
         _enc_meta = {
+            ## Act 1
             "Jaden":        ("🎒", "Fellow freshie from Iloilo City with UPV tips."),
             "Manong Josh":  ("🏘️", "Long-time Miagao local who knows every corner."),
             "Aleng Maria":  ("🍚", "Carinderia owner near the UPV gate — feeds half the campus."),
             "Manong Chris": ("🙏", "Born-and-raised Miagaoanon fluent in Kinaray-a."),
             "Tol Joseph":   ("🛺", "The tricycle driver who knows every route and fare."),
+            ## Act 2
+            "Ate Bea":      ("🎓", "Senior student volunteer at the BOX 1 entrance — freshie lifesaver."),
+            "Kuya Mark":    ("🛡️", "Campus security officer who knows every rule on campus."),
+            "Ma'am Reyes":  ("📋", "Administrative staff at New Admin who handles office directory queries."),
+            ## Act 3
+            "Sir Noel":     ("💻", "Faculty enrollment adviser who walks freshmen through CRS and scheduling."),
+            ## Act 4
+            "Dorm Manager": ("🏠", "The dormitory manager who handles check-in, rules, and room assignments."),
+            ## Act 5
+            "Prof. Lena":   ("📊", "Professor who explains the UP grading system on the first day of class."),
+            "Kuya Rico":    ("📅", "Upperclassman who knows the MAO policy and campus building layout."),
+            "Ate Grace":    ("⚖️", "OSA student assistant knowledgeable about student rights."),
+            "Dan":          ("📚", "Classmate and study-tips enthusiast with a surprisingly organized planner."),
+            ## Act 6
+            "Mika":         ("🌿", "Org leader at the fair who explains org culture and anti-hazing laws."),
+            "Kuya Tomas":   ("💰", "Scholarship upperclassman with practical advice on grants and STFAP."),
+            "Ate Jenny":    ("🗓️", "OSA student rep who knows every UPV campus event by heart."),
+            "Coach Ramon":  ("🏅", "Sports coordinator and long-time UPV athletics coach."),
+            ## Act 7
+            "Ate Rosa":     ("📖", "Friendly librarian at the Diwata Library — knows every resource on campus."),
+            "Kuya Neil":    ("🖥️", "Computer lab technician who manages student access and printing."),
+            "Prof. Santos": ("🔬", "Research professor who explains UP's three mandates and research culture."),
+            "Bea":          ("📝", "Classmate and APA citation guru — already on her second coffee of the day."),
+            ## Act 8
+            "Nanay Elena":  ("🎒", "Veteran dormer who gives freshmen the real survival kit list."),
+            "Prof. Reyes":  ("🏅", "Professor who embodies the meaning of UP's Honor and Excellence motto."),
         }
 
     ## Outer glow border
@@ -4304,7 +4348,7 @@ screen encyclopedia_screen():
                                         for _esrc in _enc_srcs:
                                             python:
                                                 _emeta  = _enc_meta.get(_esrc, ("📄", "A local source."))
-                                                _ecount = len([i for i in collected_items if i.source == _esrc])
+                                                _ecount = len([i for i in collected_items if i.act == _esrc])
                                                 _eword  = "entry" if _ecount == 1 else "entries"
                                                 _eact   = (enc_selected == _esrc)
 
@@ -4369,7 +4413,7 @@ screen encyclopedia_screen():
 
                             else:
                                 python:
-                                    _eitems  = [i for i in collected_items if i.source == enc_selected]
+                                    _eitems  = [i for i in collected_items if i.act == enc_selected]
                                     _echmeta = _enc_meta.get(enc_selected, ("📄", "Information gathered from a local."))
 
                                 vbox:
@@ -4424,13 +4468,13 @@ screen encyclopedia_screen():
                                                                 xysize (30, 30) yalign 0.5
                                                                 background Solid("#3c1a28")
                                                                 text _eitem.icon size 15 xalign 0.5 yalign 0.5
-                                                            text _eitem.label size 15 color "#ffd700" bold True yalign 0.5
+                                                            text _eitem.name size 15 color "#ffd700" bold True yalign 0.5
 
                                                         ## Short desc
-                                                        text _eitem.short size 13 color "#f1debf" line_spacing 3
+                                                        text _eitem.desc size 13 color "#f1debf" line_spacing 3
 
                                                         ## Long desc (if different)
-                                                        if _eitem.full and _eitem.full != _eitem.short:
+                                                        if _eitem.full and _eitem.full != _eitem.desc:
                                                             frame:
                                                                 background Solid("#2a0e0e")
                                                                 xfill True
@@ -4794,66 +4838,78 @@ screen quiz_inner(state):
                                         outlines [(1, "#1a0a0e", 0, 0)]
 
                                 ## Evidence grid
-                                vpgrid:
-                                    cols 2
+                                viewport:
+                                    id "evidence_vp"
                                     xfill True
-                                    spacing 6
+                                    ysize 268
+                                    mousewheel True
+                                    draggable True
+                                    scrollbars "vertical"
 
-                                    for item in items:
-                                        python:
-                                            is_chosen  = (state["chosen"] == item.item_id)
-                                            card_bg    = "#2e1810" if is_chosen else "#130609"
-                                            tab_col    = "#ffd700" if is_chosen else "#f6d79d33"
-                                            lbl_col    = "#ffd700" if is_chosen else "#f1debf"
-                                            src_col    = "#f6d79daa" if is_chosen else "#f6d79d44"
+                                    frame:
+                                        background None
+                                        padding (0, 0, 16, 0)
 
-                                        button:
-                                            background card_bg
-                                            hover_background "#1e0c10"
+                                        vpgrid:
+                                            cols 2
                                             xfill True
-                                            padding (0, 0, 0, 0)
-                                            if state["feedback"] is None:
-                                                action SetDict(state, "chosen", item.item_id)
-                                            else:
-                                                action NullAction()
+                                            spacing 6
 
-                                            hbox:
-                                                spacing 0
-                                                xfill True
+                                            for item in items:
+                                                python:
+                                                    is_chosen  = (state["chosen"] == item.item_id)
+                                                    card_bg    = "#2e1810" if is_chosen else "#130609"
+                                                    tab_col    = "#ffd700" if is_chosen else "#f6d79d33"
+                                                    lbl_col    = "#ffd700" if is_chosen else "#f1debf"
+                                                    src_col    = "#f6d79daa" if is_chosen else "#f6d79d44"
 
-                                                ## Selection tab
-                                                frame:
-                                                    xsize 3
-                                                    ysize 56
-                                                    background Solid(tab_col)
-                                                    padding (0,0,0,0)
-
-                                                frame:
+                                                button:
+                                                    background card_bg
+                                                    hover_background "#1e0c10"
                                                     xfill True
-                                                    padding (10, 8, 10, 8)
-                                                    background Solid("#00000000")
+                                                    padding (0, 0, 0, 0)
+                                                    if state["feedback"] is None:
+                                                        action SetDict(state, "chosen", item.item_id)
+                                                    else:
+                                                        action NullAction()
 
-                                                    vbox:
-                                                        spacing 2
+                                                    hbox:
+                                                        spacing 0
                                                         xfill True
 
-                                                        hbox:
-                                                            spacing 6
-                                                            yalign 0.5
-                                                            text item.icon:
-                                                                size 16
-                                                                yalign 0.5
-                                                            text item.label:
-                                                                size 12
-                                                                color lbl_col
-                                                                bold True
-                                                                outlines [(1, "#1a0a0e", 0, 0)]
-                                                                yalign 0.5
+                                                        ## Selection tab
+                                                        frame:
+                                                            xsize 3
+                                                            ysize 56
+                                                            background Solid(tab_col)
+                                                            padding (0,0,0,0)
 
-                                                        text item.short:
-                                                            size 9
-                                                            color src_col
-                                                            line_spacing 2
+                                                        frame:
+                                                            xfill True
+                                                            padding (10, 8, 10, 8)
+                                                            background Solid("#00000000")
+
+                                                            vbox:
+                                                                spacing 2
+                                                                xfill True
+
+                                                                hbox:
+                                                                    spacing 6
+                                                                    yalign 0.5
+                                                                    text item.icon:
+                                                                        size 16
+                                                                        yalign 0.5
+                                                                    text item.name:
+                                                                        size 12
+                                                                        color lbl_col
+                                                                        bold True
+                                                                        outlines [(1, "#1a0a0e", 0, 0)]
+                                                                        yalign 0.5
+
+                                                                text item.desc:
+                                                                    size 9
+                                                                    color src_col
+                                                                    line_spacing 2
 
                     ## Gold rule
                     frame:

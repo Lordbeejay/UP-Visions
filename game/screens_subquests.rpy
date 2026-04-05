@@ -28,10 +28,14 @@ init python:
             self.show_feedback = False
 
         def setup(self, title, subtitle, icon, questions):
+            import random
             self.title = title
             self.subtitle = subtitle
             self.icon = icon
-            self.questions = questions
+            self.questions = [
+                (q[0], random.sample(q[1], len(q[1])))
+                for q in questions
+            ]
             self.current_q = 0
             self.score = 0
             self.done = False
@@ -53,6 +57,11 @@ init python:
             self.show_feedback = True
 
         def retry(self):
+            import random
+            self.questions = [
+                (q[0], random.sample(q[1], len(q[1])))
+                for q in self.questions
+            ]
             self.current_q = 0
             self.score = 0
             self.done = False

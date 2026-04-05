@@ -703,10 +703,31 @@ label walk_to_node(target_node, map_bg=None, nodes=None, player_zoom=2.5):
         $ map_bg = current_map_bg
 
     ## Show the map background so it stays visible during the walk animation
-    show expression ("images/" + map_bg) as walk_map_bg:
-        xalign 0.5
-        yalign 0.5
-        zoom 1.0
+    # Use map_scale=0.5 for Act 5 CL3, otherwise default to 1.0
+    python:
+        _map_scale = 1.0
+        _use_black_bg = False
+        if map_bg == "maps/CL3.png":
+            _map_scale = 0.5
+            _use_black_bg = True
+    if _use_black_bg:
+        # Show black background, then a white border, then the CL3 photo on top
+        show expression Solid("#000000") as walk_map_bg_bg:
+            xalign 0.5
+            yalign 0.5
+        show expression Frame(Solid("#ffffff"), 4, 4) as walk_map_bg:
+            xalign 0.5
+            yalign 0.5
+        show expression ("images/" + map_bg) as walk_map_bg:
+            xalign 0.5
+            yalign 0.5
+            zoom _map_scale
+        
+    else:
+        show expression ("images/" + map_bg) as walk_map_bg:
+            xalign 0.5
+            yalign 0.5
+            zoom _map_scale
 
     if nodes is not None:
         show screen map_nodes_overlay(nodes)
