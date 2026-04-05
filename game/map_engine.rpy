@@ -237,7 +237,7 @@ init python:
 ## MAP SCREEN
 ## ============================================================================
 
-screen map_screen(map_bg, nodes, task_text="", map_scale=1.0):
+screen map_screen(map_bg, nodes, task_text="", map_scale=1.0, player_zoom=2.5):
 
     predict False
 
@@ -333,7 +333,7 @@ screen map_screen(map_bg, nodes, task_text="", map_scale=1.0):
     add ("player_idle_" + player_facing):
         xpos _px
         ypos _py
-        zoom 2.5
+        zoom player_zoom
         xanchor 0.5
         yanchor 0.5
 
@@ -540,7 +540,7 @@ screen map_nodes_overlay(nodes):
 ## WALK LABEL
 ## ============================================================================
 
-label walk_to_node(target_node, map_bg=None, nodes=None):
+label walk_to_node(target_node, map_bg=None, nodes=None, player_zoom=2.5):
     ## Use the global current_map_bg if no explicit map_bg is passed
     if map_bg is None:
         $ map_bg = current_map_bg
@@ -578,7 +578,7 @@ label walk_to_node(target_node, map_bg=None, nodes=None):
 
             show expression ("player_walk_" + _dir) as player_sprite:
                 pos (_sx, _sy)
-                zoom 2.5
+                zoom player_zoom
                 xanchor 0.5
                 yanchor 0.5
                 linear _dur pos (_ex, _ey)

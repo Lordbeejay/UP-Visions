@@ -232,6 +232,12 @@ label act7_santos_end:
     prof_santos "Don't be a stranger."
     $ talked_prof_santos = True
     $ complete_task("talk_prof_santos")
+    if "sq_up_mandates" not in subquests_completed:
+        menu:
+            "★ One more thing — quiz me on UP's three mandates.":
+                jump sq_up_mandates
+            "(Thank you, Prof. Santos.)":
+                pass
     window hide
     return
 
@@ -335,6 +341,12 @@ label act7_bea_end:
     bea "Together, we survive!"
     $ talked_classmate_bea = True
     $ complete_task("talk_classmate_bea")
+    if "sq_apa_challenge" not in subquests_completed:
+        menu:
+            "★ Actually — test me on APA citation format first.":
+                jump sq_apa_challenge
+            "(See you Tuesday!)":
+                pass
     window hide
     return
 

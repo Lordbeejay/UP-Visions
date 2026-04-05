@@ -80,6 +80,12 @@ label act8_jaden_end:
     jaden "See you in class Monday!"
     $ talked_jaden_act8 = True
     $ complete_task("talk_jaden_act8")
+    if "sq_upv_heritage" not in subquests_completed:
+        menu:
+            "★ Before you go — test me on UPV history.":
+                jump sq_upv_heritage
+            "(See you Monday!)":
+                pass
     window hide
     return
 
@@ -313,6 +319,12 @@ label act8_reyes_end:
     prof_reyes "Welcome to UP Visayas. You belong here."
     $ talked_prof_reyes = True
     $ complete_task("talk_prof_reyes")
+    if "sq_honor_excellence" not in subquests_completed:
+        menu:
+            "★ One final challenge — quiz me on Honor and Excellence.":
+                jump sq_honor_excellence
+            "(Thank you, Prof. Reyes.)":
+                pass
     window hide
     return
 

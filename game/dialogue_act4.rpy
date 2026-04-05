@@ -151,7 +151,7 @@ label act4_dorm_key:
 ## ROOM EXPLORATION — Enter the dorm room
 ## ============================================================================
 label act4_explore_room:
-    scene expression "images/ui/dormRoom.png" with fade
+    scene expression "images/maps/Dorm_Room.png" with fade
     window show
 
     narrator_char "(You open the door to Room 207.)"

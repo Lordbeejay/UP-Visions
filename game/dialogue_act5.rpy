@@ -80,6 +80,12 @@ label act5_lena_end:
     prof_lena "Class starts properly next meeting. Read Chapters 1 through 3 of Agoncillo. No excuses."
     $ talked_prof_lena = True
     $ complete_task("talk_prof_lena")
+    if "sq_grade_mastery" not in subquests_completed:
+        menu:
+            "★ Can you show me how the UP grading system actually works?":
+                jump sq_grade_mastery
+            "(Got it, see you next class.)":
+                pass
     window hide
     return
 
@@ -156,6 +162,12 @@ label act5_rico_end:
     kuya_rico "If you get lost again, ask any upperclassman. We don't bite. Usually."
     $ talked_kuya_rico = True
     $ complete_task("talk_kuya_rico")
+    if "sq_absence_policy" not in subquests_completed:
+        menu:
+            "★ One more thing — quiz me on the absence policy.":
+                jump sq_absence_policy
+            "(Thanks, Kuya.)":
+                pass
     window hide
     return
 
@@ -294,15 +306,12 @@ label act5_dan_study_spots:
     jump act5_dan_end
 
 label act5_dan_hsu:
-    dan "Oh man, that actually happened to me on the second day."
-    dan "I had a headache — probably from the heat and not drinking enough water."
-    dan "An upperclassman told me to go to the HSU — the Health Services Unit."
-    dan "It's the campus clinic near the admin area. They gave me paracetamol and let me rest for an hour."
-    dan "Free of charge. You just show your student ID."
-    dan "They have a doctor and a dentist. Consultations, first aid, basic checkups — all free."
-    dan "If it's serious, they refer you to the district hospital in Miagao or to Western Visayas Medical Center."
-    player_char "That's reassuring. Maybe I should stop by and find out where it actually is."
-    dan "Good idea! I'll walk you there after this — I want to restock my paracetamol anyway."
+    dan "Oh — the HSU. Health Services Unit. I heard about it from a senior during orientation."
+    dan "It's the campus clinic near the admin area. Doctor and dentist on duty, all free for students."
+    dan "Consultations, first aid, basic checkups, dental services — you just show your student ID."
+    dan "If it's serious, they refer you to the district hospital in Miagao or Western Visayas Medical Center in Iloilo."
+    player_char "That's good to know. Maybe we should find out exactly where it is."
+    dan "Good idea — better to know before you actually need it. Let's go check it out."
     menu:
         "(Visit the HSU with Dan right now.)":
             jump act5_visit_hsu

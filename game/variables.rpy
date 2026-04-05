@@ -18,7 +18,7 @@ define ACT4_TASKS = {"talk_dorm_manager", "explore_dorm_room", "complete_room_se
 
 ## --- Acts 5–8 Task Requirements ---
 define ACT5_TASKS = {"talk_prof_lena", "talk_kuya_rico", "talk_ate_grace", "talk_classmate_dan", "attend_first_class", "visit_hsu"}
-define ACT6_TASKS = {"talk_mika", "talk_kuya_tomas", "talk_ate_jenny", "talk_coach_ramon", "visit_org_fair", "visit_scholarship_service"}
+define ACT6_TASKS = {"talk_mika", "talk_kuya_tomas", "talk_ate_jenny", "talk_coach_ramon", "talk_dan_gcsu", "visit_org_fair", "visit_scholarship_service"}
 define ACT7_TASKS = {"talk_ate_rosa", "talk_kuya_neil", "talk_prof_santos", "talk_classmate_bea", "attend_study_session", "visit_tlrc"}
 define ACT8_TASKS = {"talk_jaden_act8", "talk_ate_linda", "talk_nanay_elena", "talk_prof_reyes", "end_of_first_week", "visit_gcsu"}
 
@@ -111,6 +111,7 @@ define TASK_LIST_TEXT = {
     "talk_kuya_tomas": "Ask Kuya Tomas about scholarships",
     "talk_ate_jenny": "Visit Ate Jenny at the OSA",
     "talk_coach_ramon": "Talk to Coach Ramon about sports",
+    "talk_dan_gcsu": "Help Dan visit the GCSU and Scholarship Service",
     "visit_org_fair": "Walk through the org fair",
     "talk_ate_rosa": "Talk to Ate Rosa at the library",
     "talk_kuya_neil": "Visit Kuya Neil at the computer lab",
@@ -210,12 +211,15 @@ init python:
         if task_id == "talk_coach_ramon":
             return ("talk_kuya_tomas" in store.tasks_completed or
                     "talk_ate_jenny" in store.tasks_completed)
+        if task_id == "talk_dan_gcsu":
+            return "talk_ate_jenny" in store.tasks_completed
         if task_id == "visit_org_fair":
             return (
                 "talk_mika" in store.tasks_completed and
                 "talk_kuya_tomas" in store.tasks_completed and
                 "talk_ate_jenny" in store.tasks_completed and
-                "talk_coach_ramon" in store.tasks_completed
+                "talk_coach_ramon" in store.tasks_completed and
+                "talk_dan_gcsu" in store.tasks_completed
             )
         ## Act 7 prerequisites
         if task_id in ("talk_kuya_neil", "talk_prof_santos"):
