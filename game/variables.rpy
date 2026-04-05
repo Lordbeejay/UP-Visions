@@ -371,7 +371,7 @@ init python:
         """Replace current batch with the next 3 GC messages."""
         global gc_open_count, gc_revealed
         batch = gc_open_count
-        if batch < len(gc_all_messages):
+        if batch < len(gc_messages):
             start = batch * 3
             gc_revealed = [start, start + 1, start + 2]
             gc_open_count += 1
@@ -814,84 +814,53 @@ init python:
 
 init python:
 
-    gc_all_messages = [
-
-        ## BATCH 1 — revealed on first phone open
+    gc_messages = [
+        ## BATCH 1 — ACT 1 (Arrival & Getting Lost)
         [
-            GCMessage("Jaden 🌊",
-                "guys is anyone else completely lost rn 😭",
-                "#7C3AED"),
-            GCMessage("Jaden 🌊",
-                "i asked for the registrar and ended up in the fishpond area??",
-                "#7C3AED"),
-            GCMessage("Caezar ⚡",
-                "HAHAHA classic freshie. the fishpond is the OPPOSITE direction",
-                "#0F6E56"),
+            GCMessage("Jaden", "Asan na kayo guys? Ang init sa labas 😭", "#1d4ed8"),
+            GCMessage("Anonymous 👤", "Guys paano pumunta sa Miagao church from campus? May tricycle ba sa loob?", "#374151"),
+            GCMessage("Anonymous 👤", "Lost ako sa tindahan... the tricycle dropped me off somewhere random. Help.", "#374151"),
+            GCMessage("Anonymous 👤", "Normal lang ba na amoy dagat yung hangin dito? Ang ganda omg", "#374151"),
         ],
 
-        ## BATCH 2 — revealed on second phone open
+        ## BATCH 2 — ACT 2 (Admin, Clearance, & Long Lines)
         [
-            GCMessage("Unknown 👤",
-                "hey does anyone know the tricycle fare to UPV? i got quoted ₱25",
-                "#374151"),
-            GCMessage("Jaden 🌊",
-                "₱25?? no way that's too high. i heard it's ₱15",
-                "#7C3AED"),
-            GCMessage("Caezar ⚡",
-                "depends on the driver tbh. if they see a freshie backpack you're getting freshie prices lol",
-                "#0F6E56"),
+            GCMessage("Anonymous 👤", "GRABE ANG HABA NG PILA SA BOX 1!!!", "#374151"),
+            GCMessage("Anonymous 👤", "Ano nga ulit yung kailangan ipasa sa New Admin? Pwede ba to follow ang ID picture?", "#374151"),
+            GCMessage("Jaden", "Wag niyo kalimutan yung medical clearance niyo! Bawal pumasok pag wala.", "#1d4ed8"),
+            GCMessage("Anonymous 👤", "San pwede magpa-photocopy malapit sa admin? Di ko na-print yung form 5 ko 💀", "#374151"),
         ],
 
-        ## BATCH 3 — revealed on third phone open
+        ## BATCH 3 — ACT 3 (CRS, Enrollment & PE Panic)
         [
-            GCMessage("Mikhaela 🍢",
-                "pls someone tell me there is decent food near campus",
-                "#B45309"),
-            GCMessage("Jaden 🌊",
-                "there's this aleng near the gate!! she saved my life today",
-                "#7C3AED"),
-            GCMessage("Caezar ⚡",
-                "pinakbet + rice + fish. ₱60. don't overthink it",
-                "#0F6E56"),
+            GCMessage("Anonymous 👤", "DOWN NANAMAN ANG PORTAL 😭😭 Pano na ang PE ko???", "#374151"),
+            GCMessage("Anonymous 👤", "UBOS NA YUNG SLOTS SA MATH :(( Sino magpe-prerog dito? Tinatanggap ba nila freshies?", "#374151"),
+            GCMessage("Anonymous 👤", "pa-ampon po sa mag pre-prerog, sabay na tayo umiyak sa prof", "#374151"),
+            GCMessage("Anonymous 👤", "tips para di antukin sa 7 AM class? asking for a friend", "#374151"),
         ],
 
-        ## BATCH 4
+        ## BATCH 4 — ACT 4 (Dorm Life & Move-In)
         [
-            GCMessage("Anonymous 👤",
-                "Hello Luis ng compscie 4. I think you're cute and I wanna approach you but I'm too shy. Can we be friends? Kahit more than friends pa sana 🥲- your secret admirer ❤️",
-                "#374151"),
-            GCMessage("Anonymous 👤",
-                "nagawork po ba ang SOTECH x SOTECH",
-                "#374151"),
-            GCMessage("Anonymous 👤",
-                "Hello po! Sino na gusto mag ka jowa? Yung bff ko po kasi jowang-jowa na…",
-                "#374151"),
+            GCMessage("Anonymous 👤", "Hi sa mga taga-Balay! May nagdadala ba ng rice cooker dito or confiscate agad?", "#374151"),
+            GCMessage("Anonymous 👤", "Guys anong oras curfew sa dorm? Makakapasok pa ba ako if 10 PM na?", "#374151"),
+            GCMessage("Anonymous 👤", "Ang dami kong dalang gamit, di kasya sa cabinet ko huhu. Sino gusto umampon ng unan?", "#374151"),
+            GCMessage("Anonymous 👤", "May multo ba sa dorms? May narinig akong nagwawalis kaninang 3 AM tapos wala namang tao 😭", "#374151"),
         ],
 
-        ## BATCH 5
+        ## BATCH 5 — ACT 5 (First Classes & CASAS)
         [
-            GCMessage("Anonymous 👤",
-                "as someone na suki ng mga teleserye, fantasy ko ang San Ag x UP trope 🤩 yung burgis x aktibista trope na sasamahan ako mag rally kahit aircon humor siya",
-                "#374151"),
-            GCMessage("Anonymous 👤",
-                "ganito pala sa economics. mahirap, calculator ang puhunan, puno ng graphs, at higit sa lahat, maraming bading.",
-                "#374151"),
-            GCMessage("Anonymous 👤",
-                "may mga poging professor din ba sa UPV? like yung poging di nakakasawa or like kahit matanda na pero masasabi mong pogi dahip malinis siya o di kaya matalino?",
-                "#374151"),
+            GCMessage("Anonymous 👤", "Sino may alam kung saan yung room CAS 104? Naikot ko na buong CASAS di ko makita.", "#374151"),
+            GCMessage("Anonymous 👤", "terror ba si prof *redacted*? kinakabahan ako sa syllabus niya puro papers.", "#374151"),
+            GCMessage("Anonymous 👤", "TANGINA FIRST DAY PA LANG MAY ASSIGNMENT NA AGAD", "#374151"),
+            GCMessage("Anonymous 👤", "ganito pala sa economics. mahirap, calculator ang puhunan, puno ng graphs, at higit sa lahat, maraming bading.", "#374151"),
         ],
 
-        ## BATCH 6
+        ## BATCH 6 — ACT 6 (Org Fair & Campus Life)
         [
-            GCMessage("Anonymous 👤",
-                "weird po ba 1st year and 4th year? what if yung 1st year po yung nakacrush??",
-                "#374151"),
-            GCMessage("Anonymous 👤",
-                "Hii asking for a friend, anu name sang upclass nga ga smoke tambay sa may mush",
-                "#374151"),
-            GCMessage("Anonymous 👤",
-                "bat parang chill2 lng yung mga appmath dyan, eziest degprog ba talga?",
-                "#374151"),
+            GCMessage("Anonymous 👤", "Guys anong org ang maganda salihan? Yung hindi masyadong demanding pls", "#374151"),
+            GCMessage("Jaden", "Sino pupunta sa org fair mamaya sa plaza? Sabay tayo!", "#1d4ed8"),
+            GCMessage("Anonymous 👤", "may mga poging professor din ba sa UPV? like yung poging di nakakasawa or like kahit matanda na pero masasabi mong pogi dahil malinis siya o di kaya matalino?", "#374151"),
+            GCMessage("Anonymous 👤", "weird po ba 1st year and 4th year? what if yung 1st year po yung nakacrush??", "#374151"),
         ],
     ]
 

@@ -15,6 +15,8 @@
 ## ----------------------------------------------------------------------------
 
 label act1_start:
+    play music "audio/Act1.mp3" fadein 1.0
+    
     $ talked_jaden   = False
     $ talked_josh    = False
     $ talked_maria   = False
@@ -33,6 +35,7 @@ label act1_start:
     ## Reset notebook questions
     $ [setattr(q, 'answered', False) for q in notebook_questions]
     $ [setattr(q, 'chosen_item_id', None) for q in notebook_questions]
+
 
     ## Brief intro narration
     narrator_char "You've just arrived in Miagao."
@@ -639,6 +642,8 @@ label act1_box1_arrive:
     $ complete_task("reach_box1")
     $ complete_task("act1_complete")
 
+    stop music fadeout 1.0
+    play music "audio/Act2.mp3" fadein 1.0
     window hide
     return
 

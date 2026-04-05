@@ -24,8 +24,12 @@ default quiz_score = 0
 
 
 label start:
-    ## stop the fucking music when entering game
-    stop music fadeout 1.0  # FUCKING STOP the main menu theme
+
+    ## Stop the main menu theme (the one from options.rpy)
+    stop music fadeout 1.0
+
+    ## START ACT 1 MUSIC HERE
+    play music "audio/Act1.mp3" fadein 1.0
 
     ## Hide the dialogue window for map exploration
     window hide
@@ -40,13 +44,20 @@ label start:
 
     call screen act_transition("MIAGAO FRESHMAN GUIDE", "A point-and-click adventure\nNavigate your first day at UP Visayas", mode="welcome")
 
-    call screen act_transition("ACT 2", "Entering the University", "intro")
-    scene expression "images/maps/Entrance.png"
-    $ current_act = 2
+    call screen act_transition("ACT 1", "Welcome to Banwa!", "intro")
+    scene expression "images/maps/banwa.png"
+    $ current_act = 1
     $ tasks_completed = set()
     $ player_map_x = 2500
-    $ player_map_y = 4600
+    $ player_map_y = 3200
     $ player_facing = "up"
+    $ inventory_unlocked = True
+    $ persistent.encyclopedia_unlocks = set([entry_id for entry_id in all_entries])
+
+    ## ── Detective Notebook intro ─────────────────────────────────────────
+    call screen notebook_intro_screen()
+    ## ────────────────────────────────────────────────────────────────────
+
     jump act1_map
 
 ## ============================================================================
@@ -69,7 +80,7 @@ label act1_map:
     $ current_map_bg = "maps/banwa.png"
     $ act1_nav_target = None
     $ act1_nodes = [
-        MapNode("jaden",         2500, 4600, "act1_npc_jaden",     tooltip="Jaden",              icon_image="jaden.png",        locked=False),
+        MapNode("jaden",         2300, 4000, "act1_npc_jaden",     tooltip="Jaden",              icon_image="jaden.png",        locked=False),
         MapNode("go_tindahan",   100,  2500, "act1_go_tindahan",   tooltip="← Tindahan",         icon_image="Arrow.png",        locked=True, icon_zoom=1.5),
         MapNode("go_marillac",   4900, 2500, "act1_go_marillac",   tooltip="Marillac →",         icon_image="Arrow.png",        locked=True, icon_zoom=1.5),
         MapNode("box1",          3860, 1500, "act1_prebox1_gate",  tooltip="BOX 1",              icon_image="Arrow.png",        locked=True, icon_zoom=1.5),

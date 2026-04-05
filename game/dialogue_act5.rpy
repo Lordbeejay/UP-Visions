@@ -5,6 +5,7 @@
 
 ## --- ACT 5 INIT ---
 label act5_start:
+    # play music moved to end of previous act
     $ talked_prof_lena = False
     $ talked_kuya_rico = False
     $ talked_ate_grace = False
@@ -455,3 +456,4 @@ label act5_first_class:
 ## ============================================================================
 ## END OF ACT 5 DIALOGUES
 ## ============================================================================
+play music "audio/Act6.mp3" fadein 1.0

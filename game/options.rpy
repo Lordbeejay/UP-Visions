@@ -67,6 +67,11 @@ define config.has_voice = True
 ## game, until it is stopped or another file is played.
 
 define config.main_menu_music = "audio/main_menu.mp3"
+## Music assignments for each section (for reference):
+## Main Menu: audio/main_menu.mp3
+## Act 1:     audio/Act1.mp3
+## Act 2:     audio/Act2.mp3
+#  (Set in script/dialogue files using 'play music' command at the start of each act.)
 
 
 ## Transitions #################################################################
