@@ -1,507 +1,279 @@
 ## ============================================================================
 ## ACT 7 DIALOGUES — Library & Academic Resources
-## KEY THEME: Library, research, study habits, academic support
+## KEY THEME: UPV Library, TLRC peer tutoring, academic tools
+## STORY: Jaden is panicking about a paper. Player helps him through the
+##        Library → Computer Lab → Prof. Santos → TLRC → Study Session.
 ## ============================================================================
 
 ## --- ACT 7 INIT ---
 label act7_start:
     # play music moved to end of previous act
-    $ talked_ate_rosa = False
-    $ talked_kuya_neil = False
-    $ talked_prof_santos = False
-    $ talked_classmate_bea = False
     jump act7_map
 
+
 ## ============================================================================
-## NPC 1 — ATE ROSA (University Librarian)
-## KEY INFO: Library system, borrowing, digital resources
+## ACT 7 STORY — Find Jaden outside the library
 ## ============================================================================
-label act7_npc_ate_rosa:
+label act7_npc_jaden:
     window show
-    ate_rosa "Welcome to the UPV Library! First time here?"
-    player_char "Yes, Ate. It's bigger than I expected."
-    ate_rosa "I'm Ate Rosa, one of the librarians. Let me show you what's available."
-    menu:
-        "How does the library work?":
-            jump act7_rosa_library
-        "What digital resources are available?":
-            jump act7_rosa_digital
-        "Any tips for using the library effectively?":
-            jump act7_rosa_tips
+    narrator_char "(You spot Jaden near the steps of the library building. The same Jaden from the Banwa entrance on your first day.)"
+    narrator_char "(He's got a notebook open on his lap but he's not writing. He's just staring at it.)"
+    player_char "Jaden? I haven't seen you since day one."
+    jaden "Oh — hey. Yeah. I've been..."
+    player_char "What's wrong?"
+    jaden "I have a research paper due Friday. For Kas 1. Three sources minimum, APA format, five pages."
+    jaden "I have never written an academic paper in my life."
+    player_char "Okay. When did you find out?"
+    jaden "The first day of class."
+    player_char "Jaden, that was two weeks ago."
+    jaden "I know. I kept telling myself I'd start tomorrow. And then it was this week."
+    jaden "I don't even know what JSTOR is. I Googled it and I got more confused."
+    player_char "Have you been inside the library yet?"
+    jaden "I've walked past it."
+    player_char "Come on."
+    jaden "I don't know how to use a library."
+    player_char "That's exactly why we're going in."
+    narrator_char "(Jaden closes his notebook, grabs his bag, and follows. He looks like a man being walked to his own execution.)"
+    jump act7_library_scene
 
-label act7_rosa_library:
-    ate_rosa "The UPV Library has several sections:"
-    ate_rosa "General Circulation — textbooks, reference books, and general reading. Open shelves."
-    ate_rosa "Filipiniana Section — materials about Philippine culture, history, and society. Important for GE courses."
-    ate_rosa "Periodicals Section — journals, magazines, and newspapers. Both current and archived."
-    ate_rosa "Reserve Section — books requested by professors for specific courses. Limited borrowing time."
-    ate_rosa "Thesis and Dissertation Section — completed research papers from UPV graduates. Great for research ideas."
-    player_char "How do I borrow books?"
-    ate_rosa "You need your UPV student ID. That's your library card."
-    ate_rosa "General circulation books — 3-day borrowing period. Renewable once if no one else has reserved it."
-    ate_rosa "Reserve books — room use only, or overnight borrowing after 4 PM. Return by 8 AM the next day."
-    ate_rosa "Overdue fines are ₱5 per day for general, ₱10 per hour for reserve. They add up fast, so return on time!"
-    ate_rosa "Lost books — you'll need to replace the exact title or pay the replacement cost plus processing fee."
-    menu:
-        "What digital resources are available?":
-            jump act7_rosa_digital
-        "Any tips?":
-            jump act7_rosa_tips
-        "(Thank you, Ate Rosa!)":
-            jump act7_rosa_end
 
-label act7_rosa_digital:
-    ate_rosa "This is where modern students have a huge advantage."
-    ate_rosa "UP subscribes to several online databases that you can access for FREE as a student."
-    ate_rosa "JSTOR — academic journals across all disciplines. Your best friend for research papers."
-    ate_rosa "ScienceDirect — science and medical journals. Essential for CFOS and science students."
-    ate_rosa "Google Scholar — not a UP subscription, but it's powerful. Link it with your UP email for better access."
-    ate_rosa "Philippine E-Journals — local academic publications. Good for topics about Filipino society."
-    ate_rosa "To access these from off-campus, you'll need to go through the UP Remote Access Portal."
-    ate_rosa "Log in with your UP Mail credentials. The portal gives you access as if you were on campus."
-    player_char "I didn't know we had all of that."
-    ate_rosa "Most students don't! That's why I always tell freshmen — learn your tools early."
-    menu:
-        "Any tips?":
-            jump act7_rosa_tips
-        "(This is so helpful!)":
-            jump act7_rosa_end
-
-label act7_rosa_tips:
-    ate_rosa "Here are my librarian tips for surviving academics:"
-    ate_rosa "One — come to the library during off-peak hours. Early morning or late afternoon. You'll find seats and silence."
-    ate_rosa "Two — use the online catalog before coming in. Search from your phone so you know the call number before you arrive."
-    ate_rosa "Three — don't just Google your research. Use academic databases. Professors can tell the difference."
-    ate_rosa "Four — if you can't find a book, ASK US. We know this library like the back of our hands."
-    ate_rosa "Five — the library also has study rooms. You can reserve one for group study sessions. Two hours max."
-    ate_rosa "Six — we have printing and photocopying services. Cheaper than the shops outside campus."
-    player_char "I'll definitely be a regular here."
-    ate_rosa "That's what I like to hear!"
-    jump act7_rosa_end
-
-label act7_rosa_end:
-    ate_rosa "The library is open Monday to Friday, 8 AM to 7 PM. Saturdays, 8 AM to 12 noon."
-    ate_rosa "Closed on Sundays and holidays. Plan your study schedule accordingly."
-    ate_rosa "Happy reading!"
-    $ talked_ate_rosa = True
+## ============================================================================
+## LIBRARY SCENE — Ate Rosa shows them the tools
+## ============================================================================
+label act7_library_scene:
+    narrator_char "(Inside the UPV Library. Cool air, low shelves, the smell of old books and something close to quiet.)"
+    narrator_char "(Jaden looks around. He seems surprised it doesn't feel more intimidating.)"
+    ate_rosa "Good morning! First time here?"
+    jaden "Is it that obvious?"
+    ate_rosa "You're both standing at the entrance looking like you're about to ask for directions in a foreign country."
+    ate_rosa "I'm Ate Rosa, one of the librarians. Tell me what you need."
+    player_char "He has a Kas 1 research paper due Friday. Three academic sources, APA, five pages. He doesn't know where to start."
+    ate_rosa "Friday. Okay. That's tight but manageable. Step one — come with me."
+    narrator_char "(She moves with quiet efficiency toward the Reference Section.)"
+    ate_rosa "For Philippine history topics — which Kas 1 usually covers — you start in two places."
+    ate_rosa "First: the Filipiniana Section. Right here. These are books and materials specific to Philippine culture, history, and society."
+    ate_rosa "Second: the Thesis and Dissertation Section — past UPV research papers. They cite sources you can then track down yourself."
+    jaden "So I use other people's papers to find my sources?"
+    ate_rosa "You use their reference lists as a map. That's standard academic practice."
+    jaden "...I did not know that was allowed."
+    ate_rosa "It's not just allowed — it's how research works. You build on what came before you."
+    ate_rosa "Now — your third source should be a journal article. That's where online databases come in."
+    jaden "JSTOR. I've heard of it but I can't access it from my phone."
+    ate_rosa "You need your UP Mail credentials. Do you have your UP Mail set up?"
+    jaden "I have an account but I've never used it for anything."
+    ate_rosa "Then your next stop is the computer lab. Kuya Neil there will walk you through setting up remote database access."
+    ate_rosa "Once you're connected, JSTOR, ScienceDirect, and Philippine E-Journals are all free through your UP account."
+    player_char "How do I borrow physical books in the meantime?"
+    ate_rosa "Your student ID is your library card. General circulation books — three days. Reserve books — room use or overnight after 4 PM."
+    ate_rosa "Overdue fines add up fast: ₱5 per day for general books, ₱10 per hour for reserve. Return on time."
+    ate_rosa "And if you can't find a book — ask us. We know every shelf."
+    jaden "This is actually... really useful. Why did no one tell us about this during orientation?"
+    ate_rosa "They did. You weren't ready to hear it yet."
+    narrator_char "(She pulls a slim volume from the Filipiniana shelf and sets it in Jaden's hands.)"
+    ate_rosa "Start here. Agoncillo's 'History of the Filipino People.' If Kas 1 is your course, this is your foundation."
+    ate_rosa "Library hours: Monday to Friday, 8 AM to 7 PM. Saturdays, 8 AM to noon."
+    ate_rosa "Come back whenever you need help. That's what we're here for."
+    narrator_char "(Encyclopedia unlocked: UPV Library.)"
+    $ persistent.encyclopedia_unlocks.add("upv_library")
     $ complete_task("talk_ate_rosa")
-    window hide
-    return
+    jump act7_computer_lab_scene
+
 
 ## ============================================================================
-## NPC 2 — KUYA NEIL (Computer Lab Attendant)
-## KEY INFO: Computer labs, UP Mail, CRS tips, campus WiFi
+## COMPUTER LAB SCENE — Kuya Neil sets up UP Mail + database access
 ## ============================================================================
-label act7_npc_kuya_neil:
-    window show
-    kuya_neil "Oh, freshie? Come in, come in. Welcome to the computer lab."
-    player_char "Hi, Kuya. Can I use the computers here?"
-    kuya_neil "Of course! I'm Kuya Neil, the lab attendant. Just sign the logbook."
-    menu:
-        "How does the computer lab work?":
-            jump act7_neil_lab
-        "Tell me about UP Mail and online tools.":
-            jump act7_neil_tools
-        "Any tips for campus WiFi?":
-            jump act7_neil_wifi
-
-label act7_neil_lab:
-    kuya_neil "We have 30 desktop computers available on a first-come, first-served basis."
-    kuya_neil "Maximum usage time is 2 hours per session. If no one's waiting, you can extend."
-    kuya_neil "The computers have Microsoft Office, LibreOffice, browsers, and basic software."
-    kuya_neil "For specialized software — GIS, statistical tools, design software — check your college's dedicated lab."
-    kuya_neil "USB drives are allowed, but always scan for viruses first. We have antivirus installed."
-    kuya_neil "Printing is ₱3 per page for black-and-white, ₱10 for colored."
-    player_char "Can I bring my own laptop?"
-    kuya_neil "Yes! We have power outlets and WiFi. Many students prefer their own device."
-    menu:
-        "Tell me about UP Mail and tools.":
-            jump act7_neil_tools
-        "Campus WiFi tips?":
-            jump act7_neil_wifi
-        "(Thanks, Kuya Neil!)":
-            jump act7_neil_end
-
-label act7_neil_tools:
-    kuya_neil "Your UP Mail is your gateway to everything digital at UP. It's a Google Workspace account."
-    kuya_neil "Format is usually firstname.lastname@up.edu.ph. You should have received it during enrollment."
-    kuya_neil "With UP Mail, you get:"
-    kuya_neil "Google Drive — unlimited storage. Back up EVERYTHING there. Don't lose your thesis to a broken laptop."
-    kuya_neil "Google Docs, Sheets, Slides — free alternatives to Microsoft Office. Great for group work."
-    kuya_neil "Google Meet — for online consultations with professors."
-    kuya_neil "Access to UP databases — library resources, JSTOR, and other academic tools."
-    kuya_neil "CRS access — the Computerized Registration System. That's where you enlist in classes."
-    player_char "Any tips for CRS?"
-    kuya_neil "CRS enlistment is... an experience. Here's what I tell every freshie:"
-    kuya_neil "Know your schedule BEFORE enlistment opens. Have backup classes ready."
-    kuya_neil "Log in the MOMENT it opens. Slots fill up in minutes."
-    kuya_neil "Have a stable internet connection. Use ethernet if possible, not WiFi."
-    kuya_neil "If a class is full, check again on the first day of classes. Some students drop."
-    menu:
-        "Campus WiFi tips?":
-            jump act7_neil_wifi
-        "(Very helpful!)":
-            jump act7_neil_end
-
-label act7_neil_wifi:
-    kuya_neil "Campus WiFi — eduroam and UPV-Guest are the main networks."
-    kuya_neil "eduroam is the more reliable one. Use your UP Mail credentials to connect."
-    kuya_neil "UPV-Guest requires you to register through a portal. It resets every 24 hours."
-    kuya_neil "WiFi can be slow during peak hours — lunch time, between classes. Everyone's online."
-    kuya_neil "Pro tip: if WiFi is weak in your building, try the library or the admin building."
-    kuya_neil "Some dorms also have their own WiFi routers, but those are usually contributed by residents."
-    kuya_neil "For heavy downloads — software, videos for class, large files — use the computer lab. Wired connection is faster."
-    player_char "Good to know. I'll keep that in mind."
-    jump act7_neil_end
-
-label act7_neil_end:
-    kuya_neil "Lab hours are Monday to Friday, 8 AM to 6 PM. Closed weekends."
-    kuya_neil "If you have any tech issues, just ask me. I've seen it all."
-    $ talked_kuya_neil = True
+label act7_computer_lab_scene:
+    narrator_char "(The computer lab. Rows of desktops, a handwritten sign-in sheet at the door, and Kuya Neil eating a sandwich at his desk.)"
+    kuya_neil "Oh! Freshies. Sign the logbook. What do you need?"
+    player_char "He needs to set up his UP Mail and access JSTOR for a research paper."
+    kuya_neil "Perfect. Come here."
+    narrator_char "(Kuya Neil pulls up a chair without ceremony and opens a browser.)"
+    kuya_neil "UP Mail first. Your account is firstname.lastname@up.edu.ph — you set the password during enrollment."
+    kuya_neil "It's a Google Workspace account. Drive, Docs, Sheets, Meet — all of it. Free, unlimited storage."
+    jaden "I thought it was just for email."
+    kuya_neil "Most freshmen think that. It's not. It's your entire academic digital infrastructure."
+    kuya_neil "Back up everything to Google Drive. Assignments, notes, everything. Don't lose a paper because your laptop died."
+    kuya_neil "Now — databases. Go to the UP Remote Access Portal."
+    narrator_char "(He types the URL. Jaden watches carefully.)"
+    kuya_neil "Log in with your UP Mail. This portal gives you database access as if you're on campus, even from home."
+    kuya_neil "JSTOR — academic journals across all fields. Best for humanities and social sciences. Your paper goes here."
+    kuya_neil "ScienceDirect — science and medical journals. More useful for CFOS students but good to know."
+    kuya_neil "Philippine E-Journals — local academic publications. For Philippine-specific topics, these are gold."
+    jaden "Can I search by topic?"
+    kuya_neil "Yes. And on JSTOR, filter by date, discipline, and article type. Look for peer-reviewed articles only — professors notice the difference."
+    player_char "What about campus WiFi? His phone connection keeps dropping."
+    kuya_neil "eduroam is the reliable network. Use your UP Mail credentials to connect. UPV-Guest resets every 24 hours — not great for sustained work."
+    kuya_neil "For heavy research sessions — downloads, multiple tabs — come here to the lab. Wired connection is faster and stable."
+    kuya_neil "Lab hours: Monday to Friday, 8 AM to 6 PM. Printing is ₱3 per page black-and-white."
+    narrator_char "(Jaden opens JSTOR for the first time. Types in his topic. Forty-seven results appear.)"
+    jaden "Oh. There's actually a lot here."
+    kuya_neil "There's always a lot. The skill is narrowing it down. But that part — you'll need a different expert for."
+    narrator_char "(He nods toward the hallway.)"
+    kuya_neil "Prof. Santos has office hours right now. Room 204. She'll help you figure out which sources are actually worth using."
+    narrator_char "(Encyclopedia unlocked: Computer Lab & UP Mail.)"
+    $ persistent.encyclopedia_unlocks.add("computer_lab")
     $ complete_task("talk_kuya_neil")
-    window hide
-    return
+    jump act7_prof_santos_scene
+
 
 ## ============================================================================
-## NPC 3 — PROF. SANTOS (Research Mentor / GE Professor)
-## KEY INFO: Research culture, thesis awareness, critical thinking
+## PROF. SANTOS SCENE — Research process, APA, critical thinking
 ## ============================================================================
-label act7_npc_prof_santos:
-    window show
-    prof_santos "Ah, a curious freshie approaches. Are you here about my class, or just exploring?"
-    player_char "Just exploring, Prof. I heard you're a research professor?"
-    prof_santos "I am. Prof. Santos. I teach GE classes but my heart is in marine biology research."
-    prof_santos "But research isn't just for scientists. Every UP student should understand it."
-    menu:
-        "Why is research important?":
-            jump act7_santos_research
-        "How does research work at UPV?":
-            jump act7_santos_how
-        "Any advice for a freshman?":
-            jump act7_santos_advice
-
-label act7_santos_research:
-    prof_santos "UP's mandate has three pillars: instruction, research, and extension."
-    prof_santos "Instruction is your classes. Extension is community service. Research is the creation of new knowledge."
-    prof_santos "As a UP student, you're expected to contribute to all three before you graduate."
-    prof_santos "Your thesis or special problem in senior year will be a research output."
-    prof_santos "But more broadly — research is about critical thinking, evidence-based reasoning, and intellectual curiosity."
-    prof_santos "Don't just accept information. Question it. Verify it. Test it."
-    prof_santos "That's the UP way of thinking."
-    player_char "That sounds intimidating."
-    prof_santos "It is at first. But it becomes natural. You'll see."
-    menu:
-        "How does research work at UPV?":
-            jump act7_santos_how
-        "Advice for a freshman?":
-            jump act7_santos_advice
-        "(Thank you, Prof.)":
-            jump act7_santos_end
-
-label act7_santos_how:
-    prof_santos "UPV is especially strong in marine science and fisheries research."
-    prof_santos "We have the Marine Biological Station, the Fish World Museum, and partnerships with international marine institutes."
-    prof_santos "But other colleges do excellent work too — management research, social science studies, local governance analysis."
-    prof_santos "As a student, you can get involved in research as early as second year."
-    prof_santos "How? Approach a professor whose work interests you. Ask to volunteer as a research assistant."
-    prof_santos "You'll learn methodology, data collection, analysis — skills that are invaluable after graduation."
-    prof_santos "Some professors also have funded projects and can provide a small stipend for student assistants."
-    player_char "I didn't know freshmen could get involved."
-    prof_santos "You can. It's rare, but the professors who see initiative will appreciate it."
-    menu:
-        "Advice for a freshman?":
-            jump act7_santos_advice
-        "(That's inspiring.)":
-            jump act7_santos_end
-
-label act7_santos_advice:
-    prof_santos "Here's my advice for your first year:"
-    prof_santos "Read beyond the assigned materials. Professors give minimums. Go beyond them."
-    prof_santos "Learn proper citation. APA format — learn it now, thank me later. Plagiarism can get you expelled."
-    prof_santos "Start building your academic vocabulary. Read journals, not just textbooks."
-    prof_santos "Form study groups. Discussion sharpens understanding better than solo reading."
-    prof_santos "Visit your professors during consultation hours. They WANT to help. Most are lonely in their offices."
-    prof_santos "And use the TLRC — the Teaching and Learning Resource Center. They have peer tutors and academic workshops."
-    prof_santos "I've referred struggling students there before. Many of them turned their grades around completely."
-    prof_santos "And most importantly — don't be afraid to not know. Ignorance is temporary. Apathy is the real enemy."
-    player_char "That's really inspiring, Prof."
-    prof_santos "You're at the University of the Philippines. You've earned your place. Now grow into it."
-    jump act7_santos_end
-
-label act7_santos_end:
-    prof_santos "My office is at the CAS building, Room 204. Consultation hours are Tuesday and Thursday, 3-5 PM."
-    prof_santos "Don't be a stranger."
-    $ talked_prof_santos = True
+label act7_prof_santos_scene:
+    narrator_char "(Room 204. Prof. Santos is at her desk marking papers. She looks up at a knock on the door.)"
+    prof_santos "Come in. Freshmen — I can always tell. Sit down."
+    player_char "Kuya Neil sent us. Jaden has a Kas 1 research paper due Friday and he's just started."
+    prof_santos "Friday. And it's Wednesday."
+    jaden "I know."
+    prof_santos "I'm not going to lecture you on time management. You're already aware of the problem. Let's solve it."
+    prof_santos "Show me what you have so far."
+    narrator_char "(Jaden opens his notebook. One paragraph. Half a bibliography. Three sources he's clearly not read.)"
+    prof_santos "Alright. First things first: what's your argument?"
+    jaden "My argument?"
+    prof_santos "A research paper is not a summary. It is an argument supported by evidence. What is your claim?"
+    jaden "I... thought I just had to write about the topic."
+    prof_santos "That's the most common freshman mistake. You describe when you should be arguing."
+    prof_santos "Tell me your topic."
+    jaden "The Propaganda Movement."
+    prof_santos "Good. Now — what do you want to say ABOUT the Propaganda Movement that isn't just retelling it?"
+    jaden "That it... failed? But it still mattered?"
+    prof_santos "That is a thesis. The movement failed politically but succeeded in reshaping Filipino national consciousness."
+    prof_santos "Now everything you write — every source you cite — must support or complicate that argument."
+    prof_santos "This is what research means at UP. Not collecting facts. Building a case."
+    player_char "What about his sources? He found some on JSTOR but doesn't know how to evaluate them."
+    prof_santos "For journal articles: check the author's credentials, the publication, and the date. Peer-reviewed journals only."
+    prof_santos "For books: the Filipiniana section has primary sources. Eyewitness accounts, original documents. Those carry weight."
+    prof_santos "And for citation — APA 7th edition. Learn it now. Plagiarism at UP is not just a failed grade — it's an academic offense that goes on your record."
+    prof_santos "Paraphrase, don't copy. Cite everything you borrowed, even ideas. If you're unsure, cite it anyway."
+    jaden "APA format looks complicated. The in-text citations, the reference list format—"
+    prof_santos "That's what the TLRC is for."
+    player_char "The TLRC?"
+    prof_santos "Teaching and Learning Resource Center. In the CAS building. They have an academic writing workshop specifically for freshmen."
+    prof_santos "They'll walk you through APA format, paper structure, and they'll review your draft before you submit it."
+    prof_santos "I've referred students there before. Several of them went from near-failing to Dean's List by second semester."
+    prof_santos "The tool exists. Use it."
+    narrator_char "(She writes a note on a slip of paper and hands it to Jaden.)"
+    prof_santos "This is the argument structure outline I give my own students. Use it as a scaffold for your paper."
+    prof_santos "You have enough time if you start tonight. The library closes at 7. Be there until it does."
+    jaden "Thank you, Prof."
+    prof_santos "Don't thank me. Write the paper."
+    narrator_char "(Encyclopedia unlocked: UP Research Culture.)"
+    $ persistent.encyclopedia_unlocks.add("up_research")
     $ complete_task("talk_prof_santos")
     if "sq_up_mandates" not in subquests_completed:
         menu:
-            "★ One more thing — quiz me on UP's three mandates.":
+            "★ Before we go — quiz me on UP's three mandates.":
                 jump sq_up_mandates
-            "(Thank you, Prof. Santos.)":
+            "(Got it. We'll head to the TLRC.)":
                 pass
     window hide
-    return
+    jump act7_tlrc_entrance
+
 
 ## ============================================================================
-## NPC 4 — CLASSMATE BEA (Study Group Organizer)
-## KEY INFO: Study groups, exam tips, academic survival
+## TLRC ENTRANCE — Bea finds them in the hallway
 ## ============================================================================
-label act7_npc_classmate_bea:
+label act7_tlrc_entrance:
     window show
-    bea "Hey! Are you in the GE 1 class with Prof. Ramos? I keep seeing you around."
-    player_char "Yeah, I am! I'm still trying to figure out how to study for college."
-    bea "Same! I'm Bea, by the way. Some of us are forming a study group — want to join?"
-    menu:
-        "Sure! How does the study group work?":
-            jump act7_bea_group
-        "Any study tips for college?":
-            jump act7_bea_tips
-        "How are college exams different from high school?":
-            jump act7_bea_exams
-        "Have you heard of the TLRC?":
-            jump act7_bea_tlrc
+    narrator_char "(In the CAS corridor, heading toward the TLRC, you nearly walk into Bea.)"
+    bea "Oh! You two. Are you going where I think you're going?"
+    player_char "TLRC. Prof. Santos sent us."
+    bea "I was just there! I signed up for the writing workshop."
+    bea "I'm Bea, by the way — we're in the same Kas 1 section."
+    jaden "Jaden."
+    bea "I know. You sit in the back and look like you're either asleep or having a very intense internal conversation."
+    jaden "Both, usually."
+    bea "Come on — I'll introduce you to the coordinator. She's really good."
+    jump act7_visit_tlrc
 
-label act7_bea_group:
-    bea "We meet twice a week — Tuesdays and Thursdays after last class."
-    bea "Usually in a library study room or at the canteen if the library's full."
-    bea "The deal is — each person summarizes one topic and presents it to the group."
-    bea "That way, we all benefit from everyone's work. Plus, explaining a topic helps you understand it better."
-    bea "We also share notes, reviewers, and past exam questions when we can find them."
-    player_char "That sounds really organized."
-    bea "It has to be! College is no joke. Working alone is possible, but working smart is better."
-    bea "We've got 6 members so far. One more would be perfect."
-    menu:
-        "Any study tips?":
-            jump act7_bea_tips
-        "How are exams different?":
-            jump act7_bea_exams
-        "(Count me in!)":
-            jump act7_bea_end
-
-label act7_bea_tips:
-    bea "I've been doing research on study techniques. Here's what actually works:"
-    bea "Active recall — don't just re-read notes. Close the book and try to explain the topic from memory."
-    bea "Spaced repetition — review material at intervals. Day 1, Day 3, Day 7, Day 14."
-    bea "Pomodoro technique — 25 minutes of focused study, 5-minute break. Repeat 4 times, then take a longer break."
-    bea "Don't highlight everything — only key concepts and unfamiliar terms. Your notes should be mostly in your own words."
-    bea "Teach someone else — if you can explain it simply, you understand it deeply."
-    bea "And SLEEP. Pulling all-nighters actually hurts your performance. 7-8 hours of sleep before an exam is non-negotiable."
-    player_char "All-nighters don't work?"
-    bea "They feel productive, but science says your retention drops. Study early, sleep well, perform better."
-    menu:
-        "How are exams different?":
-            jump act7_bea_exams
-        "(Great advice!)":
-            jump act7_bea_end
-
-label act7_bea_exams:
-    bea "Oh boy, where do I start."
-    bea "High school exams were mostly memorization. College exams are about APPLICATION."
-    bea "Professors will give you scenarios and ask you to analyze, evaluate, and argue."
-    bea "Expect essay-type questions. Not 'define photosynthesis' but 'explain why photosynthesis matters in the context of marine ecology.'"
-    bea "Multiple choice exists, but the options are designed to trick you. They test understanding, not recall."
-    bea "Some professors use take-home exams — longer, more in-depth, open-book but harder."
-    bea "And papers. So many papers. Learn to write clear, structured academic essays NOW."
-    bea "APA citation, proper bibliography, no plagiarism — professors run everything through plagiarism checkers."
-    player_char "That's intense."
-    bea "It is. But once you adjust, it actually makes you smarter. You'll notice the difference within a semester."
-    jump act7_bea_end
-
-label act7_bea_tlrc:
-    bea "The TLRC? YES! I just found out about it last week. It's amazing."
-    bea "TLRC stands for Teaching and Learning Resource Center."
-    bea "It's a support unit at UPV that helps students who are struggling academically."
-    bea "They offer peer tutoring — upperclassmen who got high marks in a subject volunteer to tutor freshmen."
-    bea "They also have review sessions before midterms and finals. Free and open to all students."
-    bea "And learning workshops — study skills, time management, how to write academic papers."
-    player_char "Where is it?"
-    bea "It's in the CAS Building area. They have a small office and a learning commons room."
-    bea "You can walk in and ask for a tutor, or check their schedule for group review sessions."
-    bea "They even have diagnostic assessments — if you don't know WHY you're struggling, they help figure it out."
-    bea "Like, is it your study habits? Reading comprehension? Test anxiety? They'll work with you on it."
-    player_char "That's exactly what I need. I've been struggling with the reading load."
-    bea "Same! I signed up for their academic writing workshop next week."
-    bea "The TLRC is honestly one of UPV's best-kept secrets. Most freshmen don't discover it until second semester."
-    bea "But now you know. Use it!"
-    bea "Actually — it's right in this building. Do you want to visit together right now?"
-    menu:
-        "(Yes, let's visit the TLRC now.)":
-            jump act7_visit_tlrc
-        "How does the study group work?":
-            jump act7_bea_group
-        "Any study tips?":
-            jump act7_bea_tips
-        "How are exams different?":
-            jump act7_bea_exams
-        "(Maybe later. Thanks!)":
-            jump act7_bea_end
-
-label act7_bea_end:
-    bea "So, study group? Tuesday, 4 PM, library study room 2?"
-    bea "I'll add you to the group chat."
-    bea "Together, we survive!"
-    $ talked_classmate_bea = True
-    $ complete_task("talk_classmate_bea")
-    if "sq_apa_challenge" not in subquests_completed:
-        menu:
-            "★ Actually — test me on APA citation format first.":
-                jump sq_apa_challenge
-            "(See you Tuesday!)":
-                pass
-    window hide
-    return
 
 ## ============================================================================
-## SUPPORT SERVICE VISIT — Teaching and Learning Resource Center (TLRC)
-## Reference: UP Visayas Student Handbook — Academic Support Services
+## TLRC SCENE — Full support service visit
 ## ============================================================================
 label act7_visit_tlrc:
     window show
-    narrator_char "(Bea leads you down the CAS corridor to a bright room at the end of the hall.)"
-    narrator_char "(A banner above the door reads: 'TLRC — Teaching and Learning Resource Center. Free academic support for all UPV students.'"
-    narrator_char "(Inside: whiteboards covered in formulas, study carrels, shelves of supplementary materials, and student tutors bent over workbooks.)"
-    tlrc_coord "Good afternoon! New visitors — freshmen?"
-    bea "First time for both of us. We heard about the TLRC and wanted to see it properly."
-    tlrc_coord "Perfect timing! I'm the TLRC Coordinator. Come in, I'll walk you through everything."
-    tlrc_coord "The TLRC exists for one reason: to make sure no UP student fails because they didn't have help."
-    tlrc_coord "What would you like to know first?"
-    menu:
-        "What services does the TLRC offer?":
-            jump act7_tlrc_services
-        "How does peer tutoring work?":
-            jump act7_tlrc_tutoring
-        "Do you have academic writing support?":
-            jump act7_tlrc_writing
-        "How do I request a tutor?":
-            jump act7_tlrc_request
-
-label act7_tlrc_services:
-    tlrc_coord "Let me give you the full picture. The TLRC offers four main services."
-    tlrc_coord "One — Peer Tutoring. Trained student tutors, matched to your subject, meet with you one-on-one or in small groups."
-    tlrc_coord "Two — Supplemental Instruction. For courses with historically high failure rates — think advanced math, chemistry, statistics."
-    tlrc_coord "We assign an SI Leader — a student who excelled in that subject — to run weekly facilitated review sessions."
-    tlrc_coord "Three — Academic Writing Support. Workshops on research paper writing, APA citation, argumentation, and anti-plagiarism practices."
-    tlrc_coord "Four — Study Skills Seminars. Time management, active reading, test preparation, memory techniques. Open to all."
-    player_char "What are these Supplemental Instruction sessions like?"
-    tlrc_coord "The SI Leader doesn't reteach the lecture. They facilitate discussion, work through problem sets, and answer questions."
-    tlrc_coord "The difference from regular studying: it's structured, collaborative, and guided by someone who already mastered the material."
-    tlrc_coord "Research shows students who attend SI sessions consistently score higher on exams."
-    tlrc_coord "The schedule is posted on our bulletin board and the UPV student portal at the start of each semester."
-    bea "I didn't know there were sessions for gateway courses. I'm definitely coming for math."
-    menu:
-        "How does peer tutoring work?":
-            jump act7_tlrc_tutoring
-        "Tell me about writing support.":
-            jump act7_tlrc_writing
-        "How do I request a tutor?":
-            jump act7_tlrc_request
-        "(This is very useful!)":
-            jump act7_tlrc_end
-
-label act7_tlrc_tutoring:
-    tlrc_coord "Our peer tutors are upper-class students — juniors and seniors — who excelled in specific subjects."
-    tlrc_coord "They go through a selection process: minimum GWA, a subject proficiency evaluation, and a tutoring skills training."
-    tlrc_coord "Each tutor is matched to the subjects they're strongest in. We don't assign a chemistry tutor to math."
-    tlrc_coord "Sessions are held here at the TLRC — one-on-one or groups of two to three students."
-    tlrc_coord "Sessions are focused: you bring specific problems, the tutor guides you through reasoning them out."
-    player_char "Do tutors do my homework for me?"
-    tlrc_coord "No — and that's intentional. Peer tutors are here to build YOUR understanding, not to replace it."
-    tlrc_coord "They'll ask guiding questions, explain concepts in different ways, and work through examples with you."
-    tlrc_coord "After a few sessions, you should be able to work independently. That's the goal."
-    bea "That sounds so much better than just copying notes."
-    tlrc_coord "Exactly. The research is clear: guided practice builds deeper retention than passive review."
-    tlrc_coord "We currently have tutors for: General Chemistry, College Algebra, Statistics, Basic Economics, Research Methods, and academic English writing."
-    tlrc_coord "For specialized upper-division courses, availability varies by semester. Check with us at the start of each term."
-    menu:
-        "What about writing support?":
-            jump act7_tlrc_writing
-        "How do I request a tutor?":
-            jump act7_tlrc_request
-        "What other services do you offer?":
-            jump act7_tlrc_services
-        "(Great, I'll come for statistics.)":
-            jump act7_tlrc_end
-
-label act7_tlrc_writing:
-    tlrc_coord "Academic writing is the single biggest adjustment challenge for UP freshmen. And rightfully so."
-    tlrc_coord "High school writing was formulaic. College writing demands critical thinking, argumentation, and proper citation."
-    tlrc_coord "Our Academic Writing Workshop is a structured program that covers:"
-    tlrc_coord "Research paper anatomy — how to write an introduction with a clear thesis, a literature review, methodology, analysis, and conclusion."
-    tlrc_coord "APA 7th Edition citation format — in-text citations, reference lists, DOI formatting. Every faculty member now requires APA."
-    tlrc_coord "Argumentation and evidence — how to construct a logical argument supported by credible academic sources."
-    tlrc_coord "Paraphrasing and summarizing — how to use sources without plagiarizing."
-    player_char "Can the TLRC review my paper before I submit it?"
-    tlrc_coord "Yes — that's our writing consultation service. Bring a draft at least two days before your deadline."
-    tlrc_coord "Our writing consultants review for structure, clarity, citation format, and coherence."
-    tlrc_coord "We don't evaluate content — that's your professor's role. We evaluate the writing itself."
-    tlrc_coord "We'll leave comments on your draft, then sit with you to discuss the revisions."
-    bea "I need this before my first research paper due date."
-    tlrc_coord "Sign up early. Slots fill up fast before midterms and finals."
-    tlrc_coord "We also have an anti-plagiarism seminar — highly recommended for freshmen who don't fully understand what counts as plagiarism."
-    tlrc_coord "Turnitin is used by most UP professors. You want to understand the rules before you accidentally break them."
-    menu:
-        "How do I request a tutor?":
-            jump act7_tlrc_request
-        "What other services do you offer?":
-            jump act7_tlrc_services
-        "(I'll sign up for the workshop.)":
-            jump act7_tlrc_end
-
-label act7_tlrc_request:
-    tlrc_coord "Requesting a tutor is straightforward. Here's the process:"
-    tlrc_coord "Step one — fill out a Tutoring Request Form. You can get it here or download it from the portal."
-    tlrc_coord "List: the subject, specific topics you're struggling with, your available schedule, and your preferred session mode — solo or group."
-    tlrc_coord "Step two — we match you with a compatible tutor within two to three working days."
-    tlrc_coord "Step three — the tutor contacts you to confirm the schedule. Sessions are logged by us."
-    tlrc_coord "There's no limit on the number of sessions. Come as often as you need."
-    player_char "Is there any cost?"
-    tlrc_coord "Zero. Completely free. Peer tutors are volunteers or compensated through the university's student support budget."
-    tlrc_coord "The TLRC is a service of UPV — funded to support your academic success."
-    tlrc_coord "Would you like to observe a session happening right now? One of our tutors is working with a group."
-    menu:
-        "(Yes, let me observe.)":
-            jump act7_tlrc_demo
-        "(No thanks — I'll come back to request a tutor.)":
-            jump act7_tlrc_end
-
-label act7_tlrc_demo:
-    narrator_char "(The coordinator leads you to a carrel where a third-year student is working with two freshmen on algebra.)"
-    peer_tutor "Okay — before I solve this, tell me: what does it mean when the equation has two variables?"
-    narrator_char "(The freshmen look at each other, then venture an answer. The tutor listens carefully.)"
-    peer_tutor "Close. Let me show you another way to think about it..."
-    narrator_char "(Twenty minutes pass. By the end, both students are working problems independently.)"
-    peer_tutor "Good! Now try this one on your own. I'll be right here if you get stuck."
-    narrator_char "(You watch as the tutor observes without interrupting, letting them work through the problem.)"
-    bea "(whispering) You can see it — the moment it clicks for them."
-    player_char "(whispering) Yeah. That's different from just being told the answer."
-    narrator_char "(The coordinator catches your eye and smiles, as if to say: this is what we do.)"
-    jump act7_tlrc_end
-
-label act7_tlrc_end:
-    tlrc_coord "Our office hours are Monday to Friday, 8 AM to 5 PM."
-    tlrc_coord "Workshop schedule, SI session timetable, and tutor availability are updated every semester on our bulletin board."
-    tlrc_coord "One last thing — don't wait until you're failing to come here."
-    tlrc_coord "The students who benefit most from the TLRC are the ones who come early, before the problem becomes a crisis."
-    bea "Noted. I'm signing up for the writing workshop this week."
-    player_char "(You feel like you've found a secret advantage — one that most freshmen overlook.)"
+    narrator_char "(The TLRC. A bright room at the end of the CAS hall. A banner above the door: 'Free Academic Support for All UPV Students.')"
+    narrator_char "(Inside: whiteboards with formulas and paper outlines, study carrels, a shelf of supplementary materials. Two tutors are already working with students.)"
+    tlrc_coord "Bea! And you brought friends."
+    bea "They need the writing workshop and a paper review before Friday."
+    tlrc_coord "Friday. Okay — sit down, let me explain what we can do."
+    tlrc_coord "I'm the TLRC Coordinator. We exist for one reason: no UP student should fail because they didn't have help."
+    tlrc_coord "Four services. Let me walk you through them quickly."
+    tlrc_coord "One — Peer Tutoring. Juniors and seniors who excelled in specific subjects, matched to you one-on-one."
+    tlrc_coord "They don't do your work. They guide you until you can do it yourself. There's a difference."
+    jaden "What subjects?"
+    tlrc_coord "College Algebra, General Chemistry, Statistics, Basic Economics, Research Methods, and academic writing."
+    tlrc_coord "Two — Supplemental Instruction. For gateway courses with high failure rates — think math, chemistry, stats."
+    tlrc_coord "An SI Leader runs weekly review sessions. Not a re-lecture — a guided discussion. Students who attend consistently score higher."
+    tlrc_coord "Three — Academic Writing Support. Workshops on paper structure, APA 7th edition, argumentation, anti-plagiarism."
+    tlrc_coord "And paper review: bring a draft two days before your deadline. We read it for structure, clarity, and citation — not content."
+    jaden "Can you review mine? It's due Friday."
+    tlrc_coord "Bring a draft by tomorrow, 3 PM. That gives us time to give you feedback before you finalize."
+    jaden "I don't have a draft yet."
+    tlrc_coord "Then tonight you write. Tomorrow at 3, you bring what you have — even rough. We work with rough."
+    bea "That's exactly what I needed to hear."
+    tlrc_coord "Four — Study Skills Seminars. Time management, active reading, test preparation. Open to all, free."
+    player_char "What's the biggest thing freshmen get wrong academically?"
+    tlrc_coord "Waiting. They wait until the problem is a crisis before they come here."
+    tlrc_coord "The students who benefit most are the ones who show up early — before the grade drops, before the deadline panic."
+    tlrc_coord "The library has the resources. We teach you how to use them. Those two combined — that's how students go from surviving to thriving."
+    player_char "Can he also observe a tutoring session? So he knows what to expect?"
+    tlrc_coord "Right this way."
+    narrator_char "(She leads you to a carrel where a third-year is working with a freshman on an essay outline.)"
+    peer_tutor "Okay — before we fix this paragraph, tell me: what is this sentence trying to argue?"
+    narrator_char "(The freshman thinks. Ventures an answer. The tutor listens, asks another question, doesn't give the answer.)"
+    narrator_char "(Five minutes later, the freshman rewrites the sentence herself — and it's better.)"
+    jaden "(quietly) That's what Prof. Santos was doing. Asking questions instead of just telling me."
+    player_char "Yeah."
+    jaden "I think I've been waiting for someone to just tell me what to do."
+    player_char "UP doesn't really work that way."
+    jaden "I'm starting to understand that."
+    narrator_char "(The coordinator hands Jaden a Tutoring Request Form and a workshop schedule.)"
+    tlrc_coord "Office hours: Monday to Friday, 8 AM to 5 PM. See you tomorrow at 3."
     narrator_char "(Encyclopedia unlocked: Teaching and Learning Resource Center (TLRC).)"
     $ persistent.encyclopedia_unlocks.add("tlrc")
     $ complete_task("visit_tlrc")
+    $ complete_task("talk_classmate_bea")
+    if "sq_apa_challenge" not in subquests_completed:
+        menu:
+            "★ Before we leave — test me on APA citation format.":
+                jump sq_apa_challenge
+            "(Got it. See you tomorrow.)":
+                pass
     window hide
-    jump act7_bea_end
+    jump act7_resolution
+
 
 ## ============================================================================
-## ACT 7 COMPLETION — Study Session
+## RESOLUTION — Outside TLRC, evening
 ## ============================================================================
-label act7_study_session:
+label act7_resolution:
     window show
-    narrator_char "(You sit in the library study room, surrounded by new friends and stacks of books.)"
-    narrator_char "(For the first time since arriving, the academic mountain ahead feels climbable.)"
-    narrator_char "(You have the tools, the resources, and the people. Time to put them to use.)"
+    narrator_char "(Outside. The afternoon has cooled into early evening. The library lights are still on.)"
+    jaden "I feel like I just attended three weeks of orientation in one afternoon."
+    player_char "You kind of did."
+    jaden "Library. Computer lab. Prof. Santos. TLRC."
+    jaden "These were all here the whole time."
+    player_char "Yeah."
+    jaden "I just... never went in."
+    player_char "You went in today."
+    bea "And you're going back tomorrow. With a draft."
+    jaden "With a draft. Right."
+    narrator_char "(A pause. Somewhere in the library building, a door closes. The last of the afternoon students heading home.)"
+    jaden "Hey — do you want to form a study group? The three of us?"
+    bea "I already have one. Tuesdays and Thursdays, 4 PM, library study room 2."
+    bea "You're both in now."
+    jaden "What if I show up and I don't know anything?"
+    bea "That's the point of the group, Jaden."
+    narrator_char "(You walk back toward the dorms together. Jaden still looks tired. But it's a different kind of tired.)"
+    narrator_char "(Not the paralyzed kind. The kind that comes after you've actually done something.)"
+    narrator_char "(Tomorrow he'll sit in the TLRC with a rough draft and a counselor who asks questions instead of giving answers.)"
+    narrator_char "(And that — the willingness to show up with what he has — is the whole skill.)"
     narrator_char "\[ACT 7 COMPLETE] — Library & Academic Resources."
     $ complete_task("attend_study_session")
     window hide
     return
+
 
 ## ============================================================================
 ## END OF ACT 7 DIALOGUES

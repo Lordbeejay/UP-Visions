@@ -51,7 +51,7 @@ label start:
     $ player_map_x = 2500
     $ player_map_y = 3200
     $ player_facing = "up"
-    jump act5_map
+    jump act6_map
     ## --- ACT 3 ---
     scene bg Miagao with fade
     show text "{size=+6}{color=#ffd700}ACT 3{/color}{/size}\n{color=#ffffff}Social / Exploration{/color}" at truecenter
@@ -636,20 +636,20 @@ label act5_complete:
 
 
 ## ============================================================================
-## ACT 6 MAP — Student Orgs & Campus Life
+## ACT 6 MAP — Student Support Services
+## Story: Find Dan → he's unwell → HSU → GCSU → Scholarship Service
+## Single entry node; the rest flows as one narrative chain.
 ## ============================================================================
 
 label act6_map:
     $ current_map_bg = "ui/CAS_Overworld(F).png"
+    $ player_map_x = 2500
+    $ player_map_y = 3200
+    $ player_facing = "up"
     $ act6_nodes = [
-        MapNode("mika",         1600, 2200, "act6_npc_mika",         tooltip="Mika",          icon_image="mika.png",         locked=False),
-        MapNode("kuya_tomas",   2800, 1900, "act6_npc_kuya_tomas",   tooltip="Kuya Tomas",    icon_image="kuya_tomas.png",   locked=True),
-        MapNode("ate_jenny",    2200, 2800, "act6_npc_ate_jenny",    tooltip="Ate Jenny",     icon_image="ate_jenny.png",    locked=True),
-        MapNode("coach_ramon",  3400, 2600, "act6_npc_coach_ramon",  tooltip="Coach Ramon",   icon_image="coach_ramon.png",  locked=True),
-        MapNode("dan_gcsu",     1200, 3200, "act6_npc_dan",          tooltip="Dan",           icon_image="classmate_dan.png", locked=True, icon_zoom=0.25),
-        MapNode("org_fair",     2500, 1500, "act6_org_fair",         tooltip="Org Fair",      icon_image="npcs/Arrow.png",   locked=True),
+        MapNode("dan", 1800, 2400, "act6_npc_dan", tooltip="Dan", icon_image="classmate_dan.png", locked=False, icon_zoom=0.25),
     ]
-    $ current_task_text = "Talk to Mika at the org fair"
+    $ current_task_text = "Find Dan near the CAS corridor"
 
 label act6_loop:
     call screen map_screen("ui/CAS_Overworld(F).png", act6_nodes, current_task_text, 1.0)
@@ -659,30 +659,6 @@ label act6_loop:
         call walk_to_node(_node, nodes=act6_nodes)
         call expression _node.target_label
 
-        if "talk_mika" in tasks_completed:
-            $ act6_nodes[1].locked = False
-            $ act6_nodes[2].locked = False
-            $ current_task_text = "Learn about scholarships and the OSA"
-
-        if "talk_kuya_tomas" in tasks_completed or "talk_ate_jenny" in tasks_completed:
-            $ act6_nodes[3].locked = False
-
-        if "talk_ate_jenny" in tasks_completed:
-            $ act6_nodes[4].locked = False
-
-        if "talk_dan_gcsu" not in tasks_completed and "talk_ate_jenny" in tasks_completed:
-            $ current_task_text = "Find Dan near the CAS corridor"
-
-        if (
-            "talk_mika" in tasks_completed and
-            "talk_kuya_tomas" in tasks_completed and
-            "talk_ate_jenny" in tasks_completed and
-            "talk_coach_ramon" in tasks_completed and
-            "talk_dan_gcsu" in tasks_completed
-        ):
-            $ act6_nodes[5].locked = False
-            $ current_task_text = "Walk through the org fair"
-
         if is_act_complete():
             jump act6_complete
 
@@ -691,7 +667,7 @@ label act6_loop:
 
 label act6_complete:
     scene black
-    call screen act_transition("ACT 6 COMPLETE", "You've explored campus life and organizations!", "complete")
+    call screen act_transition("ACT 6 COMPLETE", "You've navigated the support services\nthat hold UP Visayas together.", "complete")
     call screen act_transition("ACT 7", "Library & Academic Resources", "intro")
 
     $ current_act = 7
@@ -703,18 +679,19 @@ label act6_complete:
 
 ## ============================================================================
 ## ACT 7 MAP — Library & Academic Resources
+## Story: Find Jaden outside the library → chains through all scenes.
+## Single entry node; the rest flows as one narrative chain.
 ## ============================================================================
 
 label act7_map:
     $ current_map_bg = "ui/Diwata.png"
+    $ player_map_x = 2500
+    $ player_map_y = 3200
+    $ player_facing = "up"
     $ act7_nodes = [
-        MapNode("ate_rosa",      1800, 2000, "act7_npc_ate_rosa",      tooltip="Ate Rosa",      icon_image="ate_rosa.png",      locked=False),
-        MapNode("kuya_neil",     2800, 2400, "act7_npc_kuya_neil",     tooltip="Kuya Neil",     icon_image="kuya_neil.png",     locked=True),
-        MapNode("prof_santos",   3200, 1800, "act7_npc_prof_santos",   tooltip="Prof. Santos",  icon_image="prof_santos.png",   locked=True),
-        MapNode("classmate_bea", 2200, 3000, "act7_npc_classmate_bea", tooltip="Bea",           icon_image="classmate_bea.png", locked=True),
-        MapNode("study_session", 2500, 1400, "act7_study_session",     tooltip="Study Session",  icon_image="npcs/Arrow.png",          locked=True),
+        MapNode("jaden", 2200, 2400, "act7_npc_jaden", tooltip="Jaden", icon_image="jaden.png", locked=False, icon_zoom=0.25),
     ]
-    $ current_task_text = "Talk to Ate Rosa at the library"
+    $ current_task_text = "Find Jaden near the library"
 
 label act7_loop:
     call screen map_screen("ui/Diwata.png", act7_nodes, current_task_text, 1.0)
@@ -724,23 +701,6 @@ label act7_loop:
         call walk_to_node(_node, nodes=act7_nodes)
         call expression _node.target_label
 
-        if "talk_ate_rosa" in tasks_completed:
-            $ act7_nodes[1].locked = False
-            $ act7_nodes[2].locked = False
-            $ current_task_text = "Explore the computer lab and talk to professors"
-
-        if "talk_kuya_neil" in tasks_completed or "talk_prof_santos" in tasks_completed:
-            $ act7_nodes[3].locked = False
-
-        if (
-            "talk_ate_rosa" in tasks_completed and
-            "talk_kuya_neil" in tasks_completed and
-            "talk_prof_santos" in tasks_completed and
-            "talk_classmate_bea" in tasks_completed
-        ):
-            $ act7_nodes[4].locked = False
-            $ current_task_text = "Attend the study session"
-
         if is_act_complete():
             jump act7_complete
 
@@ -749,7 +709,7 @@ label act7_loop:
 
 label act7_complete:
     scene black
-    call screen act_transition("ACT 7 COMPLETE", "You've discovered the library and academic resources!", "complete")
+    call screen act_transition("ACT 7 COMPLETE", "Library, TLRC, study group.\nYou finally know how to study at UP.", "complete")
     call screen act_transition("ACT 8", "Finding Your Place", "intro")
 
     $ current_act = 8
@@ -761,43 +721,27 @@ label act7_complete:
 
 ## ============================================================================
 ## ACT 8 MAP — End of First Week: Finding Your Place
+## Story: Find Jaden → one chain through canteen, dorm, Prof. Reyes, oval.
+## Single entry node; the rest flows as one narrative chain.
 ## ============================================================================
 
 label act8_map:
-    $ current_map_bg = "ui/dormRoom.png"
+    $ current_map_bg = "ui/CAS_Overworld(F).png"
+    $ player_map_x = 2500
+    $ player_map_y = 3200
+    $ player_facing = "up"
     $ act8_nodes = [
-        MapNode("jaden_act8",    2100, 2600, "act8_npc_jaden",       tooltip="Jaden",         icon_image="jaden.png",        locked=False),
-        MapNode("ate_linda",     1600, 3200, "act8_npc_ate_linda",   tooltip="Ate Linda",     icon_image="ate_linda.png",    locked=True),
-        MapNode("nanay_elena",   3300, 1900, "act8_npc_nanay_elena", tooltip="Nanay Elena",   icon_image="nanay_elena.png",  locked=True),
-        MapNode("prof_reyes",    2800, 1600, "act8_npc_prof_reyes",  tooltip="Prof. Reyes",   icon_image="prof_reyes.png",   locked=True),
-        MapNode("end_of_week",   2500, 2200, "act8_end_of_week",     tooltip="Campus Oval",   icon_image="npcs/Arrow.png",         locked=True),
+        MapNode("jaden", 2100, 2400, "act8_npc_jaden", tooltip="Jaden", icon_image="jaden.png", locked=False, icon_zoom=0.25),
     ]
-    $ current_task_text = "Catch up with Jaden"
+    $ current_task_text = "Find Jaden — it's the end of the week"
 
 label act8_loop:
-    call screen map_screen("ui/dormRoom.png", act8_nodes, current_task_text, 1.0)
+    call screen map_screen("ui/CAS_Overworld(F).png", act8_nodes, current_task_text, 1.0)
     $ _action, _node = _return
 
     if _action == "walk":
         call walk_to_node(_node, nodes=act8_nodes)
         call expression _node.target_label
-
-        if "talk_jaden_act8" in tasks_completed:
-            $ act8_nodes[1].locked = False
-            $ act8_nodes[2].locked = False
-            $ current_task_text = "Talk to Ate Linda and Nanay Elena"
-
-        if "talk_ate_linda" in tasks_completed or "talk_nanay_elena" in tasks_completed:
-            $ act8_nodes[3].locked = False
-
-        if (
-            "talk_jaden_act8" in tasks_completed and
-            "talk_ate_linda" in tasks_completed and
-            "talk_nanay_elena" in tasks_completed and
-            "talk_prof_reyes" in tasks_completed
-        ):
-            $ act8_nodes[4].locked = False
-            $ current_task_text = "Reflect on your first week at the campus oval"
 
         if is_act_complete():
             jump act8_complete
@@ -807,7 +751,8 @@ label act8_loop:
 
 label act8_complete:
     scene black
-    call screen act_transition("ACT 8 COMPLETE", "You've found your place at UP Visayas.", "complete")
+    call screen act_transition("ACT 8 COMPLETE", "End of Week One.\nYou know where to go now.", "complete")
+    call screen act_transition("UP VISAYAS", "Honor and Excellence.", "complete")
 
     jump open_world
 
