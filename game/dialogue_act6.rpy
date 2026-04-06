@@ -192,6 +192,7 @@ label act6_at_gcsu:
     guidance_counselor "What helps: routine, community, and small wins. Regular sleep and meals — even just structure reduces anxiety. One or two people you can be honest with. And noticing the small things you manage each day."
     guidance_counselor "Let's try something right now. Slow breath with me."
     guidance_counselor "In... hold... and out."
+    call screen breathing_exercise_screen
     narrator_char "(A quiet moment. Dan breathes. Something in his posture shifts — just slightly.)"
     guidance_counselor "Good. Here's what I need you to understand."
     guidance_counselor "The stress you're carrying has a specific, concrete cause: you don't have enough money to eat. That is not a character flaw. That is a circumstance."
@@ -274,6 +275,12 @@ label act6_at_scholarship:
     narrator_char "(Encyclopedia unlocked: Scholarship Service — STFAP & Financial Assistance.)"
     $ persistent.encyclopedia_unlocks.add("scholarship_service")
     $ complete_task("talk_kuya_tomas")
+    if "sq_stfap_docs" not in subquests_completed:
+        menu:
+            "★ Kuya Tomas, can you test me on which documents go where?":
+                jump sq_stfap_docs
+            "(We'll head out. Thank you.)":
+                pass
     jump act6_dan_resolution
 
 
@@ -303,6 +310,12 @@ label act6_dan_resolution:
     narrator_char "(Nobody fixed anything for Dan today. They handed him the tools and showed him the door.)"
     narrator_char "(The rest — the forms, the follow-ups, the slow climb back — that's still his work.)"
     narrator_char "(But he's not doing it alone anymore.)"
+    if "sq_support_router" not in subquests_completed:
+        menu:
+            "★ Dan, quiz me — where does each problem go?":
+                jump sq_support_router
+            "(Let's head back.)":
+                pass
     window hide
     return
 
