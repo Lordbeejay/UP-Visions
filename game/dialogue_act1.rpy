@@ -123,11 +123,19 @@ label act1_jaden_end:
     jaden "Anyway — I'm going to keep walking around. Still figuring out where everything is."
     jaden "If you want to compare notes later, find me."
     if "sq_oblation" not in subquests_completed:
-        menu:
-            "★ Actually — tell me about the Oblation statue. What does it really mean?":
-                jump sq_oblation
-            "(Alright, see you around.)":
-                jump act1_jaden_complete
+        $ _flip = renpy.random.randint(0, 1)
+        if _flip == 0:
+            menu:
+                "★ Actually — tell me about the Oblation statue. What does it really mean?":
+                    jump sq_oblation
+                "(Alright, see you around.)":
+                    jump act1_jaden_complete
+        else:
+            menu:
+                "(Alright, see you around.)":
+                    jump act1_jaden_complete
+                "★ Actually — tell me about the Oblation statue. What does it really mean?":
+                    jump sq_oblation
     else:
         jump act1_jaden_complete
 
@@ -249,11 +257,19 @@ label act1_josh_general:
 label act1_josh_end:
     manong_josh "You seem like a good kid. Study hard."
     if "sq_miagao_heritage" not in subquests_completed:
-        menu:
-            "★ Manong, can you tell me more about the Miagao Church and the town's history?":
-                jump sq_miagao_heritage
-            "(Thank you, Manong.)":
-                jump act1_josh_complete
+        $ _flip = renpy.random.randint(0, 1)
+        if _flip == 0:
+            menu:
+                "★ Manong, can you tell me more about the Miagao Church and the town's history?":
+                    jump sq_miagao_heritage
+                "(Thank you, Manong.)":
+                    jump act1_josh_complete
+        else:
+            menu:
+                "(Thank you, Manong.)":
+                    jump act1_josh_complete
+                "★ Manong, can you tell me more about the Miagao Church and the town's history?":
+                    jump sq_miagao_heritage
     else:
         jump act1_josh_complete
 

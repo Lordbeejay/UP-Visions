@@ -210,13 +210,50 @@ label npc_jaden_go:
         $ complete_task("complete_enrollment_tetris")
         if "sq_crs_tactics" not in subquests_completed or "sq_academic_load" not in subquests_completed:
             sir_noel "One more thing — while you're here, do you want to test what you've really learned?"
-            menu:
-                "★ CRS tactics — quiz me on survival strategies for enlistment." if "sq_crs_tactics" not in subquests_completed:
-                    jump sq_crs_tactics
-                "★ Academic load — quiz me on units, NSTP, and standing." if "sq_academic_load" not in subquests_completed:
-                    jump sq_academic_load
-                "(I'm good, thanks Sir Noel.)":
-                    pass
+            $ _flip = renpy.random.randint(0, 1)
+            if "sq_crs_tactics" not in subquests_completed and "sq_academic_load" not in subquests_completed:
+                if _flip == 0:
+                    menu:
+                        "★ CRS tactics — quiz me on survival strategies for enlistment.":
+                            jump sq_crs_tactics
+                        "★ Academic load — quiz me on units, NSTP, and standing.":
+                            jump sq_academic_load
+                        "(I'm good, thanks Sir Noel.)":
+                            pass
+                else:
+                    menu:
+                        "★ Academic load — quiz me on units, NSTP, and standing.":
+                            jump sq_academic_load
+                        "★ CRS tactics — quiz me on survival strategies for enlistment.":
+                            jump sq_crs_tactics
+                        "(I'm good, thanks Sir Noel.)":
+                            pass
+            elif "sq_crs_tactics" not in subquests_completed:
+                if _flip == 0:
+                    menu:
+                        "★ CRS tactics — quiz me on survival strategies for enlistment.":
+                            jump sq_crs_tactics
+                        "(I'm good, thanks Sir Noel.)":
+                            pass
+                else:
+                    menu:
+                        "(I'm good, thanks Sir Noel.)":
+                            pass
+                        "★ CRS tactics — quiz me on survival strategies for enlistment.":
+                            jump sq_crs_tactics
+            else:
+                if _flip == 0:
+                    menu:
+                        "★ Academic load — quiz me on units, NSTP, and standing.":
+                            jump sq_academic_load
+                        "(I'm good, thanks Sir Noel.)":
+                            pass
+                else:
+                    menu:
+                        "(I'm good, thanks Sir Noel.)":
+                            pass
+                        "★ Academic load — quiz me on units, NSTP, and standing.":
+                            jump sq_academic_load
         window hide
 
     caezar "Oy, Jaden! Finally."

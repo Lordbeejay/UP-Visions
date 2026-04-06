@@ -137,13 +137,50 @@ label act4_dorm_key:
 
     $ complete_task("talk_dorm_manager")
     if "sq_dorm_code" not in subquests_completed or "sq_dorm_survival" not in subquests_completed:
-        menu:
-            "★ Walk me through the dorm rules properly." if "sq_dorm_code" not in subquests_completed:
-                jump sq_dorm_code
-            "★ Help me check if I have everything I need." if "sq_dorm_survival" not in subquests_completed:
-                jump sq_dorm_survival
-            "(Okay, heading to my room now.)":
-                pass
+        $ _flip = renpy.random.randint(0, 1)
+        if "sq_dorm_code" not in subquests_completed and "sq_dorm_survival" not in subquests_completed:
+            if _flip == 0:
+                menu:
+                    "★ Walk me through the dorm rules properly.":
+                        jump sq_dorm_code
+                    "★ Help me check if I have everything I need.":
+                        jump sq_dorm_survival
+                    "(Okay, heading to my room now.)":
+                        pass
+            else:
+                menu:
+                    "★ Help me check if I have everything I need.":
+                        jump sq_dorm_survival
+                    "★ Walk me through the dorm rules properly.":
+                        jump sq_dorm_code
+                    "(Okay, heading to my room now.)":
+                        pass
+        elif "sq_dorm_code" not in subquests_completed:
+            if _flip == 0:
+                menu:
+                    "★ Walk me through the dorm rules properly.":
+                        jump sq_dorm_code
+                    "(Okay, heading to my room now.)":
+                        pass
+            else:
+                menu:
+                    "(Okay, heading to my room now.)":
+                        pass
+                    "★ Walk me through the dorm rules properly.":
+                        jump sq_dorm_code
+        else:
+            if _flip == 0:
+                menu:
+                    "★ Help me check if I have everything I need.":
+                        jump sq_dorm_survival
+                    "(Okay, heading to my room now.)":
+                        pass
+            else:
+                menu:
+                    "(Okay, heading to my room now.)":
+                        pass
+                    "★ Help me check if I have everything I need.":
+                        jump sq_dorm_survival
     window hide
     return
 

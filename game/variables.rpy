@@ -276,19 +276,42 @@ default inventory_unlocked = False
 ## CLASSES — InfoItem, NotebookQuestion, GCMessage
 ## ============================================================================
 
+## ============================================================================
+## CLASSES — InfoItem, NotebookQuestion, GCMessage
+## ============================================================================
+
 init python:
 
     ## -------------------------------------------------------------------------
-    ## INFO ITEM — represents a piece of knowledge dropped by an NPC
+    ## INFO ITEM
     ## -------------------------------------------------------------------------
     class InfoItem:
-        def __init__(self, item_id, label, short, source, icon="📄", full=None):
-            self.item_id  = item_id   # unique string key
-            self.label    = label     # full display name
-            self.short    = short     # 1-line description shown in inventory
-            self.source   = source    # which NPC gave this
-            self.icon     = icon
-            self.full     = full if full else short  # encyclopedia long description
+        def __init__(self, item_id, name, desc, act, icon, full=""):
+            self.item_id = item_id
+            self.name = name
+            self.desc = desc
+            self.act = act
+            self.icon = icon
+            self.full = full
+
+    # --- ACT 5 ITEMS ---
+    ITEM_CLASS_SCHEDULE = InfoItem("class_schedule", "Class Schedule", "Your schedule of classes", "Act 5", "📄")
+    ITEM_GE_CURRICULUM = InfoItem("ge_curriculum", "GE Curriculum", "General Education curriculum details", "Act 5", "📄")
+    ITEM_GRADING_GUIDE = InfoItem("grading_guide", "Grading Guide", "UP Grading System Guide", "Act 5", "📄")
+    ITEM_PROF_ADVICE = InfoItem("prof_advice", "Professor's Advice", "Advice from a professor", "Act 5", "📄")
+    ITEM_ROOM_NUMBERING = InfoItem("room_numbering", "Room Numbering Guide", "How to find rooms", "Act 5", "📄")
+    ITEM_BUILDING_MAP = InfoItem("building_map", "Building Map", "Map of campus buildings", "Act 5", "📄")
+    ITEM_MASS_SCHEDULE = InfoItem("mass_schedule", "Mass Schedule", "Church Mass Schedule", "Act 5", "📄") 
+    ITEM_MAO_POLICY = InfoItem("mao_policy", "MAO Policy", "Maximum Allowable Absences Policy", "Act 5", "📄")
+    ITEM_STUDENT_COUNCIL = InfoItem("student_council", "Student Council", "Student Council Info", "Act 5", "📄")
+    ITEM_STUDENT_RIGHTS = InfoItem("student_rights", "Student Rights", "Your rights as a student", "Act 5", "📄")
+    ITEM_ACADEMIC_FREEDOM = InfoItem("academic_freedom", "Academic Freedom", "Academic Freedom Info", "Act 5", "📄")
+    ITEM_STUDY_TIPS = InfoItem("study_tips", "Study Tips", "Tips for studying effectively", "Act 5", "📄")
+    ITEM_STUDY_BALANCE = InfoItem("study_balance", "Study Balance", "Study Balance Guide", "Act 5", "📄")
+    ITEM_STUDY_SPOTS = InfoItem("study_spots", "Study Spots", "Study Spots Map", "Act 5", "📄")
+    ITEM_HSU_SERVICES = InfoItem("hsu_services", "HSU Services", "HSU Services Guide", "Act 5", "📄")
+
+    # --- JADEN ITEMS ---
 
     ## -------------------------------------------------------------------------
     ## NOTEBOOK QUESTION — one question on the detective board

@@ -94,11 +94,19 @@ label act2_bea_tips:
 label act2_bea_end:
     ate_bea "By the way, you should also talk to Kuya Mark — the guard near the gate. He knows all the security rules."
     if "sq_up_jargon" not in subquests_completed:
-        menu:
-            "★ Before you go — can you quiz me on UP academic jargon? DRP, INC, LOA...":
-                jump sq_up_jargon
-            "(Alright, thanks Ate Bea!)":
-                jump act2_bea_complete
+        $ _flip = renpy.random.randint(0, 1)
+        if _flip == 0:
+            menu:
+                "★ Before you go — can you quiz me on UP academic jargon? DRP, INC, LOA...":
+                    jump sq_up_jargon
+                "(Alright, thanks Ate Bea!)":
+                    jump act2_bea_complete
+        else:
+            menu:
+                "(Alright, thanks Ate Bea!)":
+                    jump act2_bea_complete
+                "★ Before you go — can you quiz me on UP academic jargon? DRP, INC, LOA...":
+                    jump sq_up_jargon
     else:
         jump act2_bea_complete
 
