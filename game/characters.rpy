@@ -42,33 +42,37 @@ define sir_allan = Character("sir allan", color="#6e1f2a", what_color="#ffffff",
 define sir_noel = Character("Sir Noel", color="#6e1f2a", what_color="#ffffff", callback=typing_sound)
 
 ## --- Act 5 Characters ---
-define prof_lena = Character("Prof. Lena", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
-define kuya_rico = Character("Kuya Rico", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
-define ate_grace = Character("Ate Grace", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
-define dan = Character("Dan", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
-define ria = Character("Ria", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
-define hsu_nurse = Character("Nurse Santos", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+
+# --- Act 5 Unique Titles ---
 define prof_lena = Character("Prof. Lena", color="#6e1f2a", what_color="#ffffff", callback=typing_sound)
 define kuya_rico = Character("Kuya Rico", color="#6e1f2a", what_color="#ffffff", callback=typing_sound)
 define ate_grace = Character("Ate Grace", color="#6e1f2a", what_color="#ffffff", callback=typing_sound)
 define dan = Character("Dan", color="#6e1f2a", what_color="#ffffff", callback=typing_sound)
+define ria = Character("Ria", color="#6e1f2a", what_color="#ffffff", callback=typing_sound)
+define hsu_nurse = Character("Nurse Santos", color="#6e1f2a", what_color="#ffffff", callback=typing_sound)
 
 ## --- Act 6 Characters ---
+
+# --- Act 6 Unique Titles ---
 define mika = Character("Mika", color="#6e1f2a", what_color="#ffffff", callback=typing_sound)
 define kuya_tomas = Character("Kuya Tomas", color="#6e1f2a", what_color="#ffffff", callback=typing_sound)
-define ate_jenny = Character("Ate Jenny", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
-define coach_ramon = Character("Coach Ramon", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+define ate_jenny = Character("Ate Jenny", color="#6e1f2a", what_color="#ffffff", callback=typing_sound)
+define coach_ramon = Character("Coach Ramon", color="#6e1f2a", what_color="#ffffff", callback=typing_sound)
 
 ## --- Act 7 Characters ---
-define ate_rosa = Character("Ate Rosa", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
-define kuya_neil = Character("Kuya Neil", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
-define prof_santos = Character("Prof. Santos", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
-define bea = Character("Bea", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+
+# --- Act 7 Unique Titles ---
+define ate_rosa = Character("Ate Rosa", color="#6e1f2a", what_color="#ffffff", callback=typing_sound)
+define kuya_neil = Character("Kuya Neil", color="#6e1f2a", what_color="#ffffff", callback=typing_sound)
+define prof_santos = Character("Prof. Santos", color="#6e1f2a", what_color="#ffffff", callback=typing_sound)
+define bea = Character("Bea", color="#6e1f2a", what_color="#ffffff", callback=typing_sound)
 
 ## --- Act 8 Characters ---
-define ate_linda = Character("Ate Linda", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
-define nanay_elena = Character("Nanay Elena", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
-define prof_reyes = Character("Prof. Reyes", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
+
+# --- Act 8 Unique Titles ---
+define ate_linda = Character("Ate Linda", color="#6e1f2a", what_color="#ffffff", callback=typing_sound)
+define nanay_elena = Character("Nanay Elena", color="#6e1f2a", what_color="#ffffff", callback=typing_sound)
+define prof_reyes = Character("Prof. Reyes", color="#6e1f2a", what_color="#ffffff", callback=typing_sound)
 
 ## --- Support Services Characters ---
 define guidance_counselor = Character("Ma'am Garcia", color="#6e1f2a", what_color="#ffffff", what_sound="audio/click.wav")
