@@ -326,7 +326,22 @@ label act8_reyes_end:
                 jump sq_honor_excellence
             "(Thank you, Prof. Reyes.)":
                 pass
-    window hide
+    # Randomize star quiz menu (if more options are added in the future)
+    # Example for future expansion:
+    # python:
+    #     import random
+    #     _star_choices = [
+    #         ("★ One final challenge — quiz me on Honor and Excellence.", "sq_honor_excellence"),
+    #         ("(Thank you, Prof. Reyes.)", None)
+    #     ]
+    #     random.shuffle(_star_choices)
+    # menu:
+    #     for _text, _jump in _star_choices:
+    #         _text:
+    #             if _jump is not None:
+    #                 jump expression _jump
+    #             else:
+    #                 pass
     return
 
 ## ============================================================================

@@ -243,8 +243,8 @@ screen map_screen(map_bg, nodes, task_text="", map_scale=1.0, player_zoom=2.5):
 
     ## Key bindings for phone, inventory, encyclopedia — overlays so the map stays visible
     key "p" action If(phone_unlocked, Show("phone_screen"), NullAction())
-    key "e" action If(inventory_unlocked, Show("encyclopedia_screen"), NullAction())
-    key "d" action If(inventory_unlocked, Show("dictionary_screen"), NullAction())
+    key "e" action Show("encyclopedia_screen")
+    key "d" action Show("dictionary_screen")
 
     ## Black background behind everything
     add Solid("#000000"):
@@ -552,8 +552,7 @@ screen map_screen(map_bg, nodes, task_text="", map_scale=1.0, player_zoom=2.5):
                         hover_background Solid("#f6d79d14")
                         insensitive_background Solid("#00000000")
                         padding (10, 4, 10, 4)
-                        action If(inventory_unlocked, Show("encyclopedia_screen"), NullAction())
-                        sensitive inventory_unlocked
+                        action Show("encyclopedia_screen")
 
                         hbox:
                             spacing 5
@@ -569,7 +568,7 @@ screen map_screen(map_bg, nodes, task_text="", map_scale=1.0, player_zoom=2.5):
                                     outlines [(1, "#1e0c12", 0, 0)]
                             text "ncyclopedia":
                                 yalign 0.5 size 15
-                                color ("#f1debf" if inventory_unlocked else "#f1debf44")
+                                color "#f1debf"
                                 outlines [(2, "#1e0c12", 0, 0)]
 
                     ## Thin gold divider
@@ -583,8 +582,7 @@ screen map_screen(map_bg, nodes, task_text="", map_scale=1.0, player_zoom=2.5):
                         hover_background Solid("#f6d79d14")
                         insensitive_background Solid("#00000000")
                         padding (10, 4, 10, 4)
-                        action If(inventory_unlocked, Show("dictionary_screen"), NullAction())
-                        sensitive inventory_unlocked
+                        action Show("dictionary_screen")
 
                         hbox:
                             spacing 5
@@ -600,7 +598,7 @@ screen map_screen(map_bg, nodes, task_text="", map_scale=1.0, player_zoom=2.5):
                                     outlines [(1, "#1e0c12", 0, 0)]
                             text "ictionary":
                                 yalign 0.5 size 15
-                                color ("#f1debf" if inventory_unlocked else "#f1debf44")
+                                color "#f1debf"
                                 outlines [(2, "#1e0c12", 0, 0)]
 
                     ## Thin gold divider
@@ -703,10 +701,31 @@ label walk_to_node(target_node, map_bg=None, nodes=None, player_zoom=2.5):
         $ map_bg = current_map_bg
 
     ## Show the map background so it stays visible during the walk animation
-    show expression ("images/" + map_bg) as walk_map_bg:
-        xalign 0.5
-        yalign 0.5
-        zoom 1.0
+    # Use map_scale=0.5 for Act 5 CL3, otherwise default to 1.0
+    python:
+        _map_scale = 1.0
+        _use_black_bg = False
+        if map_bg == "maps/CL3.png":
+            _map_scale = 0.5
+            _use_black_bg = True
+    if _use_black_bg:
+        # Show black background, then a white border, then the CL3 photo on top
+        show expression Solid("#000000") as walk_map_bg_bg:
+            xalign 0.5
+            yalign 0.5
+        show expression Frame(Solid("#ffffff"), 4, 4) as walk_map_bg:
+            xalign 0.5
+            yalign 0.5
+        show expression ("images/" + map_bg) as walk_map_bg:
+            xalign 0.5
+            yalign 0.5
+            zoom _map_scale
+        
+    else:
+        show expression ("images/" + map_bg) as walk_map_bg:
+            xalign 0.5
+            yalign 0.5
+            zoom _map_scale
 
     if nodes is not None:
         show screen map_nodes_overlay(nodes)
