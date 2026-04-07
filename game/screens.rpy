@@ -6521,3 +6521,204 @@ screen dorm_room_setup_game():
                 text_hover_color "#ffffff"
                 text_outlines [(2, "#1e0c12", 0, 0)]
                 action Return("completed")
+
+
+################################################################################
+## Travel Cutscene Screen
+## Self-contained: video + RPG-style border + vignette + HUD all in one screen.
+##
+## Usage in a label:
+##   window hide
+##   show screen travel_cutscene("images/maps/MyVideo.webm", "Location Name")
+##   $ renpy.pause()
+##   hide screen travel_cutscene
+################################################################################
+
+## Pulsing glow for the dot indicator
+transform _travel_dot_pulse:
+    alpha 1.0
+    linear 0.55 alpha 0.15
+    linear 0.55 alpha 1.0
+    repeat
+
+## Destination card slides up on appear
+transform _travel_card_slidein:
+    alpha 0.0
+    yoffset 28
+    linear 0.5 alpha 1.0 yoffset 0
+
+## Staggered travel dots (sequential blink)
+transform _travel_tdot1:
+    block:
+        alpha 0.2
+        linear 0.28 alpha 1.0
+        linear 0.28 alpha 0.2
+        repeat
+
+transform _travel_tdot2:
+    pause 0.22
+    block:
+        alpha 0.2
+        linear 0.28 alpha 1.0
+        linear 0.28 alpha 0.2
+        repeat
+
+transform _travel_tdot3:
+    pause 0.44
+    block:
+        alpha 0.2
+        linear 0.28 alpha 1.0
+        linear 0.28 alpha 0.2
+        repeat
+
+## Subtle scan line sweeping top to bottom
+transform _travel_scan:
+    ypos -3
+    linear 2.8 ypos 1083
+    repeat
+
+screen travel_cutscene(video_path, destination, subtitle=""):
+    zorder 500
+    modal False
+
+    ## ── Black base ──
+    add Solid("#000000") xsize 1920 ysize 1080
+
+    ## ── Video (fullscreen) ──
+    add Movie(play=video_path) xsize 1920 ysize 1080 xpos 0 ypos 0
+
+    ## ── Scan line (very subtle, sweeps over video) ──
+    add Solid("#ffffff08") xsize 1920 ysize 3 at _travel_scan
+
+    ## ── Vignette: dark wash on all four edges ──
+    add Solid("#000000CC") xsize 1920 ysize 110 xpos 0 ypos 0
+    add Solid("#000000CC") xsize 1920 ysize 110 xpos 0 yalign 1.0
+    add Solid("#00000077") xsize 110 ysize 1080 xpos 0 ypos 0
+    add Solid("#00000077") xsize 110 ysize 1080 xalign 1.0 ypos 0
+
+    ## ── Thin outer border (dark maroon, 3px, all 4 sides) ──
+    add Solid("#4a0e0e") xsize 1920 ysize 3   xpos 0      ypos 0
+    add Solid("#4a0e0e") xsize 1920 ysize 3   xpos 0      yalign 1.0
+    add Solid("#4a0e0e") xsize 3   ysize 1080 xpos 0      ypos 0
+    add Solid("#4a0e0e") xsize 3   ysize 1080 xalign 1.0  ypos 0
+
+    ## ── Outer corner brackets (warm gold, 110px arms, 8px thick) ──
+    ## Top-left
+    add Solid("#c8923a") xsize 110 ysize 8 xpos 0      ypos 0
+    add Solid("#c8923a") xsize 8   ysize 110 xpos 0    ypos 0
+    ## Top-right
+    add Solid("#c8923a") xsize 110 ysize 8 xalign 1.0  ypos 0
+    add Solid("#c8923a") xsize 8   ysize 110 xalign 1.0 ypos 0
+    ## Bottom-left
+    add Solid("#c8923a") xsize 110 ysize 8 xpos 0      yalign 1.0
+    add Solid("#c8923a") xsize 8   ysize 110 xpos 0    yalign 1.0
+    ## Bottom-right
+    add Solid("#c8923a") xsize 110 ysize 8 xalign 1.0  yalign 1.0
+    add Solid("#c8923a") xsize 8   ysize 110 xalign 1.0 yalign 1.0
+
+    ## ── Corner squares at outer bracket tips (gold, 12×12) ──
+    add Solid("#c8923a") xsize 12 ysize 12 xpos 0      ypos 0
+    add Solid("#c8923a") xsize 12 ysize 12 xalign 1.0  ypos 0
+    add Solid("#c8923a") xsize 12 ysize 12 xpos 0      yalign 1.0
+    add Solid("#c8923a") xsize 12 ysize 12 xalign 1.0  yalign 1.0
+
+    ## ── Inner corner brackets (maroon, 70px arms, 3px thick, inset 22px) ──
+    ## Top-left
+    add Solid("#a03030") xsize 70 ysize 3 xpos 22          ypos 22
+    add Solid("#a03030") xsize 3  ysize 70 xpos 22         ypos 22
+    ## Top-right  (1920 - 22 - 70 = 1828 | 1920 - 22 - 3 = 1895)
+    add Solid("#a03030") xsize 70 ysize 3 xpos 1828        ypos 22
+    add Solid("#a03030") xsize 3  ysize 70 xpos 1895       ypos 22
+    ## Bottom-left  (1080 - 22 - 3 = 1055 | 1080 - 22 - 70 = 988)
+    add Solid("#a03030") xsize 70 ysize 3 xpos 22          ypos 1055
+    add Solid("#a03030") xsize 3  ysize 70 xpos 22         ypos 988
+    ## Bottom-right
+    add Solid("#a03030") xsize 70 ysize 3 xpos 1828        ypos 1055
+    add Solid("#a03030") xsize 3  ysize 70 xpos 1895       ypos 988
+
+    ## ── Top HUD strip: "◆ NAVIGATING ◆" ──
+    frame:
+        xalign 0.5
+        ypos 10
+        background "#00000000"
+        padding (18, 4, 18, 4)
+        hbox:
+            spacing 10
+            xalign 0.5
+            text "◆" at _travel_dot_pulse:
+                color "#c8923a"
+                size 20
+                yalign 0.5
+            text "NAVIGATING":
+                color "#2FA89A"
+                size 30
+                yalign 0.5
+            text "◆" at _travel_dot_pulse:
+                color "#c8923a"
+                size 20
+                yalign 0.5
+
+    ## ── Destination card (slides up) ──
+    frame at _travel_card_slidein:
+        xalign 0.5
+        yalign 0.87
+        background "#000000AA"
+        padding (48, 14, 48, 20)
+        vbox:
+            spacing 6
+            xalign 0.5
+
+            ## "DESTINATION" label with arrow indicators
+            hbox:
+                spacing 8
+                xalign 0.5
+                text "▶" at _travel_dot_pulse:
+                    color "#e07070"
+                    size 11
+                    yalign 0.5
+                text "DESTINATION":
+                    color "#ffffff44"
+                    size 11
+                    yalign 0.5
+                text "▶" at _travel_dot_pulse:
+                    color "#e07070"
+                    size 11
+                    yalign 0.5
+
+            ## Destination name
+            text destination:
+                xalign 0.5
+                color "#ffffff"
+                size 38
+                bold True
+                outlines [(2, "#000000AA", 1, 1)]
+
+            ## Optional subtitle
+            if subtitle:
+                text subtitle:
+                    xalign 0.5
+                    color "#ffffff77"
+                    size 14
+
+            ## Staggered travel dots
+            null height 2
+            hbox:
+                xalign 0.5
+                spacing 10
+                text "●" at _travel_tdot1:
+                    color "#c8923a"
+                    size 10
+                text "●" at _travel_tdot2:
+                    color "#c8923a"
+                    size 10
+                text "●" at _travel_tdot3:
+                    color "#c8923a"
+                    size 10
+
+    ## ── Skip hint (bottom-right, inside corner bracket) ──
+    text "[[ Click to skip ]]":
+        xpos 1895
+        xanchor 1.0
+        ypos 1062
+        color "#ffffff33"
+        size 11
