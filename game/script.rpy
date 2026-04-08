@@ -79,7 +79,7 @@ label start:
     ## ────────────────────────────────────────────────────────────────────
 
     # Jump directly to Act 1
-    jump act2_map
+    jump act6_map
 
 ## ============================================================================
 ## ACT 1 MAP — Banwa (Gate / HSU / Admin / Medical)
@@ -641,72 +641,6 @@ label act5_complete:
     $ player_map_y = 2600
     $ player_facing = "down"
     jump act6_map
-
-
-## ============================================================================
-## ACT 6 MAP — Student Orgs & Campus Life
-## ============================================================================
-
-label act6_map:
-    $ current_map_bg = "ace/OW_CAS.png"
-    $ act6_nodes = [
-        MapNode("mika",         1600, 2200, "act6_npc_mika",         tooltip="Mika",          icon_image="mika.png",         locked=False),
-        MapNode("kuya_tomas",   2800, 1900, "act6_npc_kuya_tomas",   tooltip="Kuya Tomas",    icon_image="kuya_tomas.png",   locked=True),
-        MapNode("ate_jenny",    2200, 2800, "act6_npc_ate_jenny",    tooltip="Ate Jenny",     icon_image="ate_jenny.png",    locked=True),
-        MapNode("coach_ramon",  3400, 2600, "act6_npc_coach_ramon",  tooltip="Coach Ramon",   icon_image="coach_ramon.png",  locked=True),
-        MapNode("dan_gcsu",     1200, 3200, "act6_npc_dan",          tooltip="Dan",           icon_image="classmate_dan.png", locked=True, icon_zoom=0.25),
-        MapNode("org_fair",     2500, 1500, "act6_org_fair",         tooltip="Org Fair",      icon_image="npcs/Arrow.png",   locked=True),
-    ]
-    $ current_task_text = "Talk to Mika at the org fair"
-
-label act6_loop:
-    call screen map_screen("ace/OW_CAS.png", act6_nodes, current_task_text, 1.0)
-    $ _action, _node = _return
-
-    if _action == "walk":
-        call walk_to_node(_node, nodes=act6_nodes)
-        call expression _node.target_label
-
-        if "talk_mika" in tasks_completed:
-            $ act6_nodes[1].locked = False
-            $ act6_nodes[2].locked = False
-            $ current_task_text = "Learn about scholarships and the OSA"
-
-        if "talk_kuya_tomas" in tasks_completed or "talk_ate_jenny" in tasks_completed:
-            $ act6_nodes[3].locked = False
-
-        if "talk_ate_jenny" in tasks_completed:
-            $ act6_nodes[4].locked = False
-
-        if "talk_dan_gcsu" not in tasks_completed and "talk_ate_jenny" in tasks_completed:
-            $ current_task_text = "Find Dan near the CAS corridor"
-
-        if (
-            "talk_mika" in tasks_completed and
-            "talk_kuya_tomas" in tasks_completed and
-            "talk_ate_jenny" in tasks_completed and
-            "talk_coach_ramon" in tasks_completed and
-            "talk_dan_gcsu" in tasks_completed
-        ):
-            $ act6_nodes[5].locked = False
-            $ current_task_text = "Walk through the org fair"
-
-        if is_act_complete():
-            jump act6_complete
-
-    jump act6_loop
-
-
-label act6_complete:
-    scene black
-    call screen act_transition("ACT 6 COMPLETE", "You've explored campus life and organizations!", "complete")
-    call screen act_transition("ACT 7", "Library & Academic Resources", "intro")
-
-    $ current_act = 7
-    $ player_map_x = 2500
-    $ player_map_y = 2600
-    $ player_facing = "up"
-    jump act7_map
 
 
 ## ============================================================================
