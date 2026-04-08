@@ -79,7 +79,7 @@ label start:
     ## ────────────────────────────────────────────────────────────────────
 
     # Jump directly to Act 1
-    jump act1_map
+    jump act6_map
 
 ## ============================================================================
 ## ACT 1 MAP — Banwa (Gate / HSU / Admin / Medical)
@@ -189,7 +189,7 @@ label act1_tindahan_map:
     $ current_map_bg = "ui/overhead_tindahan.png"
     $ act1_nav_target = None
     $ act1_tindahan_nodes = [
-        MapNode("aleng_maria",   1500, 2400, "act1_npc_aleng_maria",   tooltip="Aleng Maria",     icon_image="alengmaria.png",    locked=False),
+        MapNode("aleng_maria",   1500, 3400, "act1_npc_aleng_maria",   tooltip="Aleng Maria",     icon_image="alengmaria.png",    locked=False),
         MapNode("joseph_driver", 2800, 2400, "act1_npc_joseph_driver", tooltip="Joseph (Driver)", icon_image="manong_driver.png",  locked=True),
         MapNode("go_banwa_r",    4900, 2400, "act1_go_banwa",          tooltip="Banwa →",         icon_image="Arrow.png",          locked=False, icon_zoom=1.5),
     ]
@@ -311,7 +311,7 @@ label act1_complete:
 
 ## --- PHASE 1: Entrance map with Ate Bea and Kuya Mark ---
 label act2_map:
-    $ current_map_bg = "maps/Entrance_Box1.png"
+    $ current_map_bg = "maps/Box1.png"
     $ act2_entrance_nodes = [
         MapNode("ate_bea",    2000, 2600, "act2_npc_ate_bea",    tooltip="Ate Bea",     icon_image="ate_bea.png",    locked=False),
         MapNode("kuya_mark",  2800, 3900, "act2_npc_kuya_mark",  tooltip="Kuya Mark",   icon_image="kuya_mark.png",  locked=True),
@@ -320,7 +320,7 @@ label act2_map:
     $ current_task_text = "Talk to Ate Bea at the Entrance"
 
 label act2_entrance_loop:
-    call screen map_screen("maps/Entrance_Box1.png", act2_entrance_nodes, current_task_text, 1.0)
+    call screen map_screen("maps/Box1.png", act2_entrance_nodes, current_task_text, 1.0)
     $ _action, _node = _return
 
     if _action == "walk":
@@ -345,7 +345,7 @@ label act2_entrance_loop:
 
 ## --- PHASE 2: New Admin exterior — enter inside ---
 label act2_newad_map:
-    $ current_map_bg = "maps/Box1.png"
+    $ current_map_bg = "maps/NewAd.png"
     $ player_map_x = 2500
     $ player_map_y = 3200
     $ player_facing = "up"
@@ -356,7 +356,7 @@ label act2_newad_map:
     $ current_task_text = "Enter the New Admin building"
 
 label act2_newad_loop:
-    call screen map_screen("maps/Box1.png", act2_newad_nodes, current_task_text, 1.0)
+    call screen map_screen("maps/NewAd.png", act2_newad_nodes, current_task_text, 1.0)
     $ _action, _node = _return
 
     if _action == "walk":
@@ -371,7 +371,7 @@ label act2_newad_loop:
 
 ## --- PHASE 3: Inside New Admin — find Ma'am Reyes ---
 label act2_inside_map:
-    $ current_map_bg = "maps/NewAd_Inside.png"
+    $ current_map_bg = "maps/NewAd_Lobby.png"
     $ player_map_x = 2500
     $ player_map_y = 3500
     $ player_facing = "up"
@@ -382,7 +382,7 @@ label act2_inside_map:
     $ current_task_text = "Find Ma'am Reyes inside New Admin"
 
 label act2_inside_loop:
-    call screen map_screen("maps/NewAd_Inside.png", act2_inside_nodes, current_task_text, 1.0)
+    call screen map_screen("maps/NewAd_Lobby.png", act2_inside_nodes, current_task_text, 1.0)
     $ _action, _node = _return
 
     if _action == "walk":
@@ -641,72 +641,6 @@ label act5_complete:
     $ player_map_y = 2600
     $ player_facing = "down"
     jump act6_map
-
-
-## ============================================================================
-## ACT 6 MAP — Student Orgs & Campus Life
-## ============================================================================
-
-label act6_map:
-    $ current_map_bg = "ui/CAS_Overworld(F).png"
-    $ act6_nodes = [
-        MapNode("mika",         1600, 2200, "act6_npc_mika",         tooltip="Mika",          icon_image="mika.png",         locked=False),
-        MapNode("kuya_tomas",   2800, 1900, "act6_npc_kuya_tomas",   tooltip="Kuya Tomas",    icon_image="kuya_tomas.png",   locked=True),
-        MapNode("ate_jenny",    2200, 2800, "act6_npc_ate_jenny",    tooltip="Ate Jenny",     icon_image="ate_jenny.png",    locked=True),
-        MapNode("coach_ramon",  3400, 2600, "act6_npc_coach_ramon",  tooltip="Coach Ramon",   icon_image="coach_ramon.png",  locked=True),
-        MapNode("dan_gcsu",     1200, 3200, "act6_npc_dan",          tooltip="Dan",           icon_image="classmate_dan.png", locked=True, icon_zoom=0.25),
-        MapNode("org_fair",     2500, 1500, "act6_org_fair",         tooltip="Org Fair",      icon_image="npcs/Arrow.png",   locked=True),
-    ]
-    $ current_task_text = "Talk to Mika at the org fair"
-
-label act6_loop:
-    call screen map_screen("ui/CAS_Overworld(F).png", act6_nodes, current_task_text, 1.0)
-    $ _action, _node = _return
-
-    if _action == "walk":
-        call walk_to_node(_node, nodes=act6_nodes)
-        call expression _node.target_label
-
-        if "talk_mika" in tasks_completed:
-            $ act6_nodes[1].locked = False
-            $ act6_nodes[2].locked = False
-            $ current_task_text = "Learn about scholarships and the OSA"
-
-        if "talk_kuya_tomas" in tasks_completed or "talk_ate_jenny" in tasks_completed:
-            $ act6_nodes[3].locked = False
-
-        if "talk_ate_jenny" in tasks_completed:
-            $ act6_nodes[4].locked = False
-
-        if "talk_dan_gcsu" not in tasks_completed and "talk_ate_jenny" in tasks_completed:
-            $ current_task_text = "Find Dan near the CAS corridor"
-
-        if (
-            "talk_mika" in tasks_completed and
-            "talk_kuya_tomas" in tasks_completed and
-            "talk_ate_jenny" in tasks_completed and
-            "talk_coach_ramon" in tasks_completed and
-            "talk_dan_gcsu" in tasks_completed
-        ):
-            $ act6_nodes[5].locked = False
-            $ current_task_text = "Walk through the org fair"
-
-        if is_act_complete():
-            jump act6_complete
-
-    jump act6_loop
-
-
-label act6_complete:
-    scene black
-    call screen act_transition("ACT 6 COMPLETE", "You've explored campus life and organizations!", "complete")
-    call screen act_transition("ACT 7", "Library & Academic Resources", "intro")
-
-    $ current_act = 7
-    $ player_map_x = 2500
-    $ player_map_y = 2600
-    $ player_facing = "up"
-    jump act7_map
 
 
 ## ============================================================================
