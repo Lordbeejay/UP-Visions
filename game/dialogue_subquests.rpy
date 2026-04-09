@@ -848,5 +848,196 @@ label sq_honor_excellence:
 
 
 ## ============================================================================
+## ACT 5 — SUBQUEST C: "Rights vs. Freedom — Sort It Out"
+## Trigger: Ate Grace's dialogue end  |  Game: Sort (3 bins)
+## Sort student scenarios into: Student Right / Faculty Academic Freedom /
+## Student Responsibility
+## ============================================================================
+label sq_rights_freedom:
+    window show
+    ate_grace "One more thing before you go. You said you understand your rights and academic freedom."
+    ate_grace "Prove it. Sort these situations into the right category."
+    python:
+        sq_sort_state.setup(
+            "Rights vs. Freedom",
+            "Sort each situation into the correct category",
+            [
+                ("Requesting your official grade sheet from the Registrar", 0, "📄"),
+                ("A professor teaching from an unconventional or controversial theory", 1, "📖"),
+                ("Filing a formal complaint when a professor is absent more than 20% of classes", 0, "📢"),
+                ("A professor deciding which readings to assign in their own syllabus", 1, "📚"),
+                ("Submitting your own original work — no plagiarism, no ghostwriting", 2, "✏️"),
+                ("Appealing an unfair grade through the department chair or dean", 0, "⚖️"),
+                ("Attending class prepared after completing the assigned readings", 2, "📓"),
+            ],
+            [
+                ("Your Student Right", "#1a3a1a", "🎓"),
+                ("Faculty Academic Freedom", "#1a1a3a", "📚"),
+                ("Your Responsibility", "#2a1a00", "⚡"),
+            ]
+        )
+    window hide
+    call screen sq_sort_game()
+    $ _sq_result = _return
+    window show
+    if _sq_result == "completed":
+        ate_grace "Good. You know the difference. Rights protect you. Academic freedom protects inquiry. Responsibility holds both together."
+        ate_grace "Use all three — and understand which one applies before you act."
+    else:
+        ate_grace "Review what you missed. Knowing the difference between a right, a freedom, and a duty keeps you from misusing all three."
+    $ collect_item(ITEM_RIGHTS_FREEDOM_GUIDE)
+    show screen item_pickup_screen(ITEM_RIGHTS_FREEDOM_GUIDE)
+    pause 2.5
+    hide screen item_pickup_screen
+    $ persistent.encyclopedia_unlocks.add("rights_freedom_sq")
+    $ complete_subquest("sq_rights_freedom")
+    window hide
+    return
+
+
+## ============================================================================
+## ACT 5 — SUBQUEST D: "Campus Health Triage"
+## Trigger: Physician at act5_hsu_end  |  Game: Sort (3 bins)
+## Sort health scenarios into: Visit HSU / Refer to Hospital / Self-manage
+## ============================================================================
+label sq_hsu_triage:
+    window show
+    physician "Before you go — one practical exercise. Different situations call for different responses."
+    physician "Sort these cases into what you would do. It will serve you better than any pamphlet."
+    python:
+        sq_sort_state.setup(
+            "Campus Health Triage",
+            "Sort each health situation into the right response",
+            [
+                ("Mild fever and headache — first onset today", 0, "🤒"),
+                ("Severe toothache — needs extraction", 0, "🦷"),
+                ("Suspected fracture after a fall — severe swelling, cannot move limb", 1, "🦴"),
+                ("Common cold, runny nose only — no fever", 2, "🤧"),
+                ("Need an official Medical Certificate for missed classes", 0, "📄"),
+                ("High fever persisting three or more days — not improving", 1, "🌡️"),
+                ("Dehydrated after vomiting — needs oral rehydration salts", 0, "💧"),
+            ],
+            [
+                ("Visit HSU — free on campus", "#1a3a2a", "🏥"),
+                ("Referral to hospital needed", "#1a2a3a", "🚑"),
+                ("Self-manage — rest or pharmacy", "#2a2a1a", "💊"),
+            ]
+        )
+    window hide
+    call screen sq_sort_game()
+    $ _sq_result = _return
+    window show
+    if _sq_result == "completed":
+        physician "Correct on all. The HSU is your first stop — not last resort. We handle far more than most students expect."
+        physician "And when we cannot, we refer you immediately. You are never left to figure it out alone."
+    else:
+        physician "Review the cases you missed. The key rule: when uncertain, come here first. We will tell you if you need to go further."
+    $ collect_item(ITEM_HSU_TRIAGE_GUIDE)
+    show screen item_pickup_screen(ITEM_HSU_TRIAGE_GUIDE)
+    pause 2.5
+    hide screen item_pickup_screen
+    $ persistent.encyclopedia_unlocks.add("hsu_triage_sq")
+    $ complete_subquest("sq_hsu_triage")
+    window hide
+    return
+
+
+## ============================================================================
+## ACT 6 — SUBQUEST C: "Which Support Office?"
+## Trigger: Dan — after act6_dan_resolution  |  Game: Sort (4 bins)
+## Sort student problems into: HSU / GCSU / Scholarship Service / OSA
+## ============================================================================
+label sq_support_router:
+    window show
+    dan "Hey — now that I know all three of these offices... let's see if you really do too."
+    dan "Where would you send someone with each of these problems?"
+    python:
+        sq_sort_state.setup(
+            "Which Support Office?",
+            "Route each student situation to the correct campus office",
+            [
+                ("Dizzy and pale — hasn't eaten properly in days", 0, "🤒"),
+                ("Persistent sadness and inability to leave the dorm for a week", 1, "💙"),
+                ("Parents' income dropped — needs STFAP bracket re-assessed", 2, "📋"),
+                ("Wants to register a new student organization", 3, "🏛️"),
+                ("Anxious about career path — unsure which degree to finish", 1, "🤔"),
+                ("Applying for the Emergency Assistance Fund after a family crisis", 2, "🆘"),
+                ("Org activity permit and venue reservation for a campus event", 3, "📢"),
+                ("Needs a Medical Certificate for two missed class days", 0, "📄"),
+            ],
+            [
+                ("Health Services Unit (HSU)", "#1a3a2a", "🏥"),
+                ("Guidance & Counseling (GCSU)", "#3a1a3a", "💙"),
+                ("Scholarship Service", "#1a3a10", "📋"),
+                ("Office of Student Affairs (OSA)", "#2a1a10", "🏛️"),
+            ]
+        )
+    window hide
+    call screen sq_sort_game()
+    $ _sq_result = _return
+    window show
+    if _sq_result == "completed":
+        dan "You got it. HSU for the body. GCSU for the mind. Scholarship Service for the wallet. OSA for everything else."
+        dan "I'll remember this. I should have known it before today."
+    else:
+        dan "Review the ones you missed. I only learned this the hard way — don't wait until you actually need it."
+    $ collect_item(ITEM_SUPPORT_ROUTE_MAP)
+    show screen item_pickup_screen(ITEM_SUPPORT_ROUTE_MAP)
+    pause 2.5
+    hide screen item_pickup_screen
+    $ persistent.encyclopedia_unlocks.add("support_router_sq")
+    $ complete_subquest("sq_support_router")
+    window hide
+    return
+
+
+## ============================================================================
+## ACT 6 — SUBQUEST D: "Documents Checklist"
+## Trigger: Kuya Tomas — end of scholarship scene  |  Game: Sort (3 bins)
+## Sort documents into: STFAP Re-bracketing / Emergency Fund / Scholarship App
+## ============================================================================
+label sq_stfap_docs:
+    window show
+    kuya_tomas "One last thing. You need to know which document goes where."
+    kuya_tomas "Students lose opportunities because they prepare the wrong documents for the wrong application."
+    kuya_tomas "Sort these. I've seen this mistake too many times."
+    python:
+        sq_sort_state.setup(
+            "Documents Checklist",
+            "Sort each document into the correct application",
+            [
+                ("Sworn Affidavit of Income — notarized, signed by parent or guardian", 0, "📜"),
+                ("Brief letter explaining the sudden change in family financial circumstances", 0, "✉️"),
+                ("Filled Emergency Fund request form from the Scholarship Office", 1, "📝"),
+                ("Written description of the specific urgent need — meals, transport, photocopying", 1, "🗒️"),
+                ("Latest grades transcript — current semester GWA on record", 2, "📊"),
+                ("Personal essay on financial need and long-term academic goals", 2, "✍️"),
+                ("Recommendation letter from a faculty member or department chair", 2, "👨‍🏫"),
+            ],
+            [
+                ("STFAP Re-bracketing", "#1a2a3a", "📋"),
+                ("Emergency Fund Application", "#3a2a1a", "🆘"),
+                ("Scholarship Application", "#1a3a1a", "🎓"),
+            ]
+        )
+    window hide
+    call screen sq_sort_game()
+    $ _sq_result = _return
+    window show
+    if _sq_result == "completed":
+        kuya_tomas "Good. Keep those categories clear in your head. Deadlines are absolute — the right document submitted late is the same as no document at all."
+        kuya_tomas "Build your folder now. Don't wait until you need it."
+    else:
+        kuya_tomas "Review what you missed. The Scholarship Office posts guides on the bulletin board — read them before your next application."
+    $ collect_item(ITEM_STFAP_DOCS_LIST)
+    show screen item_pickup_screen(ITEM_STFAP_DOCS_LIST)
+    pause 2.5
+    hide screen item_pickup_screen
+    $ persistent.encyclopedia_unlocks.add("stfap_docs_sq")
+    $ complete_subquest("sq_stfap_docs")
+    window hide
+    return
+
+## ============================================================================
 ## END OF SUBQUESTS
 ## ============================================================================

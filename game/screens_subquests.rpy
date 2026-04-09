@@ -998,11 +998,15 @@ screen sq_gwa_calc_game():
                             spacing 4
                             text "GRADE SCALE" size 10 color "#c89218" bold True xalign 0.5
                             null height 3
-                            for _ref in [("\u2264 1.20", "Univ. Scholar", "#ffd700"),
-                                         ("\u2264 1.45", "College Scholar", "#10b981"),
-                                         ("\u2264 1.75", "Dean's List", "#6ee7b7"),
-                                         ("\u2264 3.00", "Regular", "#f1debf"),
-                                         ("> 3.00",  "Concern", "#f87171")]:
+                            python:
+                                _grade_scale = [
+                                    ("\u2264 1.20", "Univ. Scholar", "#ffd700"),
+                                    ("\u2264 1.45", "College Scholar", "#10b981"),
+                                    ("\u2264 1.75", "Dean's List", "#6ee7b7"),
+                                    ("\u2264 3.00", "Regular", "#f1debf"),
+                                    ("> 3.00",  "Concern", "#f87171"),
+                                ]
+                            for _ref in _grade_scale:
                                 hbox:
                                     spacing 6
                                     text _ref[0] size 11 color "#f6d79d88" xsize 56
@@ -1041,3 +1045,562 @@ screen sq_gwa_calc_game():
         text "Click any row to advance to the next grade value  |  Rows cycle: 1.00 \u2192 1.25 \u2192 ... \u2192 5.00 \u2192 1.00":
             xalign 0.5 size 11 color "#c8921866"
             outlines [(1, "#1a0a0e", 0, 0)]
+
+
+## ============================================================================
+## ACT 6 MINIGAME — Guided Breathing Exercise (GCSU Scene)
+## Triggered after Ma'am Garcia's "Slow breath with me. In... hold... and out."
+## Player follows 3 breath cycles: Inhale (4s) → Hold (2s) → Exhale (4s).
+## Dan's stress meter drops after each cycle; Continue unlocks after all 3.
+## ============================================================================
+
+## ── ATL: Circle animates per phase ──────────────────────────────────────────
+
+transform breath_inhale:
+    ## Expands from small to full over 4 seconds
+    zoom 0.45 alpha 0.65
+    linear 4.0 zoom 1.0 alpha 1.0
+
+transform breath_hold_pulse:
+    ## Gentle slow pulse at full size over 2 seconds
+    zoom 1.0 alpha 1.0
+    ease 1.0 zoom 1.07 alpha 0.90
+    ease 1.0 zoom 1.0 alpha 1.0
+    repeat
+
+transform breath_exhale:
+    ## Contracts from full to small over 4 seconds
+    zoom 1.0 alpha 1.0
+    linear 4.0 zoom 0.45 alpha 0.65
+
+transform breath_done_glow:
+    ## Soft steady glow when all cycles complete
+    alpha 0.85
+    ease 1.5 alpha 1.0
+    ease 1.5 alpha 0.85
+    repeat
+
+
+## ── Screen ───────────────────────────────────────────────────────────────────
+
+screen breathing_exercise_screen():
+    modal True
+    zorder 200
+
+    ## Per-call screen state
+    default bphase = "in"    ## "in" | "hold" | "out"
+    default bcycle = 0       ## cycles completed (0–2)
+    default bdone  = False   ## True after the 3rd exhale
+
+    ## ── Phase-advance timers ────────────────────────────────────────────────
+    ## Each timer fires once, then the screen re-renders with the new phase,
+    ## which creates the next timer. Chain stops when bdone becomes True.
+    if not bdone:
+        if bphase == "in":
+            timer 4.0 action SetScreenVariable("bphase", "hold")
+        elif bphase == "hold":
+            timer 2.0 action SetScreenVariable("bphase", "out")
+        elif bphase == "out":
+            if bcycle < 2:
+                ## More cycles remain — reset to inhale and increment counter
+                timer 4.0 action [
+                    SetScreenVariable("bcycle", bcycle + 1),
+                    SetScreenVariable("bphase", "in"),
+                ]
+            else:
+                ## 3rd exhale complete — mark done
+                timer 4.0 action SetScreenVariable("bdone", True)
+
+    ## ── Background ──────────────────────────────────────────────────────────
+    add Solid("#050c12") alpha 0.98
+
+    ## ── Central layout ──────────────────────────────────────────────────────
+    vbox:
+        xalign 0.5
+        yalign 0.5
+        spacing 28
+
+        ## Header
+        frame:
+            xalign 0.5
+            background Solid("#0c1d2a")
+            padding (32, 14, 32, 14)
+            vbox:
+                spacing 5
+                text "Guided Breathing":
+                    size 21
+                    color "#a8d8ea"
+                    bold True
+                    xalign 0.5
+                    outlines [(1, "#050c12", 1, 1)]
+                text "Follow the rhythm with Dan":
+                    size 12
+                    color "#4e7f92"
+                    italic True
+                    xalign 0.5
+
+        ## Breathing circle container
+        fixed:
+            xsize 270
+            ysize 270
+            xalign 0.5
+
+            ## Soft outer ring (always visible)
+            frame:
+                xsize 270
+                ysize 270
+                xalign 0.5
+                yalign 0.5
+                background Solid("#ffffff06")
+
+            ## Animated inner circle — swapped per phase so ATL restarts
+            if bdone:
+                frame:
+                    xsize 190
+                    ysize 190
+                    xalign 0.5
+                    yalign 0.5
+                    background Solid("#4aad78")
+                    at breath_done_glow
+            elif bphase == "in":
+                frame:
+                    xsize 190
+                    ysize 190
+                    xalign 0.5
+                    yalign 0.5
+                    background Solid("#3e8fb5")
+                    at breath_inhale
+            elif bphase == "hold":
+                frame:
+                    xsize 190
+                    ysize 190
+                    xalign 0.5
+                    yalign 0.5
+                    background Solid("#4aad78")
+                    at breath_hold_pulse
+            elif bphase == "out":
+                frame:
+                    xsize 190
+                    ysize 190
+                    xalign 0.5
+                    yalign 0.5
+                    background Solid("#8a62a0")
+                    at breath_exhale
+
+            ## Phase label (centred inside circle)
+            if bdone:
+                text "":
+                    xalign 0.5 yalign 0.5 size 15 color "#ffffff"
+            elif bphase == "in":
+                text "Breathe in...":
+                    xalign 0.5 yalign 0.5 size 15 color "#ffffff" bold True
+                    outlines [(1, "#00000088", 1, 1)]
+            elif bphase == "hold":
+                text "Hold...":
+                    xalign 0.5 yalign 0.5 size 15 color "#ffffff" bold True
+                    outlines [(1, "#00000088", 1, 1)]
+            elif bphase == "out":
+                text "Breathe out...":
+                    xalign 0.5 yalign 0.5 size 15 color "#ffffff" bold True
+                    outlines [(1, "#00000088", 1, 1)]
+
+        ## ── Cycle progress pips (fill as each cycle finishes) ───────────────
+        python:
+            _filled_pips = bcycle + (1 if bdone else 0)
+        hbox:
+            xalign 0.5
+            spacing 12
+            for _pip in range(3):
+                frame:
+                    xsize 22
+                    ysize 22
+                    background Solid("#5ab3d0" if _pip < _filled_pips else "#0e2030")
+
+        ## ── Dan's stress meter (decreases each cycle) ───────────────────────
+        python:
+            _stress_bars = 3 - bcycle - (1 if bdone else 0)
+        vbox:
+            spacing 8
+            xalign 0.5
+            text "Dan's stress:":
+                size 11
+                color "#4e7f92"
+                xalign 0.5
+            hbox:
+                spacing 8
+                xalign 0.5
+                for _bar in range(3):
+                    frame:
+                        xsize 54
+                        ysize 16
+                        background Solid("#c84040" if _bar < _stress_bars else "#0e1e16")
+
+        ## ── Done state — calm message + Continue ────────────────────────────
+        if bdone:
+            vbox:
+                spacing 14
+                xalign 0.5
+                text "Dan feels calmer.":
+                    size 15
+                    color "#8fd4a8"
+                    bold True
+                    xalign 0.5
+                    outlines [(1, "#050c12", 1, 1)]
+                textbutton "Continue":
+                    xalign 0.5
+                    action Return()
+                    text_size 14
+                    text_color "#a8d8ea"
+                    background Solid("#0c2233")
+                    hover_background Solid("#163344")
+                    padding (30, 10, 30, 10)
+
+
+## ============================================================================
+## ACT 5 MINIGAME — Find Your Classroom (Navigation Puzzle)
+## Triggered at the "Attend your first class" node in act5_first_class.
+## Player decodes 3 schedule entries to find the correct building + floor.
+## Reinforces Kuya Rico's room-numbering lesson: prefix = building, first
+## digit of room number = floor.
+## ============================================================================
+
+init python:
+
+    class ClassroomFinderState:
+
+        BUILDINGS = [
+            "CAS Building",
+            "CM Building",
+            "CFOS Building",
+        ]
+        BUILDINGS_SUB = [
+            "College of Arts & Sciences",
+            "College of Management",
+            "Fisheries & Ocean Sciences",
+        ]
+        FLOORS = [
+            "Ground Floor  (1xx)",
+            "2nd Floor  (2xx)",
+            "3rd Floor  (3xx)",
+        ]
+
+        ## Each challenge: the formatted schedule entry the player sees,
+        ## the explanation shown after, and the correct building/floor indices.
+        CHALLENGES = [
+            dict(
+                entry    = "ENG 1  \u00b7  MWF 09:00\u201310:00  \u00b7  CAS 105",
+                explain  = "\"CAS\" \u2192 CAS Building   |   Room 105: first digit 1 \u2192 Ground Floor",
+                building = 0,   ## CAS
+                floor    = 0,   ## 1xx = Ground
+            ),
+            dict(
+                entry    = "KAS 1  \u00b7  TTh 13:00\u201314:30  \u00b7  CAS 203",
+                explain  = "\"CAS\" \u2192 CAS Building   |   Room 203: first digit 2 \u2192 2nd Floor",
+                building = 0,   ## CAS
+                floor    = 1,   ## 2xx = 2nd
+            ),
+            dict(
+                entry    = "MATH 11  \u00b7  MWF 11:00\u201312:00  \u00b7  CM 301",
+                explain  = "\"CM\" \u2192 CM Building   |   Room 301: first digit 3 \u2192 3rd Floor",
+                building = 1,   ## CM
+                floor    = 2,   ## 3xx = 3rd
+            ),
+        ]
+
+        def __init__(self):
+            self.reset()
+
+        def reset(self):
+            self.round        = 0
+            self.phase        = "building"  ## "building" | "floor" | "result"
+            self.sel_building = None
+            self.sel_floor    = None
+            self.bld_ok       = None
+            self.flr_ok       = None
+            self.done         = False
+
+        def pick_building(self, idx):
+            if self.phase != "building":
+                return
+            self.sel_building = idx
+            self.bld_ok       = (idx == self.CHALLENGES[self.round]["building"])
+            self.phase        = "floor"
+
+        def pick_floor(self, idx):
+            if self.phase != "floor":
+                return
+            self.sel_floor = idx
+            self.flr_ok    = (idx == self.CHALLENGES[self.round]["floor"])
+            self.phase     = "result"
+
+        def advance(self):
+            self.round += 1
+            if self.round >= len(self.CHALLENGES):
+                self.done = True
+            else:
+                self.phase        = "building"
+                self.sel_building = None
+                self.sel_floor    = None
+                self.bld_ok       = None
+                self.flr_ok       = None
+
+        def retry(self):
+            self.phase        = "building"
+            self.sel_building = None
+            self.sel_floor    = None
+            self.bld_ok       = None
+            self.flr_ok       = None
+
+    classroom_finder_state = ClassroomFinderState()
+
+
+## ── Screen ───────────────────────────────────────────────────────────────────
+
+screen classroom_finder_screen():
+    modal True
+    zorder 200
+
+    add Solid("#080d18") alpha 0.98
+
+    python:
+        _cf    = classroom_finder_state
+        _total = len(_cf.CHALLENGES)
+        _ch    = _cf.CHALLENGES[_cf.round] if not _cf.done else None
+
+    vbox:
+        xalign 0.5
+        yalign 0.5
+        spacing 22
+
+        ## ── Header ──────────────────────────────────────────────────────────
+        frame:
+            xalign 0.5
+            background Solid("#0e1a2c")
+            padding (36, 14, 36, 14)
+            vbox:
+                spacing 5
+                text "Find Your Classroom":
+                    size 21
+                    color "#f6d7a0"
+                    bold True
+                    xalign 0.5
+                    outlines [(1, "#080d18", 1, 1)]
+                text "Read the schedule entry \u2192 pick the right building \u2192 pick the right floor":
+                    size 11
+                    color "#8a7a5a"
+                    italic True
+                    xalign 0.5
+
+        ## ── Round progress pips ─────────────────────────────────────────────
+        hbox:
+            xalign 0.5
+            spacing 12
+            for _pip in range(_total):
+                frame:
+                    xsize 22
+                    ysize 22
+                    background Solid("#c89218" if (_pip < _cf.round or _cf.done) else "#1e1408")
+
+        if not _cf.done:
+
+            ## ── Schedule entry card ─────────────────────────────────────────
+            frame:
+                xalign 0.5
+                background Solid("#10203a")
+                padding (32, 18, 32, 18)
+                vbox:
+                    spacing 8
+                    text ("CLASS  " + str(_cf.round + 1) + " / " + str(_total)):
+                        size 10
+                        color "#4a6a8a"
+                        bold True
+                        xalign 0.5
+                    text (_ch["entry"]):
+                        size 17
+                        color "#e8d4a0"
+                        bold True
+                        xalign 0.5
+                        outlines [(1, "#080d18", 1, 1)]
+
+            ## ── Step 1 — Choose building ────────────────────────────────────
+            if _cf.phase == "building":
+                vbox:
+                    spacing 12
+                    xalign 0.5
+                    text "Step 1 \u2014 Which building?":
+                        size 13
+                        color "#c8a84a"
+                        bold True
+                        xalign 0.5
+                    hbox:
+                        spacing 14
+                        xalign 0.5
+                        for _bi in range(len(_cf.BUILDINGS)):
+                            textbutton _cf.BUILDINGS[_bi]:
+                                action Function(_cf.pick_building, _bi)
+                                text_size 13
+                                text_color "#e8d4a0"
+                                background Solid("#0e1a2c")
+                                hover_background Solid("#1c3050")
+                                padding (20, 10, 20, 10)
+
+            ## ── Step 2 — Choose floor ───────────────────────────────────────
+            elif _cf.phase == "floor":
+                vbox:
+                    spacing 12
+                    xalign 0.5
+
+                    ## Show building result badge
+                    frame:
+                        xalign 0.5
+                        background Solid("#0a1420" if _cf.bld_ok else "#1a0a0a")
+                        padding (16, 8, 16, 8)
+                        hbox:
+                            spacing 10
+                            xalign 0.5
+                            yalign 0.5
+                            text ("\u2713" if _cf.bld_ok else "\u2717"):
+                                size 15
+                                color ("#10b981" if _cf.bld_ok else "#ef4444")
+                                yalign 0.5
+                            text (_cf.BUILDINGS[_cf.sel_building]):
+                                size 13
+                                color "#e8d4a0"
+                                yalign 0.5
+
+                    text "Step 2 \u2014 Which floor?":
+                        size 13
+                        color "#c8a84a"
+                        bold True
+                        xalign 0.5
+                    hbox:
+                        spacing 12
+                        xalign 0.5
+                        for _fi in range(len(_cf.FLOORS)):
+                            textbutton _cf.FLOORS[_fi]:
+                                action Function(_cf.pick_floor, _fi)
+                                text_size 12
+                                text_color "#e8d4a0"
+                                background Solid("#0e1a2c")
+                                hover_background Solid("#1c3050")
+                                padding (18, 9, 18, 9)
+
+            ## ── Result phase ────────────────────────────────────────────────
+            elif _cf.phase == "result":
+                python:
+                    _both_ok = _cf.bld_ok and _cf.flr_ok
+
+                vbox:
+                    spacing 12
+                    xalign 0.5
+
+                    ## Building row
+                    frame:
+                        xalign 0.5
+                        background Solid("#0a1420" if _cf.bld_ok else "#1a0a0a")
+                        padding (16, 8, 16, 8)
+                        hbox:
+                            spacing 10
+                            xalign 0.5
+                            yalign 0.5
+                            text ("\u2713" if _cf.bld_ok else "\u2717"):
+                                size 15
+                                color ("#10b981" if _cf.bld_ok else "#ef4444")
+                                yalign 0.5
+                            text (_cf.BUILDINGS[_cf.sel_building]):
+                                size 13
+                                color "#e8d4a0"
+                                yalign 0.5
+                            if not _cf.bld_ok:
+                                text (" \u2192 " + _cf.BUILDINGS[_ch["building"]]):
+                                    size 12
+                                    color "#10b981"
+                                    yalign 0.5
+
+                    ## Floor row
+                    frame:
+                        xalign 0.5
+                        background Solid("#0a1420" if _cf.flr_ok else "#1a0a0a")
+                        padding (16, 8, 16, 8)
+                        hbox:
+                            spacing 10
+                            xalign 0.5
+                            yalign 0.5
+                            text ("\u2713" if _cf.flr_ok else "\u2717"):
+                                size 15
+                                color ("#10b981" if _cf.flr_ok else "#ef4444")
+                                yalign 0.5
+                            text (_cf.FLOORS[_cf.sel_floor]):
+                                size 13
+                                color "#e8d4a0"
+                                yalign 0.5
+                            if not _cf.flr_ok:
+                                text (" \u2192 " + _cf.FLOORS[_ch["floor"]]):
+                                    size 12
+                                    color "#10b981"
+                                    yalign 0.5
+
+                    ## Explanation note
+                    frame:
+                        xalign 0.5
+                        background Solid("#0a1810" if _both_ok else "#120a08")
+                        padding (18, 10, 18, 10)
+                        text (_ch["explain"]):
+                            size 11
+                            color ("#90c890" if _both_ok else "#c89060")
+                            italic True
+                            xalign 0.5
+
+                    if _both_ok:
+                        text "Room found! \u2605":
+                            size 15
+                            color "#f6d700"
+                            bold True
+                            xalign 0.5
+                            outlines [(1, "#080d18", 1, 1)]
+                        textbutton "Next Class \u2192":
+                            xalign 0.5
+                            action Function(_cf.advance)
+                            text_size 13
+                            text_color "#f6d7a0"
+                            background Solid("#183a0e")
+                            hover_background Solid("#28581a")
+                            padding (26, 9, 26, 9)
+                    else:
+                        text "Not quite \u2014 check the schedule notation.":
+                            size 12
+                            color "#f87171"
+                            xalign 0.5
+                        textbutton "Try Again":
+                            xalign 0.5
+                            action Function(_cf.retry)
+                            text_size 13
+                            text_color "#f6d7a0"
+                            background Solid("#2a0e0e")
+                            hover_background Solid("#3a1616")
+                            padding (26, 9, 26, 9)
+
+        ## ── Done state ──────────────────────────────────────────────────────
+        else:
+            vbox:
+                spacing 18
+                xalign 0.5
+                text "All classrooms found!":
+                    size 20
+                    color "#f6d700"
+                    bold True
+                    xalign 0.5
+                    outlines [(1, "#080d18", 1, 1)]
+                text "You know your way around. Time for that first class.":
+                    size 13
+                    color "#a0c8a0"
+                    italic True
+                    xalign 0.5
+                textbutton "Attend First Class":
+                    xalign 0.5
+                    action Return()
+                    text_size 14
+                    text_color "#f6d7a0"
+                    background Solid("#183a0e")
+                    hover_background Solid("#28581a")
+                    padding (30, 10, 30, 10)

@@ -553,7 +553,12 @@ label act1_joseph_end:
 ## ============================================================================
 
 label act1_go_tindahan:
+    play sound "images/maps/Transition.wav"
     narrator_char "(You head left toward the Tindahan area.)"
+    window hide
+    show screen travel_cutscene("images/maps/Pakadto_Tinda.webm", "Tindahan")
+    $ renpy.pause()
+    hide screen travel_cutscene
     $ act1_nav_target = "tindahan"
     ## Player enters tindahan from the right side (waypoint 7)
     $ player_map_x = 4900
@@ -562,7 +567,12 @@ label act1_go_tindahan:
     return
 
 label act1_go_marillac:
+    play sound "images/maps/Transition.wav"
     narrator_char "(You head right toward the Marillac area.)"
+    window hide
+    show screen travel_cutscene("images/maps/Pakadto_Marillac.webm", "Marillac")
+    $ renpy.pause()
+    hide screen travel_cutscene
     $ act1_nav_target = "marillac"
     ## Player enters marillac from the top-left (waypoint 0)
     $ player_map_x = 325
