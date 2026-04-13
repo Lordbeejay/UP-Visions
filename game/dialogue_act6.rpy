@@ -30,9 +30,9 @@ label act6_map:
     $ act6_nodes = [
         MapNode("dan_cas",   2800, 3200, "act6_npc_dan",
                 tooltip="Dan",
-                icon_image="classmate_dan.png",
+                icon_image="caezar.png",
                 locked=False,
-                icon_zoom=0.25),
+                icon_zoom=0.10),
         MapNode("go_to_hsu", 2500, 1200, "act6_go_to_hsu",
                 tooltip="HSU →",
                 icon_image="Arrow.png",
@@ -118,7 +118,7 @@ label act6_osa_map:
     $ act6_osa_nodes = [
         MapNode("ate_jenny_osa", 2500, 2000, "act6_enter_osa",
                 tooltip="Ate Jenny",
-                icon_image="ate_jenny.png",
+                icon_image="Osa.png",
                 locked=False,
                 icon_zoom=0.25),
     ]

@@ -480,12 +480,14 @@ init python:
         "Prof. Lena": "images/npcs/prof_lena.png",
         "Kuya Rico": "images/npcs/kuya_rico.png",
         "Ate Grace": "images/npcs/ate_grace.png",
-        "Dan": "images/npcs/classmate_dan.png",
+        "Dan": "images/npcs/Caezar.png",
+        "School Physician": "images/npcs/physician.png",
         ## Act 6
         "Mika": "images/npcs/mika.png",
         "Kuya Tomas": "images/npcs/kuya_tomas.png",
-        "Ate Jenny": "images/npcs/ate_jenny.png",
+        "Ate Jenny": "images/npcs/OSa.png",
         "Coach Ramon": "images/npcs/coach_ramon.png",
+        "Ma'am Garcia": "images/npcs/Councilor.png",
         ## Act 7
         "Ate Rosa": "images/npcs/ate_rosa.png",
         "Kuya Neil": "images/npcs/kuya_neil.png",
