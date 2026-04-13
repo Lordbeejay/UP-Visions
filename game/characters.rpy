@@ -102,7 +102,7 @@ image kuya_mark = "images/npcs/kuya_mark.png"
 image maam_reyes = "images/npcs/maam_reyes.png"
 image sir_allan = "images/npcs/sir_allan.png"
 image sir_noel = "images/npcs/sir_allan.png"  ## placeholder — reuses sir_allan portrait
-
+image hsu_nurse = "images/npcs/hsu_nurse.png"
 ## --- Act 5 NPC Sprites ---
 image prof_lena_sprite = "images/npcs/prof_lena.png"
 image kuya_rico_sprite = "images/npcs/kuya_rico.png"

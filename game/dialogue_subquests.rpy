@@ -1039,5 +1039,75 @@ label sq_stfap_docs:
     return
 
 ## ============================================================================
+## ACT 8 — SUBQUEST A: "The Week in Review" (MANDATORY FINALE QUIZ)
+## Trigger: Prof. Reyes' dialogue — mandatory before oval ending
+## Game: Quiz — 3 questions spanning Acts 1–7
+## Tests whether the player retained the most critical knowledge of the week.
+## ============================================================================
+label sq_week_review:
+    window show
+    prof_reyes "Seven days. A lot of people, a lot of places, a lot of information."
+    prof_reyes "Before you leave these steps — three questions. One for the campus you arrived in. One for the systems you navigated. One for the person you helped."
+    prof_reyes "Show me it stayed with you."
+    python:
+        sq_quiz_state.setup(
+            "The Week in Review",
+            "Prof. Reyes — everything you learned, tested in three",
+            "🏛️",
+            [
+                (
+                    "You're a freshman who just arrived in Miagao. You need to get from the Plaza to the UPV gate — you have no car. What's the correct information?",
+                    [
+                        ("Take a tricycle — the fare from Miagao Plaza to the UPV gate is ₱15. The UPV Bus to Iloilo City is free with a validated Form 5, and leaves around 5:30 AM on weekdays.", True, "Correct. Tol Joseph's lessons stayed with you. The tricycle is the standard route: ₱15 from Plaza to the gate. And the UPV Bus is free — just show your Form 5. Miss the last trip back at 6:30 PM and you're sleeping in the city."),
+                        ("Take the jeepney from the gate — ₱50 to ₱65 gets you from the campus gate to the Plaza and back.", False, "That fare is for the Iloilo City jeepney route. For short hops within Miagao — Plaza to UPV gate — you take a tricycle at ₱15. The Iloilo City jeepney is a different route from the highway junction."),
+                        ("Walk — the campus is close to the plaza and there are no public transport options between them.", False, "There are tricycle routes throughout Miagao. Route 1 goes from Town Center to the UPV Gate — the standard student route. Walking the full distance is impractical, especially under the Miagao sun."),
+                    ]
+                ),
+                (
+                    "Dan's family income has changed significantly since he enrolled, and he's been going without food for two days. Which office do you bring him to FIRST — and why?",
+                    [
+                        ("The HSU first — he needs immediate medical attention for dehydration and hypoglycemia, then GCSU for the emotional and mental health component, then the Scholarship Service for the financial root cause.", True, "Exactly the sequence. You saw it happen this week. Treat the physical emergency first — the body needs to be stabilized before any other support can be effective. Then the mind. Then the financial structure. The HSU, GCSU, and Scholarship Service are three interconnected pieces."),
+                        ("The Scholarship Service first — the financial problem is the root cause, so solving money solves everything else.", False, "The financial problem IS the root cause — but Dan needs food and medical attention before he can even fill out a form. You treat the immediate crisis first: HSU for the physical emergency. Then GCSU. Then the scholarship office for the financial solution."),
+                        ("The OSA first — they coordinate everything and will know which office to send him to.", False, "The OSA is a good coordinator, but when someone hasn't eaten in two days and is medically distressed, you go directly to the HSU. Speed matters in a health emergency. Route him yourself — don't add extra steps."),
+                    ]
+                ),
+                (
+                    "Jaden submits his Kas 1 paper. One paragraph closely paraphrases two sources without any citation. He changed all the words, so he believes it's original. What is the correct assessment?",
+                    [
+                        ("This is plagiarism — closely paraphrasing a source without attribution violates academic integrity, even if the exact words are different. Prof. Santos and the TLRC both warned about this.", True, "Exactly. Plagiarism is not only copy-paste. Taking someone else's ideas, structure, or argument and restating them without citation is still plagiarism. Prof. Santos called it clearly: 'closely paraphrasing without citation is a violation.' It goes on the academic record. It is not a small thing."),
+                        ("It is not plagiarism — he changed the words, so the content is now his own original work.", False, "Changing the words does not make an idea original. If the argument, structure, or insight belongs to a source, that source must be credited. The test is not 'did I rephrase it?' The test is 'did I credit the mind whose thinking I used?'"),
+                        ("Whether it counts as plagiarism depends on the professor — some accept paraphrasing without citation if the ideas are widely known.", False, "UP's academic integrity policy does not vary by professor or how 'widely known' an idea is. All source material — books, journals, articles — must be cited. The institution's policy is clear and the TLRC's APA workshop covered this specifically."),
+                    ]
+                ),
+            ]
+        )
+    window hide
+    call screen sq_quiz_game()
+    $ _sq_result = _return
+    window show
+
+    if _sq_result >= 2:
+        prof_reyes "Good."
+        prof_reyes "You absorbed it. Not just the facts — the pattern."
+        prof_reyes "The tricycle fare, the support offices, the definition of original work."
+        prof_reyes "These are not trivia. They are the grammar of this place."
+        prof_reyes "A student who knows the grammar can say something real."
+    else:
+        prof_reyes "Some of it slipped. That is honest."
+        prof_reyes "The first week puts a lot through you quickly. Review what you missed."
+        prof_reyes "The offices will still be there. The library will still be there."
+        prof_reyes "Come back to what you don't yet know. That is also studying."
+
+    narrator_char "(He hands you a small card — the UP Oblation on one side, the words 'Iskolar ng Bayan' on the other.)"
+    prof_reyes "For the road ahead."
+    prof_reyes "Welcome — truly — to UP Visayas."
+    narrator_char "(Encyclopedia unlocked: The First Week — What You Now Know.)"
+    $ persistent.encyclopedia_unlocks.add("first_week_complete")
+    $ complete_subquest("sq_week_review")
+    window hide
+    return
+
+
+## ============================================================================
 ## END OF SUBQUESTS
 ## ============================================================================
