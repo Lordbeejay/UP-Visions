@@ -118,7 +118,7 @@ init python:
             "scholarship_service",
             "Scholarship Service",
             "PROCESS",
-            "The UPV office that administers all student financial assistance — STFAP, university and college scholarships, DOST, CHED, and private grants. The STFAP (Socialized Tuition and Financial Assistance Program) assigns brackets A to E9 based on family income; Bracket E9 means zero tuition. University Scholarship requires a GWA of 1.20 or better. Submit STFAP documents within the first two weeks of each semester. Never miss the deadline.",
+            "The UPV office that administers all student financial assistance. Programs: STFAP (Socialized Tuition and Financial Assistance Program) — brackets A to E9 based on family income; E5 to E9 include monthly living allowances of ₱1,000 to ₱4,000. TES (Tertiary Education Subsidy, RA 10931) — CHED national grant covering full tuition and fees plus a monthly allowance for qualifying students; coordinated through this office. GIAP (Grants-in-Aid Program) — UP System monthly cash allowance for low-income undergraduates, separate from STFAP; applications open each semester. University Scholar requires GWA of 1.20 or better. Emergency Fund: up to ₱1,500, processed in 24–48 hours. These programs are not mutually exclusive — a student can receive STFAP, TES, and GIAP simultaneously. Submit documents within the first two weeks of each semester. Deadlines are absolute.",
         ),
         "tlrc": EncyEntry(
             "tlrc",
@@ -130,7 +130,25 @@ init python:
             "gcsu",
             "GCSU — Guidance and Counseling Services Unit",
             "PROCESS",
-            "UPV's professional counseling unit providing FREE, strictly confidential services for all students under Republic Act 9258. Services include individual counseling, group counseling, psychological assessments (RIASEC, aptitude tests), career guidance, academic counseling, and crisis intervention. Walk-ins are accepted; appointments are preferred. The GCSU is not a last resort — it is a first resource. Use it early.",
+            "UPV's professional counseling unit providing FREE, strictly confidential services under Republic Act 9258. Services: individual counseling, group counseling, psychological assessments (RIASEC and aptitude tests), career guidance, crisis intervention, and academic counseling — including study habits, time management, and learning strategies for students who struggle not from lack of ability but from how they work. Access: walk-in Mon–Fri 8AM–5PM (no appointment needed), or pre-schedule a specific slot through the GCSU office for less waiting time. The Peer Facilitators Program — trained student volunteers who lead group psychosocial activities for college adjustment — operates under this office. The GCSU is not a last resort. Use it before the crisis.",
+        ),
+        "tes_giap": EncyEntry(
+            "tes_giap",
+            "TES & GIAP — Government and UP Grants",
+            "PROCESS",
+            "Two financial assistance programs distinct from STFAP. TES (Tertiary Education Subsidy) — a CHED national grant under Republic Act 10931 (Universal Access to Quality Education Act). Covers full tuition and other school fees plus a monthly cash allowance calibrated to financial need. Applied through CHED's portal; enrollment certification is done at the UPV Scholarship Office. GIAP (Grants-in-Aid Program) — a UP System monthly cash allowance for low-income undergraduate students. Applied at the Scholarship Office each semester; requires proof of income and a brief application letter. Both programs can be received simultaneously with STFAP — they are not mutually exclusive. Ask the Scholarship Office which combination applies to your bracket and situation.",
+        ),
+        "slas": EncyEntry(
+            "slas",
+            "SLAS — Student Learning Assistance System",
+            "PROCESS",
+            "The overarching framework coordinating student financial, academic, and welfare support at UPV. SLAS integrates the Scholarship Service (STFAP, TES, GIAP, Emergency Fund), the GCSU (counseling and psychosocial support), and the HSU (health services). Students identified as at-risk — through academic performance, financial difficulty, or health concerns — are routed through SLAS to the appropriate combination of services. STFAP is one component of SLAS, not its entirety. A GCSU referral to the Scholarship Service, or a Scholarship Office flag to the GCSU, is SLAS working as designed. Students do not apply to SLAS — the system activates on their behalf when offices communicate. No student should fall through the gap between offices.",
+        ),
+        "peer_facilitators": EncyEntry(
+            "peer_facilitators",
+            "Peer Facilitators Program",
+            "PROCESS",
+            "A GCSU-run program staffed by trained student volunteers who facilitate group psychosocial support activities for fellow students adjusting to college life. Peer Facilitators are not licensed counselors — they lead structured group activities: journaling circles, reflection workshops, coping exercises, and community-building sessions. The program bridges the gap between 'struggling but not in crisis' and 'ready for individual counseling.' Operating under direct GCSU supervision. Applications open each semester at the GCSU office — no psychology background required, training is provided. Joining develops the facilitator's own adjustment skills alongside their capacity to support others. Attending as a participant: check the GCSU bulletin board for scheduled sessions, free and open to all enrolled students.",
         ),
     }
 
