@@ -17,6 +17,7 @@ label act5_start:
 ## KEY INFO: GE curriculum, class expectations, grading system
 ## ============================================================================
 label act5_npc_prof_lena:
+    scene expression "images/ui/classroom.png" at fit_screen
     window show
     prof_lena "Good morning, class. Sit down. If you're in the wrong room, now is the time to leave."
     prof_lena "..."
@@ -116,6 +117,7 @@ label act5_lena_end:
 ## KEY INFO: Classrooms, building navigation, class schedules
 ## ============================================================================
 label act5_npc_kuya_rico:
+    scene expression "images/ui/cas_front.png" at fit_screen
     window show
     kuya_rico "Hey, freshie! Lost already? I saw you walking in circles."
     player_char "I can't find Room 203. The building numbers don't make sense."
@@ -223,6 +225,7 @@ label act5_rico_end:
 ## KEY INFO: Student rights, academic freedom, the UP Code
 ## ============================================================================
 label act5_npc_ate_grace:
+    scene expression "images/ui/cas_front.png" at fit_screen
     window show
     ate_grace "Hey! I noticed you in Kas 1 earlier. First class, huh? How was it?"
     player_char "Intense. Professor Lena doesn't mess around."
@@ -319,6 +322,7 @@ label act5_grace_end:
 ## KEY INFO: Study tips, survival strategies, student life balance
 ## ============================================================================
 label act5_npc_classmate_dan:
+    scene expression "images/ui/cas_front.png" at fit_screen
     window show
     dan "Psst. Hey. You're in Kas 1 too, right? With Professor Lena?"
     player_char "Yeah. That reading list she gave us is terrifying."
@@ -431,6 +435,7 @@ label act5_dan_end:
 ## ============================================================================
 label act5_visit_hsu:
     window show
+    scene expression "images/ui/hsu.jpg" at fit_screen
     narrator_char "(Dan leads you down a shaded path toward the administration area. A low building with a green cross sign comes into view.)"
     narrator_char "(A handwritten notice on the door: 'HSU — Health Services Unit. Open Mon–Fri, 8:00 AM to 5:00 PM. All UPV students served FREE.')"
     narrator_char "(Inside: the smell of antiseptic, a row of plastic chairs, a small triage desk. It feels calm and clinical.)"

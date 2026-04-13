@@ -164,6 +164,7 @@ label act6_enter_osa:
 ## INTERACTIVE: Player chooses how to approach Dan
 ## ============================================================================
 label act6_npc_dan:
+    scene expression "images/ui/cas_corridor.png" at fit_screen
     window show
     narrator_char "(Dan is on a bench near the water fountain. Pale. Hunched. Staring at nothing.)"
     player_char "Dan."
@@ -214,6 +215,7 @@ label act6_dan_convinced:
 ## INTERACTIVE: Menu-driven consultation + sq_hsu_triage sort game
 ## ============================================================================
 label act6_at_hsu:
+    scene expression "images/ui/hsu.jpg" at fit_screen
     window show
     narrator_char "(The Health Services Unit. Green cross above the door. A nurse logs Dan in before he even finishes handing over his ID.)"
     hsu_nurse "Student ID. Sit. When did you last eat?"
@@ -285,6 +287,7 @@ label act6_hsu_next:
 ## INTERACTIVE: Player asks about confidentiality or OSA role
 ## ============================================================================
 label act6_corridor_jenny:
+    scene expression "images/ui/osa_corridor.png" at fit_screen
     window show
     narrator_char "(Outside the HSU. Dan's got his glucose drink. A little color back in his face.)"
     narrator_char "(Ate Jenny is posting announcements on the OSA bulletin board. She spots you.)"
@@ -337,6 +340,7 @@ label act6_jenny_continue:
 ## INTERACTIVE: Player helps Dan open up + inline GCSU quiz + breathing exercise
 ## ============================================================================
 label act6_at_gcsu:
+    scene expression "images/ui/gcsu.png" at fit_screen
     window show
     narrator_char "(The GCSU. Calm lighting. Plants on the windowsill. Ma'am Garcia closes her notebook.)"
     guidance_counselor "Come in. Take a seat. I'm Ma'am Garcia."

@@ -79,8 +79,7 @@ label start:
     ## ────────────────────────────────────────────────────────────────────
 
     # Jump directly to Act 1
-    jump act6_map
-
+    jump act1_map
 ## ============================================================================
 ## ACT 1 MAP — Banwa (Gate / HSU / Admin / Medical)
 ## ============================================================================
@@ -315,7 +314,7 @@ label act2_map:
     $ act2_entrance_nodes = [
         MapNode("ate_bea",    2000, 2600, "act2_npc_ate_bea",    tooltip="Ate Bea",     icon_image="ate_bea.png",    locked=False),
         MapNode("kuya_mark",  2800, 3900, "act2_npc_kuya_mark",  tooltip="Kuya Mark",   icon_image="kuya_mark.png",  locked=True),
-        MapNode("newad_gate", 2500, 1200, "act2_go_to_newad",    tooltip="New Admin",   icon_image="Arrow.png",       locked=True, icon_zoom=2.0),
+        MapNode("newad_gate", 2500, 1200, "act2_go_to_newad",    tooltip="New Admin",   icon_image="ArrowUp.png",       locked=True, icon_zoom=2.0),
     ]
     $ current_task_text = "Talk to Ate Bea at the Entrance"
 
@@ -351,7 +350,7 @@ label act2_newad_map:
     $ player_facing = "up"
 
     $ act2_newad_nodes = [
-        MapNode("enter_inside", 2500, 1800, "act2_enter_inside", tooltip="Enter New Admin", icon_image="ArrowUp.png", locked=False),
+        MapNode("enter_inside", 2500, 2250, "act2_enter_inside", tooltip="Enter New Admin", icon_image="ArrowUp.png", locked=False, icon_zoom=2.0),
     ]
     $ current_task_text = "Enter the New Admin building"
 
@@ -373,11 +372,11 @@ label act2_newad_loop:
 label act2_inside_map:
     $ current_map_bg = "maps/NewAd_Lobby.png"
     $ player_map_x = 2500
-    $ player_map_y = 3500
+    $ player_map_y = 4200
     $ player_facing = "up"
 
     $ act2_inside_nodes = [
-        MapNode("maam_reyes", 2500, 1800, "act2_npc_maam_reyes", tooltip="Ma'am Reyes", icon_image="maam_reyes.png", locked=False),
+        MapNode("maam_reyes", 4700, 3200, "act2_npc_maam_reyes", tooltip="Ma'am Reyes", icon_image="maam_reyes.png", locked=False, icon_zoom=0.1),
     ]
     $ current_task_text = "Find Ma'am Reyes inside New Admin"
 
@@ -451,8 +450,8 @@ label act3_complete:
     call screen act_transition("ACT 4", "Dorm Life", "intro")
 
     $ current_act = 4
-    $ player_map_x = 2500
-    $ player_map_y = 2600
+    $ player_map_x = 4800
+    $ player_map_y = 4800
     $ player_facing = "up"
     jump act4_map
 
@@ -464,7 +463,7 @@ label act3_complete:
 label act4_map:
     $ current_map_bg = "maps/Dorm_Lobby.png"
     $ act4_nodes = [
-        MapNode("dorm_office", 2500, 2500, "act4_npc_dorm_manager", tooltip="Dormitory Office", icon_image="dorm_mgr.png", locked=False, icon_zoom=0.25),
+        MapNode("dorm_office", 2500, 2000, "act4_npc_dorm_manager", tooltip="Dormitory Office", icon_image="dorm_mgr.png", locked=False, icon_zoom=0.25),
     ]
 
     $ current_task_text = "Talk to the Dorm Manager"
