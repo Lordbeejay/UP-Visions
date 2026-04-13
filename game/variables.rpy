@@ -800,6 +800,20 @@ init python:
         "Kuya Tomas", "📋",
         full="STFAP RE-BRACKETING requires: (1) Sworn Affidavit of Income — notarized, from parent/guardian. (2) Brief explanation letter describing the change in financial circumstances. (3) Current enrollment form. Special cases (single parent, OFW, informal sector) have adjusted requirements — ask the Scholarship Office. EMERGENCY FUND APPLICATION requires: (1) Filled Emergency Fund form from the Scholarship Office. (2) Student number, college, and written description of the urgent situation. Processing: 24–48 hours; GCSU-referred cases are prioritized. SCHOLARSHIP APPLICATION requires: (1) Latest grades transcript. (2) Personal essay on financial need and academic goals. (3) Certificate of Family Income or ITR. (4) At least one recommendation letter. (5) Any scholarship-specific forms. Keep all documents in a ready folder — scholarship openings close fast."
     )
+    ITEM_FINANCIAL_PROGRAMS = InfoItem(
+        "financial_programs",
+        "Financial Assistance Programs",
+        "TES, GIAP, STFAP, SLAS — four programs, one goal: no student left behind for money",
+        "Kuya Tomas", "💰",
+        full="STFAP (Socialized Tuition and Financial Assistance Program) — UP's internal bracketing system. Brackets A to E9; E5 to E9 include monthly living allowances of ₱1,000–₱4,000. TES (Tertiary Education Subsidy, RA 10931) — CHED national government grant. Covers full tuition and fees plus a monthly allowance. Applied via CHED portal; Scholarship Office certifies enrollment. GIAP (Grants-in-Aid Program) — UP System monthly cash allowance for low-income undergraduates. Separate from STFAP. Applied at the Scholarship Office each semester. SLAS (Student Learning Assistance System) — the institutional framework coordinating Scholarship Service, GCSU, and HSU. Not a program you apply to — it is the structure that routes you to help. KEY RULE: These programs are not mutually exclusive. A student can receive STFAP, TES, and GIAP simultaneously. Ask, apply, and meet deadlines."
+    )
+    ITEM_GCSU_SERVICES_GUIDE = InfoItem(
+        "gcsu_services_guide",
+        "GCSU Full Services Guide",
+        "Counseling, study skills, career guidance, Peer Facilitators — and how to access all of them",
+        "Ma'am Garcia", "💙",
+        full="GCSU DIRECT SERVICES (free, confidential, RA 9258 protected): Individual counseling — walk-in Mon–Fri 8AM–5PM (no appointment needed) or pre-schedule for a specific slot with less waiting. Academic counseling — study habits, time management, learning strategies. Career guidance — RIASEC inventory, aptitude testing. Psychological assessments. Group counseling. Crisis intervention. Referrals to licensed psychiatrists. PEER FACILITATORS PROGRAM (GCSU-supervised): Student volunteers trained to lead group psychosocial activities — journaling circles, reflection workshops, coping exercises. For students adjusting to college life, not in clinical crisis. Applications open each semester at the GCSU office. NOT GCSU SERVICES: Annual Physical Examination (HSU), peer academic tutoring (TLRC), financial assistance (Scholarship Service). The GCSU coordinates with all of them — it does not replace them."
+    )
 
 
 ## ============================================================================

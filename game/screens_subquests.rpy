@@ -705,6 +705,858 @@ screen sq_sort_game():
 
 
 ## ============================================================================
+## SCREEN: SQ SCENARIO GAME
+## Guided chat-style scenario. Player clicks reply options to explore a topic.
+## No right/wrong — each choice reveals a key fact. All paths teach.
+## call screen sq_scenario_game() → _return = "completed"
+## ============================================================================
+
+init python:
+
+    ## Step format: (speaker_text_str, [(choice_label_str, reveal_text_str), ...])
+    ## Summary format: [(icon_str, bullet_text_str), ...]
+
+    class SQScenarioState:
+        def __init__(self):
+            self.title        = ""
+            self.icon         = "💬"
+            self.speaker_name  = ""
+            self.speaker_color = "#f1debf"
+            self.steps        = []
+            self.summary      = []
+            self.current      = 0
+            self.chosen_idx   = None
+            self.reveal_text  = None
+            self.done         = False
+
+        def setup(self, title, icon, speaker_name, speaker_color, steps, summary):
+            self.title         = title
+            self.icon          = icon
+            self.speaker_name  = speaker_name
+            self.speaker_color = speaker_color
+            self.steps         = list(steps)
+            self.summary       = list(summary)
+            self.current       = 0
+            self.chosen_idx    = None
+            self.reveal_text   = None
+            self.done          = False
+
+        def choose(self, idx):
+            if self.reveal_text is not None:
+                return
+            choice = self.steps[self.current][1][idx]
+            self.chosen_idx  = idx
+            self.reveal_text = choice[1]
+
+        def advance(self):
+            self.current    += 1
+            self.chosen_idx  = None
+            self.reveal_text = None
+            if self.current >= len(self.steps):
+                self.done = True
+
+    sq_scenario_state = SQScenarioState()
+
+
+screen sq_scenario_game():
+    on "show" action NullAction()
+    modal True
+    zorder 200
+
+    add Solid("#070d18") alpha 0.98
+
+    $ _sc_total = len(sq_scenario_state.steps)
+    $ _sc_cur   = sq_scenario_state.current
+
+    if sq_scenario_state.done:
+        ## ── SUMMARY SCREEN ───────────────────────────────────────────────────
+        frame:
+            xalign 0.5 yalign 0.5 xsize 660
+            padding (0, 0, 0, 0)
+            background Solid("#0b1622f8")
+
+            vbox:
+                spacing 0
+
+                ## Header
+                frame:
+                    background Solid("#0c2236")
+                    xfill True padding (24, 14, 24, 14)
+                    hbox:
+                        spacing 10
+                        text "[sq_scenario_state.icon]" size 18 yalign 0.5
+                        text "[sq_scenario_state.title]" size 16 color "#4dd9f0" bold True yalign 0.5
+                        text " — Done" size 13 color "#4dd9f066" yalign 0.5
+
+                ## Summary body
+                frame:
+                    background Solid("#070d18")
+                    xfill True padding (36, 26, 36, 30)
+                    vbox:
+                        spacing 12
+
+                        text "WHAT YOU DISCOVERED":
+                            size 11 color "#4dd9f0" bold True xalign 0.5
+                            letter_spacing 2
+
+                        null height 4
+
+                        for _si in range(len(sq_scenario_state.summary)):
+                            $ _s_icon = sq_scenario_state.summary[_si][0]
+                            $ _s_text = sq_scenario_state.summary[_si][1]
+                            frame:
+                                background Solid("#0c1e2e")
+                                xfill True padding (14, 10, 14, 10)
+                                hbox:
+                                    spacing 14 yalign 0.5
+                                    frame:
+                                        xysize (32, 32) yalign 0.5
+                                        background Solid("#102840")
+                                        text "[_s_icon]" size 16 xalign 0.5 yalign 0.5
+                                    text "[_s_text]":
+                                        size 13 color "#c8e8f4" yalign 0.5 line_spacing 2
+
+                        null height 10
+
+                        textbutton "Claim Reward  ★":
+                            xalign 0.5
+                            action Return("completed")
+                            text_size 15 text_color "#4dd9f0"
+                            background Solid("#0c2236")
+                            hover_background Solid("#163a50")
+                            padding (28, 14, 28, 14)
+    else:
+        ## ── CONVERSATION SCREEN ──────────────────────────────────────────────
+        $ _step    = sq_scenario_state.steps[_sc_cur]
+        $ _choices = _step[1]
+
+        frame:
+            xalign 0.5 yalign 0.5 xsize 800
+            padding (0, 0, 0, 0)
+            background Solid("#0b1622f8")
+
+            vbox:
+                spacing 0
+
+                ## Header
+                frame:
+                    background Solid("#0c2236")
+                    xfill True padding (22, 12, 22, 12)
+                    hbox:
+                        xfill True yalign 0.5
+                        hbox:
+                            spacing 8
+                            text "[sq_scenario_state.icon]" size 15 yalign 0.5
+                            text "[sq_scenario_state.title]" size 14 color "#4dd9f0" bold True yalign 0.5
+                        frame:
+                            xalign 1.0 yalign 0.5
+                            background Solid("#070d18")
+                            padding (12, 6, 12, 6)
+                            text "Step [_sc_cur + 1] / [_sc_total]" size 12 color "#4dd9f0"
+
+                ## Progress bar
+                frame:
+                    background Solid("#060c16")
+                    xfill True padding (20, 6, 20, 6)
+                    hbox:
+                        xalign 0.5 spacing 8
+                        for _pi in range(_sc_total):
+                            if _pi < _sc_cur:
+                                frame:
+                                    xysize (40, 5) background Solid("#4dd9f0")
+                            elif _pi == _sc_cur:
+                                frame:
+                                    xysize (40, 5) background Solid("#9aecff")
+                            else:
+                                frame:
+                                    xysize (40, 5) background Solid("#162030")
+
+                ## Speaker message bubble
+                frame:
+                    background Solid("#070d18")
+                    xfill True padding (28, 18, 28, 14)
+                    vbox:
+                        spacing 6
+                        text "[sq_scenario_state.speaker_name]":
+                            size 12 color "[sq_scenario_state.speaker_color]" bold True
+                        frame:
+                            background Solid("#0c1e30")
+                            padding (18, 13, 18, 13)
+                            xfill True
+                            text "[_step[0]]":
+                                size 15 color "#ddf0f8" line_spacing 5
+
+                ## Reveal box — appears after a choice is clicked
+                if sq_scenario_state.reveal_text is not None:
+                    frame:
+                        background Solid("#0a2018")
+                        xfill True padding (24, 14, 24, 14)
+                        vbox:
+                            spacing 6
+                            text "✓  Key fact:":
+                                size 12 color "#4ded9a" bold True
+                            text "[sq_scenario_state.reveal_text]":
+                                size 14 color "#b8f0d0" line_spacing 4
+
+                ## Choice buttons or Next button
+                frame:
+                    background Solid("#060c16")
+                    xfill True padding (20, 14, 20, 14)
+
+                    if sq_scenario_state.reveal_text is None:
+                        ## Show clickable choice buttons
+                        vbox:
+                            spacing 8
+                            text "How do you reply?":
+                                size 11 color "#4dd9f066" xalign 0.5
+                            null height 2
+                            for _ci in range(len(_choices)):
+                                $ _clabel = _choices[_ci][0]
+                                textbutton "[_clabel]":
+                                    xfill True
+                                    action Function(sq_scenario_state.choose, _ci)
+                                    text_size 13 text_color "#ddf0f8"
+                                    background Solid("#101e30")
+                                    hover_background Solid("#1a3040")
+                                    padding (18, 12, 18, 12)
+                    else:
+                        ## Show the chosen reply (greyed) and Next button
+                        vbox:
+                            spacing 8
+                            for _ci in range(len(_choices)):
+                                $ _clabel = _choices[_ci][0]
+                                if _ci == sq_scenario_state.chosen_idx:
+                                    frame:
+                                        xfill True padding (18, 12, 18, 12)
+                                        background Solid("#0c2e20")
+                                        hbox:
+                                            spacing 8 yalign 0.5
+                                            text "✓" size 14 color "#4ded9a" yalign 0.5
+                                            text "[_clabel]":
+                                                size 13 color "#4ded9a" yalign 0.5
+                                else:
+                                    frame:
+                                        xfill True padding (18, 12, 18, 12)
+                                        background Solid("#0a1218")
+                                        text "[_clabel]":
+                                            size 13 color "#3a5060"
+                            textbutton ("See Summary →" if _sc_cur + 1 >= _sc_total else "Next →"):
+                                xalign 1.0
+                                action Function(sq_scenario_state.advance)
+                                text_size 14 text_color "#4dd9f0"
+                                background Solid("#0c2236")
+                                hover_background Solid("#163a50")
+                                padding (20, 10, 20, 10)
+
+
+## ============================================================================
+## STATES: SQ INBOX GAME + SQ FUNDING GAME
+## ============================================================================
+
+init python:
+
+    ## ── SQ INBOX STATE ───────────────────────────────────────────────────────
+    ## Route student cases to the right support service.
+    ## case format:   (emoji, name, situation_text, correct_idx, hint_text)
+    ## choice format: (label, icon, color_hex)
+
+    class SQInboxState:
+        def __init__(self):
+            self.title      = ""
+            self.icon       = "📬"
+            self.cases      = []
+            self.choices    = []
+            self.current    = 0
+            self.score      = 0
+            self.chosen     = None
+            self.is_correct = False
+            self.phase      = "choose"   # "choose" | "feedback"
+            self.done       = False
+
+        def setup(self, title, icon, cases, choices):
+            self.title   = title
+            self.icon    = icon
+            self.cases   = list(cases)
+            self.choices = list(choices)
+            self.current = 0
+            self.score   = 0
+            self.chosen  = None
+            self.phase   = "choose"
+            self.done    = False
+
+        def choose(self, idx):
+            if self.phase != "choose":
+                return
+            self.chosen     = idx
+            self.is_correct = (idx == self.cases[self.current][3])
+            if self.is_correct:
+                self.score += 1
+            self.phase = "feedback"
+
+        def advance(self):
+            self.current += 1
+            self.chosen = None
+            self.phase  = "choose"
+            if self.current >= len(self.cases):
+                self.done = True
+
+    sq_inbox_state = SQInboxState()
+
+
+    ## ── SQ FUNDING STATE ─────────────────────────────────────────────────────
+    ## Apply financial programs to fill a student's budget gaps.
+    ## student format: (emoji, name, situation, [(seg_label, prog_idx, color), ...])
+    ## program format: (label, icon, color, short_blurb)
+
+    class SQFundingState:
+        def __init__(self):
+            self.title    = ""
+            self.icon     = "💰"
+            self.students = []
+            self.programs = []
+            self.current  = 0
+            self.filled   = set()   # set of (student_idx, seg_idx)
+            self.done     = False
+
+        def setup(self, title, icon, students, programs):
+            self.title    = title
+            self.icon     = icon
+            self.students = list(students)
+            self.programs = list(programs)
+            self.current  = 0
+            self.filled   = set()
+            self.done     = False
+
+        def activate(self, prog_idx):
+            segs = self.students[self.current][3]
+            for i, seg in enumerate(segs):
+                if seg[1] == prog_idx:
+                    self.filled.add((self.current, i))
+
+        def is_applied(self, prog_idx):
+            segs = self.students[self.current][3]
+            return any(
+                (self.current, i) in self.filled
+                for i, seg in enumerate(segs)
+                if seg[1] == prog_idx
+            )
+
+        def current_complete(self):
+            segs = self.students[self.current][3]
+            return all((self.current, i) in self.filled for i in range(len(segs)))
+
+        def next_student(self):
+            self.current += 1
+            if self.current >= len(self.students):
+                self.done = True
+
+    sq_funding_state = SQFundingState()
+
+
+## Bar fill animation — fades+slides in from left when a segment is filled
+transform bar_fill_anim:
+    alpha 0.0 xoffset -18
+    ease 0.35 alpha 1.0 xoffset 0
+
+
+## ============================================================================
+## SCREEN: SQ INBOX GAME
+## Route 5 student cases to the correct GCSU/Peer Facilitators resource.
+## Clicking a routing button shows immediate visual status + hint text.
+## call screen sq_inbox_game() → _return = "completed"
+## ============================================================================
+
+screen sq_inbox_game():
+    on "show" action NullAction()
+    modal True
+    zorder 200
+
+    add Solid("#070d18") alpha 0.98
+
+    $ _in_n   = len(sq_inbox_state.cases)
+    $ _in_i   = sq_inbox_state.current
+
+    if sq_inbox_state.done:
+        ## ── RESULTS ──────────────────────────────────────────────────────────
+        frame:
+            xalign 0.5 yalign 0.5 xsize 580
+            padding (0, 0, 0, 0)
+            background Solid("#0b1622f8")
+            vbox:
+                spacing 0
+                frame:
+                    background Solid("#0c2236") xfill True padding (24, 14, 24, 14)
+                    hbox:
+                        spacing 8
+                        text "[sq_inbox_state.icon]" size 18 yalign 0.5
+                        text "[sq_inbox_state.title]" size 16 color "#4dd9f0" bold True yalign 0.5
+                frame:
+                    background Solid("#070d18") xfill True padding (40, 32, 40, 36)
+                    vbox:
+                        spacing 18 xalign 0.5
+                        text "★  CASES HANDLED  ★":
+                            xalign 0.5 size 12 color "#4dd9f0" bold True letter_spacing 2
+                        hbox:
+                            xalign 0.5 spacing 4
+                            text "[sq_inbox_state.score]":
+                                size 64 color "#4dd9f0" bold True yalign 0.5
+                            text "/[_in_n]":
+                                size 30 color "#4dd9f055" yalign 1.0
+                        if sq_inbox_state.score == _in_n:
+                            text "Perfect routing. Every student reached the right support.":
+                                xalign 0.5 size 13 color "#4ded9a"
+                        elif sq_inbox_state.score >= 3:
+                            text "Good instincts. Review the cases you missed.":
+                                xalign 0.5 size 13 color "#9aecff"
+                        else:
+                            text "The hints showed the right paths. Review them before you go.":
+                                xalign 0.5 size 13 color "#f87171"
+                        null height 8
+                        textbutton "Claim Reward  ★":
+                            xalign 0.5
+                            action Return("completed")
+                            text_size 15 text_color "#4dd9f0"
+                            background Solid("#0c2236")
+                            hover_background Solid("#163a50")
+                            padding (28, 14, 28, 14)
+
+    else:
+        ## ── ACTIVE CASE ──────────────────────────────────────────────────────
+        $ _case     = sq_inbox_state.cases[_in_i]
+        $ _c_emoji  = _case[0]
+        $ _c_name   = _case[1]
+        $ _c_sit    = _case[2]
+        $ _c_hint   = _case[4]
+        $ _choices  = sq_inbox_state.choices
+
+        vbox:
+            xalign 0.5 yalign 0.5
+            xsize 880
+            spacing 10
+
+            ## Header + progress pips
+            frame:
+                background Solid("#0b1622") xfill True padding (18, 10, 18, 10)
+                hbox:
+                    xfill True yalign 0.5
+                    hbox:
+                        spacing 8 yalign 0.5
+                        text "[sq_inbox_state.icon]" size 16 yalign 0.5
+                        text "[sq_inbox_state.title]" size 14 color "#4dd9f0" bold True yalign 0.5
+                    hbox:
+                        xalign 1.0 spacing 5
+                        for _pi in range(_in_n):
+                            if _pi < _in_i:
+                                frame:
+                                    xysize (24, 24) background Solid("#4dd9f0")
+                                    text "✓" size 10 color "#070d18" xalign 0.5 yalign 0.5 bold True
+                            elif _pi == _in_i:
+                                frame:
+                                    xysize (24, 24) background Solid("#9aecff")
+                                    text "[_pi+1]" size 10 color "#070d18" xalign 0.5 yalign 0.5 bold True
+                            else:
+                                frame:
+                                    xysize (24, 24) background Solid("#162030")
+                                    text "[_pi+1]" size 10 color "#3a5060" xalign 0.5 yalign 0.5
+
+            ## Case card
+            frame:
+                background Solid("#0b1622") xfill True padding (0, 0, 0, 0)
+                vbox:
+                    spacing 0
+
+                    ## Student row
+                    frame:
+                        background Solid("#0c1e30") xfill True padding (20, 14, 20, 14)
+                        hbox:
+                            spacing 16 yalign 0.5
+                            frame:
+                                xysize (52, 52) background Solid("#102840")
+                                text "[_c_emoji]" size 26 xalign 0.5 yalign 0.5
+                            vbox:
+                                spacing 3 yalign 0.5
+                                text "[_c_name]" size 15 color "#9aecff" bold True
+                                if sq_inbox_state.phase == "choose":
+                                    text "● needs support" size 11 color "#f8717188"
+                                elif sq_inbox_state.is_correct:
+                                    text "✓  correctly routed" size 11 color "#4ded9a" bold True
+                                else:
+                                    text "✗  see correct path below" size 11 color "#f87171"
+
+                    ## Situation text
+                    frame:
+                        background Solid("#070d18") xfill True padding (24, 16, 24, 16)
+                        text "[_c_sit]":
+                            size 14 color "#c8e8f4" line_spacing 5
+
+                    ## Feedback box — visible after routing
+                    if sq_inbox_state.phase == "feedback":
+                        frame:
+                            background Solid("#0a2018" if sq_inbox_state.is_correct else "#1e0c10")
+                            xfill True padding (22, 13, 22, 13)
+                            vbox:
+                                spacing 5
+                                text ("✓  Right call." if sq_inbox_state.is_correct else "✗  Not the best match — here's why:"):
+                                    size 12
+                                    color ("#4ded9a" if sq_inbox_state.is_correct else "#f87171")
+                                    bold True
+                                text "[_c_hint]":
+                                    size 13 color "#b8f0d0" line_spacing 4
+
+            ## Routing buttons — 2 × 2 grid
+            frame:
+                background Solid("#060c16") xfill True padding (14, 12, 14, 12)
+                vbox:
+                    spacing 8
+
+                    if sq_inbox_state.phase == "choose":
+                        text "Route to →":
+                            size 11 color "#4dd9f044" xalign 0.5
+                        null height 2
+
+                    ## Row 1: choices 0 and 1
+                    hbox:
+                        xfill True spacing 8
+                        for _ci in [0, 1]:
+                            $ _ch      = _choices[_ci]
+                            $ _ch_lbl  = _ch[0]
+                            $ _ch_icon = _ch[1]
+                            $ _ch_col  = _ch[2]
+                            $ _chosen  = sq_inbox_state.chosen == _ci
+                            $ _correct = _ci == _case[3]
+
+                            if sq_inbox_state.phase == "choose":
+                                button:
+                                    xfill True padding (14, 14, 14, 14)
+                                    background Solid("#101e30")
+                                    hover_background Solid("#1a3040")
+                                    action Function(sq_inbox_state.choose, _ci)
+                                    hbox:
+                                        spacing 12 yalign 0.5
+                                        text "[_ch_icon]" size 26 yalign 0.5
+                                        text "[_ch_lbl]" size 13 color "#ddf0f8" yalign 0.5
+                            elif _chosen and sq_inbox_state.is_correct:
+                                frame:
+                                    xfill True padding (14, 14, 14, 14)
+                                    background Solid("#0a2e18")
+                                    hbox:
+                                        spacing 12 yalign 0.5
+                                        text "[_ch_icon]" size 26 yalign 0.5
+                                        text "[_ch_lbl]" size 13 color "#4ded9a" bold True yalign 0.5
+                            elif _chosen:
+                                frame:
+                                    xfill True padding (14, 14, 14, 14)
+                                    background Solid("#2e0a10")
+                                    hbox:
+                                        spacing 12 yalign 0.5
+                                        text "[_ch_icon]" size 26 yalign 0.5
+                                        text "[_ch_lbl]" size 13 color "#f87171" yalign 0.5
+                            elif _correct:
+                                frame:
+                                    xfill True padding (14, 14, 14, 14)
+                                    background Solid("#0a2e18")
+                                    hbox:
+                                        spacing 12 yalign 0.5
+                                        text "[_ch_icon]" size 26 yalign 0.5
+                                        text "[_ch_lbl]" size 13 color "#4ded9a" yalign 0.5
+                            else:
+                                frame:
+                                    xfill True padding (14, 14, 14, 14)
+                                    background Solid("#0a1420")
+                                    hbox:
+                                        spacing 12 yalign 0.5
+                                        text "[_ch_icon]" size 26 yalign 0.5
+                                        text "[_ch_lbl]" size 13 color "#3a5060" yalign 0.5
+
+                    ## Row 2: choices 2 and 3
+                    hbox:
+                        xfill True spacing 8
+                        for _ci in [2, 3]:
+                            $ _ch      = _choices[_ci]
+                            $ _ch_lbl  = _ch[0]
+                            $ _ch_icon = _ch[1]
+                            $ _ch_col  = _ch[2]
+                            $ _chosen  = sq_inbox_state.chosen == _ci
+                            $ _correct = _ci == _case[3]
+
+                            if sq_inbox_state.phase == "choose":
+                                button:
+                                    xfill True padding (14, 14, 14, 14)
+                                    background Solid("#101e30")
+                                    hover_background Solid("#1a3040")
+                                    action Function(sq_inbox_state.choose, _ci)
+                                    hbox:
+                                        spacing 12 yalign 0.5
+                                        text "[_ch_icon]" size 26 yalign 0.5
+                                        text "[_ch_lbl]" size 13 color "#ddf0f8" yalign 0.5
+                            elif _chosen and sq_inbox_state.is_correct:
+                                frame:
+                                    xfill True padding (14, 14, 14, 14)
+                                    background Solid("#0a2e18")
+                                    hbox:
+                                        spacing 12 yalign 0.5
+                                        text "[_ch_icon]" size 26 yalign 0.5
+                                        text "[_ch_lbl]" size 13 color "#4ded9a" bold True yalign 0.5
+                            elif _chosen:
+                                frame:
+                                    xfill True padding (14, 14, 14, 14)
+                                    background Solid("#2e0a10")
+                                    hbox:
+                                        spacing 12 yalign 0.5
+                                        text "[_ch_icon]" size 26 yalign 0.5
+                                        text "[_ch_lbl]" size 13 color "#f87171" yalign 0.5
+                            elif _correct:
+                                frame:
+                                    xfill True padding (14, 14, 14, 14)
+                                    background Solid("#0a2e18")
+                                    hbox:
+                                        spacing 12 yalign 0.5
+                                        text "[_ch_icon]" size 26 yalign 0.5
+                                        text "[_ch_lbl]" size 13 color "#4ded9a" yalign 0.5
+                            else:
+                                frame:
+                                    xfill True padding (14, 14, 14, 14)
+                                    background Solid("#0a1420")
+                                    hbox:
+                                        spacing 12 yalign 0.5
+                                        text "[_ch_icon]" size 26 yalign 0.5
+                                        text "[_ch_lbl]" size 13 color "#3a5060" yalign 0.5
+
+                    ## Next button — only after routing
+                    if sq_inbox_state.phase == "feedback":
+                        textbutton ("See Results →" if _in_i + 1 >= _in_n else "Next Case →"):
+                            xalign 1.0
+                            action Function(sq_inbox_state.advance)
+                            text_size 14 text_color "#4dd9f0"
+                            background Solid("#0c2236")
+                            hover_background Solid("#163a50")
+                            padding (20, 10, 20, 10)
+
+
+## ============================================================================
+## SCREEN: SQ FUNDING GAME
+## Click program buttons to fill a student's budget gaps.
+## Each program fills its specific segments with a bar-fill animation.
+## call screen sq_funding_game() → _return = "completed"
+## ============================================================================
+
+screen sq_funding_game():
+    on "show" action NullAction()
+    modal True
+    zorder 200
+
+    add Solid("#07100a") alpha 0.98
+
+    $ _fd_total = len(sq_funding_state.students)
+    $ _fd_cur   = sq_funding_state.current
+
+    if sq_funding_state.done:
+        ## ── RESULTS ──────────────────────────────────────────────────────────
+        frame:
+            xalign 0.5 yalign 0.5 xsize 620
+            padding (0, 0, 0, 0)
+            background Solid("#091610f8")
+            vbox:
+                spacing 0
+                frame:
+                    background Solid("#0c2e1a") xfill True padding (24, 14, 24, 14)
+                    hbox:
+                        spacing 8
+                        text "[sq_funding_state.icon]" size 18 yalign 0.5
+                        text "[sq_funding_state.title]" size 16 color "#4ded9a" bold True yalign 0.5
+                frame:
+                    background Solid("#07100a") xfill True padding (40, 32, 40, 36)
+                    vbox:
+                        spacing 16 xalign 0.5
+                        text "★  ALL STUDENTS FUNDED  ★":
+                            xalign 0.5 size 12 color "#4ded9a" bold True letter_spacing 2
+                        null height 4
+                        frame:
+                            background Solid("#0c2e1a") xfill True padding (20, 16, 20, 16)
+                            vbox:
+                                spacing 10
+                                for _pi in range(len(sq_funding_state.programs)):
+                                    $ _p = sq_funding_state.programs[_pi]
+                                    hbox:
+                                        spacing 12 yalign 0.5
+                                        frame:
+                                            xysize (36, 36) background Solid(_p[2] + "66")
+                                            text "[_p[1]]" size 18 xalign 0.5 yalign 0.5
+                                        vbox:
+                                            spacing 2 yalign 0.5
+                                            text "[_p[0]]" size 14 color _p[2] bold True
+                                            text "[_p[3]]" size 12 color "#9ad0b8"
+                        null height 8
+                        text "These three programs are not mutually exclusive.":
+                            xalign 0.5 size 13 color "#c8e8d0" italic True
+                        null height 4
+                        textbutton "Claim Reward  ★":
+                            xalign 0.5
+                            action Return("completed")
+                            text_size 15 text_color "#4ded9a"
+                            background Solid("#0c2e1a")
+                            hover_background Solid("#163a26")
+                            padding (28, 14, 28, 14)
+
+    else:
+        ## ── ACTIVE STUDENT ───────────────────────────────────────────────────
+        $ _stu     = sq_funding_state.students[_fd_cur]
+        $ _s_emoji = _stu[0]
+        $ _s_name  = _stu[1]
+        $ _s_sit   = _stu[2]
+        $ _s_segs  = _stu[3]
+
+        vbox:
+            xalign 0.5 yalign 0.5
+            xsize 860
+            spacing 10
+
+            ## Header + student counter
+            frame:
+                background Solid("#091610") xfill True padding (18, 10, 18, 10)
+                hbox:
+                    xfill True yalign 0.5
+                    hbox:
+                        spacing 8 yalign 0.5
+                        text "[sq_funding_state.icon]" size 16 yalign 0.5
+                        text "[sq_funding_state.title]" size 14 color "#4ded9a" bold True yalign 0.5
+                    hbox:
+                        xalign 1.0 spacing 5
+                        for _pi in range(_fd_total):
+                            if _pi < _fd_cur:
+                                frame:
+                                    xysize (24, 24) background Solid("#4ded9a")
+                                    text "✓" size 10 color "#07100a" xalign 0.5 yalign 0.5 bold True
+                            elif _pi == _fd_cur:
+                                frame:
+                                    xysize (24, 24) background Solid("#9af4c8")
+                                    text "[_pi+1]" size 10 color "#07100a" xalign 0.5 yalign 0.5 bold True
+                            else:
+                                frame:
+                                    xysize (24, 24) background Solid("#102818")
+                                    text "[_pi+1]" size 10 color "#3a6050" xalign 0.5 yalign 0.5
+
+            ## Student profile
+            frame:
+                background Solid("#091610") xfill True padding (0, 0, 0, 0)
+                vbox:
+                    spacing 0
+                    frame:
+                        background Solid("#0c1e14") xfill True padding (20, 14, 20, 14)
+                        hbox:
+                            spacing 16 yalign 0.5
+                            frame:
+                                xysize (52, 52) background Solid("#102818")
+                                text "[_s_emoji]" size 28 xalign 0.5 yalign 0.5
+                            vbox:
+                                spacing 3 yalign 0.5
+                                text "[_s_name]" size 15 color "#9af4c8" bold True
+                                text "[_s_sit]" size 12 color "#7ab898" line_spacing 3
+
+            ## Budget gap bars
+            frame:
+                background Solid("#07100a") xfill True padding (22, 16, 22, 12)
+                vbox:
+                    spacing 6
+                    text "BUDGET GAPS":
+                        size 10 color "#4ded9a88" bold True letter_spacing 2
+                    null height 4
+                    for _si in range(len(_s_segs)):
+                        $ _seg       = _s_segs[_si]
+                        $ _seg_lbl   = _seg[0]
+                        $ _seg_prog  = _seg[1]
+                        $ _seg_color = _seg[2]
+                        $ _seg_prog_name = sq_funding_state.programs[_seg_prog][0]
+                        $ _is_filled = (_fd_cur, _si) in sq_funding_state.filled
+
+                        hbox:
+                            xfill True spacing 10 yalign 0.5
+                            frame:
+                                xsize 230 ysize 44
+                                background Solid("#0c1e14")
+                                text "[_seg_lbl]":
+                                    size 12 color "#7ab898" xalign 0.5 yalign 0.5
+                            frame:
+                                xfill True ysize 44
+                                background Solid("#0c1810")
+                                if _is_filled:
+                                    frame:
+                                        xfill True ysize 44
+                                        background Solid(_seg_color)
+                                        at bar_fill_anim
+                                        hbox:
+                                            xfill True yalign 0.5
+                                            text "✓  [_seg_prog_name]":
+                                                size 13 color "#ffffff" xalign 0.5 yalign 0.5 bold True
+
+            ## Program buttons
+            frame:
+                background Solid("#060e08") xfill True padding (18, 14, 18, 14)
+                vbox:
+                    spacing 8
+                    text "APPLY PROGRAMS  →  click to fill the gaps":
+                        size 10 color "#4ded9a55" xalign 0.5 letter_spacing 1
+                    null height 2
+                    hbox:
+                        xalign 0.5 spacing 12
+                        for _pi in range(len(sq_funding_state.programs)):
+                            $ _prog       = sq_funding_state.programs[_pi]
+                            $ _prog_lbl   = _prog[0]
+                            $ _prog_icon  = _prog[1]
+                            $ _prog_color = _prog[2]
+                            $ _prog_blurb = _prog[3]
+                            $ _applied    = sq_funding_state.is_applied(_pi)
+
+                            if _applied:
+                                frame:
+                                    xsize 240 ysize 72
+                                    background Solid(_prog_color + "33")
+                                    padding (14, 10, 14, 10)
+                                    vbox:
+                                        spacing 4 xalign 0.5 yalign 0.5
+                                        hbox:
+                                            spacing 8 xalign 0.5
+                                            text "[_prog_icon]" size 20
+                                            text "[_prog_lbl]" size 14 color _prog_color bold True
+                                        text "✓  Applied" size 11 color _prog_color xalign 0.5
+                            else:
+                                button:
+                                    xsize 240 ysize 72
+                                    background Solid("#0c1810")
+                                    hover_background Solid(_prog_color + "22")
+                                    action Function(sq_funding_state.activate, _pi)
+                                    padding (14, 10, 14, 10)
+                                    vbox:
+                                        spacing 4 xalign 0.5 yalign 0.5
+                                        hbox:
+                                            spacing 8 xalign 0.5
+                                            text "[_prog_icon]" size 20
+                                            text "[_prog_lbl]" size 14 color "#7ab898" bold True
+                                        text "[_prog_blurb]" size 10 color "#3a6050" xalign 0.5
+
+                    ## Funded indicator + Next button
+                    if sq_funding_state.current_complete():
+                        null height 6
+                        frame:
+                            background Solid("#0a2818") xfill True padding (18, 12, 18, 12)
+                            hbox:
+                                xfill True yalign 0.5
+                                vbox:
+                                    spacing 3
+                                    text "✓  [_s_name] is funded.":
+                                        size 14 color "#4ded9a" bold True
+                                    text "All three programs are active — none cancel each other out.":
+                                        size 12 color "#7ab898"
+                                textbutton ("See Results →" if _fd_cur + 1 >= _fd_total else "Next Student →"):
+                                    xalign 1.0 yalign 0.5
+                                    action Function(sq_funding_state.next_student)
+                                    text_size 14 text_color "#4ded9a"
+                                    background Solid("#0c2e1a")
+                                    hover_background Solid("#163a26")
+                                    padding (20, 10, 20, 10)
+
+
+## ============================================================================
 ## SCREEN: SQ TIMELINE GAME
 ## call screen sq_timeline_game() → _return = score_int
 ## ============================================================================

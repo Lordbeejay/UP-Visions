@@ -1039,6 +1039,143 @@ label sq_stfap_docs:
     return
 
 ## ============================================================================
+## ACT 6 — SUBQUEST E: "Fund the Student — Financial Safety Net"
+## Trigger: Kuya Tomas — after sq_stfap_docs  |  Game: Funding bar fill
+## Three students, each with budget gaps. Player clicks programs to fill gaps.
+## Each program lights up its specific segment with an animation.
+## Teaches: TES vs GIAP vs STFAP — what each covers, and that they stack.
+## ============================================================================
+label sq_financial_assistance:
+    window show
+    kuya_tomas "Last thing. Three students. Each one has budget gaps."
+    kuya_tomas "You have three programs to work with. Click each one. See what it covers."
+    python:
+        sq_funding_state.setup(
+            "Fund the Student",
+            "💰",
+            [
+                (
+                    "👩‍🎓", "Maya",
+                    "Freshman. Zero financial support yet. Needs everything — tuition covered, a monthly allowance from CHED, and UP's own cash support.",
+                    [
+                        ("UP Tuition Adjustment",     0, "#1e5c2a"),
+                        ("CHED Tuition + Allowance",  1, "#1a3a5c"),
+                        ("UP System Cash Allowance",  2, "#5c3a1a"),
+                    ]
+                ),
+                (
+                    "👨‍🎓", "Ben",
+                    "STFAP re-bracketing approved. But tuition-free isn't the same as rent-free. Two more programs still to go.",
+                    [
+                        ("Re-bracketing (STFAP)",         0, "#1e5c2a"),
+                        ("Government Subsidy (TES)",      1, "#1a3a5c"),
+                        ("Grants-in-Aid Allowance (GIAP)", 2, "#5c3a1a"),
+                    ]
+                ),
+                (
+                    "👩", "Ana",
+                    "On STFAP E9 already — zero tuition. But two programs she didn't know existed can still give her monthly cash.",
+                    [
+                        ("STFAP Bracket (E9)",           0, "#1e5c2a"),
+                        ("RA 10931 National Grant (TES)", 1, "#1a3a5c"),
+                        ("UP Monthly Cash (GIAP)",        2, "#5c3a1a"),
+                    ]
+                ),
+            ],
+            [
+                ("STFAP", "📊", "#2a9a4a", "UP's internal tuition bracket"),
+                ("TES",   "🏛️", "#2a6aaa", "CHED national grant — RA 10931"),
+                ("GIAP",  "💵", "#c89218", "UP System monthly cash allowance"),
+            ]
+        )
+    window hide
+    call screen sq_funding_game()
+    window show
+    kuya_tomas "You saw it. All three programs running at the same time. None of them cancelling the others."
+    kuya_tomas "STFAP handles tuition inside UP. TES is the government's coverage layer on top. GIAP is UP's cash for living costs."
+    kuya_tomas "SLAS is what makes sure a student finds all three instead of only the one they happened to ask about."
+    $ collect_item(ITEM_FINANCIAL_PROGRAMS)
+    show screen item_pickup_screen(ITEM_FINANCIAL_PROGRAMS)
+    pause 2.5
+    hide screen item_pickup_screen
+    $ persistent.encyclopedia_unlocks.add("slas")
+    $ persistent.encyclopedia_unlocks.add("tes_giap")
+    $ complete_subquest("sq_financial_assistance")
+    window hide
+    return
+
+
+## ============================================================================
+## ACT 6 — SUBQUEST F: "Handle the Inbox — GCSU Routing"
+## Trigger: Ma'am Garcia — after act6_at_gcsu  |  Game: Inbox routing
+## 5 student cases arrive. Player routes each to the right GCSU resource.
+## Teaches: walk-in vs. scheduled appointment, academic counseling,
+##          Peer Facilitators vs. individual counseling.
+## ============================================================================
+label sq_gcsu_services:
+    window show
+    guidance_counselor "Before you go — one more exercise."
+    guidance_counselor "Five students. Each one needs something specific from this office. You tell me where to send them."
+    python:
+        sq_inbox_state.setup(
+            "GCSU Intake",
+            "📬",
+            [
+                (
+                    "😓", "Renz",
+                    "Can't make himself study even with notes open in front of him. Been staring at the same page for an hour every night. Not in crisis — more like a broken system.",
+                    3,
+                    "GCSU academic counseling addresses exactly this — study habits, time management, and the patterns behind procrastination. This isn't a TLRC tutoring issue. TLRC helps you do the task. GCSU helps you understand why you're stuck doing it."
+                ),
+                (
+                    "😢", "Bea",
+                    "First week. Just arrived from Palawan. Cries every night, doesn't know anyone, eats alone. Not in crisis — just really struggling with the transition.",
+                    2,
+                    "The Peer Facilitators group is the ideal first step here. It's low-stakes, student-led, and specifically designed for adjustment — homesickness, isolation, first-year transition. Group activities help students realize they're not alone before individual counseling feels necessary."
+                ),
+                (
+                    "🤔", "Carlo",
+                    "Two months in and unsure if his degree is the right choice. Wants to understand what careers actually match his skills and personality. Not urgent — but important.",
+                    1,
+                    "Career guidance at GCSU (RIASEC testing, aptitude assessment, one-on-one career counseling) works best with a pre-scheduled appointment — it needs adequate time. Walk-in is available, but scheduling gets Carlo a dedicated slot without the wait."
+                ),
+                (
+                    "😰", "Maya",
+                    "Overwhelmed for weeks. Hasn't told anyone. Wants support but is scared of sitting one-on-one with a counselor. Doesn't know where to start.",
+                    2,
+                    "The Peer Facilitators group is the natural entry point when individual counseling feels intimidating. Group sessions are student-led, lower-stakes, and often help students feel ready for one-on-one sessions later. It's designed for this exact situation."
+                ),
+                (
+                    "📱", "Dan",
+                    "Had his first GCSU session after everything this week. Ma'am Garcia said to come back. He wants a regular slot — same time, every week, no waiting in line.",
+                    1,
+                    "Pre-scheduling is exactly for ongoing or recurring sessions — Dan gets a confirmed time slot, no wait, and consistency across weeks. Walk-in is best for first visits or urgent needs. For regular sessions, scheduling is the right choice."
+                ),
+            ],
+            [
+                ("Walk-in Now",     "🚪", "#1a2a4a"),
+                ("Schedule Ahead",  "📅", "#1a3a2a"),
+                ("Peer Facilitators Group", "🤝", "#2a1a3a"),
+                ("Academic Counseling (GCSU)", "📖", "#2a2a1a"),
+            ]
+        )
+    window hide
+    call screen sq_inbox_game()
+    window show
+    guidance_counselor "Good. Knowing which door to open for which problem — that's half the work."
+    guidance_counselor "The other half is actually walking through it."
+    $ collect_item(ITEM_GCSU_SERVICES_GUIDE)
+    show screen item_pickup_screen(ITEM_GCSU_SERVICES_GUIDE)
+    pause 2.5
+    hide screen item_pickup_screen
+    $ persistent.encyclopedia_unlocks.add("gcsu")
+    $ persistent.encyclopedia_unlocks.add("peer_facilitators")
+    $ complete_subquest("sq_gcsu_services")
+    window hide
+    return
+
+
+## ============================================================================
 ## ACT 8 — SUBQUEST A: "The Week in Review" (MANDATORY FINALE QUIZ)
 ## Trigger: Prof. Reyes' dialogue — mandatory before oval ending
 ## Game: Quiz — 3 questions spanning Acts 1–7
