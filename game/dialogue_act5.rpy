@@ -305,6 +305,12 @@ label act5_grace_end:
     ate_grace "Welcome to UP, freshie. Don't just survive — participate. The university is what you make of it."
     $ talked_ate_grace = True
     $ complete_task("talk_ate_grace")
+    if "sq_rights_freedom" not in subquests_completed:
+        menu:
+            "★ Can you test me on rights versus academic freedom?":
+                jump sq_rights_freedom
+            "(Got it — see you around.)":
+                pass
     window hide
     return
 
@@ -539,6 +545,12 @@ label act5_hsu_end:
     hide screen item_pickup_screen
 
     $ complete_task("visit_hsu")
+    if "sq_hsu_triage" not in subquests_completed:
+        menu:
+            "★ Doc, can you give me a quick triage exercise?":
+                jump sq_hsu_triage
+            "(Thanks — we'll head out now.)":
+                pass
     window hide
     jump act5_dan_end
 
@@ -546,6 +558,11 @@ label act5_hsu_end:
 ## ACT 5 COMPLETION — First Class Attended
 ## ============================================================================
 label act5_first_class:
+    window show
+    narrator_char "(You check your schedule one last time before heading out. Three classes today. Time to find them.)"
+    window hide
+    $ classroom_finder_state.reset()
+    call screen classroom_finder_screen
     window show
     narrator_char "(The bell rings. Your first class at UP Visayas is officially over.)"
     narrator_char "(Your notebook is already half-full. The reading list is daunting. But something feels different.)"

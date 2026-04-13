@@ -18,9 +18,9 @@ define ACT4_TASKS = {"talk_dorm_manager", "explore_dorm_room", "complete_room_se
 
 ## --- Acts 5–8 Task Requirements ---
 define ACT5_TASKS = {"talk_prof_lena", "talk_kuya_rico", "talk_ate_grace", "talk_classmate_dan", "attend_first_class", "visit_hsu"}
-define ACT6_TASKS = {"talk_mika", "talk_kuya_tomas", "talk_ate_jenny", "talk_coach_ramon", "talk_dan_gcsu", "visit_org_fair", "visit_scholarship_service"}
+define ACT6_TASKS = {"visit_hsu_annual", "talk_ate_jenny", "talk_dan_gcsu", "talk_kuya_tomas"}
 define ACT7_TASKS = {"talk_ate_rosa", "talk_kuya_neil", "talk_prof_santos", "talk_classmate_bea", "attend_study_session", "visit_tlrc"}
-define ACT8_TASKS = {"talk_jaden_act8", "talk_ate_linda", "talk_nanay_elena", "talk_prof_reyes", "end_of_first_week", "visit_gcsu"}
+define ACT8_TASKS = {"talk_jaden_act8", "talk_ate_linda", "talk_nanay_elena", "talk_prof_reyes", "end_of_first_week"}
 
 ## --- Player Map Position ---
 default player_map_x = 640
@@ -107,12 +107,10 @@ define TASK_LIST_TEXT = {
     "talk_ate_grace": "Talk to Ate Grace about student rights",
     "talk_classmate_dan": "Chat with Dan about study tips",
     "attend_first_class": "Attend your first class",
-    "talk_mika": "Talk to Mika at the org fair",
-    "talk_kuya_tomas": "Ask Kuya Tomas about scholarships",
     "talk_ate_jenny": "Visit Ate Jenny at the OSA",
-    "talk_coach_ramon": "Talk to Coach Ramon about sports",
+    "talk_kuya_tomas": "Learn about scholarships and STFAP",
     "talk_dan_gcsu": "Help Dan visit the GCSU and Scholarship Service",
-    "visit_org_fair": "Walk through the org fair",
+    "visit_hsu_annual": "Complete the Annual Physical Exam at the HSU",
     "talk_ate_rosa": "Talk to Ate Rosa at the library",
     "talk_kuya_neil": "Visit Kuya Neil at the computer lab",
     "talk_prof_santos": "Talk to Prof. Santos about research",
@@ -206,21 +204,8 @@ init python:
                 "talk_classmate_dan" in store.tasks_completed
             )
         ## Act 6 prerequisites
-        if task_id in ("talk_kuya_tomas", "talk_ate_jenny"):
-            return "talk_mika" in store.tasks_completed
-        if task_id == "talk_coach_ramon":
-            return ("talk_kuya_tomas" in store.tasks_completed or
-                    "talk_ate_jenny" in store.tasks_completed)
-        if task_id == "talk_dan_gcsu":
+        if task_id in ("talk_kuya_tomas", "talk_dan_gcsu", "visit_hsu_annual"):
             return "talk_ate_jenny" in store.tasks_completed
-        if task_id == "visit_org_fair":
-            return (
-                "talk_mika" in store.tasks_completed and
-                "talk_kuya_tomas" in store.tasks_completed and
-                "talk_ate_jenny" in store.tasks_completed and
-                "talk_coach_ramon" in store.tasks_completed and
-                "talk_dan_gcsu" in store.tasks_completed
-            )
         ## Act 7 prerequisites
         if task_id in ("talk_kuya_neil", "talk_prof_santos"):
             return "talk_ate_rosa" in store.tasks_completed
@@ -786,6 +771,34 @@ init python:
         "UP's motto: integrity in work, excellence in service — not just in grades",
         "Prof. Reyes", "🏅",
         full="UP's motto 'Honor and Excellence' defines the standard for every Iskolar ng Bayan. HONOR means academic integrity: submitting your own work, citing sources, refusing to cheat even under pressure, and speaking up when you witness injustice. It means being a person whose word means something. EXCELLENCE means the quality of your work, your character, and how you use your education in service. A 1.0 GWA with no moral backbone serves no one. Excellence is not just a grade — it is a way of living. The Oblation statue embodies both: arms raised, not grasping, but offering. That is the UP ideal."
+    )
+    ITEM_RIGHTS_FREEDOM_GUIDE = InfoItem(
+        "rights_freedom_guide",
+        "Rights, Freedom & Responsibility",
+        "Student rights, faculty academic freedom, and your own obligations — all three matter",
+        "Ate Grace", "⚖️",
+        full="THREE DISTINCT CONCEPTS: STUDENT RIGHTS — guaranteed protections: quality education, due process in discipline, the right to appeal grades, access to records, freedom to organize, and equal treatment. These can be enforced through the OSA and the UP Student Code. ACADEMIC FREEDOM (Faculty) — professors have the right to choose their pedagogy, assign challenging materials, and teach without political interference. You may disagree with their content — respectfully — but you cannot demand they teach only what is comfortable. STUDENT RESPONSIBILITIES — attending class prepared, submitting original work, engaging honestly, and using the grievance process rather than retaliation. Rights without responsibility produce entitlement. Responsibility without rights produces silence. Know both."
+    )
+    ITEM_HSU_TRIAGE_GUIDE = InfoItem(
+        "hsu_triage_guide",
+        "Campus Health Triage Guide",
+        "HSU handles most cases free — know when to go, when to be referred, when to self-manage",
+        "Physician", "🏥",
+        full="THE HSU TRIAGE PRINCIPLE: Go to HSU FIRST for any campus health concern — consultations, medicines, dental, and medical certificates are all FREE. Common cases handled at HSU: fever, colds, stomach upset, minor injuries, dental extraction, ORS for dehydration, wound care. REFERRAL CASES — HSU sends you to Miagao District Hospital for: suspected fractures, severe or worsening fever (3+ days), lacerations requiring stitches, emergency stabilization. SPECIALIST cases go to Western Visayas Medical Center in Iloilo. SELF-MANAGE (buy at pharmacy) for: mild cold with no fever, over-the-counter supplements, prescription refills. Rule of thumb: when in doubt, go to HSU first. They will tell you if you need a referral."
+    )
+    ITEM_SUPPORT_ROUTE_MAP = InfoItem(
+        "support_route_map",
+        "Campus Support Office Map",
+        "HSU → health | GCSU → counseling | Scholarship Service → financial | OSA → org & general",
+        "Dan", "🗺️",
+        full="KNOW WHERE TO GO: HEALTH SERVICES UNIT (HSU) — physical health, illness, injury, dental, medical certificates, annual physical exam. Free for enrolled students. GUIDANCE & COUNSELING SERVICES UNIT (GCSU) — mental health, academic anxiety, career confusion, personal difficulties, crisis intervention, freshmen adjustment. Fully confidential under RA 9258. Walk-ins welcome. SCHOLARSHIP SERVICE (New Admin) — STFAP re-bracketing, emergency fund (₱1,500 max, 24–48 hr processing), scholarship applications and renewals. OFFICE OF STUDENT AFFAIRS (OSA) — student organization registration, permits for activities, student welfare coordination, connecting you to the other offices when unsure. RULE: If lost, go to OSA first. They will route you."
+    )
+    ITEM_STFAP_DOCS_LIST = InfoItem(
+        "stfap_docs_list",
+        "STFAP & Scholarship Documents",
+        "Know which documents go where — deadlines are absolute, scrambling is avoidable",
+        "Kuya Tomas", "📋",
+        full="STFAP RE-BRACKETING requires: (1) Sworn Affidavit of Income — notarized, from parent/guardian. (2) Brief explanation letter describing the change in financial circumstances. (3) Current enrollment form. Special cases (single parent, OFW, informal sector) have adjusted requirements — ask the Scholarship Office. EMERGENCY FUND APPLICATION requires: (1) Filled Emergency Fund form from the Scholarship Office. (2) Student number, college, and written description of the urgent situation. Processing: 24–48 hours; GCSU-referred cases are prioritized. SCHOLARSHIP APPLICATION requires: (1) Latest grades transcript. (2) Personal essay on financial need and academic goals. (3) Certificate of Family Income or ITR. (4) At least one recommendation letter. (5) Any scholarship-specific forms. Keep all documents in a ready folder — scholarship openings close fast."
     )
 
 
