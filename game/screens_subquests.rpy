@@ -634,7 +634,7 @@ screen sq_sort_game():
                                     text "[_itm[2]]" size 17 yalign 0.5
                                     text "[_itm[0]]":
                                         size 13 color ("#10b981" if _right else "#f87171") yalign 0.5
-                                    text "[\u2192 [sq_sort_state.bins[_bx][0]]]":
+                                    text "\u2192 [sq_sort_state.bins[_bx][0]]":
                                         size 11 color _bcol yalign 0.5
 
                         elif sq_sort_state.selected == _ci:
