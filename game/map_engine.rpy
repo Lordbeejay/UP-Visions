@@ -246,18 +246,13 @@ screen map_screen(map_bg, nodes, task_text="", map_scale=1.0, player_zoom=2.5):
     key "e" action Show("encyclopedia_screen")
     key "d" action Show("dictionary_screen")
 
-    ## Black background behind everything
-    add Solid("#000000"):
-        xysize (1920, 1080)
-
-    ## Map background — scaled and centered with white border
-    frame:
-        background Solid("#ffffff")
-        padding (4, 4, 4, 4)
-        xalign 0.5
-        yalign 0.5
-        add ("images/" + map_bg):
-            zoom map_scale
+    ## Full-screen map background — stretches to fill 1920x1080
+    add ("images/" + map_bg):
+        xpos 0
+        ypos 0
+        xsize 1920
+        ysize 1080
+        fit "cover"
 
     ## Node markers — positioned using screen coordinates
     for node in nodes:
@@ -720,7 +715,14 @@ label walk_to_node(target_node, map_bg=None, nodes=None, player_zoom=2.5):
             xalign 0.5
             yalign 0.5
             zoom _map_scale
-        
+    elif map_bg == "ui/Diwata.png":
+        # For act 7, use full-screen fit: cover style
+        show expression ("images/" + map_bg) as walk_map_bg:
+            xpos 0
+            ypos 0
+            xsize 1920
+            ysize 1080
+            fit "cover"
     else:
         show expression ("images/" + map_bg) as walk_map_bg:
             xalign 0.5

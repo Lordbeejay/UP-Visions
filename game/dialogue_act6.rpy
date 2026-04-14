@@ -164,7 +164,7 @@ label act6_enter_osa:
 ## INTERACTIVE: Player chooses how to approach Dan
 ## ============================================================================
 label act6_npc_dan:
-    scene expression "images/ui/cas_corridor.png" at fit_screen
+    scene expression "images/ui/cas_front.png" at fit_screen
     window show
     narrator_char "(Dan is on a bench near the water fountain. Pale. Hunched. Staring at nothing.)"
     player_char "Dan."

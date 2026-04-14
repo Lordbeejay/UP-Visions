@@ -16,6 +16,7 @@ label act7_start:
 ## INTERACTIVE: Menu-driven tour + inline library quiz
 ## ============================================================================
 label act7_npc_ate_rosa:
+    scene expression "images/ui/old_ad.png"
     window show
     narrator_char "(Jaden is on the library steps, notebook open, writing nothing. He spots you and looks relieved.)"
     jaden "You're here. Good. I have a Kas 1 paper due Friday. Three sources, APA, five pages."
@@ -23,6 +24,7 @@ label act7_npc_ate_rosa:
     player_char "Have you been inside the library yet?"
     jaden "I've walked past it."
     player_char "Come on."
+    scene expression "images/ui/Library_Interior.png"
     narrator_char "(Ate Rosa catches you both at the entrance the way librarians catch every lost freshie — quietly, calmly, like she's seen it a thousand times.)"
     ate_rosa "First time?"
     jaden "Is it that obvious?"
@@ -126,6 +128,7 @@ label act7_library_end:
 ## INTERACTIVE: Menu-driven setup + UP Mail knowledge check
 ## ============================================================================
 label act7_npc_kuya_neil:
+    scene expression "images/ui/classroom.png"
     window show
     narrator_char "(Computer lab. Rows of desktops. Kuya Neil at the sign-in desk.)"
     kuya_neil "Freshies. Sign the logbook. What do you need?"
@@ -230,6 +233,7 @@ label act7_lab_end:
 ## INTERACTIVE: Thesis-building menu + sq_up_mandates (mandatory)
 ## ============================================================================
 label act7_npc_prof_santos:
+    scene expression "images/ui/room204.png"
     window show
     narrator_char "(Room 204. Prof. Santos is marking papers. She looks up at the knock.)"
     prof_santos "Freshmen. Sit down."
@@ -301,6 +305,7 @@ label act7_santos_thesis_good:
 ## INTERACTIVE: Menu-driven coordinator tour + sq_apa_challenge (mandatory)
 ## ============================================================================
 label act7_npc_classmate_bea:
+    scene expression "images/ui/cas_hallway.png"
     window show
     narrator_char "(CAS corridor. Bea nearly walks into you both.)"
     bea "Oh! You two — are you going to the TLRC?"
@@ -349,6 +354,7 @@ label act7_tlrc_workshop:
     jump act7_tlrc_loop
 
 label act7_tlrc_observe:
+    scene expression "images/ui/tlrc.png"
     narrator_char "(She leads you to a carrel. A third-year is working with a freshman on an essay paragraph.)"
     peer_tutor "Before we fix this — tell me what this sentence is trying to argue."
     narrator_char "(The freshman thinks. Ventures an answer. The tutor asks another question, doesn't give the answer.)"
@@ -384,6 +390,7 @@ label act7_tlrc_finish:
 ## INTERACTIVE: Player chooses the study group's focus + short resolution
 ## ============================================================================
 label act7_study_session:
+    scene expression "images/ui/Library_Interior.png"
     window show
     narrator_char "(Library study room 2. Tuesday, 4 PM. Bea is already there with notes spread out.)"
     bea "You both made it."
