@@ -700,23 +700,13 @@ label walk_to_node(target_node, map_bg=None, nodes=None, player_zoom=2.5):
     python:
         _map_scale = 1.0
         _use_black_bg = False
-        if map_bg == "maps/CL3.png":
-            _map_scale = 0.5
-            _use_black_bg = True
-    if _use_black_bg:
-        # Show black background, then a white border, then the CL3 photo on top
-        show expression Solid("#000000") as walk_map_bg_bg:
-            xalign 0.5
-            yalign 0.5
-        show expression Frame(Solid("#ffffff"), 4, 4) as walk_map_bg:
-            xalign 0.5
-            yalign 0.5
-        show expression ("images/" + map_bg) as walk_map_bg:
-            xalign 0.5
-            yalign 0.5
-            zoom _map_scale
-    elif map_bg == "ui/Diwata.png":
-        # For act 7, use full-screen fit: cover style
+        _fit_cover = False
+        if map_bg == "maps/CL3.png" or map_bg == "ui/CAS_Overworld(F).png" or map_bg == "ui/Diwata.png":
+            _fit_cover = True
+    if map_bg == "maps/CL3.png":
+        # Remove black/white border for CL3, use fit cover for consistency
+        pass
+    if _fit_cover:
         show expression ("images/" + map_bg) as walk_map_bg:
             xpos 0
             ypos 0

@@ -489,10 +489,10 @@ init python:
         "Coach Ramon": "images/npcs/coach_ramon.png",
         "Ma'am Garcia": "images/npcs/Councilor.png",
         ## Act 7
-        "Ate Rosa": "images/npcs/ate_rosa.png",
-        "Kuya Neil": "images/npcs/kuya_neil.png",
-        "Prof. Santos": "images/npcs/prof_santos.png",
-        "Bea": "images/npcs/classmate_bea.png",
+        "Ate Rosa": "images/npcs/ow_cub.png",
+        "Kuya Neil": "images/npcs/ow_lovers.png",
+        "Prof. Santos": "images/npcs/ow_hsu.png",
+        "Bea": "images/npcs/ate_bea.png",
         ## Act 8
         "Ate Linda": "images/npcs/ate_linda.png",
         "Nanay Elena": "images/npcs/nanay_elena.png",
