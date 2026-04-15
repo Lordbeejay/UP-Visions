@@ -260,14 +260,20 @@ screen map_screen(map_bg, nodes, task_text="", map_scale=1.0, player_zoom=2.5):
         $ _sx = int(node.x * MAP_SCALE_X)
         $ _sy = int(node.y * MAP_SCALE_Y)
 
+        $ _icon_zoom = getattr(node, "icon_zoom", 1.0)
+        ## Clamp zoom for hit box — min 0.8 so tiny icons are still clickable,
+        ## max 2.0 so large arrows don't create oversized boxes.
+        $ _hit_scale = max(0.8, min(_icon_zoom, 2.0))
+        $ _btn_w = int(80 * _hit_scale)
+        $ _btn_h = int(90 * _hit_scale)
         if not node.locked:
             button:
-                xpos _sx - 40
-                ypos _sy - 70
-                xysize (80, 90)
+                xpos _sx - _btn_w // 2
+                ypos _sy - int(_btn_h * 0.78)
+                xysize (_btn_w, _btn_h)
                 action Return(("walk", node))
-                background Solid("#00000000")
-                hover_background Solid("#00000000")
+                background Solid("#ff000088") # DEBUG: semi-transparent red
+                hover_background Solid("#ff0000cc") # DEBUG: more opaque red
 
                 vbox:
                     xalign 0.5
@@ -280,11 +286,11 @@ screen map_screen(map_bg, nodes, task_text="", map_scale=1.0, player_zoom=2.5):
                     else:
                         frame:
                             xalign 0.5
-                            xysize (20, 20)
+                            xysize (int(20 * _hit_scale), int(20 * _hit_scale))
                             background Solid(node.icon_color if not node.visited else "#666666")
                             padding (3, 3, 3, 3)
                             add Solid("#ffffff"):
-                                xysize (14, 14)
+                                xysize (int(14 * _hit_scale), int(14 * _hit_scale))
 
                     text node.tooltip:
                         size 12
@@ -295,10 +301,10 @@ screen map_screen(map_bg, nodes, task_text="", map_scale=1.0, player_zoom=2.5):
 
         else:
             frame:
-                xpos _sx - 40
-                ypos _sy - 70
-                xysize (80, 90)
-                background Solid("#00000000")
+                xpos _sx - _btn_w // 2
+                ypos _sy - int(_btn_h * 0.78)
+                xysize (_btn_w, _btn_h)
+                background Solid("#ff000088") # DEBUG: semi-transparent red
 
                 vbox:
                     xalign 0.5
@@ -312,11 +318,11 @@ screen map_screen(map_bg, nodes, task_text="", map_scale=1.0, player_zoom=2.5):
                     else:
                         frame:
                             xalign 0.5
-                            xysize (18, 18)
+                            xysize (int(18 * _hit_scale), int(18 * _hit_scale))
                             background Solid("#33333388")
                             padding (3, 3, 3, 3)
                             add Solid("#55555588"):
-                                xysize (12, 12)
+                                xysize (int(12 * _hit_scale), int(12 * _hit_scale))
 
                     text "🔒":
                         size 12

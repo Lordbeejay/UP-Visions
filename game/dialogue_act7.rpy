@@ -229,7 +229,7 @@ label act7_lab_end:
     $ persistent.encyclopedia_unlocks.add("computer_lab")
     $ complete_task("talk_kuya_neil")
     window hide
-    jump act7_cas_loop
+    jump act7_cl3_loop
 
 
 ## ============================================================================
@@ -301,7 +301,7 @@ label act7_santos_thesis_good:
     $ persistent.encyclopedia_unlocks.add("up_research")
     $ complete_task("talk_prof_santos")
     window hide
-    jump act7_cas_loop
+    jump act7_complete
 
 
 ## ============================================================================
@@ -452,7 +452,7 @@ label act7_study_end:
     narrator_char "(That — the willingness to show up — is the whole skill.)"
     $ complete_task("attend_study_session")
     window hide
-    jump act7_cas_loop
+    jump act7_complete
 
 
 ## ============================================================================

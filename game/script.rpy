@@ -698,34 +698,36 @@ label act7_cas_map:
     $ player_map_y = 3500
     $ player_facing = "up"
     $ act7_cas_nodes = [
-        MapNode("to_cl3",      1200, 2400, "act7_cl3_map", tooltip="Head to Computer Lab", icon_image="Arrow.png", locked=False, icon_zoom=1.5),
-        MapNode("prof_santos", 3500, 2100, "act7_npc_prof_santos", tooltip="Prof. Santos", icon_image="ow_hsu.png", locked=False, icon_zoom=0.15),
-        MapNode("classmate_bea", 2500, 2900, "act7_npc_classmate_bea", tooltip="Bea", icon_image="ate_bea.png", locked=True),
-        MapNode("study_session", 2500, 600, "act7_study_session", tooltip="Study Session", icon_image="ArrowUp.png", locked=True, icon_zoom=2.0),
+        MapNode("to_cl3",      900, 2700, "act7_cl3_map", tooltip="Head to Computer Lab", icon_image="ArrowUp.png", locked=False, icon_zoom=1.5),
+        MapNode("prof_santos", 3200, 2900, "act7_npc_prof_santos", tooltip="Prof. Santos", icon_image="ow_hsu.png", locked=False, icon_zoom=0.15),
+        MapNode("classmate_bea", 1500, 2900, "act7_npc_classmate_bea", tooltip="Bea", icon_image="ate_bea.png", locked=True),
+        MapNode("study_session", 2260, 5000, "act7_study_session", tooltip="Study Session", icon_image="ArrowDown.png", locked=True, icon_zoom=2.0),
     ]
     $ current_task_text = "Visit the computer lab and talk to the professors"
 
 label act7_cas_loop:
+
+    # Always check unlocks for Bea and Study Session
+    if "talk_kuya_neil" in tasks_completed and "talk_prof_santos" in tasks_completed:
+        $ act7_cas_nodes[2].locked = False
+
+    if (
+        "talk_kuya_neil" in tasks_completed and
+        "talk_prof_santos" in tasks_completed and
+        "talk_classmate_bea" in tasks_completed
+    ):
+        $ act7_cas_nodes[3].locked = False
+        $ current_task_text = "Attend the study session"
+
     call screen map_screen("ui/CAS_Overworld(F).png", act7_cas_nodes, current_task_text, 1.0)
     $ _action, _node = _return
 
     if _action == "walk":
-        call walk_to_node(_node, map_bg="ui/CAS_Overworld(F).png", nodes=act7_cas_nodes, player_zoom=1.0)
+        call walk_to_node(_node, map_bg="ui/CAS_Overworld(F).png", nodes=act7_cas_nodes, player_zoom=2.5)
         if _node.target_label == "act7_cl3_map":
             jump act7_cl3_map
         else:
             call expression _node.target_label
-
-        if "talk_kuya_neil" in tasks_completed or "talk_prof_santos" in tasks_completed:
-            $ act7_cas_nodes[2].locked = False
-
-        if (
-            "talk_kuya_neil" in tasks_completed and
-            "talk_prof_santos" in tasks_completed and
-            "talk_classmate_bea" in tasks_completed
-        ):
-            $ act7_cas_nodes[3].locked = False
-            $ current_task_text = "Attend the study session"
 
         if is_act_complete():
             jump act7_complete
@@ -741,8 +743,8 @@ label act7_cl3_map:
     $ player_map_y = 3500
     $ player_facing = "up"
     $ act7_cl3_nodes = [
-        MapNode("kuya_neil", 2475, 2175, "act7_npc_kuya_neil", tooltip="Kuya Neil", icon_image="ow_lovers.png", locked=False, icon_zoom=0.25),
-        MapNode("to_cas", 2500, 4200, "act7_cas_map", tooltip="Back to CAS", icon_image="Arrow.png", locked=False, icon_zoom=1.5),
+        MapNode("kuya_neil", 2475, 1775, "act7_npc_kuya_neil", tooltip="Kuya Neil", icon_image="ow_lovers.png", locked=False, icon_zoom=0.16),
+        MapNode("to_cas", 4000, 1600, "act7_cas_map", tooltip="CAS Front", icon_image="Arrow.png", locked=False, icon_zoom=1.5),
     ]
     $ current_task_text = "Visit Kuya Neil in the Computer Lab"
 
@@ -751,7 +753,7 @@ label act7_cl3_loop:
     $ _action, _node = _return
 
     if _action == "walk":
-        call walk_to_node(_node, map_bg="maps/CL3.png", nodes=act7_cl3_nodes, player_zoom=1.0)
+        call walk_to_node(_node, map_bg="maps/CL3.png", nodes=act7_cl3_nodes, player_zoom=2.5)
         if _node.target_label == "act7_cas_map":
             jump act7_cas_map
         else:
