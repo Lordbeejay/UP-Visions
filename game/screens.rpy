@@ -1211,7 +1211,7 @@ style choice_vbox:
 
 style choice_content is default:
     xfill True
-    ymaximum 200
+    ymaximum 700
     yalign 0.5
     background Frame(Solid("#1e0c12ee"), 0, 0)
     padding (20, 14, 20, 14)
@@ -1220,7 +1220,6 @@ style choice_area is default:
     xalign 0.5
     yalign 1.0
     xfill True
-    ysize gui.textbox_height
     left_margin 120
     right_margin 120
     bottom_margin 92
