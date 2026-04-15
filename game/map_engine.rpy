@@ -237,7 +237,7 @@ init python:
 ## MAP SCREEN
 ## ============================================================================
 
-screen map_screen(map_bg, nodes, task_text="", map_scale=1.0, player_zoom=2.5):
+screen map_screen(map_bg, nodes, task_text="", map_scale=1.0, player_zoom=2.5, fit_mode="cover"):
 
     predict False
 
@@ -252,7 +252,7 @@ screen map_screen(map_bg, nodes, task_text="", map_scale=1.0, player_zoom=2.5):
         ypos 0
         xsize 1920
         ysize 1080
-        fit "cover"
+        fit fit_mode
 
     ## Node markers — positioned using screen coordinates
     for node in nodes:
@@ -265,7 +265,7 @@ screen map_screen(map_bg, nodes, task_text="", map_scale=1.0, player_zoom=2.5):
         ## max 2.0 so large arrows don't create oversized boxes.
         $ _hit_scale = max(0.8, min(_icon_zoom, 2.0))
         $ _btn_w = int(80 * _hit_scale)
-        $ _btn_h = int(90 * _hit_scale)
+        $ _btn_h = int((90 if getattr(node, "icon_image", "").lower().startswith("arrow") else (220 if map_bg == "maps/NewAd_Office.png" else 160)) * _hit_scale)
         if not node.locked:
             button:
                 xpos _sx - _btn_w // 2
@@ -667,30 +667,74 @@ screen map_nodes_overlay(nodes):
     for node in nodes:
         $ _sx = int(node.x * MAP_SCALE_X)
         $ _sy = int(node.y * MAP_SCALE_Y)
+        $ _icon_zoom = getattr(node, "icon_zoom", 1.0)
+        $ _hit_scale = max(0.8, min(_icon_zoom, 2.0))
+        $ _btn_w = int(80 * _hit_scale)
+        $ _btn_h = int((90 if getattr(node, "icon_image", "").lower().startswith("arrow") else (220 if current_map_bg == "maps/NewAd_Office.png" else 160)) * _hit_scale)
 
         if not node.locked:
-            if getattr(node, "icon_image", None):
-                add ("npcs/" + node.icon_image):
-                    zoom getattr(node, "icon_zoom", 0.12)
-                    xpos _sx - 40
-                    ypos _sy - 70
-            text node.tooltip:
-                xpos _sx - 40
-                ypos _sy - 10
-                size 12
-                color "#ffffff"
-                outlines [(3, "#000000", 0, 0)]
+            frame:
+                xpos _sx - _btn_w // 2
+                ypos _sy - int(_btn_h * 0.78)
+                xysize (_btn_w, _btn_h)
+                background None
+                padding (0, 0, 0, 0)
+
+                vbox:
+                    xalign 0.5
+                    spacing 2
+
+                    if getattr(node, "icon_image", None):
+                        add ("npcs/" + node.icon_image):
+                            zoom getattr(node, "icon_zoom", 0.12)
+                            xalign 0.5
+                    else:
+                        frame:
+                            xalign 0.5
+                            xysize (int(20 * _hit_scale), int(20 * _hit_scale))
+                            background Solid(node.icon_color if not node.visited else "#666666")
+                            padding (3, 3, 3, 3)
+                            add Solid("#ffffff"):
+                                xysize (int(14 * _hit_scale), int(14 * _hit_scale))
+
+                    text node.tooltip:
+                        size 12
+                        color "#ffffff"
+                        outlines [(3, "#000000", 0, 0)]
+                        text_align 0.5
+                        xalign 0.5
         else:
-            if getattr(node, "icon_image", None):
-                add ("npcs/" + node.icon_image):
-                    zoom getattr(node, "icon_zoom", 0.12)
-                    xpos _sx - 40
-                    ypos _sy - 70
-                    matrixcolor BrightnessMatrix(-0.5)
-            text "🔒":
-                xpos _sx - 40
-                ypos _sy - 10
-                size 12
+            frame:
+                xpos _sx - _btn_w // 2
+                ypos _sy - int(_btn_h * 0.78)
+                xysize (_btn_w, _btn_h)
+                background None
+                padding (0, 0, 0, 0)
+
+                vbox:
+                    xalign 0.5
+                    spacing 2
+
+                    if getattr(node, "icon_image", None):
+                        add ("npcs/" + node.icon_image):
+                            zoom getattr(node, "icon_zoom", 0.12)
+                            xalign 0.5
+                            matrixcolor BrightnessMatrix(-0.5)
+                    else:
+                        frame:
+                            xalign 0.5
+                            xysize (int(20 * _hit_scale), int(20 * _hit_scale))
+                            background Solid("#666666")
+                            padding (3, 3, 3, 3)
+                            add Solid("#444444"):
+                                xysize (int(14 * _hit_scale), int(14 * _hit_scale))
+
+                    text "🔒":
+                        size 12
+                        color "#ffffff"
+                        outlines [(3, "#000000", 0, 0)]
+                        text_align 0.5
+                        xalign 0.5
 
 ## ============================================================================
 ## WALK LABEL

@@ -64,7 +64,7 @@ label start:
     # Start Act 1 background
     scene expression "maps/banwa.png" 
     
-    $ current_act = 7
+    $ current_act = 3
     $ tasks_completed = set()
     
     # Act 1 starting coordinates (near the gate)
@@ -79,7 +79,7 @@ label start:
     ## ────────────────────────────────────────────────────────────────────
 
     # Jump directly to Act 1
-    jump act7_map
+    jump act3_map
 ## ============================================================================
 ## ACT 1 MAP — Banwa (Gate / HSU / Admin / Medical)
 ## ============================================================================
@@ -413,35 +413,78 @@ label act2_complete:
 ## ACT 3 MAP — Enrollment (CRS Portal & Schedule Building)
 ## ============================================================================
 
+## ============================================================================
+## ACT 3 MAP — Enrollment
+## Phase 1: New Admin Office  →  Sir Noel
+## Phase 2: Box 1 Area        →  Mikhaela, Jaden
+## Phase 3: Lover's Lane      →  Jaden, Caezar
+## ============================================================================
+
+## --- Phase 1: New Admin Office — Sir Noel ---
 label act3_map:
     $ current_map_bg = "maps/NewAd_Office.png"
-    $ act3_nodes = [
-        MapNode("sir_noel", 4500, 2500, "act3_npc_sir_noel", tooltip="Sir Noel", icon_image="sir_allan.png", locked=False, icon_zoom=0.25),
-        MapNode("Kiosk", 2100, 3750, "npc_mikhaela_eat", "Mikhaela (Kiosk)", False, "#ff99cc", "sarah.png", icon_zoom=0.25),
-        MapNode("Path", 3100, 800, "act3_npc_jaden", "Jaden (Main)", False, "#99ccff", "jaden.png", icon_zoom=0.25),
-        MapNode("Lover's", 1000, 3950, "npc_caezar", "Ceazar (Lover's Lane)", True, "#ccff99", "caezar.png", icon_zoom=0.18),
+    $ act3_noel_nodes = [
+        MapNode("sir_noel", 4500, 2500, "act3_npc_sir_noel", tooltip="Sir Noel",   icon_image="sir_allan.png",  locked=False, icon_zoom=0.25),
+        MapNode("go_box1",  300,  3200, "act3_go_box1",      tooltip="← Box 1",   icon_image="ArrowLeft.png",  locked=True,  icon_zoom=2),
     ]
-
     $ current_task_text = "Talk to Sir Noel about enrollment"
 
-label act3_loop:
-    call screen map_screen("maps/NewAd_Office.png", act3_nodes, current_task_text, 1.0, player_zoom=6)
+label act3_noel_loop:
+    call screen map_screen("maps/NewAd_Office.png", act3_noel_nodes, current_task_text, 1.0, player_zoom=6)
     $ _action, _node = _return
 
     if _action == "walk":
-        call walk_to_node(_node, nodes=act3_nodes, player_zoom=4.5)
+        call walk_to_node(_node, nodes=act3_noel_nodes, player_zoom=4)
         call expression _node.target_label
+
+        python:
+            for _n in act3_noel_nodes:
+                if _n.name == "go_box1" and "complete_enrollment_tetris" in tasks_completed:
+                    _n.locked = False
 
         if "talk_sir_noel" in tasks_completed:
             $ current_task_text = "View the CRS Student Portal"
-
         if "view_crs_portal" in tasks_completed:
             $ current_task_text = "Complete Enrollment Tetris!"
+        if "complete_enrollment_tetris" in tasks_completed:
+            $ current_task_text = "Head to Box 1 (← left arrow)"
 
-        if is_act_complete():
-            jump act3_complete
+        if _node.name == "go_box1":
+            jump act3_box1_map
 
-    jump act3_loop
+    jump act3_noel_loop
+
+
+## --- Phase 2: Box 1 Area — Mikhaela, Jaden ---
+label act3_box1_map:
+    $ current_map_bg = "maps/Box1.png"
+    $ player_map_x = 2450
+    $ player_map_y = 2500
+    $ player_facing = "right"
+    $ act3_box1_nodes = [
+        MapNode("mikhaela",  1500, 3500, "npc_mikhaela_eat", tooltip="Mikhaela",        icon_image="sarah.png",     locked=False, icon_zoom=0.15),
+        MapNode("jaden",     3000, 2500, "act3_npc_jaden",   tooltip="Jaden",            icon_image="jaden.png",     locked=False, icon_zoom=0.15),
+        MapNode("go_lovers", 2450, 1400, "act3_go_lovers",   tooltip="Lover's Lane →",   icon_image="ArrowUp.png",     locked=True,  icon_zoom=2.5),
+    ]
+    $ current_task_text = "Talk to Jaden"
+
+label act3_box1_loop:
+    call screen map_screen("maps/Box1.png", act3_box1_nodes, current_task_text, 1.0, player_zoom=3)
+    $ _action, _node = _return
+
+    if _action == "walk":
+        call walk_to_node(_node, nodes=act3_box1_nodes, player_zoom=4.5)
+        call expression _node.target_label
+
+        python:
+            for _n in act3_box1_nodes:
+                if _n.name == "go_lovers" and "talk_jaden" in tasks_completed:
+                    _n.locked = False
+
+        if "talk_jaden" in tasks_completed:
+            $ current_task_text = "Head to Lover's Lane (→ right arrow)"
+
+    jump act3_box1_loop
 
 
 label act3_complete:
@@ -476,7 +519,7 @@ label act4_loop:
         $ player_map_y = 3800
         $ player_facing = "up"
         $ act4_nodes = [
-            MapNode("your_room", 2500, 1800, "act4_explore_room", tooltip="Your Room #207", icon_image="dorm_mgr.png", locked=False, icon_zoom=0.25),
+            MapNode("your_room", 1200, 4400, "act4_explore_room", tooltip="Your Room #207", icon_image="ArrowLeft.png", locked=False, icon_zoom=3),
         ]
         $ current_task_text = "Explore your dorm room"
 
@@ -522,7 +565,7 @@ label act5_map:
     $ player_map_y = 3200
     $ player_facing = "up"
     $ act5_nodes = [
-        MapNode("kuya_rico", 3350, 2550, "act5_npc_kuya_rico", tooltip="Kuya Rico", icon_image="kuya_rico.png", locked=False, icon_zoom=0.25),
+        MapNode("kuya_rico", 3350, 2550, "act5_npc_kuya_rico", tooltip="Kuya Rico", icon_image="manong_guard.png", locked=False, icon_zoom=0.11),
     ]
     $ current_task_text = "Find Kuya Rico outside CAS"
 
@@ -559,7 +602,7 @@ label act5_cl3_map:
     $ player_map_y = 3500
     $ player_facing = "up"
     $ act5_nodes = [
-        MapNode("prof_lena", 2475, 2175, "act5_npc_prof_lena", tooltip="Prof. Lena", icon_image="prof_lena.png", locked=False, icon_zoom=0.25),
+        MapNode("prof_lena", 2475, 2100, "act5_npc_prof_lena", tooltip="Prof. Lena", icon_image="prof_lena.png", locked=False, icon_zoom=0.30),
     ]
     $ current_task_text = "Talk to Prof. Lena in CL3"
 
@@ -596,7 +639,7 @@ label act5_ow_cas2_map:
     $ player_facing = "up"
     $ act5_nodes = [
         MapNode("ate_grace",     1250, 3000, "act5_npc_ate_grace",     tooltip="Ate Grace", icon_image="ate_grace.png",     locked=False, icon_zoom=0.15),
-        MapNode("classmate_dan", 3250, 3400, "act5_npc_classmate_dan", tooltip="Dan",       icon_image="classmate_dan.png", locked=True,  icon_zoom=0.15),
+        MapNode("classmate_dan", 3250, 3200, "act5_npc_classmate_dan", tooltip="Dan",       icon_image="caezar.png", locked=True,  icon_zoom=0.1),
         MapNode("first_class",   3400, 2450, "act5_first_class",       tooltip="Enter CL3", icon_image="Arrow.png",    locked=True, icon_zoom=3),
     ]
     $ current_task_text = "Talk to Ate Grace"

@@ -572,7 +572,7 @@ label act5_first_class:
     narrator_char "(The bell rings. Your first class at UP Visayas is officially over.)"
     narrator_char "(Your notebook is already half-full. The reading list is daunting. But something feels different.)"
     narrator_char "(For the first time since arriving, you feel like a real UP student.)"
-    narrator_char "\[ACT 5 COMPLETE] — First Day of Classes."
+    narrator_char "[[ACT 5 COMPLETE]] — First Day of Classes."
     $ complete_task("attend_first_class")
     window hide
     return

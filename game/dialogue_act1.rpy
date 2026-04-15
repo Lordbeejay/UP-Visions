@@ -1,15 +1,15 @@
+transform fit_screen:
+    xalign 0.5
+    yalign 0.5
+    fit "cover"
+
+
 ## ============================================================================
 ## ACT 1 — DIALOGUE LABELS ONLY
 ## All classes, data, screens, and helpers have been moved to:
 ##   - variables.rpy (classes, items, GC data, helpers, unlock flags)
 ##   - screens.rpy   (notebook, inventory, quiz, phone screens)
 ## ============================================================================
-
-transform fit_screen:
-    xalign 0.5
-    yalign 0.5
-    fit "cover"
-
 
 ## ============================================================================
 ## ACT 1 GAME FLOW

@@ -1,17 +1,16 @@
-
 ## ============================================================================
 ## ACT 2 DIALOGUES — Entrance → New Admin → Inside New Admin
 ## KEY THEME: Security & Permits, Offices, Office Hours
 ## ============================================================================
 
-label act2:
-    # play music moved to end of Act 1
-    # ...existing code for act2...
-
 transform fit_screen:
     xalign 0.5
     yalign 0.5
     fit "cover"
+
+label act2:
+    # play music moved to end of Act 1
+    # ...existing code for act2...
 
 ## ============================================================================
 ## NPC 1 — ATE BEA (Upperclassman Guide) — at Entrance

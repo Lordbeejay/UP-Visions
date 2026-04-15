@@ -7,8 +7,14 @@
 ## NPC — DORM MANAGER (Check-in & Rules)
 ## KEY INFO: Point system, curfew, dorm rules, room assignment
 ## ============================================================================
+transform fit_screen:
+    xalign 0.5
+    yalign 0.5
+    fit "cover"
+
 label act4_npc_dorm_manager:
     # play music moved to end of previous act
+    scene expression "images/ui/dorm_lobby.png" at fit_screen
     window show
 
     dorm_mgr "Good afternoon. You're one of the new freshmen?"
@@ -189,7 +195,7 @@ label act4_dorm_key:
 ## ROOM EXPLORATION — Enter the dorm room
 ## ============================================================================
 label act4_explore_room:
-    scene expression "images/maps/Dorm_Room.png" with fade
+    scene expression "images/maps/Dorm_Room.png" at fit_screen with fade
     window show
 
     narrator_char "(You open the door to Room 207.)"

@@ -478,7 +478,7 @@ init python:
         "Dorm Manager": "images/npcs/dorm_mgr.png",
         ## Act 5
         "Prof. Lena": "images/npcs/prof_lena.png",
-        "Kuya Rico": "images/npcs/kuya_rico.png",
+        "Kuya Rico": "images/npcs/manong_guard.png",
         "Ate Grace": "images/npcs/ate_grace.png",
         "Dan": "images/npcs/Caezar.png",
         "School Physician": "images/npcs/physician.png",
