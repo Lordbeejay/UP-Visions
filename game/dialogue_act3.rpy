@@ -7,8 +7,14 @@
 ## NPC — SIR NOEL (Faculty / Enrollment Adviser)
 ## KEY INFO: Enrollment process, CRS walkthrough, units & schedule
 ## ============================================================================
+transform fit_screen:
+    xalign 0.5
+    yalign 0.5
+    fit "cover"
+
 label act3_npc_sir_noel:
     # play music moved to end of previous act
+    scene expression "images/ui/office.png" at fit_screen
     window show
     sir_noel "Ah, you must be one of the freshmen. Come in, come in."
     sir_noel "I'm Sir Noel, one of the faculty advisers for enrollment. You're here to learn how enrollment works?"
@@ -106,79 +112,6 @@ label act3_noel_schedule_tips:
 label act3_noel_show_portal:
     sir_noel "Let me show you the actual CRS Student Portal. This is what you'll be using."
     $ complete_task("talk_sir_noel")
-
-    mikhaela "Did you survive Sir Ruel?"
-    mikhaela "Want some? It's isaw from the kiosk near the gate. Best post-enrollment reward."
-
-    menu:
-        "Sure, thanks.":
-            jump npc_mikhaela_eat
-        "No thanks, I'm good.":
-            jump npc_mikhaela_decline
-
-label npc_mikhaela_eat:
-    narrator_char "(You take a stick of isaw. It's perfectly grilled.)"
-    mikhaela "See? Instant morale boost."
-    $ complete_task("talk_mikhaela")
-    window hide
-    return
-
-label npc_mikhaela_decline:
-    mikhaela "Your loss! I'll save you one if you change your mind."
-    $ complete_task("talk_mikhaela")
-    window hide
-    return
-
-## --- Jaden ---
-label act3_npc_jaden:
-    jump Act3_npc_jaden
-
-label Act3_npc_jaden:
-    window show
-
-    jaden "Hey! You survived Sir Ruel."
-
-    menu:
-        "Barely. He's intense.":
-            jump npc_jaden_intense
-        "It was easy.":
-            jump npc_jaden_easy
-        "I need food. Now.":
-            jump npc_jaden_hungry
-
-label npc_jaden_intense:
-    jaden "Same. I came from CUB and got my stipend papers tagged."
-    jaden "That line took forever."
-    jump npc_jaden_invite
-
-label npc_jaden_easy:
-    jaden "Wow, confident freshie."
-    jaden "I came from CUB too and got my stipend papers tagged."
-    jump npc_jaden_invite
-
-label npc_jaden_hungry:
-    jaden "Real. Enrollment burns more energy than PE."
-    jaden "I just finished at CUB too."
-    jump npc_jaden_invite
-
-label npc_jaden_invite:
-    jaden "I'm heading to Lover's Lane to meet some friends. Want to walk with me?"
-
-    menu:
-        "Sure, let's go.":
-            jump npc_jaden_go
-        "Where is Lover's Lane?":
-            jump npc_jaden_explain
-
-label npc_jaden_explain:
-    jaden "It's near HSU, just past the dormitory road."
-    jaden "It's breezy there, and the sunset is good. It's walking distance."
-    jump npc_jaden_go
-
-label npc_jaden_go:
-    jaden "All settled?"
-    jaden "Come on, let's walk it off. My friends are waiting at Lover's Lane."
-    $ complete_task("talk_jaden")
     window hide
 
     ## Show the CRS portal screen
@@ -255,7 +188,132 @@ label npc_jaden_go:
                         "★ Academic load — quiz me on units, NSTP, and standing.":
                             jump sq_academic_load
         window hide
+    return
 
+label npc_mikhaela_eat:
+    scene expression "images/ui/box1.png" at fit_screen
+    window show
+    mikhaela "Did you survive Sir Noel?"
+    mikhaela "Want some? It's isaw from the kiosk near the gate. Best post-enrollment reward."
+
+    menu:
+        "Sure, thanks.":
+            narrator_char "(You take a stick of isaw. It's perfectly grilled.)"
+            mikhaela "See? Instant morale boost."
+        "No thanks, I'm good.":
+            jump npc_mikhaela_decline
+
+    $ complete_task("talk_mikhaela")
+    window hide
+    return
+
+label npc_mikhaela_decline:
+    mikhaela "Your loss! I'll save you one if you change your mind."
+    $ complete_task("talk_mikhaela")
+    window hide
+    return
+
+## --- Jaden ---
+label act3_npc_jaden:
+    jump Act3_npc_jaden
+
+label Act3_npc_jaden:
+    scene expression "images/ui/box1.png" at fit_screen
+    window show
+
+
+    jaden "Hey! You survived Sir Ruel."
+
+    menu:
+        "Barely. He's intense.":
+            jump npc_jaden_intense
+        "It was easy.":
+            jump npc_jaden_easy
+        "I need food. Now.":
+            jump npc_jaden_hungry
+
+label npc_jaden_intense:
+    jaden "Same. I came from CUB and got my stipend papers tagged."
+    jaden "That line took forever."
+    jump npc_jaden_invite
+
+label npc_jaden_easy:
+    jaden "Wow, confident freshie."
+    jaden "I came from CUB too and got my stipend papers tagged."
+    jump npc_jaden_invite
+
+label npc_jaden_hungry:
+    jaden "Real. Enrollment burns more energy than PE."
+    jaden "I just finished at CUB too."
+    jump npc_jaden_invite
+
+label npc_jaden_invite:
+    jaden "I'm heading to Lover's Lane to meet some friends. Want to walk with me?"
+
+    menu:
+        "Sure, let's go.":
+            jump npc_jaden_go
+        "Where is Lover's Lane?":
+            jump npc_jaden_explain
+
+label npc_jaden_explain:
+    jaden "It's near HSU, just past the dormitory road."
+    jaden "It's breezy there, and the sunset is good. It's walking distance."
+    jump npc_jaden_go
+
+label npc_jaden_go:
+    jaden "All settled?"
+    jaden "Come on, let's walk it off. My friends are waiting at Lover's Lane."
+    $ complete_task("talk_jaden")
+    window hide
+    return
+
+## --- Navigation: New Admin Office → Box 1 ---
+label act3_go_box1:
+    window show
+    narrator_char "(You leave the New Admin building and head toward Box 1.)"
+    window hide
+    return
+
+## --- Navigation: Box 1 → Lover's Lane (combined Jaden & Caezar scene) ---
+label act3_go_lovers:
+    scene expression "images/ui/loverLane.png" at fit_screen with Dissolve(1.0)
+    window show
+    jaden "Here we are — Lover's Lane."
+    jaden "Hey, Caezar! Over here!"
+    caezar "Oy, Jaden! Finally brought a freshie."
+    caezar "Welcome to UPV. First-day survival rate is still 100%%, I see."
+    caezar "So, freshie, what's the plan? Honors, org life, or just survive semester one?"
+    menu:
+        "I need to maintain my scholarship. Grades are priority.":
+            pass
+        "I want to meet people. Join orgs.":
+            pass
+        "I just want to graduate on time.":
+            pass
+    caezar "Good answer."
+    caezar "Just remember: UP isn't just about the classroom."
+    caezar "Look around once in a while. That's part of learning too."
+    $ complete_task("talk_jaden_ll")
+    $ complete_task("talk_caezar")
+    window hide
+    jump act3_complete
+
+## --- Jaden at Lover's Lane ---
+label act3_npc_jaden_lovers:
+    scene expression "images/ui/loverLane.png" at fit_screen
+    window show
+    jaden "Hey, you made it! Come on, I want you to meet someone."
+    jaden "This is Caezar — 3rd year, long-time friend. He knows basically everyone on campus."
+    narrator_char "(Caezar waves from the bench by the trees.)"
+    $ complete_task("talk_jaden_ll")
+    window hide
+    return
+
+## --- Caezar (Lover's Lane — unlocked after talking to Jaden) ---
+label npc_caezar:
+    scene expression "images/ui/loverLane.png" at fit_screen
+    window show
     caezar "Oy, Jaden! Finally."
     caezar "Welcome to UPV. First-day survival rate is still 100%%, I see."
     caezar "So, freshie, what's the plan? Honors, org life, or just survive semester one?"

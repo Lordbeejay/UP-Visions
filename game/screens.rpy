@@ -478,19 +478,21 @@ init python:
         "Dorm Manager": "images/npcs/dorm_mgr.png",
         ## Act 5
         "Prof. Lena": "images/npcs/prof_lena.png",
-        "Kuya Rico": "images/npcs/kuya_rico.png",
+        "Kuya Rico": "images/npcs/manong_guard.png",
         "Ate Grace": "images/npcs/ate_grace.png",
-        "Dan": "images/npcs/classmate_dan.png",
+        "Dan": "images/npcs/Caezar.png",
+        "School Physician": "images/npcs/physician.png",
         ## Act 6
         "Mika": "images/npcs/mika.png",
         "Kuya Tomas": "images/npcs/kuya_tomas.png",
-        "Ate Jenny": "images/npcs/ate_jenny.png",
+        "Ate Jenny": "images/npcs/OSa.png",
         "Coach Ramon": "images/npcs/coach_ramon.png",
+        "Ma'am Garcia": "images/npcs/Councilor.png",
         ## Act 7
-        "Ate Rosa": "images/npcs/ate_rosa.png",
-        "Kuya Neil": "images/npcs/kuya_neil.png",
-        "Prof. Santos": "images/npcs/prof_santos.png",
-        "Bea": "images/npcs/classmate_bea.png",
+        "Ate Rosa": "images/npcs/ow_cub.png",
+        "Kuya Neil": "images/npcs/ow_lovers.png",
+        "Prof. Santos": "images/npcs/ow_hsu.png",
+        "Bea": "images/npcs/ate_bea.png",
         ## Act 8
         "Ate Linda": "images/npcs/ate_linda.png",
         "Nanay Elena": "images/npcs/nanay_elena.png",
@@ -1209,7 +1211,7 @@ style choice_vbox:
 
 style choice_content is default:
     xfill True
-    ymaximum 200
+    ymaximum 700
     yalign 0.5
     background Frame(Solid("#1e0c12ee"), 0, 0)
     padding (20, 14, 20, 14)
@@ -1218,7 +1220,6 @@ style choice_area is default:
     xalign 0.5
     yalign 1.0
     xfill True
-    ysize gui.textbox_height
     left_margin 120
     right_margin 120
     bottom_margin 92
@@ -1530,21 +1531,8 @@ screen quick_menu():
     ## Ensure this appears on top of other screens.
     zorder 100
 
-    if quick_menu:
 
-        hbox:
-            style_prefix "quick"
-            style "quick_menu"
-
-            textbutton _("Back") action Rollback()
-            textbutton _("History") action ShowMenu('history')
-            textbutton _("Skip") action Skip() alternate Skip(fast=True, confirm=True)
-            textbutton _("Auto") action Preference("auto-forward", "toggle")
-            textbutton _("Save") action ShowMenu('save')
-            textbutton _("Q.Save") action QuickSave()
-            textbutton _("Q.Load") action QuickLoad()
-            textbutton _("Prefs") action ShowMenu('preferences')
-            textbutton _("ENCYCLOPEDIA") action ShowMenu("encyclopedia") ## Encyclopedia Button
+    # Quick menu removed as requested
 
 
 

@@ -28,14 +28,14 @@ label act6_org_fair:
 label act6_map:
     $ current_map_bg = "ace/OW_CAS.png"
     $ act6_nodes = [
-        MapNode("dan_cas",   2800, 3200, "act6_npc_dan",
+        MapNode("dan_cas",   1200, 3200, "act6_npc_dan",
                 tooltip="Dan",
-                icon_image="classmate_dan.png",
+                icon_image="caezar.png",
                 locked=False,
-                icon_zoom=0.25),
-        MapNode("go_to_hsu", 2500, 1200, "act6_go_to_hsu",
+                icon_zoom=0.10),
+        MapNode("go_to_hsu", 2100, 5000, "act6_go_to_hsu",
                 tooltip="HSU →",
-                icon_image="Arrow.png",
+                icon_image="ArrowDown.png",
                 locked=True,
                 icon_zoom=2.0),
     ]
@@ -111,16 +111,15 @@ label act6_hsu_loop:
 ## ============================================================================
 label act6_osa_map:
     $ current_map_bg = "maps/OSA.png"
-    $ player_map_x = 2500
-    $ player_map_y = 3200
+    $ player_map_x = 1500
+    $ player_map_y = 5000
     $ player_facing = "up"
 
     $ act6_osa_nodes = [
-        MapNode("ate_jenny_osa", 2500, 2000, "act6_enter_osa",
-                tooltip="Ate Jenny",
-                icon_image="ate_jenny.png",
-                locked=False,
-                icon_zoom=0.25),
+        MapNode("ate_jenny_osa", 2000, 2000, "act6_enter_osa",
+            tooltip="Ate Jenny",
+            icon_image="Osa.png",
+            locked=False),
     ]
     $ current_task_text = "Meet Ate Jenny in the OSA corridor"
 
@@ -164,6 +163,7 @@ label act6_enter_osa:
 ## INTERACTIVE: Player chooses how to approach Dan
 ## ============================================================================
 label act6_npc_dan:
+    scene expression "images/ui/cas_front.png" at fit_screen
     window show
     narrator_char "(Dan is on a bench near the water fountain. Pale. Hunched. Staring at nothing.)"
     player_char "Dan."
@@ -214,6 +214,7 @@ label act6_dan_convinced:
 ## INTERACTIVE: Menu-driven consultation + sq_hsu_triage sort game
 ## ============================================================================
 label act6_at_hsu:
+    scene expression "images/ui/hsu.jpg" at fit_screen
     window show
     narrator_char "(The Health Services Unit. Green cross above the door. A nurse logs Dan in before he even finishes handing over his ID.)"
     hsu_nurse "Student ID. Sit. When did you last eat?"
@@ -285,6 +286,7 @@ label act6_hsu_next:
 ## INTERACTIVE: Player asks about confidentiality or OSA role
 ## ============================================================================
 label act6_corridor_jenny:
+    scene expression "images/ui/osa_corridor.png" at fit_screen
     window show
     narrator_char "(Outside the HSU. Dan's got his glucose drink. A little color back in his face.)"
     narrator_char "(Ate Jenny is posting announcements on the OSA bulletin board. She spots you.)"
@@ -337,6 +339,7 @@ label act6_jenny_continue:
 ## INTERACTIVE: Player helps Dan open up + inline GCSU quiz + breathing exercise
 ## ============================================================================
 label act6_at_gcsu:
+    scene expression "images/ui/gcsu.png" at fit_screen
     window show
     narrator_char "(The GCSU. Calm lighting. Plants on the windowsill. Ma'am Garcia closes her notebook.)"
     guidance_counselor "Come in. Take a seat. I'm Ma'am Garcia."
@@ -378,6 +381,9 @@ label act6_gcsu_core:
     guidance_counselor "The UPCAT doesn't make mistakes. You earned your place here."
     dan "It doesn't feel that way right now."
     guidance_counselor "It rarely does in the first month."
+    guidance_counselor "And people come here for more than crisis support. Study habits, time management — why you freeze before exams even when you studied."
+    guidance_counselor "If the TLRC helps you with the paper, we help with why you can't start the paper."
+    guidance_counselor "Academic counseling is part of what we do. Not just when something breaks — but before it does."
     guidance_counselor "Let's try something. Follow my lead."
 
     ## ── Breathing exercise ────────────────────────────────────────────────────
@@ -431,13 +437,28 @@ label act6_gcsu_core:
     else:
         guidance_counselor "Review what you missed. Knowing what this office can and cannot do — that's part of using it correctly."
 
+    guidance_counselor "One more thing before the referral. The Peer Facilitators Program — it runs under this office."
+    guidance_counselor "Trained student volunteers. They lead group sessions: journaling, coping workshops, reflection circles."
+    guidance_counselor "Not therapy. But the kind of peer support that makes walking through that door feel less impossible."
+    guidance_counselor "Check the bulletin board outside. The schedule is posted every semester."
     guidance_counselor "Dan — I'm writing a referral to the Scholarship Service. GCSU-referred cases are prioritized."
     guidance_counselor "Come back after. Not because something is wrong with you. Because adjustment is a process."
     dan "...Yes, Ma'am."
-    narrator_char "(She hands Dan a small card. 'GCSU — Walk-in hours Mon–Fri, 8AM–5PM. You don't need a reason. Just come.')"
+    narrator_char "(She hands Dan a small card.)"
+    guidance_counselor "Two ways to reach us: walk-in, Mon–Fri 8AM–5PM — no appointment needed, just come."
+    guidance_counselor "Or pre-schedule through the GCSU office to get a specific time slot with less waiting."
+    guidance_counselor "For crisis visits, walk-ins are always prioritized. For ongoing sessions, scheduling helps."
+    dan "I didn't know you could just walk in."
+    guidance_counselor "Most students don't find out until it's too late. Now you know."
     narrator_char "(Encyclopedia unlocked: GCSU — Guidance and Counseling Services Unit.)"
     $ persistent.encyclopedia_unlocks.add("gcsu")
     $ complete_task("talk_dan_gcsu")
+
+    if "sq_gcsu_services" not in subquests_completed:
+        jump sq_gcsu_services
+    else:
+        guidance_counselor "You already know what this office offers. Use it."
+
     jump act6_at_scholarship
 
 
@@ -481,12 +502,29 @@ label act6_schol_stfap:
     player_char "So lower-bracket students get money every month?"
     kuya_tomas "Yes. That's the financial assistance component. Not just tuition — actual living support."
     kuya_tomas "If your family's situation changed since you enrolled, you can request re-bracketing."
+    player_char "Is STFAP the only part of the system, or is there something bigger?"
+    kuya_tomas "SLAS — Student Learning Assistance System. That is the full framework."
+    kuya_tomas "STFAP is the bracketing mechanism inside SLAS. But SLAS also coordinates how the university identifies students who need financial, academic, and welfare intervention."
+    kuya_tomas "The Scholarship Office, the GCSU, and the HSU all feed into SLAS. A student flagged for financial difficulty gets routed through it automatically."
+    player_char "So the GCSU referral to you just now — that was SLAS in action."
+    kuya_tomas "Exactly. You just watched the system work."
+    narrator_char "(Encyclopedia unlocked: SLAS — Student Learning Assistance System.)"
+    $ persistent.encyclopedia_unlocks.add("slas")
     jump act6_scholarship_loop
 
 label act6_schol_scholarships:
     kuya_tomas "University Scholar — GWA of 1.20 or better. Full tuition and miscellaneous fee exemption. Automatic, no application."
     kuya_tomas "DOST-SEI — for STEM students. Full tuition plus ₱7,000 monthly stipend."
     kuya_tomas "CHED Merit — based on entrance scores. Full tuition and allowance."
+    kuya_tomas "TES — Tertiary Education Subsidy. This is not a UP program. It comes from CHED under Republic Act 10931."
+    kuya_tomas "It covers full tuition and school fees, plus a monthly allowance calibrated to financial need. You apply through CHED's portal — we certify your enrollment here."
+    kuya_tomas "GIAP — Grants-in-Aid Program. This is a UP System grant. A monthly cash allowance specifically for low-income undergraduates."
+    kuya_tomas "Separate from STFAP. You apply here at the Scholarship Office each semester."
+    dan "So STFAP reduces tuition, TES covers tuition and gives an allowance, and GIAP gives a monthly allowance on top?"
+    kuya_tomas "All three address different parts of the same problem. A student can receive all three — they are not mutually exclusive."
+    kuya_tomas "The mistake students make is waiting too long to ask. Deadlines are absolute."
+    narrator_char "(Encyclopedia unlocked: Scholarship Service — TES and GIAP added.)"
+    $ persistent.encyclopedia_unlocks.add("tes_giap")
     kuya_tomas "UPV Foundation scholarships — mix of need-based and merit-based. Applications open each semester."
     dan "Some of these give ₱3,000 a month?"
     kuya_tomas "Some give more. Maintain your GWA and watch this bulletin board. Deadlines are absolute."
@@ -508,6 +546,11 @@ label act6_schol_action:
         jump sq_stfap_docs
     else:
         kuya_tomas "Keep your document folder ready. Deadlines wait for no one."
+
+    if "sq_financial_assistance" not in subquests_completed:
+        jump sq_financial_assistance
+    else:
+        kuya_tomas "TES, GIAP, STFAP — three different instruments. Use all of them."
 
     jump act6_dan_resolution
 
