@@ -24,6 +24,7 @@ label act8_start:
 ## CALLBACKS: Every act, 1 through 7 — explicit and by name
 ## ============================================================================
 label act8_npc_jaden:
+    scene expression "images/ui/cas_front.png" at fit_screen
     window show
     narrator_char "(Friday. Late afternoon. The CAS building steps.)"
     narrator_char "(Jaden drops down beside you with a half-eaten pandesal and that look.)"
@@ -112,6 +113,7 @@ label act8_npc_jaden:
 ## CALLBACKS: Aleng Maria (Act 1), community belonging, Iskolar ng Bayan
 ## ============================================================================
 label act8_npc_ate_linda:
+    scene expression "images/maps/Canteen.png" at fit_screen
     window show
     narrator_char "(The canteen. Nearly closing time. A few students still eating, trays stacked on one side.)"
     narrator_char "(Ate Linda is wiping down the counter. She looks up at Jaden first, then you — recognition breaking into a warm expression.)"
@@ -155,6 +157,7 @@ label act8_npc_ate_linda:
 ## CALLBACKS: Dorm check-in (Act 4), Room 207, Dan's crisis (Acts 5–6)
 ## ============================================================================
 label act8_npc_nanay_elena:
+    scene expression "images/maps/Dorm_Room.png" at fit_screen
     window show
     narrator_char "(The dorm corridor. End-of-week hum — students washing clothes, calling home, music behind closed doors.)"
     narrator_char "(You pass Room 207. The door is open a crack. Your desk lamp is on.)"
@@ -229,6 +232,7 @@ label act8_npc_nanay_elena:
 ## INTERACTIVE: sq_week_review (mandatory finale quiz), sq_honor_excellence (optional)
 ## ============================================================================
 label act8_npc_prof_reyes:
+    scene expression "images/ui/Entrance.png" at fit_screen
     window show
     narrator_char "(The steps of the Administration Building. The last of the daylight is gold on the campus oval.)"
     narrator_char "(Prof. Reyes is there — older, with the quiet gravity of someone who has thought about the same things for a very long time.)"
@@ -313,6 +317,7 @@ label act8_npc_prof_reyes:
 ## The ending that ties every act together.
 ## ============================================================================
 label act8_end_of_week:
+    scene expression "images/ui/Oval.png" at fit_screen
     window show
     narrator_char "(The campus oval. The light is almost gone. The grass is dark gold.)"
     narrator_char "(Jaden is beside you. Neither of you say anything for a while.)"

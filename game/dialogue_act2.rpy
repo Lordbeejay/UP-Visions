@@ -1,13 +1,16 @@
-
 ## ============================================================================
 ## ACT 2 DIALOGUES — Entrance → New Admin → Inside New Admin
 ## KEY THEME: Security & Permits, Offices, Office Hours
 ## ============================================================================
 
+transform fit_screen:
+    xalign 0.5
+    yalign 0.5
+    fit "cover"
+
 label act2:
     # play music moved to end of Act 1
     # ...existing code for act2...
-
 
 ## ============================================================================
 ## NPC 1 — ATE BEA (Upperclassman Guide) — at Entrance
@@ -16,7 +19,7 @@ label act2:
 label act2_npc_ate_bea:
     ## Play Act 2 music
     play music "audio/Something Wrong with my Dog.mp3"
-    scene expression "images/maps/Entrance.png"
+    scene expression "images/ui/box1.png" at fit_screen
     window show
     ate_bea "Oh, you look lost. First time sa BOX 1?"
     player_char "Is it that obvious?"
@@ -120,7 +123,7 @@ label act2_bea_complete:
 ## KEY INFO: ID policies, security protocols, restricted areas
 ## ============================================================================
 label act2_npc_kuya_mark:
-    scene expression "images/maps/Entrance.png"
+    scene expression "images/ui/box1.png" at fit_screen
     window show
     kuya_mark "Good morning. Transaction?"
     player_char "Good morning, Kuya. I'm a freshie — I wanted to ask about the campus rules."
@@ -245,7 +248,7 @@ label act2_enter_inside:
 ## KEY INFO: Offices in BOX 1, office hours, appointments vs walk-ins
 ## ============================================================================
 label act2_npc_maam_reyes:
-    scene expression "images/maps/Entrance.png"
+    scene expression "images/ui/Entrance.png" at fit_screen
     window show
     maam_reyes "Good morning! How can I help you?"
     player_char "Good morning, Ma'am. I'm a freshie. I wanted to know more about the offices here."

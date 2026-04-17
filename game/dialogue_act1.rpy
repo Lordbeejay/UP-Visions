@@ -1,10 +1,15 @@
+transform fit_screen:
+    xalign 0.5
+    yalign 0.5
+    fit "cover"
+
+
 ## ============================================================================
 ## ACT 1 — DIALOGUE LABELS ONLY
 ## All classes, data, screens, and helpers have been moved to:
 ##   - variables.rpy (classes, items, GC data, helpers, unlock flags)
 ##   - screens.rpy   (notebook, inventory, quiz, phone screens)
 ## ============================================================================
-
 
 ## ============================================================================
 ## ACT 1 GAME FLOW
@@ -59,7 +64,7 @@ label act1_start:
 label act1_npc_jaden:
     
 
-    scene expression "images/ui/UI_Miagao.png"
+    scene expression "images/ui/UI_Miagao.png" at fit_screen
     window show
 
     jaden "Oh! Hey. You're a freshie too, right? I can tell by the confused look."
@@ -195,7 +200,7 @@ label act1_npc_jaden_second:
 label act1_npc_manong_josh:
     
 
-    scene expression "images/ui/UI_Miagao.png"
+    scene expression "images/ui/marillac.png" at fit_screen
     window show
 
     manong_josh "Ay, estudyante ka? Bagong-abot?"
@@ -287,7 +292,7 @@ label act1_josh_complete:
 
 label act1_npc_aleng_maria:
 
-    scene expression "images/ui/UI_Miagao.png"
+    scene expression "images/ui/tinda.png" at fit_screen
     window show
 
     aleng_maria "Uy, estudyante! Gutom ka na? Kain na dali!"
@@ -377,7 +382,7 @@ label act1_maria_end:
 
 label act1_npc_manong_chris:
 
-    scene expression "images/ui/UI_Miagao.png"
+    scene expression "images/ui/marillac.png" at fit_screen
     window show
 
     manong_chris "Ay, bag-o ka diri? Taga-diin ka?"
@@ -463,7 +468,7 @@ label act1_chris_end:
 label act1_npc_joseph_driver:
     
 
-    scene expression "images/ui/UI_Miagao.png"
+    scene expression "images/ui/tinda.png" at fit_screen
     window show
 
     joseph "Sakay! Saan? Saan?"
@@ -553,12 +558,7 @@ label act1_joseph_end:
 ## ============================================================================
 
 label act1_go_tindahan:
-    play sound "images/maps/Transition.wav"
     narrator_char "(You head left toward the Tindahan area.)"
-    window hide
-    show screen travel_cutscene("images/maps/Pakadto_Tinda.webm", "Tindahan")
-    $ renpy.pause()
-    hide screen travel_cutscene
     $ act1_nav_target = "tindahan"
     ## Player enters tindahan from the right side (waypoint 7)
     $ player_map_x = 4900
@@ -567,12 +567,7 @@ label act1_go_tindahan:
     return
 
 label act1_go_marillac:
-    play sound "images/maps/Transition.wav"
     narrator_char "(You head right toward the Marillac area.)"
-    window hide
-    show screen travel_cutscene("images/maps/Pakadto_Marillac.webm", "Marillac")
-    $ renpy.pause()
-    hide screen travel_cutscene
     $ act1_nav_target = "marillac"
     ## Player enters marillac from the top-left (waypoint 0)
     $ player_map_x = 325

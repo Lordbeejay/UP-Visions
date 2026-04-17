@@ -13,7 +13,7 @@ default game_complete = False
 ## Each act has a set of task IDs the player must complete to advance
 define ACT1_TASKS = {"talk_jaden", "talk_manong_josh", "talk_aleng_maria", "talk_manong_chris", "talk_joseph_driver", "reach_box1"}
 define ACT2_TASKS = {"talk_ate_bea", "talk_kuya_mark", "go_to_newad", "talk_maam_reyes", "complete_flip_card"}
-define ACT3_TASKS = {"talk_sir_noel", "view_crs_portal", "complete_enrollment_tetris"}
+define ACT3_TASKS = {"talk_sir_noel", "view_crs_portal", "complete_enrollment_tetris", "talk_caezar"}
 define ACT4_TASKS = {"talk_dorm_manager", "explore_dorm_room", "complete_room_setup"}
 
 ## --- Acts 5–8 Task Requirements ---
@@ -76,7 +76,7 @@ define TASK_DESCRIPTIONS = {
 define ACT_TASK_ORDER = {
     1: ["talk_jaden", "talk_manong_josh", "talk_aleng_maria", "talk_manong_chris", "talk_joseph_driver", "reach_box1"],
     2: ["talk_ate_bea", "talk_kuya_mark", "go_to_newad", "talk_maam_reyes", "complete_flip_card"],
-    3: ["talk_sir_noel", "view_crs_portal", "complete_enrollment_tetris"],
+    3: ["talk_sir_noel", "view_crs_portal", "complete_enrollment_tetris", "talk_caezar"],
     4: ["talk_dorm_manager", "explore_dorm_room", "complete_room_setup"],
     5: ["talk_prof_lena", "talk_kuya_rico", "talk_ate_grace", "talk_classmate_dan", "attend_first_class", "visit_hsu"],
     6: ["talk_mika", "talk_kuya_tomas", "talk_ate_jenny", "talk_coach_ramon", "visit_org_fair", "visit_scholarship_service"],
@@ -99,6 +99,7 @@ define TASK_LIST_TEXT = {
     "talk_sir_noel": "Talk to Sir Noel about enrollment",
     "view_crs_portal": "View the CRS Student Portal",
     "complete_enrollment_tetris": "Complete Enrollment Tetris",
+    "talk_caezar": "Talk to Caezar at Lover's Lane",
     "talk_dorm_manager": "Talk to the Dorm Manager about check-in",
     "explore_dorm_room": "Explore your dorm room",
     "complete_room_setup": "Set up your dorm room with essentials",

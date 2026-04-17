@@ -28,14 +28,14 @@ label act6_org_fair:
 label act6_map:
     $ current_map_bg = "ace/OW_CAS.png"
     $ act6_nodes = [
-        MapNode("dan_cas",   2800, 3200, "act6_npc_dan",
+        MapNode("dan_cas",   1200, 3200, "act6_npc_dan",
                 tooltip="Dan",
                 icon_image="caezar.png",
                 locked=False,
                 icon_zoom=0.10),
-        MapNode("go_to_hsu", 2500, 1200, "act6_go_to_hsu",
+        MapNode("go_to_hsu", 2100, 5000, "act6_go_to_hsu",
                 tooltip="HSU →",
-                icon_image="Arrow.png",
+                icon_image="ArrowDown.png",
                 locked=True,
                 icon_zoom=2.0),
     ]
@@ -111,16 +111,15 @@ label act6_hsu_loop:
 ## ============================================================================
 label act6_osa_map:
     $ current_map_bg = "maps/OSA.png"
-    $ player_map_x = 2500
-    $ player_map_y = 3200
+    $ player_map_x = 1500
+    $ player_map_y = 5000
     $ player_facing = "up"
 
     $ act6_osa_nodes = [
-        MapNode("ate_jenny_osa", 2500, 2000, "act6_enter_osa",
-                tooltip="Ate Jenny",
-                icon_image="Osa.png",
-                locked=False,
-                icon_zoom=0.25),
+        MapNode("ate_jenny_osa", 2000, 2000, "act6_enter_osa",
+            tooltip="Ate Jenny",
+            icon_image="Osa.png",
+            locked=False),
     ]
     $ current_task_text = "Meet Ate Jenny in the OSA corridor"
 
@@ -164,6 +163,7 @@ label act6_enter_osa:
 ## INTERACTIVE: Player chooses how to approach Dan
 ## ============================================================================
 label act6_npc_dan:
+    scene expression "images/ui/cas_front.png" at fit_screen
     window show
     narrator_char "(Dan is on a bench near the water fountain. Pale. Hunched. Staring at nothing.)"
     player_char "Dan."
@@ -214,6 +214,7 @@ label act6_dan_convinced:
 ## INTERACTIVE: Menu-driven consultation + sq_hsu_triage sort game
 ## ============================================================================
 label act6_at_hsu:
+    scene expression "images/ui/hsu.jpg" at fit_screen
     window show
     narrator_char "(The Health Services Unit. Green cross above the door. A nurse logs Dan in before he even finishes handing over his ID.)"
     hsu_nurse "Student ID. Sit. When did you last eat?"
@@ -285,6 +286,7 @@ label act6_hsu_next:
 ## INTERACTIVE: Player asks about confidentiality or OSA role
 ## ============================================================================
 label act6_corridor_jenny:
+    scene expression "images/ui/osa_corridor.png" at fit_screen
     window show
     narrator_char "(Outside the HSU. Dan's got his glucose drink. A little color back in his face.)"
     narrator_char "(Ate Jenny is posting announcements on the OSA bulletin board. She spots you.)"
@@ -337,6 +339,7 @@ label act6_jenny_continue:
 ## INTERACTIVE: Player helps Dan open up + inline GCSU quiz + breathing exercise
 ## ============================================================================
 label act6_at_gcsu:
+    scene expression "images/ui/gcsu.png" at fit_screen
     window show
     narrator_char "(The GCSU. Calm lighting. Plants on the windowsill. Ma'am Garcia closes her notebook.)"
     guidance_counselor "Come in. Take a seat. I'm Ma'am Garcia."
