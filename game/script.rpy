@@ -64,7 +64,7 @@ label start:
     # Start Act 1 background
     scene expression "maps/banwa.png" 
     
-    $ current_act = 3
+    $ current_act = 1
     $ tasks_completed = set()
     
     # Act 1 starting coordinates (near the gate)
@@ -79,7 +79,7 @@ label start:
     ## ────────────────────────────────────────────────────────────────────
 
     # Jump directly to Act 1
-    jump act3_map
+    jump act1_map
 ## ============================================================================
 ## ACT 1 MAP — Banwa (Gate / HSU / Admin / Medical)
 ## ============================================================================
@@ -139,8 +139,8 @@ label act1_loop:
     $ _action, _node = _return
 
     if _action == "walk":
-        call walk_to_node(_node, nodes=act1_nodes)
-        call expression _node.target_label
+        call walk_to_node(_node, nodes=act1_nodes) from _call_walk_to_node_3
+        call expression _node.target_label from _call_expression_3
 
         ## unlock logic after talking to Jaden
         if "talk_jaden" in tasks_completed:
@@ -172,7 +172,7 @@ label act1_loop:
 
     ## Phone toggle (P key) — universal
     if _action == "phone":
-        call phone_check
+        call phone_check from _call_phone_check_3
 
     ## Inventory toggle (I key) — universal
     if _action == "inventory":
@@ -209,8 +209,8 @@ label act1_tindahan_loop:
     $ _action, _node = _return
 
     if _action == "walk":
-        call walk_to_node(_node, nodes=act1_tindahan_nodes)
-        call expression _node.target_label
+        call walk_to_node(_node, nodes=act1_tindahan_nodes) from _call_walk_to_node_4
+        call expression _node.target_label from _call_expression_4
 
         if "talk_aleng_maria" in tasks_completed:
             $ act1_tindahan_nodes[1].locked = False
@@ -226,7 +226,7 @@ label act1_tindahan_loop:
 
     ## Phone toggle (P key) — universal
     if _action == "phone":
-        call phone_check
+        call phone_check from _call_phone_check_4
 
     ## Inventory toggle (I key) — universal
     if _action == "inventory":
@@ -263,8 +263,8 @@ label act1_marillac_loop:
     $ _action, _node = _return
 
     if _action == "walk":
-        call walk_to_node(_node, nodes=act1_marillac_nodes)
-        call expression _node.target_label
+        call walk_to_node(_node, nodes=act1_marillac_nodes) from _call_walk_to_node_5
+        call expression _node.target_label from _call_expression_5
 
         if "talk_manong_josh" in tasks_completed:
             $ act1_marillac_nodes[1].locked = False
@@ -280,7 +280,7 @@ label act1_marillac_loop:
 
     ## Phone toggle (P key) — universal
     if _action == "phone":
-        call phone_check
+        call phone_check from _call_phone_check_5
 
     ## Inventory toggle (I key) — universal
     if _action == "inventory":
@@ -324,8 +324,8 @@ label act2_entrance_loop:
 
     if _action == "walk":
         scene black
-        call walk_to_node(_node, nodes=act2_entrance_nodes)
-        call expression _node.target_label
+        call walk_to_node(_node, nodes=act2_entrance_nodes) from _call_walk_to_node_6
+        call expression _node.target_label from _call_expression_6
 
         if "talk_ate_bea" in tasks_completed:
             $ act2_entrance_nodes[1].locked = False
@@ -359,8 +359,8 @@ label act2_newad_loop:
     $ _action, _node = _return
 
     if _action == "walk":
-        call walk_to_node(_node, nodes=act2_newad_nodes)
-        call expression _node.target_label
+        call walk_to_node(_node, nodes=act2_newad_nodes) from _call_walk_to_node_7
+        call expression _node.target_label from _call_expression_7
 
         ## After entering, transition to phase 3
         jump act2_inside_map
@@ -385,8 +385,8 @@ label act2_inside_loop:
     $ _action, _node = _return
 
     if _action == "walk":
-        call walk_to_node(_node, nodes=act2_inside_nodes)
-        call expression _node.target_label
+        call walk_to_node(_node, nodes=act2_inside_nodes) from _call_walk_to_node_8
+        call expression _node.target_label from _call_expression_8
 
         if "talk_maam_reyes" in tasks_completed:
             $ current_task_text = "Complete the Office Match Game!"
@@ -434,8 +434,8 @@ label act3_noel_loop:
     $ _action, _node = _return
 
     if _action == "walk":
-        call walk_to_node(_node, nodes=act3_noel_nodes, player_zoom=4)
-        call expression _node.target_label
+        call walk_to_node(_node, nodes=act3_noel_nodes, player_zoom=4) from _call_walk_to_node_9
+        call expression _node.target_label from _call_expression_9
 
         python:
             for _n in act3_noel_nodes:
@@ -473,8 +473,8 @@ label act3_box1_loop:
     $ _action, _node = _return
 
     if _action == "walk":
-        call walk_to_node(_node, nodes=act3_box1_nodes, player_zoom=4.5)
-        call expression _node.target_label
+        call walk_to_node(_node, nodes=act3_box1_nodes, player_zoom=4.5) from _call_walk_to_node_10
+        call expression _node.target_label from _call_expression_10
 
         python:
             for _n in act3_box1_nodes:
@@ -530,8 +530,8 @@ label act4_loop:
     $ _action, _node = _return
 
     if _action == "walk":
-        call walk_to_node(_node, nodes=act4_nodes, player_zoom=6)
-        call expression _node.target_label
+        call walk_to_node(_node, nodes=act4_nodes, player_zoom=6) from _call_walk_to_node_11
+        call expression _node.target_label from _call_expression_11
 
         if is_act_complete():
             jump act4_complete
@@ -574,8 +574,8 @@ label act5_ow_cas_loop:
     $ _action, _node = _return
 
     if _action == "walk":
-        call walk_to_node(_node, nodes=act5_nodes)
-        call expression _node.target_label
+        call walk_to_node(_node, nodes=act5_nodes) from _call_walk_to_node_12
+        call expression _node.target_label from _call_expression_12
 
         if "talk_kuya_rico" in tasks_completed:
             jump act5_transition_to_cl3
@@ -612,8 +612,8 @@ label act5_cl3_loop:
     $ _action, _node = _return
 
     if _action == "walk":
-        call walk_to_node(_node, map_bg="maps/CL3.png", nodes=act5_nodes, player_zoom=3)
-        call expression _node.target_label
+        call walk_to_node(_node, map_bg="maps/CL3.png", nodes=act5_nodes, player_zoom=3) from _call_walk_to_node_13
+        call expression _node.target_label from _call_expression_13
 
         if "talk_prof_lena" in tasks_completed:
             jump act5_transition_back_to_ow_cas
@@ -649,8 +649,8 @@ label act5_ow_cas2_loop:
     $ _action, _node = _return
 
     if _action == "walk":
-        call walk_to_node(_node, nodes=act5_nodes, player_zoom=3)
-        call expression _node.target_label
+        call walk_to_node(_node, nodes=act5_nodes, player_zoom=3) from _call_walk_to_node_14
+        call expression _node.target_label from _call_expression_14
 
         if "talk_ate_grace" in tasks_completed:
             $ act5_nodes[1].locked = False
@@ -719,12 +719,12 @@ label act7_lib_loop:
     $ _action, _node = _return
 
     if _action == "walk":
-        call walk_to_node(_node, nodes=act7_lib_nodes)
+        call walk_to_node(_node, nodes=act7_lib_nodes) from _call_walk_to_node_15
 
         if _node.target_label == "act7_to_cas":
             jump act7_cas_map
         else:
-            call expression _node.target_label
+            call expression _node.target_label from _call_expression_15
 
     jump act7_lib_loop
 
@@ -766,11 +766,11 @@ label act7_cas_loop:
     $ _action, _node = _return
 
     if _action == "walk":
-        call walk_to_node(_node, map_bg="ui/CAS_Overworld(F).png", nodes=act7_cas_nodes, player_zoom=2.5)
+        call walk_to_node(_node, map_bg="ui/CAS_Overworld(F).png", nodes=act7_cas_nodes, player_zoom=2.5) from _call_walk_to_node_16
         if _node.target_label == "act7_cl3_map":
             jump act7_cl3_map
         else:
-            call expression _node.target_label
+            call expression _node.target_label from _call_expression_16
 
         if is_act_complete():
             jump act7_complete
@@ -796,11 +796,11 @@ label act7_cl3_loop:
     $ _action, _node = _return
 
     if _action == "walk":
-        call walk_to_node(_node, map_bg="maps/CL3.png", nodes=act7_cl3_nodes, player_zoom=2.5)
+        call walk_to_node(_node, map_bg="maps/CL3.png", nodes=act7_cl3_nodes, player_zoom=2.5) from _call_walk_to_node_17
         if _node.target_label == "act7_cas_map":
             jump act7_cas_map
         else:
-            call expression _node.target_label
+            call expression _node.target_label from _call_expression_17
 
     jump act7_cl3_loop
 
@@ -837,8 +837,8 @@ label act8_loop:
     $ _action, _node = _return
 
     if _action == "walk":
-        call walk_to_node(_node, nodes=act8_nodes)
-        call expression _node.target_label
+        call walk_to_node(_node, nodes=act8_nodes) from _call_walk_to_node_18
+        call expression _node.target_label from _call_expression_18
 
         if "talk_jaden_act8" in tasks_completed:
             $ act8_nodes[1].locked = False
@@ -901,8 +901,8 @@ label open_world_loop:
     $ _action, _node = _return
 
     if _action == "walk":
-        call walk_to_node(_node, nodes=openworld_nodes)
-        call expression _node.target_label
+        call walk_to_node(_node, nodes=openworld_nodes) from _call_walk_to_node_19
+        call expression _node.target_label from _call_expression_19
 
     jump open_world_loop
 

@@ -2037,15 +2037,15 @@ screen about():
                             ## Left Column
                             vbox:
                                 spacing 16
-                                use credit_line("Project Lead / Programmer", "Your Name Here")
-                                use credit_line("Lead Writer", "Your Name Here")
-                                use credit_line("UI / UX Design", "Your Name Here")
+                                use credit_line("Project Lead / Programmer", "Josaiah Borres")
+                                use credit_line("Lead Writer", "Adrian Joel Jaspa")
+                                use credit_line("UI / UX Design", "Brethren Ace de la Gente")
                                 
                             ## Right Column
                             vbox:
                                 spacing 16
-                                use credit_line("Background & Sprite Art", "Artist Name / Assets")
-                                use credit_line("Music & Sound Effects", "Composer / Source")
+                                use credit_line("Background & Sprite Art", "Ace, Adrian, Josaiah")
+                                use credit_line("Music & Sound Effects", "Ace, Adrian, Josaiah, No Copyright Music")
                                 use credit_line("Special Thanks", "The UPV Community")
 
                     null height 15

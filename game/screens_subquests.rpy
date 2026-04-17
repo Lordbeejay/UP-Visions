@@ -797,7 +797,7 @@ screen sq_scenario_game():
 
                         text "WHAT YOU DISCOVERED":
                             size 11 color "#4dd9f0" bold True xalign 0.5
-                            letter_spacing 2
+                            kerning 2
 
                         null height 4
 
@@ -1095,7 +1095,7 @@ screen sq_inbox_game():
                     vbox:
                         spacing 18 xalign 0.5
                         text "★  CASES HANDLED  ★":
-                            xalign 0.5 size 12 color "#4dd9f0" bold True letter_spacing 2
+                            xalign 0.5 size 12 color "#4dd9f0" bold True kerning 2
                         hbox:
                             xalign 0.5 spacing 4
                             text "[sq_inbox_state.score]":
@@ -1369,7 +1369,7 @@ screen sq_funding_game():
                     vbox:
                         spacing 16 xalign 0.5
                         text "★  ALL STUDENTS FUNDED  ★":
-                            xalign 0.5 size 12 color "#4ded9a" bold True letter_spacing 2
+                            xalign 0.5 size 12 color "#4ded9a" bold True kerning 2
                         null height 4
                         frame:
                             background Solid("#0c2e1a") xfill True padding (20, 16, 20, 16)
@@ -1459,7 +1459,7 @@ screen sq_funding_game():
                 vbox:
                     spacing 6
                     text "BUDGET GAPS":
-                        size 10 color "#4ded9a88" bold True letter_spacing 2
+                        size 10 color "#4ded9a88" bold True kerning 2
                     null height 4
                     for _si in range(len(_s_segs)):
                         $ _seg       = _s_segs[_si]
@@ -1495,7 +1495,7 @@ screen sq_funding_game():
                 vbox:
                     spacing 8
                     text "APPLY PROGRAMS  →  click to fill the gaps":
-                        size 10 color "#4ded9a55" xalign 0.5 letter_spacing 1
+                        size 10 color "#4ded9a55" xalign 0.5 kerning 1
                     null height 2
                     hbox:
                         xalign 0.5 spacing 12

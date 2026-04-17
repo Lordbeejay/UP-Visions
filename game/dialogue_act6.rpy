@@ -47,8 +47,8 @@ label act6_cas_loop:
 
     if _action == "walk":
         scene black
-        call walk_to_node(_node, nodes=act6_nodes)
-        call expression _node.target_label
+        call walk_to_node(_node, nodes=act6_nodes) from _call_walk_to_node
+        call expression _node.target_label from _call_expression
 
         if "talk_dan_cas" in tasks_completed:
             $ act6_nodes[1].locked = False
@@ -58,7 +58,7 @@ label act6_cas_loop:
             jump act6_hsu_map
 
     if _action == "phone":
-        call phone_check
+        call phone_check from _call_phone_check
 
     if _action == "inventory":
         if inventory_unlocked:
@@ -90,14 +90,14 @@ label act6_hsu_loop:
     $ _action, _node = _return
 
     if _action == "walk":
-        call walk_to_node(_node, nodes=act6_hsu_nodes)
-        call expression _node.target_label
+        call walk_to_node(_node, nodes=act6_hsu_nodes) from _call_walk_to_node_1
+        call expression _node.target_label from _call_expression_1
 
         if "visit_hsu_annual" in tasks_completed:
             jump act6_osa_map
 
     if _action == "phone":
-        call phone_check
+        call phone_check from _call_phone_check_1
 
     if _action == "inventory":
         if inventory_unlocked:
@@ -128,14 +128,14 @@ label act6_osa_loop:
     $ _action, _node = _return
 
     if _action == "walk":
-        call walk_to_node(_node, nodes=act6_osa_nodes)
-        call expression _node.target_label
+        call walk_to_node(_node, nodes=act6_osa_nodes) from _call_walk_to_node_2
+        call expression _node.target_label from _call_expression_2
 
         if "talk_ate_jenny" in tasks_completed:
             jump act6_complete
 
     if _action == "phone":
-        call phone_check
+        call phone_check from _call_phone_check_2
 
     if _action == "inventory":
         if inventory_unlocked:
