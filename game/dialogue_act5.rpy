@@ -5,6 +5,7 @@
 
 ## --- ACT 5 INIT ---
 label act5_start:
+    # play music moved to end of previous act
     $ talked_prof_lena = False
     $ talked_kuya_rico = False
     $ talked_ate_grace = False
@@ -16,6 +17,7 @@ label act5_start:
 ## KEY INFO: GE curriculum, class expectations, grading system
 ## ============================================================================
 label act5_npc_prof_lena:
+    scene expression "images/ui/classroom.png" at fit_screen
     window show
     prof_lena "Good morning, class. Sit down. If you're in the wrong room, now is the time to leave."
     prof_lena "..."
@@ -39,6 +41,13 @@ label act5_lena_ge:
     player_char "How many GE subjects do we need to complete?"
     prof_lena "Around 36 units total — that's roughly 12 subjects spread across your first two years."
     prof_lena "Some are prescribed. Others, you choose from an approved list. Check your curriculum flowchart."
+
+    ## ITEM DROP
+    $ collect_item(ITEM_GE_CURRICULUM)
+    show screen item_pickup_screen(ITEM_GE_CURRICULUM)
+    pause 2.5
+    hide screen item_pickup_screen
+
     menu:
         "How does grading work?":
             jump act5_lena_grading
@@ -61,6 +70,13 @@ label act5_lena_grading:
     prof_lena "GWA — General Weighted Average. Below 1.75 puts you in the Dean's List."
     prof_lena "Below 1.20 makes you a University Scholar. That's the highest academic distinction."
     prof_lena "For scholarship retention, most require at least 2.00 or better. Check your specific scholarship terms."
+
+    ## ITEM DROP
+    $ collect_item(ITEM_GRADING_GUIDE)
+    show screen item_pickup_screen(ITEM_GRADING_GUIDE)
+    pause 2.5
+    hide screen item_pickup_screen
+
     menu:
         "Any advice for freshmen?":
             jump act5_lena_advice
@@ -74,6 +90,13 @@ label act5_lena_advice:
     prof_lena "Three — use consultation hours. Every faculty member has posted hours. If you're struggling, come to us before it's too late."
     prof_lena "The biggest mistake freshmen make is suffering in silence. UP is hard. Ask for help."
     player_char "Thank you, Ma'am. I'll keep that in mind."
+
+    ## ITEM DROP
+    $ collect_item(ITEM_PROF_ADVICE)
+    show screen item_pickup_screen(ITEM_PROF_ADVICE)
+    pause 2.5
+    hide screen item_pickup_screen
+
     jump act5_lena_end
 
 label act5_lena_end:
@@ -94,6 +117,7 @@ label act5_lena_end:
 ## KEY INFO: Classrooms, building navigation, class schedules
 ## ============================================================================
 label act5_npc_kuya_rico:
+    scene expression "images/ui/cas_front.png" at fit_screen
     window show
     kuya_rico "Hey, freshie! Lost already? I saw you walking in circles."
     player_char "I can't find Room 203. The building numbers don't make sense."
@@ -114,6 +138,13 @@ label act5_rico_rooms:
     kuya_rico "So 'CAS 203' is NOT the same as 'CFOS 203.' Check the building prefix on your schedule."
     player_char "That explains why I ended up in the fisheries building looking for a history class."
     kuya_rico "Ha! Classic freshie move. Happens every year."
+
+    ## ITEM DROP
+    $ collect_item(ITEM_ROOM_NUMBERING)
+    show screen item_pickup_screen(ITEM_ROOM_NUMBERING)
+    pause 2.5
+    hide screen item_pickup_screen
+
     menu:
         "What buildings hold classes?":
             jump act5_rico_buildings
@@ -138,6 +169,13 @@ label act5_rico_buildings:
     player_char "Is there a campus map I can use?"
     kuya_rico "Check the bulletin board near the flagpole. There's also one posted at each building entrance."
     kuya_rico "Pro tip — take a photo of it on your first day. You'll thank me later."
+
+    ## ITEM DROP
+    $ collect_item(ITEM_BUILDING_MAP)
+    show screen item_pickup_screen(ITEM_BUILDING_MAP)
+    pause 2.5
+    hide screen item_pickup_screen
+
     menu:
         "How do I read my schedule?":
             jump act5_rico_schedule
@@ -155,6 +193,17 @@ label act5_rico_schedule:
     player_char "What if two of my classes overlap?"
     kuya_rico "That's a conflict. You can't enroll in both. Go to the Registrar during the adjustment period to fix it."
     kuya_rico "Always double-check your schedule the night before the first day. Changes happen."
+
+    ## ITEM DROP
+    $ collect_item(ITEM_MASS_SCHEDULE)
+    $ collect_item(ITEM_MAO_POLICY)
+    show screen item_pickup_screen(ITEM_MASS_SCHEDULE)
+    pause 2.5
+    hide screen item_pickup_screen
+    show screen item_pickup_screen(ITEM_MAO_POLICY)
+    pause 2.5
+    hide screen item_pickup_screen
+
     jump act5_rico_end
 
 label act5_rico_end:
@@ -176,6 +225,7 @@ label act5_rico_end:
 ## KEY INFO: Student rights, academic freedom, the UP Code
 ## ============================================================================
 label act5_npc_ate_grace:
+    scene expression "images/ui/cas_front.png" at fit_screen
     window show
     ate_grace "Hey! I noticed you in Kas 1 earlier. First class, huh? How was it?"
     player_char "Intense. Professor Lena doesn't mess around."
@@ -198,6 +248,13 @@ label act5_grace_council:
     player_char "Can freshmen join the Student Council?"
     ate_grace "Not yet as officers — you need to run during elections in your second semester."
     ate_grace "But you CAN attend general assemblies and voice concerns. Your voice counts from day one."
+
+    ## ITEM DROP
+    $ collect_item(ITEM_STUDENT_COUNCIL)
+    show screen item_pickup_screen(ITEM_STUDENT_COUNCIL)
+    pause 2.5
+    hide screen item_pickup_screen
+
     menu:
         "What rights do students have?":
             jump act5_grace_rights
@@ -216,6 +273,13 @@ label act5_grace_rights:
     ate_grace "All of this is enshrined in the UP Student Code. Read it. It's available at the OSA."
     player_char "I didn't know we had all these protections."
     ate_grace "Most students don't. That's why the Student Council exists — to remind everyone."
+
+    ## ITEM DROP
+    $ collect_item(ITEM_STUDENT_RIGHTS)
+    show screen item_pickup_screen(ITEM_STUDENT_RIGHTS)
+    pause 2.5
+    hide screen item_pickup_screen
+
     menu:
         "What is academic freedom?":
             jump act5_grace_freedom
@@ -231,12 +295,25 @@ label act5_grace_freedom:
     ate_grace "Academic freedom isn't a free pass. It comes with responsibility — intellectual honesty, rigor, respect for evidence."
     player_char "That's what makes UP different, isn't it?"
     ate_grace "Exactly. Honor and Excellence — the UP motto. Freedom is the foundation of both."
+
+    ## ITEM DROP
+    $ collect_item(ITEM_ACADEMIC_FREEDOM)
+    show screen item_pickup_screen(ITEM_ACADEMIC_FREEDOM)
+    pause 2.5
+    hide screen item_pickup_screen
+
     jump act5_grace_end
 
 label act5_grace_end:
     ate_grace "Welcome to UP, freshie. Don't just survive — participate. The university is what you make of it."
     $ talked_ate_grace = True
     $ complete_task("talk_ate_grace")
+    if "sq_rights_freedom" not in subquests_completed:
+        menu:
+            "★ Can you test me on rights versus academic freedom?":
+                jump sq_rights_freedom
+            "(Got it — see you around.)":
+                pass
     window hide
     return
 
@@ -245,6 +322,7 @@ label act5_grace_end:
 ## KEY INFO: Study tips, survival strategies, student life balance
 ## ============================================================================
 label act5_npc_classmate_dan:
+    scene expression "images/ui/cas_front.png" at fit_screen
     window show
     dan "Psst. Hey. You're in Kas 1 too, right? With Professor Lena?"
     player_char "Yeah. That reading list she gave us is terrifying."
@@ -270,6 +348,13 @@ label act5_dan_study:
     dan "Five — use the library. Seriously. It's quiet, it has free Wi-Fi, and the reference section has books you can't find online."
     player_char "That's actually really helpful."
     dan "Right? I wish someone told me this on day one. Oh wait — it IS day one."
+
+    ## ITEM DROP
+    $ collect_item(ITEM_STUDY_TIPS)
+    show screen item_pickup_screen(ITEM_STUDY_TIPS)
+    pause 2.5
+    hide screen item_pickup_screen
+
     menu:
         "How do you balance everything?":
             jump act5_dan_balance
@@ -287,6 +372,13 @@ label act5_dan_balance:
     dan "And eat proper meals. I know it's tempting to skip breakfast, but your brain needs fuel."
     player_char "Pick two out of three, huh? That's a harsh reality."
     dan "It doesn't have to be. Just don't overcommit in your first semester. Ease into it."
+
+    ## ITEM DROP
+    $ collect_item(ITEM_STUDY_BALANCE)
+    show screen item_pickup_screen(ITEM_STUDY_BALANCE)
+    pause 2.5
+    hide screen item_pickup_screen
+
     menu:
         "Where do students study?":
             jump act5_dan_study_spots
@@ -303,6 +395,13 @@ label act5_dan_study_spots:
     dan "And the church grounds — oddly peaceful for reading, especially in the late afternoon."
     player_char "I didn't think of the church grounds."
     dan "Right? The benches there are shaded and nobody bothers you. Secret freshie hack."
+
+    ## ITEM DROP
+    $ collect_item(ITEM_STUDY_SPOTS)
+    show screen item_pickup_screen(ITEM_STUDY_SPOTS)
+    pause 2.5
+    hide screen item_pickup_screen
+
     jump act5_dan_end
 
 label act5_dan_hsu:
@@ -336,6 +435,7 @@ label act5_dan_end:
 ## ============================================================================
 label act5_visit_hsu:
     window show
+    scene expression "images/ui/hsu.jpg" at fit_screen
     narrator_char "(Dan leads you down a shaded path toward the administration area. A low building with a green cross sign comes into view.)"
     narrator_char "(A handwritten notice on the door: 'HSU — Health Services Unit. Open Mon–Fri, 8:00 AM to 5:00 PM. All UPV students served FREE.')"
     narrator_char "(Inside: the smell of antiseptic, a row of plastic chairs, a small triage desk. It feels calm and clinical.)"
@@ -442,9 +542,20 @@ label act5_hsu_end:
     dan "Thanks, Doc. I feel better knowing this is here."
     narrator_char "(You step out into the afternoon sun, more at ease than when you arrived.)"
     narrator_char "(Knowing where to go when you're sick — even far from home — is its own kind of comfort.)"
-    narrator_char "(Encyclopedia unlocked: Health Services Unit (HSU).)"
-    $ persistent.encyclopedia_unlocks.add("health_services_unit")
+
+    ## ITEM DROP
+    $ collect_item(ITEM_HSU_SERVICES)
+    show screen item_pickup_screen(ITEM_HSU_SERVICES)
+    pause 2.5
+    hide screen item_pickup_screen
+
     $ complete_task("visit_hsu")
+    if "sq_hsu_triage" not in subquests_completed:
+        menu:
+            "★ Doc, can you give me a quick triage exercise?":
+                jump sq_hsu_triage
+            "(Thanks — we'll head out now.)":
+                pass
     window hide
     jump act5_dan_end
 
@@ -453,10 +564,15 @@ label act5_hsu_end:
 ## ============================================================================
 label act5_first_class:
     window show
+    narrator_char "(You check your schedule one last time before heading out. Three classes today. Time to find them.)"
+    window hide
+    $ classroom_finder_state.reset()
+    call screen classroom_finder_screen
+    window show
     narrator_char "(The bell rings. Your first class at UP Visayas is officially over.)"
     narrator_char "(Your notebook is already half-full. The reading list is daunting. But something feels different.)"
     narrator_char "(For the first time since arriving, you feel like a real UP student.)"
-    narrator_char "\[ACT 5 COMPLETE] — First Day of Classes."
+    narrator_char "[[ACT 5 COMPLETE]] — First Day of Classes."
     $ complete_task("attend_first_class")
     window hide
     return
@@ -464,3 +580,4 @@ label act5_first_class:
 ## ============================================================================
 ## END OF ACT 5 DIALOGUES
 ## ============================================================================
+play music "audio/Act6.mp3" fadein 1.0

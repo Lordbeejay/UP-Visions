@@ -7,7 +7,14 @@
 ## NPC — SIR NOEL (Faculty / Enrollment Adviser)
 ## KEY INFO: Enrollment process, CRS walkthrough, units & schedule
 ## ============================================================================
+transform fit_screen:
+    xalign 0.5
+    yalign 0.5
+    fit "cover"
+
 label act3_npc_sir_noel:
+    # play music moved to end of previous act
+    scene expression "images/ui/office.png" at fit_screen
     window show
     sir_noel "Ah, you must be one of the freshmen. Come in, come in."
     sir_noel "I'm Sir Noel, one of the faculty advisers for enrollment. You're here to learn how enrollment works?"
@@ -105,19 +112,97 @@ label act3_noel_schedule_tips:
 label act3_noel_show_portal:
     sir_noel "Let me show you the actual CRS Student Portal. This is what you'll be using."
     $ complete_task("talk_sir_noel")
+    window hide
 
-    mikhaela "Did you survive Sir Ruel?"
+    ## Show the CRS portal screen
+    call screen crs_enrollment_ui()
+
+    window show
+    sir_noel "That's the portal. You'll get familiar with it quickly."
+    sir_noel "Now — let's put what you learned into practice."
+    sir_noel "I have a little challenge for you. Think of it as... Enrollment Tetris."
+    sir_noel "You need to fit your subjects into a weekly schedule grid."
+    sir_noel "18 units of academic subjects — 6 subjects at 3 units each."
+    sir_noel "Plus PE and NSTP as non-unit subjects."
+    sir_noel "Each class block is 60 to 120 minutes. No overlaps allowed!"
+    player_char "Enrollment Tetris? Sounds fun. Let's do it."
+    $ complete_task("view_crs_portal")
+    window hide
+
+    ## Launch enrollment tetris mini-game
+    call screen enrollment_tetris_game()
+    $ _tetris_result = _return
+
+    if _tetris_result == "completed":
+        window show
+        sir_noel "Excellent work! You've built a complete schedule."
+        sir_noel "All 18 units plus PE and NSTP — no conflicts."
+        sir_noel "You're going to do great this semester."
+        player_char "Thanks, Sir Noel! That really helped me understand how scheduling works."
+        sir_noel "Anytime. My office is Room 203, New Admin. Door's always open during consultation hours."
+        $ complete_task("complete_enrollment_tetris")
+        if "sq_crs_tactics" not in subquests_completed or "sq_academic_load" not in subquests_completed:
+            sir_noel "One more thing — while you're here, do you want to test what you've really learned?"
+            $ _flip = renpy.random.randint(0, 1)
+            if "sq_crs_tactics" not in subquests_completed and "sq_academic_load" not in subquests_completed:
+                if _flip == 0:
+                    menu:
+                        "★ CRS tactics — quiz me on survival strategies for enlistment.":
+                            jump sq_crs_tactics
+                        "★ Academic load — quiz me on units, NSTP, and standing.":
+                            jump sq_academic_load
+                        "(I'm good, thanks Sir Noel.)":
+                            pass
+                else:
+                    menu:
+                        "★ Academic load — quiz me on units, NSTP, and standing.":
+                            jump sq_academic_load
+                        "★ CRS tactics — quiz me on survival strategies for enlistment.":
+                            jump sq_crs_tactics
+                        "(I'm good, thanks Sir Noel.)":
+                            pass
+            elif "sq_crs_tactics" not in subquests_completed:
+                if _flip == 0:
+                    menu:
+                        "★ CRS tactics — quiz me on survival strategies for enlistment.":
+                            jump sq_crs_tactics
+                        "(I'm good, thanks Sir Noel.)":
+                            pass
+                else:
+                    menu:
+                        "(I'm good, thanks Sir Noel.)":
+                            pass
+                        "★ CRS tactics — quiz me on survival strategies for enlistment.":
+                            jump sq_crs_tactics
+            else:
+                if _flip == 0:
+                    menu:
+                        "★ Academic load — quiz me on units, NSTP, and standing.":
+                            jump sq_academic_load
+                        "(I'm good, thanks Sir Noel.)":
+                            pass
+                else:
+                    menu:
+                        "(I'm good, thanks Sir Noel.)":
+                            pass
+                        "★ Academic load — quiz me on units, NSTP, and standing.":
+                            jump sq_academic_load
+        window hide
+    return
+
+label npc_mikhaela_eat:
+    scene expression "images/ui/box1.png" at fit_screen
+    window show
+    mikhaela "Did you survive Sir Noel?"
     mikhaela "Want some? It's isaw from the kiosk near the gate. Best post-enrollment reward."
 
     menu:
         "Sure, thanks.":
-            jump npc_mikhaela_eat
+            narrator_char "(You take a stick of isaw. It's perfectly grilled.)"
+            mikhaela "See? Instant morale boost."
         "No thanks, I'm good.":
             jump npc_mikhaela_decline
 
-label npc_mikhaela_eat:
-    narrator_char "(You take a stick of isaw. It's perfectly grilled.)"
-    mikhaela "See? Instant morale boost."
     $ complete_task("talk_mikhaela")
     window hide
     return
@@ -133,7 +218,9 @@ label act3_npc_jaden:
     jump Act3_npc_jaden
 
 label Act3_npc_jaden:
+    scene expression "images/ui/box1.png" at fit_screen
     window show
+
 
     jaden "Hey! You survived Sir Ruel."
 
@@ -179,45 +266,54 @@ label npc_jaden_go:
     jaden "Come on, let's walk it off. My friends are waiting at Lover's Lane."
     $ complete_task("talk_jaden")
     window hide
+    return
 
-    ## Show the CRS portal screen
-    call screen crs_enrollment_ui()
-
+## --- Navigation: New Admin Office → Box 1 ---
+label act3_go_box1:
     window show
-    sir_noel "That's the portal. You'll get familiar with it quickly."
-    sir_noel "Now — let's put what you learned into practice."
-    sir_noel "I have a little challenge for you. Think of it as... Enrollment Tetris."
-    sir_noel "You need to fit your subjects into a weekly schedule grid."
-    sir_noel "18 units of academic subjects — 6 subjects at 3 units each."
-    sir_noel "Plus PE and NSTP as non-unit subjects."
-    sir_noel "Each class block is 60 to 120 minutes. No overlaps allowed!"
-    player_char "Enrollment Tetris? Sounds fun. Let's do it."
-    $ complete_task("view_crs_portal")
+    narrator_char "(You leave the New Admin building and head toward Box 1.)"
     window hide
+    return
 
-    ## Launch enrollment tetris mini-game
-    call screen enrollment_tetris_game()
-    $ _tetris_result = _return
+## --- Navigation: Box 1 → Lover's Lane (combined Jaden & Caezar scene) ---
+label act3_go_lovers:
+    scene expression "images/ui/loverLane.png" at fit_screen with Dissolve(1.0)
+    window show
+    jaden "Here we are — Lover's Lane."
+    jaden "Hey, Caezar! Over here!"
+    caezar "Oy, Jaden! Finally brought a freshie."
+    caezar "Welcome to UPV. First-day survival rate is still 100%%, I see."
+    caezar "So, freshie, what's the plan? Honors, org life, or just survive semester one?"
+    menu:
+        "I need to maintain my scholarship. Grades are priority.":
+            pass
+        "I want to meet people. Join orgs.":
+            pass
+        "I just want to graduate on time.":
+            pass
+    caezar "Good answer."
+    caezar "Just remember: UP isn't just about the classroom."
+    caezar "Look around once in a while. That's part of learning too."
+    $ complete_task("talk_jaden_ll")
+    $ complete_task("talk_caezar")
+    window hide
+    jump act3_complete
 
-    if _tetris_result == "completed":
-        window show
-        sir_noel "Excellent work! You've built a complete schedule."
-        sir_noel "All 18 units plus PE and NSTP — no conflicts."
-        sir_noel "You're going to do great this semester."
-        player_char "Thanks, Sir Noel! That really helped me understand how scheduling works."
-        sir_noel "Anytime. My office is Room 203, New Admin. Door's always open during consultation hours."
-        $ complete_task("complete_enrollment_tetris")
-        if "sq_crs_tactics" not in subquests_completed or "sq_academic_load" not in subquests_completed:
-            sir_noel "One more thing — while you're here, do you want to test what you've really learned?"
-            menu:
-                "★ CRS tactics — quiz me on survival strategies for enlistment." if "sq_crs_tactics" not in subquests_completed:
-                    jump sq_crs_tactics
-                "★ Academic load — quiz me on units, NSTP, and standing." if "sq_academic_load" not in subquests_completed:
-                    jump sq_academic_load
-                "(I'm good, thanks Sir Noel.)":
-                    pass
-        window hide
+## --- Jaden at Lover's Lane ---
+label act3_npc_jaden_lovers:
+    scene expression "images/ui/loverLane.png" at fit_screen
+    window show
+    jaden "Hey, you made it! Come on, I want you to meet someone."
+    jaden "This is Caezar — 3rd year, long-time friend. He knows basically everyone on campus."
+    narrator_char "(Caezar waves from the bench by the trees.)"
+    $ complete_task("talk_jaden_ll")
+    window hide
+    return
 
+## --- Caezar (Lover's Lane — unlocked after talking to Jaden) ---
+label npc_caezar:
+    scene expression "images/ui/loverLane.png" at fit_screen
+    window show
     caezar "Oy, Jaden! Finally."
     caezar "Welcome to UPV. First-day survival rate is still 100%%, I see."
     caezar "So, freshie, what's the plan? Honors, org life, or just survive semester one?"
@@ -242,3 +338,5 @@ label npc_caezar_response:
 ## ============================================================================
 ## END OF ACT 3 DIALOGUES
 ## ============================================================================
+stop music fadeout 1.0
+play music "audio/Act4.mp3" fadein 1.0
