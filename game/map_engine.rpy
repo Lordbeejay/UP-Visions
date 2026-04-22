@@ -272,8 +272,8 @@ screen map_screen(map_bg, nodes, task_text="", map_scale=1.0, player_zoom=2.5, f
                 ypos _sy - int(_btn_h * 0.78)
                 xysize (_btn_w, _btn_h)
                 action Return(("walk", node))
-                background Solid("#ff000088") # DEBUG: semi-transparent red
-                hover_background Solid("#ff0000cc") # DEBUG: more opaque red
+                background None
+                hover_background None
 
                 vbox:
                     xalign 0.5
@@ -304,7 +304,7 @@ screen map_screen(map_bg, nodes, task_text="", map_scale=1.0, player_zoom=2.5, f
                 xpos _sx - _btn_w // 2
                 ypos _sy - int(_btn_h * 0.78)
                 xysize (_btn_w, _btn_h)
-                background Solid("#ff000088") # DEBUG: semi-transparent red
+                background None
 
                 vbox:
                     xalign 0.5

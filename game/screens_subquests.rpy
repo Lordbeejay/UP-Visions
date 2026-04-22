@@ -1071,43 +1071,43 @@ screen sq_inbox_game():
     modal True
     zorder 200
 
-    add Solid("#070d18") alpha 0.98
+    add Solid("#1a0a0ef8")
 
-    $ _in_n   = len(sq_inbox_state.cases)
-    $ _in_i   = sq_inbox_state.current
+    $ _in_n = len(sq_inbox_state.cases)
+    $ _in_i = sq_inbox_state.current
 
     if sq_inbox_state.done:
         ## ── RESULTS ──────────────────────────────────────────────────────────
         frame:
-            xalign 0.5 yalign 0.5 xsize 580
+            xalign 0.5 yalign 0.5 xsize 560
             padding (0, 0, 0, 0)
-            background Solid("#0b1622f8")
+            background Solid("#1a0a0ef8")
             vbox:
                 spacing 0
                 frame:
-                    background Solid("#0c2236") xfill True padding (24, 14, 24, 14)
+                    background Solid("#2a0e0e") xfill True padding (24, 14, 24, 14)
                     hbox:
-                        spacing 8
-                        text "[sq_inbox_state.icon]" size 18 yalign 0.5
-                        text "[sq_inbox_state.title]" size 16 color "#4dd9f0" bold True yalign 0.5
+                        spacing 10
+                        text "[sq_inbox_state.icon]" size 20 yalign 0.5
+                        text "[sq_inbox_state.title]" size 17 color "#ffd700" bold True yalign 0.5
                 frame:
-                    background Solid("#070d18") xfill True padding (40, 32, 40, 36)
+                    background Solid("#0d0406") xfill True padding (40, 32, 40, 36)
                     vbox:
                         spacing 18 xalign 0.5
                         text "★  CASES HANDLED  ★":
-                            xalign 0.5 size 12 color "#4dd9f0" bold True kerning 2
+                            xalign 0.5 size 12 color "#c89218" bold True kerning 2
                         hbox:
                             xalign 0.5 spacing 4
                             text "[sq_inbox_state.score]":
-                                size 64 color "#4dd9f0" bold True yalign 0.5
+                                size 64 color "#ffd700" bold True yalign 0.5
                             text "/[_in_n]":
-                                size 30 color "#4dd9f055" yalign 1.0
+                                size 30 color "#f6d79d55" yalign 1.0
                         if sq_inbox_state.score == _in_n:
                             text "Perfect routing. Every student reached the right support.":
-                                xalign 0.5 size 13 color "#4ded9a"
+                                xalign 0.5 size 13 color "#10b981"
                         elif sq_inbox_state.score >= 3:
                             text "Good instincts. Review the cases you missed.":
-                                xalign 0.5 size 13 color "#9aecff"
+                                xalign 0.5 size 13 color "#6ee7b7"
                         else:
                             text "The hints showed the right paths. Review them before you go.":
                                 xalign 0.5 size 13 color "#f87171"
@@ -1115,222 +1115,187 @@ screen sq_inbox_game():
                         textbutton "Claim Reward  ★":
                             xalign 0.5
                             action Return("completed")
-                            text_size 15 text_color "#4dd9f0"
-                            background Solid("#0c2236")
-                            hover_background Solid("#163a50")
+                            text_size 15 text_color "#ffd700"
+                            background Solid("#5c1a1a")
+                            hover_background Solid("#7c2222")
                             padding (28, 14, 28, 14)
 
     else:
         ## ── ACTIVE CASE ──────────────────────────────────────────────────────
-        $ _case     = sq_inbox_state.cases[_in_i]
-        $ _c_emoji  = _case[0]
-        $ _c_name   = _case[1]
-        $ _c_sit    = _case[2]
-        $ _c_hint   = _case[4]
-        $ _choices  = sq_inbox_state.choices
+        $ _case    = sq_inbox_state.cases[_in_i]
+        $ _c_emoji = _case[0]
+        $ _c_name  = _case[1]
+        $ _c_sit   = _case[2]
+        $ _c_hint  = _case[4]
+        $ _choices = sq_inbox_state.choices
 
-        vbox:
+        frame:
             xalign 0.5 yalign 0.5
             xsize 880
-            spacing 10
+            padding (0, 0, 0, 0)
+            background Solid("#1a0a0ef8")
 
-            ## Header + progress pips
-            frame:
-                background Solid("#0b1622") xfill True padding (18, 10, 18, 10)
-                hbox:
-                    xfill True yalign 0.5
+            vbox:
+                spacing 0
+
+                ## ── Header ──
+                frame:
+                    background Solid("#2a0e0e") xfill True padding (22, 12, 22, 12)
                     hbox:
-                        spacing 8 yalign 0.5
-                        text "[sq_inbox_state.icon]" size 16 yalign 0.5
-                        text "[sq_inbox_state.title]" size 14 color "#4dd9f0" bold True yalign 0.5
-                    hbox:
-                        xalign 1.0 spacing 5
-                        for _pi in range(_in_n):
-                            if _pi < _in_i:
-                                frame:
-                                    xysize (24, 24) background Solid("#4dd9f0")
-                                    text "✓" size 10 color "#070d18" xalign 0.5 yalign 0.5 bold True
-                            elif _pi == _in_i:
-                                frame:
-                                    xysize (24, 24) background Solid("#9aecff")
-                                    text "[_pi+1]" size 10 color "#070d18" xalign 0.5 yalign 0.5 bold True
-                            else:
-                                frame:
-                                    xysize (24, 24) background Solid("#162030")
-                                    text "[_pi+1]" size 10 color "#3a5060" xalign 0.5 yalign 0.5
-
-            ## Case card
-            frame:
-                background Solid("#0b1622") xfill True padding (0, 0, 0, 0)
-                vbox:
-                    spacing 0
-
-                    ## Student row
-                    frame:
-                        background Solid("#0c1e30") xfill True padding (20, 14, 20, 14)
+                        xfill True yalign 0.5
+                        vbox:
+                            spacing 3 yalign 0.5
+                            hbox:
+                                spacing 8
+                                text "[sq_inbox_state.icon]" size 15 yalign 0.5
+                                text "[sq_inbox_state.title]" size 14 color "#ffd700" bold True yalign 0.5
+                            text "Route each student to the right support office":
+                                size 10 color "#c8921888" italic True
+                        ## Progress bars (matching quiz style)
                         hbox:
-                            spacing 16 yalign 0.5
-                            frame:
-                                xysize (52, 52) background Solid("#102840")
-                                text "[_c_emoji]" size 26 xalign 0.5 yalign 0.5
-                            vbox:
-                                spacing 3 yalign 0.5
-                                text "[_c_name]" size 15 color "#9aecff" bold True
-                                if sq_inbox_state.phase == "choose":
-                                    text "● needs support" size 11 color "#f8717188"
-                                elif sq_inbox_state.is_correct:
-                                    text "✓  correctly routed" size 11 color "#4ded9a" bold True
+                            xalign 1.0 yalign 0.5 spacing 5
+                            for _pi in range(_in_n):
+                                if _pi < _in_i:
+                                    frame:
+                                        xysize (36, 6) background Solid("#f6d79d")
+                                elif _pi == _in_i:
+                                    frame:
+                                        xysize (36, 6) background Solid("#ffd700")
                                 else:
-                                    text "✗  see correct path below" size 11 color "#f87171"
+                                    frame:
+                                        xysize (36, 6) background Solid("#2a1a1a")
 
-                    ## Situation text
-                    frame:
-                        background Solid("#070d18") xfill True padding (24, 16, 24, 16)
-                        text "[_c_sit]":
-                            size 14 color "#c8e8f4" line_spacing 5
+                ## ── Case card ──
+                frame:
+                    background Solid("#0d0406") xfill True padding (24, 18, 24, 18)
+                    vbox:
+                        spacing 14
 
-                    ## Feedback box — visible after routing
-                    if sq_inbox_state.phase == "feedback":
-                        frame:
-                            background Solid("#0a2018" if sq_inbox_state.is_correct else "#1e0c10")
-                            xfill True padding (22, 13, 22, 13)
+                        ## Student identity row
+                        hbox:
+                            spacing 18 yalign 0.5
+                            frame:
+                                xysize (60, 60) background Solid("#2a0e0e")
+                                text "[_c_emoji]" size 30 xalign 0.5 yalign 0.5
                             vbox:
-                                spacing 5
-                                text ("✓  Right call." if sq_inbox_state.is_correct else "✗  Not the best match — here's why:"):
-                                    size 12
-                                    color ("#4ded9a" if sq_inbox_state.is_correct else "#f87171")
-                                    bold True
-                                text "[_c_hint]":
-                                    size 13 color "#b8f0d0" line_spacing 4
+                                spacing 5 yalign 0.5
+                                text "[_c_name]":
+                                    size 16 color "#ffd700" bold True
+                                if sq_inbox_state.phase == "choose":
+                                    text "● Needs support — route to the correct office":
+                                        size 11 color "#c8921888" italic True
+                                elif sq_inbox_state.is_correct:
+                                    text "✓  Correctly routed":
+                                        size 11 color "#10b981" bold True
+                                else:
+                                    text "✗  Wrong door — see the correct path below":
+                                        size 11 color "#f87171"
 
-            ## Routing buttons — 2 × 2 grid
-            frame:
-                background Solid("#060c16") xfill True padding (14, 12, 14, 12)
-                vbox:
-                    spacing 8
+                        ## Situation text
+                        frame:
+                            background Solid("#130609") xfill True padding (18, 14, 18, 14)
+                            text "[_c_sit]":
+                                size 14 color "#f1debf" line_spacing 5
 
-                    if sq_inbox_state.phase == "choose":
-                        text "Route to →":
-                            size 11 color "#4dd9f044" xalign 0.5
-                        null height 2
+                        ## Feedback box — visible after routing
+                        if sq_inbox_state.phase == "feedback":
+                            frame:
+                                background Solid("#10b98122" if sq_inbox_state.is_correct else "#f8717122")
+                                xfill True padding (18, 12, 18, 12)
+                                vbox:
+                                    spacing 5
+                                    text ("✓  Right call." if sq_inbox_state.is_correct else "✗  Not the best match — here's why:"):
+                                        size 12
+                                        color ("#10b981" if sq_inbox_state.is_correct else "#f87171")
+                                        bold True
+                                    text "[_c_hint]":
+                                        size 13 color "#f1debf" line_spacing 4
 
-                    ## Row 1: choices 0 and 1
-                    hbox:
-                        xfill True spacing 8
-                        for _ci in [0, 1]:
+                ## ── Routing buttons — single column (full width) ──
+                frame:
+                    background Solid("#130609") xfill True padding (18, 12, 18, 12)
+                    vbox:
+                        spacing 7
+
+                        if sq_inbox_state.phase == "choose":
+                            text "Send to →":
+                                size 11 color "#c8921866" xalign 0.5
+                            null height 2
+
+                        for _ci in range(len(_choices)):
                             $ _ch      = _choices[_ci]
                             $ _ch_lbl  = _ch[0]
                             $ _ch_icon = _ch[1]
-                            $ _ch_col  = _ch[2]
                             $ _chosen  = sq_inbox_state.chosen == _ci
                             $ _correct = _ci == _case[3]
 
                             if sq_inbox_state.phase == "choose":
                                 button:
-                                    xfill True padding (14, 14, 14, 14)
-                                    background Solid("#101e30")
-                                    hover_background Solid("#1a3040")
+                                    xfill True padding (14, 10, 14, 10)
+                                    background Solid("#1e0c18")
+                                    hover_background Solid("#3c1a30")
                                     action Function(sq_inbox_state.choose, _ci)
                                     hbox:
-                                        spacing 12 yalign 0.5
-                                        text "[_ch_icon]" size 26 yalign 0.5
-                                        text "[_ch_lbl]" size 13 color "#ddf0f8" yalign 0.5
+                                        spacing 14 yalign 0.5
+                                        frame:
+                                            xysize (32, 32) yalign 0.5
+                                            background Solid("#3c1a28")
+                                            text "[_ch_icon]" size 15 xalign 0.5 yalign 0.5
+                                        text "[_ch_lbl]" size 13 color "#f1debf" yalign 0.5
                             elif _chosen and sq_inbox_state.is_correct:
                                 frame:
-                                    xfill True padding (14, 14, 14, 14)
-                                    background Solid("#0a2e18")
+                                    xfill True padding (14, 10, 14, 10)
+                                    background Solid("#10b98133")
                                     hbox:
-                                        spacing 12 yalign 0.5
-                                        text "[_ch_icon]" size 26 yalign 0.5
-                                        text "[_ch_lbl]" size 13 color "#4ded9a" bold True yalign 0.5
+                                        spacing 14 yalign 0.5
+                                        frame:
+                                            xysize (32, 32) yalign 0.5
+                                            background Solid("#10b981")
+                                            text "[_ch_icon]" size 15 xalign 0.5 yalign 0.5
+                                        text "[_ch_lbl]" size 13 color "#10b981" bold True yalign 0.5
                             elif _chosen:
                                 frame:
-                                    xfill True padding (14, 14, 14, 14)
-                                    background Solid("#2e0a10")
+                                    xfill True padding (14, 10, 14, 10)
+                                    background Solid("#f8717133")
                                     hbox:
-                                        spacing 12 yalign 0.5
-                                        text "[_ch_icon]" size 26 yalign 0.5
+                                        spacing 14 yalign 0.5
+                                        frame:
+                                            xysize (32, 32) yalign 0.5
+                                            background Solid("#f87171")
+                                            text "[_ch_icon]" size 15 xalign 0.5 yalign 0.5
                                         text "[_ch_lbl]" size 13 color "#f87171" yalign 0.5
                             elif _correct:
                                 frame:
-                                    xfill True padding (14, 14, 14, 14)
-                                    background Solid("#0a2e18")
+                                    xfill True padding (14, 10, 14, 10)
+                                    background Solid("#10b98133")
                                     hbox:
-                                        spacing 12 yalign 0.5
-                                        text "[_ch_icon]" size 26 yalign 0.5
-                                        text "[_ch_lbl]" size 13 color "#4ded9a" yalign 0.5
+                                        spacing 14 yalign 0.5
+                                        frame:
+                                            xysize (32, 32) yalign 0.5
+                                            background Solid("#10b981")
+                                            text "[_ch_icon]" size 15 xalign 0.5 yalign 0.5
+                                        text "[_ch_lbl]" size 13 color "#10b981" yalign 0.5
                             else:
                                 frame:
-                                    xfill True padding (14, 14, 14, 14)
-                                    background Solid("#0a1420")
+                                    xfill True padding (14, 10, 14, 10)
+                                    background Solid("#140810")
                                     hbox:
-                                        spacing 12 yalign 0.5
-                                        text "[_ch_icon]" size 26 yalign 0.5
-                                        text "[_ch_lbl]" size 13 color "#3a5060" yalign 0.5
+                                        spacing 14 yalign 0.5
+                                        frame:
+                                            xysize (32, 32) yalign 0.5
+                                            background Solid("#1e1020")
+                                            text "[_ch_icon]" size 15 xalign 0.5 yalign 0.5
+                                        text "[_ch_lbl]" size 13 color "#3a2a3a" yalign 0.5
 
-                    ## Row 2: choices 2 and 3
-                    hbox:
-                        xfill True spacing 8
-                        for _ci in [2, 3]:
-                            $ _ch      = _choices[_ci]
-                            $ _ch_lbl  = _ch[0]
-                            $ _ch_icon = _ch[1]
-                            $ _ch_col  = _ch[2]
-                            $ _chosen  = sq_inbox_state.chosen == _ci
-                            $ _correct = _ci == _case[3]
-
-                            if sq_inbox_state.phase == "choose":
-                                button:
-                                    xfill True padding (14, 14, 14, 14)
-                                    background Solid("#101e30")
-                                    hover_background Solid("#1a3040")
-                                    action Function(sq_inbox_state.choose, _ci)
-                                    hbox:
-                                        spacing 12 yalign 0.5
-                                        text "[_ch_icon]" size 26 yalign 0.5
-                                        text "[_ch_lbl]" size 13 color "#ddf0f8" yalign 0.5
-                            elif _chosen and sq_inbox_state.is_correct:
-                                frame:
-                                    xfill True padding (14, 14, 14, 14)
-                                    background Solid("#0a2e18")
-                                    hbox:
-                                        spacing 12 yalign 0.5
-                                        text "[_ch_icon]" size 26 yalign 0.5
-                                        text "[_ch_lbl]" size 13 color "#4ded9a" bold True yalign 0.5
-                            elif _chosen:
-                                frame:
-                                    xfill True padding (14, 14, 14, 14)
-                                    background Solid("#2e0a10")
-                                    hbox:
-                                        spacing 12 yalign 0.5
-                                        text "[_ch_icon]" size 26 yalign 0.5
-                                        text "[_ch_lbl]" size 13 color "#f87171" yalign 0.5
-                            elif _correct:
-                                frame:
-                                    xfill True padding (14, 14, 14, 14)
-                                    background Solid("#0a2e18")
-                                    hbox:
-                                        spacing 12 yalign 0.5
-                                        text "[_ch_icon]" size 26 yalign 0.5
-                                        text "[_ch_lbl]" size 13 color "#4ded9a" yalign 0.5
-                            else:
-                                frame:
-                                    xfill True padding (14, 14, 14, 14)
-                                    background Solid("#0a1420")
-                                    hbox:
-                                        spacing 12 yalign 0.5
-                                        text "[_ch_icon]" size 26 yalign 0.5
-                                        text "[_ch_lbl]" size 13 color "#3a5060" yalign 0.5
-
-                    ## Next button — only after routing
-                    if sq_inbox_state.phase == "feedback":
-                        textbutton ("See Results →" if _in_i + 1 >= _in_n else "Next Case →"):
-                            xalign 1.0
-                            action Function(sq_inbox_state.advance)
-                            text_size 14 text_color "#4dd9f0"
-                            background Solid("#0c2236")
-                            hover_background Solid("#163a50")
-                            padding (20, 10, 20, 10)
+                        ## Next button — only after routing
+                        if sq_inbox_state.phase == "feedback":
+                            textbutton ("See Results →" if _in_i + 1 >= _in_n else "Next Case →"):
+                                xalign 1.0
+                                action Function(sq_inbox_state.advance)
+                                text_size 14 text_color "#ffd700"
+                                background Solid("#5c1a1a")
+                                hover_background Solid("#7c2222")
+                                padding (20, 10, 20, 10)
 
 
 ## ============================================================================

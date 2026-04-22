@@ -64,7 +64,7 @@ label start:
     # Start Act 1 background
     scene expression "maps/banwa.png" 
     
-    $ current_act = 1
+    $ current_act = 5
     $ tasks_completed = set()
     
     # Act 1 starting coordinates (near the gate)
@@ -79,7 +79,7 @@ label start:
     ## ────────────────────────────────────────────────────────────────────
 
     # Jump directly to Act 1
-    jump act1_map
+    jump act5_map
 ## ============================================================================
 ## ACT 1 MAP — Banwa (Gate / HSU / Admin / Medical)
 ## ============================================================================

@@ -277,7 +277,7 @@ label act3_go_box1:
 
 ## --- Navigation: Box 1 → Lover's Lane (combined Jaden & Caezar scene) ---
 label act3_go_lovers:
-    scene expression "images/ui/loverLane.png" at fit_screen with Dissolve(1.0)
+    scene expression "images/ui/lovers_Lane.png" at fit_screen with Dissolve(1.0)
     window show
     jaden "Here we are — Lover's Lane."
     jaden "Hey, Caezar! Over here!"
