@@ -71,13 +71,13 @@ label act6_cas_loop:
 ## ACT 6 MAP — Phase 2: HSU
 ## ============================================================================
 label act6_hsu_map:
-    $ current_map_bg = "ui/hsu_placeholder.png"
+    $ current_map_bg = "ace/OW_HSU1.png"
     $ player_map_x = 2500
     $ player_map_y = 3200
     $ player_facing = "up"
 
     $ act6_hsu_nodes = [
-        MapNode("enter_hsu", 2500, 1800, "act6_enter_hsu",
+        MapNode("enter_hsu", 1950, 2800, "act6_enter_hsu",
                 tooltip="Enter HSU",
                 icon_image="ArrowUp.png",
                 locked=False,
@@ -86,7 +86,7 @@ label act6_hsu_map:
     $ current_task_text = "Bring Dan inside the HSU"
 
 label act6_hsu_loop:
-    call screen map_screen("ui/hsu_placeholder.png", act6_hsu_nodes, current_task_text, 1.0)
+    call screen map_screen("ace/OW_HSU1.png", act6_hsu_nodes, current_task_text, 1.0)
     $ _action, _node = _return
 
     if _action == "walk":
@@ -120,6 +120,11 @@ label act6_osa_map:
             tooltip="Ate Jenny",
             icon_image="Osa.png",
             locked=False),
+        MapNode("scholarship_trigger", 3500, 2000, "act6_at_scholarship", 
+            tooltip="Scholarship Service", 
+            icon_image="Arrow.png", 
+            locked=True, 
+            icon_zoom=2.0),
     ]
     $ current_task_text = "Meet Ate Jenny in the OSA corridor"
 
@@ -131,15 +136,19 @@ label act6_osa_loop:
         call walk_to_node(_node, nodes=act6_osa_nodes) from _call_walk_to_node_2
         call expression _node.target_label from _call_expression_2
 
-        if "talk_ate_jenny" in tasks_completed:
-            jump act6_complete
-
     if _action == "phone":
         call phone_check from _call_phone_check_2
 
     if _action == "inventory":
         if inventory_unlocked:
             call screen inventory_screen()
+
+    if "talk_dan_gcsu" in tasks_completed:
+        $ act6_osa_nodes[1].locked = False
+        $ current_task_text = "Visit the Scholarship Service in the New Admin Building"
+
+    if "talk_dan_resolved" in tasks_completed:
+        jump act6_complete
 
     jump act6_osa_loop
 
@@ -467,6 +476,8 @@ label act6_gcsu_core:
 ## INTERACTIVE: Menu-driven consultation + sq_stfap_docs sort game
 ## ============================================================================
 label act6_at_scholarship:
+
+    scene expression "images/ui/scholarship_office.png" at fit_screen
     window show
     narrator_char "(New Admin Building. Bulletin boards dense with scholarship deadlines and STFAP notices.)"
     narrator_char "(Kuya Tomas reads the GCSU referral. Sets it face-down. Opens a folder.)"

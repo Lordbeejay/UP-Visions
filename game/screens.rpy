@@ -487,7 +487,7 @@ init python:
         "Kuya Tomas": "images/npcs/kuya_tomas.png",
         "Ate Jenny": "images/npcs/OSa.png",
         "Coach Ramon": "images/npcs/coach_ramon.png",
-        "Ma'am Garcia": "images/npcs/Councilor.png",
+        "Ma'am Garcia": "images/npcs/maam_garcia.png",
         ## Act 7
         "Ate Rosa": "images/npcs/ow_cub.png",
         "Kuya Neil": "images/npcs/ow_lovers.png",

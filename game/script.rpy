@@ -65,7 +65,7 @@ label start:
     scene expression "maps/banwa.png" 
     
     # Task Testing
-    $ current_act = 5
+    $ current_act = 6
     $ tasks_completed = set()
     
     # Act 1 starting coordinates (near the gate)
@@ -80,7 +80,7 @@ label start:
     ## ────────────────────────────────────────────────────────────────────
 
     # Act Testing
-    jump act5_map
+    jump act6_map
 ## ============================================================================
 ## ACT 1 MAP — Banwa (Gate / HSU / Admin / Medical)
 ## ============================================================================
@@ -575,8 +575,8 @@ label act5_ow_cas_loop:
     $ _action, _node = _return
 
     if _action == "walk":
-        call walk_to_node(_node, nodes=act5_nodes) from _call_walk_to_node_12
-        call expression _node.target_label from _call_expression_12
+        call walk_to_node(_node, nodes=act5_nodes) from _call_walk_to_node_51
+        call expression _node.target_label from _call_expression_51
 
         if "talk_kuya_rico" in tasks_completed:
             jump act5_transition_to_cl3
@@ -643,7 +643,6 @@ label act5_ow_cas2_map:
         MapNode("classmate_dan", 3250, 3200, "act5_npc_classmate_dan", tooltip="Dan",       icon_image="caezar.png", locked=True,  icon_zoom=0.1),
         MapNode("first_class",   3400, 2450, "act5_first_class",       tooltip="Enter CL3", icon_image="Arrow.png",    locked=True, icon_zoom=3),
         MapNode("hsu_trigger",   1500, 2000, "act5_transition_to_hsu", tooltip="Health Services (HSU)", icon_image="Arrow.png", locked=True, icon_zoom=3),
-        MapNode("first_class",   3400, 2450, "act5_first_class",       tooltip="Enter CL3", icon_image="Arrow.png",     locked=True,  icon_zoom=3),
     ]
     $ current_task_text = "Talk to Ate Grace"
 
@@ -652,8 +651,8 @@ label act5_ow_cas2_loop:
     $ _action, _node = _return
 
     if _action == "walk":
-        call walk_to_node(_node, nodes=act5_nodes, player_zoom=3) from _call_walk_to_node_14
-        call expression _node.target_label from _call_expression_14
+        call walk_to_node(_node, nodes=act5_nodes, player_zoom=3) from _call_walk_to_node_52
+        call expression _node.target_label from _call_expression_52
 
         if "talk_ate_grace" in tasks_completed:
             $ act5_nodes[1].locked = False
@@ -661,7 +660,7 @@ label act5_ow_cas2_loop:
 
         if "talk_classmate_dan" in tasks_completed:
             # HSU Unlock
-            $ act5_nodes[2].locked = False 
+            $ act5_nodes[3].locked = False 
             $ current_task_text = "Visit the HSU with Dan"
         if (
             "talk_ate_grace" in tasks_completed and
@@ -684,27 +683,27 @@ label act5_transition_to_hsu:
     jump act5_hsu_map
 
 label act5_hsu_map:
-    $ current_map_bg = "maps/ow_hsu.png"
-    $ player_map_x = 2000
-    $ player_map_y = 3000
+    $ current_map_bg = "ace/OW_HSU1.png"
+    $ player_map_x = 2500
+    $ player_map_y = 3200
     $ act5_hsu_nodes = [
         MapNode("hsu_nurse", 2000, 1500, "act5_hsu_interaction", tooltip="Submit Clearance", icon_image="nurse.png", locked=False, icon_zoom=0.2)
     ]
     
-    call screen map_screen("maps/HSU_Interior.png", act5_hsu_nodes, "Submit your clearance at the counter", 0.8, 3)
+    call screen map_screen(current_map_bg, act5_hsu_nodes, "Submit your clearance at the counter", 0.8, 3)
     $ _action, _node = _return
 
     if _action == "walk":
-        call walk_to_node(_node, map_bg="maps/ow_hsu.png", nodes=act5_hsu_nodes, player_zoom=3)
-        call expression _node.target_label
+        call walk_to_node(_node, map_bg="maps/ow_hsu1.png", nodes=act5_hsu_nodes, player_zoom=3) from _call_walk_to_node_53
+        call expression _node.target_label from _call_expression_53
 
     # After interaction, return to the main CAS map
     jump act5_ow_cas2_map
 
 label act5_hsu_interaction:
     window show
-    nurse "Everything looks in order. Welcome to the university, students!"
-    $ tasks_completed.append("visit_hsu")
+    hsu_nurse "Everything looks in order. Welcome to the university, students!"
+    $ tasks_completed.add("visit_hsu")
     narrator_char "(Medical clearance submitted successfully.)"
     window hide
     return # Returns to the act5_hsu_map logic which then jumps back to CAS
@@ -712,14 +711,23 @@ label act5_hsu_interaction:
 
 label act5_complete:
     scene black
-    call screen act_transition("ACT 5 COMPLETE", "You survived your first day of classes!", "complete")
-    call screen act_transition("ACT 6", "Student Orgs & Campus Life", "intro")
+    call screen act_transition("ACTS 5 COMPLETE", "You survived your first day of classes!", "complete")
+    call screen act_transition("ACT 6", "Student Support Services", "intro")
 
     $ current_act = 6
     $ player_map_x = 2500
     $ player_map_y = 2600
     $ player_facing = "down"
     jump act6_map
+
+
+## ============================================================================
+## ACT 6 — Student Support Services
+## ============================================================================
+
+
+## It is inside dialogue_act6.rpy!
+
 
 
 ## ============================================================================

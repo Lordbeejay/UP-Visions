@@ -30,23 +30,33 @@ default current_map_bg = "maps/banwa.png"
 
 ## --- Task Names (for HUD display) ---
 define TASK_DESCRIPTIONS = {
+
+    # Act 1
     "talk_jaden": "Talk to Jaden",
     "talk_manong_josh": "Talk to Manong Josh",
     "talk_aleng_maria": "Talk to Aleng Maria",
     "talk_manong_chris": "Talk to Manong Chris",
     "talk_joseph_driver": "Talk to Joseph (Driver)",
     "reach_box1": "Head to BOX 1",
+    
+    # Act 2
     "talk_ate_bea": "Talk to Ate Bea",
     "talk_kuya_mark": "Talk to Kuya Mark",
     "go_to_newad": "Go to New Admin",
     "talk_maam_reyes": "Talk to Ma'am Reyes",
     "complete_flip_card": "Complete the Office Match Game",
+    
+    # Act 3
     "talk_sir_noel": "Talk to Sir Noel",
     "view_crs_portal": "View the CRS Portal",
     "complete_enrollment_tetris": "Complete Enrollment Tetris",
+    
+    # Act 4
     "talk_dorm_manager": "Talk to the Dorm Manager",
     "explore_dorm_room": "Explore Your Dorm Room",
     "complete_room_setup": "Complete Room Setup",
+    
+    # Act 5   
     "talk_prof_lena": "Talk to Prof. Lena",
     "talk_kuya_rico": "Talk to Kuya Rico",
     "talk_ate_grace": "Talk to Ate Grace",
@@ -79,7 +89,7 @@ define ACT_TASK_ORDER = {
     3: ["talk_sir_noel", "view_crs_portal", "complete_enrollment_tetris", "talk_caezar"],
     4: ["talk_dorm_manager", "explore_dorm_room", "complete_room_setup"],
     5: ["talk_prof_lena", "talk_kuya_rico", "talk_ate_grace", "talk_classmate_dan", "attend_first_class", "visit_hsu"],
-    6: ["talk_mika", "talk_kuya_tomas", "talk_ate_jenny", "talk_coach_ramon", "visit_org_fair", "visit_scholarship_service"],
+    6: ["talk_dan_cas", "go_to_hsu", "visit_hsu_annual", "talk_ate_jenny", "talk_dan_gcsu", "talk_kuya_tomas", "talk_dan_resolved"],
     7: ["talk_ate_rosa", "talk_kuya_neil", "talk_prof_santos", "talk_classmate_bea", "attend_study_session", "visit_tlrc"],
     8: ["talk_jaden_act8", "talk_ate_linda", "talk_nanay_elena", "talk_prof_reyes", "end_of_first_week", "visit_gcsu"],
 }
@@ -108,10 +118,13 @@ define TASK_LIST_TEXT = {
     "talk_ate_grace": "Talk to Ate Grace about student rights",
     "talk_classmate_dan": "Chat with Dan about study tips",
     "attend_first_class": "Attend your first class",
+    "talk_dan_cas": "Find Dan near the CAS corridor",
+    "go_to_hsu": "Bring Dan to the HSU",
+    "visit_hsu_annual": "Consult the HSU physician",
     "talk_ate_jenny": "Visit Ate Jenny at the OSA",
     "talk_kuya_tomas": "Learn about scholarships and STFAP",
     "talk_dan_gcsu": "Help Dan visit the GCSU and Scholarship Service",
-    "visit_hsu_annual": "Complete the Annual Physical Exam at the HSU",
+    "talk_dan_resolved": "Help Dan resolve his issues", 
     "talk_ate_rosa": "Talk to Ate Rosa at the library",
     "talk_kuya_neil": "Visit Kuya Neil at the computer lab",
     "talk_prof_santos": "Talk to Prof. Santos about research",
