@@ -65,7 +65,7 @@ label start:
     scene expression "maps/banwa.png" 
     
     # Task Testing
-    $ current_act = 6
+    $ current_act = 8
     $ tasks_completed = set()
     
     # Act 1 starting coordinates (near the gate)
@@ -80,7 +80,7 @@ label start:
     ## ────────────────────────────────────────────────────────────────────
 
     # Act Testing
-    jump act6_map
+    jump act8_map
 ## ============================================================================
 ## ACT 1 MAP — Banwa (Gate / HSU / Admin / Medical)
 ## ============================================================================
@@ -866,52 +866,149 @@ label act7_complete:
 ## ACT 8 MAP — End of First Week: Finding Your Place
 ## ============================================================================
 
-label act8_map:
-    $ current_map_bg = "ui/dormRoom.png"
-    $ act8_nodes = [
-        MapNode("jaden_act8",    2100, 2600, "act8_npc_jaden",       tooltip="Jaden",         icon_image="jaden.png",        locked=False),
-        MapNode("ate_linda",     1600, 3200, "act8_npc_ate_linda",   tooltip="Ate Linda",     icon_image="ate_linda.png",    locked=True),
-        MapNode("nanay_elena",   3300, 1900, "act8_npc_nanay_elena", tooltip="Nanay Elena",   icon_image="nanay_elena.png",  locked=True),
-        MapNode("prof_reyes",    2800, 1600, "act8_npc_prof_reyes",  tooltip="Prof. Reyes",   icon_image="prof_reyes.png",   locked=True),
-        MapNode("end_of_week",   2500, 2200, "act8_end_of_week",     tooltip="Campus Oval",   icon_image="npcs/Arrow.png",         locked=True),
-    ]
-    $ current_task_text = "Catch up with Jaden"
+## ============================================================================
+## ACT 8 MAP — Multi-map flow:
+##   CAS Steps (OW_CAS.png) -> Dorm Area (Dorm.png) -> Admin (OW_NewAd.png) -> Oval (lovers_lane.png)
+## ============================================================================
 
-label act8_loop:
-    call screen map_screen("ui/dormRoom.png", act8_nodes, current_task_text, 1.0)
+## --- MAP 1: CAS Steps ---
+label act8_map:
+    python:
+        global act8_cas_nodes
+    $ current_map_bg = "ace/OW_CAS.png"
+    $ player_map_x = 2500
+    $ player_map_y = 3200
+    $ player_facing = "up"
+    $ act8_cas_nodes = [
+        MapNode("jaden_act8", 3350, 2550, "act8_npc_jaden", tooltip="Jaden", icon_image="jaden.png", locked=False, icon_zoom=0.11),
+        MapNode("to_dorm",   2500, 5000, "act8_to_dorm",   tooltip="Head to Dorms", icon_image="ArrowDown.png", locked=True, icon_zoom=2.0),
+    ]
+    $ current_task_text = "Catch up with Jaden at the CAS steps"
+
+label act8_cas_loop:
+    if "talk_jaden_act8" in tasks_completed:
+        $ act8_cas_nodes[1].locked = False
+        $ current_task_text = "Head to the dormitory area"
+
+    call screen map_screen("ace/OW_CAS.png", act8_cas_nodes, current_task_text, 1.0)
     $ _action, _node = _return
 
     if _action == "walk":
-        call walk_to_node(_node, nodes=act8_nodes) from _call_walk_to_node_18
-        call expression _node.target_label from _call_expression_18
+        call walk_to_node(_node, map_bg="ace/OW_CAS.png", nodes=act8_cas_nodes) from _call_walk_to_node_18
 
-        if "talk_jaden_act8" in tasks_completed:
-            $ act8_nodes[1].locked = False
-            $ act8_nodes[2].locked = False
-            $ current_task_text = "Talk to Ate Linda and Nanay Elena"
+        if _node.target_label == "act8_to_dorm":
+            jump act8_dorm_map
+        else:
+            call expression _node.target_label from _call_expression_18
 
-        if "talk_ate_linda" in tasks_completed or "talk_nanay_elena" in tasks_completed:
-            $ act8_nodes[3].locked = False
+    jump act8_cas_loop
 
-        if (
-            "talk_jaden_act8" in tasks_completed and
-            "talk_ate_linda" in tasks_completed and
-            "talk_nanay_elena" in tasks_completed and
-            "talk_prof_reyes" in tasks_completed
-        ):
-            $ act8_nodes[4].locked = False
-            $ current_task_text = "Reflect on your first week at the campus oval"
+label act8_to_dorm:
+    return
 
+## --- MAP 2: Dorm Area ---
+label act8_dorm_map:
+    python:
+        global act8_dorm_nodes
+    $ current_map_bg = "ui/Dorm.png"
+    $ player_map_x = 960
+    $ player_map_y = 800
+    $ player_facing = "up"
+    $ act8_dorm_nodes = [
+        MapNode("ate_linda",    1400, 600, "act8_npc_ate_linda",   tooltip="Go to canteen",   icon_image="Arrow.png",   locked=False, icon_zoom=1),
+        MapNode("nanay_elena",  500, 700, "act8_npc_nanay_elena", tooltip="Go to room",      icon_image="ArrowLeft.png", locked=False, icon_zoom=1),
+        MapNode("to_admin",     960, 100, "act8_to_admin",        tooltip="Head to Admin",   icon_image="ArrowUp.png",   locked=True, icon_zoom=2.0),
+    ]
+    $ current_task_text = "Talk to Ate Linda and Nanay Elena"
+
+label act8_dorm_loop:
+    # Unlock logic for the path forward
+    if "talk_ate_linda" in tasks_completed and "talk_nanay_elena" in tasks_completed:
+        $ act8_dorm_nodes[2].locked = False
+        $ current_task_text = "Head to the New Admin building"
+
+    call screen map_screen("ui/Dorm.png", act8_dorm_nodes, current_task_text, 1.0, player_zoom=3.0)
+    $ _action, _node = _return
+
+    if _action == "walk":
+        call walk_to_node(_node, map_bg="ui/Dorm.png", nodes=act8_dorm_nodes, player_zoom=3.0) from _call_walk_to_node_81
+
+        if _node.target_label == "act8_to_admin":
+            jump act8_admin_map
+        else:
+            call expression _node.target_label from _call_expression_81
+
+    jump act8_dorm_loop
+
+label act8_to_admin:
+    return
+
+## --- MAP 3: Administration Building ---
+label act8_admin_map:
+    python:
+        global act8_admin_nodes
+    $ current_map_bg = "ace/OW_NewAd.png"
+    $ player_map_x = 2500
+    $ player_map_y = 3500
+    $ player_facing = "up"
+    $ act8_admin_nodes = [
+        MapNode("prof_reyes", 2800, 1600, "act8_npc_prof_reyes", tooltip="Prof. Reyes", icon_image="prof_reyes.png", locked=False, icon_zoom=0.30),
+        MapNode("to_oval",    2500, 5000, "act8_to_oval",       tooltip="Head to Oval",  icon_image="ArrowDown.png",  locked=True, icon_zoom=2.0),
+    ]
+    $ current_task_text = "Visit Professor Reyes at the Admin steps"
+
+label act8_admin_loop:
+    if "talk_prof_reyes" in tasks_completed:
+        $ act8_admin_nodes[1].locked = False
+        $ current_task_text = "Reflect at the campus oval"
+
+    call screen map_screen("ace/OW_NewAd.png", act8_admin_nodes, current_task_text, 1.0)
+    $ _action, _node = _return
+
+    if _action == "walk":
+        call walk_to_node(_node, map_bg="ace/OW_NewAd.png", nodes=act8_admin_nodes) from _call_walk_to_node_82
+
+        if _node.target_label == "act8_to_oval":
+            jump act8_oval_map
+        else:
+            call expression _node.target_label from _call_expression_82
+
+    jump act8_admin_loop
+
+label act8_to_oval:
+    return
+
+## --- MAP 4: Campus Oval ---
+label act8_oval_map:
+    python:
+        global act8_oval_nodes
+    $ current_map_bg = "ui/loversLane.png"
+    $ player_map_x = 960
+    $ player_map_y = 800
+    $ player_facing = "up"
+    $ act8_oval_nodes = [
+        MapNode("end_of_week", 960, 600, "act8_end_of_week", tooltip="Campus Oval", icon_image="Arrow.png", locked=False, icon_zoom=3.0),
+    ]
+    $ current_task_text = "Reflect on your first week at the campus oval"
+
+label act8_oval_loop:
+    call screen map_screen("ui/lovers_lane.png", act8_oval_nodes, current_task_text, 1.0, player_zoom=3.0)
+    $ _action, _node = _return
+
+    if _action == "walk":
+        call walk_to_node(_node, map_bg="ui/lovers_lane.png", nodes=act8_oval_nodes, player_zoom=3.0) from _call_walk_to_node_83
+        
+        call expression _node.target_label from _call_expression_83
+
+        # Check for act completion in the final loop
         if is_act_complete():
             jump act8_complete
 
-    jump act8_loop
-
+    jump act8_oval_loop
 
 label act8_complete:
-    scene black
+    scene black with fade
     call screen act_transition("ACT 8 COMPLETE", "You've found your place at UP Visayas.", "complete")
-
     jump open_world
 
 
@@ -921,7 +1018,7 @@ label act8_complete:
 
 label open_world:
     scene black
-    call screen act_transition("OPEN WORLD", "Classes start next week. Explore freely!", "intro")
+    call screen act_transition("OPEN WORLD", "Explore freely!", "intro")
 
     $ current_act = 9
     $ player_map_x = 2500
@@ -942,11 +1039,11 @@ label open_world:
     $ current_task_text = "Explore freely! Click anywhere to revisit."
 
 label open_world_loop:
-    call screen map_screen("maps/banwa.png", openworld_nodes, current_task_text, 1.0)
+    call screen map_screen(current_map_bg, openworld_nodes, current_task_text, 1.0)
     $ _action, _node = _return
 
     if _action == "walk":
-        call walk_to_node(_node, nodes=openworld_nodes) from _call_walk_to_node_19
+        call walk_to_node(_node, map_bg=current_map_bg, nodes=openworld_nodes) from _call_walk_to_node_19
         call expression _node.target_label from _call_expression_19
 
     jump open_world_loop

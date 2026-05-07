@@ -91,7 +91,7 @@ define ACT_TASK_ORDER = {
     5: ["talk_prof_lena", "talk_kuya_rico", "talk_ate_grace", "talk_classmate_dan", "attend_first_class", "visit_hsu"],
     6: ["talk_dan_cas", "go_to_hsu", "visit_hsu_annual", "talk_ate_jenny", "talk_dan_gcsu", "talk_kuya_tomas", "talk_dan_resolved"],
     7: ["talk_ate_rosa", "talk_kuya_neil", "talk_prof_santos", "talk_classmate_bea", "attend_study_session", "visit_tlrc"],
-    8: ["talk_jaden_act8", "talk_ate_linda", "talk_nanay_elena", "talk_prof_reyes", "end_of_first_week", "visit_gcsu"],
+    8: ["talk_jaden_act8", "talk_ate_linda", "talk_nanay_elena", "talk_prof_reyes", "end_of_first_week"],
 }
 
 define TASK_LIST_TEXT = {

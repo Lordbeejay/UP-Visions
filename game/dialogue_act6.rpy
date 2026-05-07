@@ -147,7 +147,7 @@ label act6_osa_loop:
         $ act6_osa_nodes[1].locked = False
         $ current_task_text = "Visit the Scholarship Service in the New Admin Building"
 
-    if "talk_dan_resolved" in tasks_completed:
+    if "talk_kuya_tomas" in tasks_completed:
         jump act6_complete
 
     jump act6_osa_loop
