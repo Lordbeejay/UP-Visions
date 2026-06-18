@@ -1,585 +1,566 @@
 ## ============================================================================
-## ACT 6 DIALOGUES — Student Orgs & Campus Life
-## KEY THEME: Organizations, extracurriculars, campus events, scholarships
+## ACT 6 DIALOGUES — Student Support Services
+## KEY THEME: HSU, GCSU, Scholarship Service
+## STORY: Dan is unwell. Player navigates three support offices together.
+## INTERACTIVE: Menu choices, inline quiz, breathing exercise, 3 sort mini-games
 ## ============================================================================
 
 ## --- ACT 6 INIT ---
 label act6_start:
-    $ talked_mika = False
-    $ talked_kuya_tomas = False
-    $ talked_ate_jenny = False
-    $ talked_coach_ramon = False
+    jump act6_map
+
+## --- Compatibility stubs ---
+label act6_npc_mika:
+    window hide
+    jump act6_map
+
+label act6_npc_coach_ramon:
+    window hide
+    jump act6_map
+
+label act6_org_fair:
+    window hide
     jump act6_map
 
 ## ============================================================================
-## NPC 1 — MIKA (Org Recruiter / Upperclassman)
-## KEY INFO: Student organizations, how to join, what they offer
+## ACT 6 MAP — Phase 1: CAS Overworld — Find Dan
 ## ============================================================================
-label act6_npc_mika:
-    window show
-    mika "Hey, freshie! Have you checked out the org fair yet?"
-    player_char "Org fair? What's that?"
-    mika "Oh, you're in for a treat! I'm Mika, president of the UPV Ecological Society."
-    mika "Every start of semester, student organizations set up booths to recruit new members."
-    mika "It's like a buffet of campus life — pick what interests you!"
-    menu:
-        "What kinds of orgs are there?":
-            jump act6_mika_types
-        "How do I join an org?":
-            jump act6_mika_join
-        "Is it worth joining an org as a freshie?":
-            jump act6_mika_worth
+label act6_map:
+    $ current_map_bg = "ace/OW_CAS.png"
+    $ act6_nodes = [
+        MapNode("dan_cas",   1200, 3200, "act6_npc_dan",
+                tooltip="Dan",
+                icon_image="caezar.png",
+                locked=False,
+                icon_zoom=0.10),
+        MapNode("go_to_hsu", 2100, 5000, "act6_go_to_hsu",
+                tooltip="HSU →",
+                icon_image="ArrowDown.png",
+                locked=True,
+                icon_zoom=2.0),
+    ]
+    $ current_task_text = "Find Dan near the CAS corridor"
 
-label act6_mika_types:
-    mika "UPV has a lot of recognized student organizations. Let me break them down."
-    mika "Academic orgs — tied to your degree program. CFOS has marine science clubs, CAS has literary societies, CM has econ circles."
-    mika "Socio-civic orgs — community service, outreach, volunteer work. Great for character building."
-    mika "Cultural orgs — theater, dance, music, visual arts. UPV has a strong cultural scene."
-    mika "Sports clubs — basketball, volleyball, swimming, martial arts. Some compete in inter-UP games."
-    mika "Environmental orgs — like ours! Coastal cleanups, mangrove planting, marine conservation."
-    mika "Publication orgs — the campus newspaper, literary journal, online media. If you like writing."
-    mika "Religious orgs — various faith-based groups that hold fellowship and service activities."
-    player_char "That's a lot of choices."
-    mika "It is! My advice — join one or two max in your first semester. Don't overextend."
-    menu:
-        "How do I join?":
-            jump act6_mika_join
-        "Is it worth it as a freshie?":
-            jump act6_mika_worth
-        "(Thanks, Mika!)":
-            jump act6_mika_end
+label act6_cas_loop:
+    call screen map_screen("ace/OW_CAS.png", act6_nodes, current_task_text, 1.0)
+    $ _action, _node = _return
 
-label act6_mika_join:
-    mika "Joining is simple. Here's the process:"
-    mika "Step 1 — Attend the org fair or reach out to the org directly. Most have Facebook pages or group chats."
-    mika "Step 2 — Sign up for their application process. Some orgs have interviews, others just require attendance at events."
-    mika "Step 3 — Complete the membership requirements. This varies — it could be attending a seminar, a retreat, or working on a project."
-    mika "Step 4 — Once accepted, pay the membership fee — usually ₱50 to ₱200 per semester."
-    mika "Important: ALL recognized orgs must be registered with the OSA. If an org isn't OSA-registered, be careful."
-    mika "Unregistered groups can't use campus facilities or organize official events."
-    player_char "What if I want to start my own org?"
-    mika "You can! You need at least 15 members, a constitution, a faculty adviser, and OSA approval."
-    mika "It's a process, but the OSA staff are helpful. Ate Jenny there can walk you through it."
-    menu:
-        "Is it worth it as a freshie?":
-            jump act6_mika_worth
-        "(That's really helpful.)":
-            jump act6_mika_end
+    if _action == "walk":
+        scene black
+        call walk_to_node(_node, nodes=act6_nodes)
+        call expression _node.target_label
 
-label act6_mika_worth:
-    mika "Absolutely worth it. Here's why."
-    mika "One — community. You'll find your people. UP can feel isolating at first, especially in Miagao."
-    mika "Two — skills. Leadership, event management, teamwork. These look great on your resume."
-    mika "Three — connections. Upperclassmen in your org know which professors to take, which subjects to avoid."
-    mika "Four — mental health. Having friends and a support system makes the UP experience survivable."
-    mika "Five — some orgs offer academic support — reviewers, tutoring, shared notes."
-    player_char "You make a strong case."
-    mika "UP isn't just about grades. The best students are the ones who are involved."
-    jump act6_mika_end
+        if "talk_dan_cas" in tasks_completed:
+            $ act6_nodes[1].locked = False
+            $ current_task_text = "Bring Dan to the HSU"
 
-label act6_mika_end:
-    mika "Come check out the EcoSoc booth if you're interested! We're the ones with the turtle banner."
-    mika "And don't forget — org fair is only this week. Don't miss it!"
-    $ talked_mika = True
-    $ complete_task("talk_mika")
-    if "sq_org_culture" not in subquests_completed:
-        menu:
-            "★ Before I go — test me on org rules and the OSA.":
-                jump sq_org_culture
-            "(Thanks, Mika!)":
-                pass
-    window hide
+        if "go_to_hsu" in tasks_completed:
+            jump act6_hsu_map
+
+    if _action == "phone":
+        call phone_check
+
+    if _action == "inventory":
+        if inventory_unlocked:
+            call screen inventory_screen()
+
+    jump act6_cas_loop
+
+
+## ============================================================================
+## ACT 6 MAP — Phase 2: HSU
+## ============================================================================
+label act6_hsu_map:
+    $ current_map_bg = "ui/hsu_placeholder.png"
+    $ player_map_x = 2500
+    $ player_map_y = 3200
+    $ player_facing = "up"
+
+    $ act6_hsu_nodes = [
+        MapNode("enter_hsu", 2500, 1800, "act6_enter_hsu",
+                tooltip="Enter HSU",
+                icon_image="ArrowUp.png",
+                locked=False,
+                icon_zoom=2.0),
+    ]
+    $ current_task_text = "Bring Dan inside the HSU"
+
+label act6_hsu_loop:
+    call screen map_screen("ui/hsu_placeholder.png", act6_hsu_nodes, current_task_text, 1.0)
+    $ _action, _node = _return
+
+    if _action == "walk":
+        call walk_to_node(_node, nodes=act6_hsu_nodes)
+        call expression _node.target_label
+
+        if "visit_hsu_annual" in tasks_completed:
+            jump act6_osa_map
+
+    if _action == "phone":
+        call phone_check
+
+    if _action == "inventory":
+        if inventory_unlocked:
+            call screen inventory_screen()
+
+    jump act6_hsu_loop
+
+
+## ============================================================================
+## ACT 6 MAP — Phase 3: OSA Corridor — find Ate Jenny
+## ============================================================================
+label act6_osa_map:
+    $ current_map_bg = "maps/OSA.png"
+    $ player_map_x = 1500
+    $ player_map_y = 5000
+    $ player_facing = "up"
+
+    $ act6_osa_nodes = [
+        MapNode("ate_jenny_osa", 2000, 2000, "act6_enter_osa",
+            tooltip="Ate Jenny",
+            icon_image="Osa.png",
+            locked=False),
+    ]
+    $ current_task_text = "Meet Ate Jenny in the OSA corridor"
+
+label act6_osa_loop:
+    call screen map_screen("maps/OSA.png", act6_osa_nodes, current_task_text, 1.0)
+    $ _action, _node = _return
+
+    if _action == "walk":
+        call walk_to_node(_node, nodes=act6_osa_nodes)
+        call expression _node.target_label
+
+        if "talk_ate_jenny" in tasks_completed:
+            jump act6_complete
+
+    if _action == "phone":
+        call phone_check
+
+    if _action == "inventory":
+        if inventory_unlocked:
+            call screen inventory_screen()
+
+    jump act6_osa_loop
+
+
+## ============================================================================
+## ACT 6 NAVIGATION NODE LABELS
+## ============================================================================
+label act6_go_to_hsu:
+    $ complete_task("go_to_hsu")
     return
 
-## ============================================================================
-## NPC 2 — KUYA TOMAS (Scholarship Office Staff)
-## KEY INFO: Scholarships, financial aid, stipends
-## ============================================================================
-label act6_npc_kuya_tomas:
-    window show
-    kuya_tomas "Good morning. Are you here for scholarship inquiries?"
-    player_char "Yes, Kuya. I want to know what financial aid is available."
-    kuya_tomas "Smart move coming early. A lot of freshmen don't find out about these until second semester."
-    menu:
-        "What scholarships are available?":
-            jump act6_tomas_scholarships
-        "How do I apply for financial aid?":
-            jump act6_tomas_apply
-        "What about the Socialized Tuition and Financial Assistance Program?":
-            jump act6_tomas_stfap
+label act6_enter_hsu:
+    jump act6_at_hsu
 
-label act6_tomas_scholarships:
-    kuya_tomas "There are several types of scholarships available to UPV students:"
-    kuya_tomas "University Scholarship — automatic for students with a GWA of 1.20 or better. Full tuition covered."
-    kuya_tomas "College Scholarship — GWA of 1.45 or better. Partial or full tuition depending on the college."
-    kuya_tomas "DOST Scholarship — from the Department of Science and Technology. For STEM students. Includes stipend and tuition."
-    kuya_tomas "CHED Merit Scholarship — based on board exam entrance scores. Full tuition and monthly allowance."
-    kuya_tomas "Private scholarships — various foundations offer them. Check the OSA bulletin board regularly."
-    kuya_tomas "Barangay and LGU scholarships — some local government units offer educational assistance. Check with your home LGU."
-    player_char "Are there scholarships specifically for UPV?"
-    kuya_tomas "Yes — the UPV Foundation scholarships. These are donor-funded and have specific criteria."
-    kuya_tomas "Some are need-based, others are merit-based. Applications open every start of semester."
-    menu:
-        "How do I apply?":
-            jump act6_tomas_apply
-        "What about STFAP?":
-            jump act6_tomas_stfap
-        "(That's very helpful.)":
-            jump act6_tomas_end
+label act6_enter_osa:
+    jump act6_corridor_jenny
 
-label act6_tomas_apply:
-    kuya_tomas "For university and college scholarships — these are automatic based on your grades. No application needed."
-    kuya_tomas "For external scholarships like DOST or CHED — you should have applied before enrollment. If you missed it, apply next cycle."
-    kuya_tomas "For UPV Foundation scholarships — get the application form from the OSA or the UPV Foundation office."
-    kuya_tomas "Requirements usually include: grades transcript, certificate of income, essay, and recommendation letters."
-    kuya_tomas "Deadlines are STRICT. Missing the deadline by even one day means disqualification."
-    kuya_tomas "My advice — keep a folder with all your documents ready. Updated grades, income certificate, IDs."
-    kuya_tomas "When scholarship season comes, you just grab the folder and go. No scrambling."
-    player_char "What if I lose my scholarship?"
-    kuya_tomas "Most scholarships have maintaining requirements — usually a minimum GWA."
-    kuya_tomas "If you fall below, you get one semester of probation. If you don't recover, the scholarship is revoked."
-    kuya_tomas "But you can always reapply once your grades improve."
-    menu:
-        "What about STFAP?":
-            jump act6_tomas_stfap
-        "(Thank you, Kuya.)":
-            jump act6_tomas_end
-
-label act6_tomas_stfap:
-    kuya_tomas "STFAP — Socialized Tuition and Financial Assistance Program. This is a big one."
-    kuya_tomas "It's UP's system for making education affordable based on your family's income."
-    kuya_tomas "You're assigned a bracket from A to E9. Bracket A pays the highest tuition. Bracket E pays nothing — free tuition."
-    kuya_tomas "Most students from low-income families fall into Brackets D or E."
-    kuya_tomas "To apply, you need to submit an STFAP application form, your family's income tax return, and other financial documents."
-    kuya_tomas "An interview may be conducted to verify your family's situation."
-    kuya_tomas "IMPORTANT — if you don't apply for STFAP, you're automatically placed in the highest-paying bracket."
-    kuya_tomas "So always apply, even if you think you don't qualify. The worst they can say is you stay in your current bracket."
-    player_char "When is the STFAP application period?"
-    kuya_tomas "Usually during the first two weeks of the semester. Watch for announcements from the Cashier's Office."
-    kuya_tomas "The OSA can also help you with the paperwork. Don't be shy about asking."
-    jump act6_tomas_end
-
-label act6_tomas_end:
-    kuya_tomas "Education is a right, not a privilege. UP believes that. Use every resource available to you."
-    kuya_tomas "The Scholarship Service office is right here — all scholarship processing, renewals, and certifications handled in one place."
-    kuya_tomas "My door is always open. Actually — would you like to sit down properly and go through the process right now?"
-    menu:
-        "(Yes — walk me through the Scholarship Service properly.)":
-            jump act6_visit_scholarship
-        "(I'll come back another time, Kuya.)":
-            jump act6_tomas_complete
-
-label act6_tomas_complete:
-    $ talked_kuya_tomas = True
-    $ complete_task("talk_kuya_tomas")
-    window hide
-    return
 
 ## ============================================================================
-## NPC 3 — ATE JENNY (OSA Staff)
-## KEY INFO: Campus events, org registration, student handbook
-## ============================================================================
-label act6_npc_ate_jenny:
-    window show
-    ate_jenny "Hi! Welcome to the Office of Student Affairs. How can I help you?"
-    player_char "Hi, Ate. I want to know more about campus events and what the OSA does."
-    ate_jenny "Great question! The OSA is basically the hub of student life outside the classroom."
-    menu:
-        "What events happen on campus?":
-            jump act6_jenny_events
-        "What does the OSA handle?":
-            jump act6_jenny_osa
-        "Where can I find the Student Handbook?":
-            jump act6_jenny_handbook
-
-label act6_jenny_events:
-    ate_jenny "UPV has a packed events calendar! Here are the major ones:"
-    ate_jenny "Freshie Week — orientation activities, campus tours, and the org fair. That's happening right now!"
-    ate_jenny "Lantern Parade — before Christmas break. Students and orgs build giant lanterns and parade them around campus."
-    ate_jenny "Pahampang — the annual sports festival. Inter-college competitions in basketball, volleyball, swimming, and more."
-    ate_jenny "Arts Month — cultural performances, art exhibits, literary readings. Usually March."
-    ate_jenny "Loyalty Day — anniversary celebration of UPV. Guest speakers, awards, and a big program."
-    ate_jenny "Graduation — the biggest event. Families flood Miagao. It's emotional and beautiful."
-    player_char "Are freshmen allowed to participate in all of these?"
-    ate_jenny "Absolutely! In fact, we encourage it. The more involved you are, the richer your UP experience."
-    menu:
-        "What does the OSA handle?":
-            jump act6_jenny_osa
-        "Where's the Student Handbook?":
-            jump act6_jenny_handbook
-        "(Sounds exciting!)":
-            jump act6_jenny_end
-
-label act6_jenny_osa:
-    ate_jenny "The OSA handles a lot. Let me list the main ones:"
-    ate_jenny "Student organization registration — all orgs must register with us every semester."
-    ate_jenny "Scholarship processing and verification — we work with the Cashier's Office on this."
-    ate_jenny "Student discipline — cases of misconduct, harassment, and violations go through us."
-    ate_jenny "Counseling services — through the GCSU. That's a big one."
-    ate_jenny "Event permits — any org or student body event on campus needs OSA clearance."
-    ate_jenny "Student welfare — dormitory concerns, emergency assistance, and student aid."
-    player_char "What's the GCSU?"
-    ate_jenny "The Guidance and Counseling Services Unit. It's one of the most important support services at UPV."
-    menu:
-        "Tell me more about the GCSU.":
-            jump act6_jenny_gcsu
-        "Where's the Student Handbook?":
-            jump act6_jenny_handbook
-        "(Good to know.)":
-            jump act6_jenny_end
-
-label act6_jenny_gcsu:
-    ate_jenny "The GCSU provides professional counseling to all enrolled students — completely free and confidential."
-    ate_jenny "They handle a lot of things:"
-    ate_jenny "Individual counseling — for personal problems, family issues, anxiety, depression, or anything you're going through."
-    ate_jenny "Academic counseling — if you're struggling with your grades, unsure about shifting programs, or feeling lost academically."
-    ate_jenny "Career guidance — aptitude assessments, career planning, even mock interviews for graduating students."
-    ate_jenny "Group counseling — they organize sessions on stress management, time management, and adjustment to college life."
-    ate_jenny "Crisis intervention — if someone is in emotional distress or danger, the GCSU responds immediately."
-    player_char "Is it really confidential? I'd feel embarrassed."
-    ate_jenny "One hundred percent. Whatever you say stays between you and the counselor. That's professional ethics."
-    ate_jenny "And there is NOTHING embarrassing about seeking help. The strongest students are the ones who ask for support."
-    ate_jenny "Homesickness, burnout, relationship problems, family pressure — these are all valid reasons to visit."
-    ate_jenny "Last semester, a student was about to drop out because of anxiety. The GCSU helped them through it. They graduated."
-    ate_jenny "You can walk in during office hours or set an appointment. The GCSU office is at the Student Affairs area."
-    player_char "I'll remember that. Thank you, Ate."
-    ate_jenny "Please do. And if you notice a friend struggling — gently suggest they visit too."
-    menu:
-        "Where's the Student Handbook?":
-            jump act6_jenny_handbook
-        "(That's really important to know.)":
-            jump act6_jenny_end
-
-label act6_jenny_handbook:
-    ate_jenny "The Student Handbook! Every student should have a copy."
-    ate_jenny "It contains everything — the UP Student Code, academic policies, the student bill of rights, disciplinary procedures."
-    ate_jenny "You can get a physical copy here at the OSA. We also have a digital version."
-    ate_jenny "Key things to read:"
-    ate_jenny "Section on Academic Regulations — absence policy, dropping procedures, leave of absence."
-    ate_jenny "Section on Student Conduct — what's prohibited, what the penalties are."
-    ate_jenny "Section on Student Rights — know your rights so you can stand up for them."
-    ate_jenny "Section on Grievance Procedures — how to file a complaint if you're treated unfairly."
-    player_char "I'll get a copy today."
-    ate_jenny "Please do. When in doubt about any rule, the handbook is your source of truth."
-    jump act6_jenny_end
-
-label act6_jenny_end:
-    ate_jenny "The OSA is here for you — always. Don't hesitate to drop by."
-    ate_jenny "And enjoy Freshie Week! It only happens once."
-    $ talked_ate_jenny = True
-    $ complete_task("talk_ate_jenny")
-    if "sq_upv_events" not in subquests_completed:
-        menu:
-            "★ Quiz me on the UPV campus events calendar.":
-                jump sq_upv_events
-            "(Thanks, Ate Jenny!)":
-                pass
-    window hide
-    return
-
-## ============================================================================
-## NPC 4 — COACH RAMON (Sports Coordinator)
-## KEY INFO: Sports, physical education, inter-UP games
-## ============================================================================
-label act6_npc_coach_ramon:
-    window show
-    coach_ramon "You! Freshie! You look athletic. Do you play any sport?"
-    player_char "I used to play a bit in high school..."
-    coach_ramon "Perfect! I'm Coach Ramon. I handle the UPV varsity teams and PE classes."
-    menu:
-        "What sports are available at UPV?":
-            jump act6_ramon_sports
-        "How does PE work?":
-            jump act6_ramon_pe
-        "What are the inter-UP games?":
-            jump act6_ramon_games
-
-label act6_ramon_sports:
-    coach_ramon "UPV has competitive teams in several sports:"
-    coach_ramon "Basketball — men's and women's teams. Tryouts every start of semester."
-    coach_ramon "Volleyball — very popular here. Strong program."
-    coach_ramon "Swimming — makes sense, we're near the ocean."
-    coach_ramon "Track and field — we train on the campus oval."
-    coach_ramon "Sepak takraw — traditional sport, and UPV has some excellent players."
-    coach_ramon "Martial arts — arnis and taekwondo clubs are active."
-    coach_ramon "Football — growing program. We practice on the main field."
-    player_char "Can freshmen try out for varsity?"
-    coach_ramon "Absolutely! Tryouts are open to all enrolled students. Skill comes first, not seniority."
-    coach_ramon "Varsity players also get some benefits — uniforms, travel allowance for competitions, and sometimes academic load adjustments."
-    menu:
-        "How does PE work?":
-            jump act6_ramon_pe
-        "What are the inter-UP games?":
-            jump act6_ramon_games
-        "(That's great info!)":
-            jump act6_ramon_end
-
-label act6_ramon_pe:
-    coach_ramon "Physical Education — PE — is part of the GE curriculum. You'll take 4 PE units total."
-    coach_ramon "PE 1 and PE 2 are usually assigned in your first year. PE 3 and PE 4 in second year."
-    coach_ramon "Options include swimming, badminton, volleyball, dance, martial arts, and more."
-    coach_ramon "Some PE classes are held at the gym. Others at the field or the pool."
-    coach_ramon "PE grades are based on attendance, participation, and practical exams — not just fitness level."
-    coach_ramon "Don't worry if you're not Athletic. The point is to stay active and learn basic movement skills."
-    player_char "Is PE hard to pass?"
-    coach_ramon "If you attend and participate, it's almost impossible to fail. Effort counts more than talent."
-    menu:
-        "What are the inter-UP games?":
-            jump act6_ramon_games
-        "(Thanks, Coach!)":
-            jump act6_ramon_end
-
-label act6_ramon_games:
-    coach_ramon "The Inter-UP Games! The biggest sports event in the UP system."
-    coach_ramon "All UP campuses send their best athletes to compete — Diliman, Los Baños, Visayas, Mindanao, and more."
-    coach_ramon "It's held once a year, rotating between campuses. It's a week-long event."
-    coach_ramon "Sports include basketball, volleyball, swimming, athletics, chess, table tennis, and more."
-    coach_ramon "When UPV hosts, the entire campus transforms. Athletes from other campuses stay in our dorms."
-    coach_ramon "It's the one time all UP students from across the country come together in friendly competition."
-    player_char "That sounds amazing."
-    coach_ramon "It IS amazing. And representing UPV? That's a badge of honor. Think about trying out."
-    jump act6_ramon_end
-
-label act6_ramon_end:
-    coach_ramon "Remember — a healthy body supports a healthy mind. Don't neglect your physical well-being."
-    coach_ramon "The gym is open 6 AM to 8 PM on weekdays. Free for students. No excuses!"
-    $ talked_coach_ramon = True
-    $ complete_task("talk_coach_ramon")
-    window hide
-    return
-
-## ============================================================================
-## SUPPORT SERVICE VISIT — Scholarship Service
-## Reference: UP Visayas Student Handbook — Financial Assistance & STFAP
-## ============================================================================
-label act6_visit_scholarship:
-    window show
-    narrator_char "(You sit across from Kuya Tomas at his desk. Bulletin boards behind him are covered in scholarship announcements, deadlines, and bracket tables.)"
-    narrator_char "(A laminated sign reads: 'Scholarship Service — Office of Student Affairs. We process STFAP, University Scholarships, and all external financial assistance.'"
-    kuya_tomas "Alright. Let me show you exactly what we do here and what you need to know."
-    kuya_tomas "The Scholarship Service is the unit responsible for all student financial assistance at UPV."
-    kuya_tomas "Think of us as the office that makes sure education doesn't stop because of money."
-    menu:
-        "Explain the STFAP — how does it work?":
-            jump act6_schol_stfap
-        "What documents do I need to apply?":
-            jump act6_schol_documents
-        "What are the STFAP brackets?":
-            jump act6_schol_brackets
-        "How do university and college scholarships work?":
-            jump act6_schol_academic
-
-label act6_schol_stfap:
-    kuya_tomas "STFAP — Socialized Tuition and Financial Assistance Program — is UP's core equity mechanism."
-    kuya_tomas "The University of the Philippines was built on the principle that no Filipino should be denied higher education because of poverty."
-    kuya_tomas "STFAP implements that principle: your tuition is set based on your family's ability to pay."
-    kuya_tomas "Every enrolled student is assigned a bracket — from A down to E9 — based on their household income and assets."
-    kuya_tomas "Bracket A is the full standard assessment. Bracket E9 means zero tuition. The lower the bracket, the less you pay."
-    player_char "Who decides my bracket?"
-    kuya_tomas "You do, through your submitted documents. Our office evaluates them and conducts an interview if necessary."
-    kuya_tomas "The key rule: SUBMIT HONESTLY. Misrepresentation — inflating poverty, hiding assets — is a disciplinary offense."
-    kuya_tomas "If discovered, your scholarship is cancelled, you repay the difference, and you face academic sanctions."
-    kuya_tomas "But if you're genuinely from a low-income family, DO NOT be ashamed to apply. That's exactly what STFAP is for."
-    kuya_tomas "The application period opens at the start of each semester. Watch for announcements — the window is only two weeks."
-    menu:
-        "What documents do I need?":
-            jump act6_schol_documents
-        "What exactly are the brackets?":
-            jump act6_schol_brackets
-        "What about academic scholarships?":
-            jump act6_schol_academic
-        "(I understand the STFAP now.)":
-            jump act6_schol_end
-
-label act6_schol_documents:
-    kuya_tomas "Here's the document checklist for STFAP application. I'll walk you through it."
-    kuya_tomas "One — STFAP Application Form. Get it here or download from the UP website."
-    kuya_tomas "Two — Income Tax Return (ITR) for the latest taxable year. Both parents, if employed."
-    kuya_tomas "If your parents are self-employed or in informal work — a Sworn Affidavit of Income, notarized."
-    kuya_tomas "If your family is below the tax threshold — a Certificate of Tax Exemption from the BIR."
-    kuya_tomas "Three — Proof of assets: land title or tax declaration for property, OR an affidavit that you own none."
-    kuya_tomas "Vehicle registration if your family owns a vehicle. Bank certificates for savings accounts."
-    kuya_tomas "Four — Certificate of Employment or business permit for parents, if applicable."
-    kuya_tomas "Five — PSA Birth Certificate and your parents' PSA Marriage Certificate."
-    kuya_tomas "Six — latest electric bill or water bill — shows actual household usage and provides address verification."
-    player_char "What if I can't get some of these documents in time?"
-    kuya_tomas "Come to us and explain your situation. We can advise you on alternatives."
-    kuya_tomas "For instance, if your father is an OFW, we accept a contract copy and remittance records in place of an ITR."
-    kuya_tomas "Single-parent households have a different document set. Come see us — we handle cases individually."
-    kuya_tomas "The most important thing: DO NOT miss the deadline trying to get the perfect set of documents."
-    kuya_tomas "Submit what you have and note what's missing. We'll work with you."
-    menu:
-        "What are the STFAP brackets?":
-            jump act6_schol_brackets
-        "Tell me about academic scholarships.":
-            jump act6_schol_academic
-        "(I'll start gathering documents.)":
-            jump act6_schol_end
-
-label act6_schol_brackets:
-    kuya_tomas "Let me show you the bracket table."
-    narrator_char "(He slides a laminated chart across the desk. You study it carefully.)"
-    kuya_tomas "Bracket A — full tuition at the standard assessed rate. This is the DEFAULT if you don't file STFAP."
-    kuya_tomas "Never skip filing just because you think you're Bracket A. You might qualify for something lower."
-    kuya_tomas "Brackets B and C — reduced tuition. Partial exemptions based on income thresholds."
-    kuya_tomas "Bracket D — significantly reduced. Tuition drops to around ₱300 per unit or lower."
-    kuya_tomas "Brackets E1 through E4 — very low to near-zero tuition. These cover families earning below the poverty line."
-    kuya_tomas "Brackets E5 through E9 — ZERO tuition. Families with very limited income pay nothing."
-    player_char "Are there any cash benefits for the lower brackets?"
-    kuya_tomas "Yes. Brackets E5 to E9 may also include a monthly living allowance — around ₱1,000 to ₱4,000 depending on the sub-bracket."
-    kuya_tomas "This is separate from any external scholarship stipend you may receive."
-    kuya_tomas "You CAN receive STFAP benefits and a DOST or private scholarship simultaneously — they don't cancel each other out."
-    kuya_tomas "Important: your bracket must be renewed every academic year. If your family's situation changes significantly, you must update it."
-    menu:
-        "How do academic scholarships work?":
-            jump act6_schol_academic
-        "What documents do I need?":
-            jump act6_schol_documents
-        "(That's very clear.)":
-            jump act6_schol_end
-
-label act6_schol_academic:
-    kuya_tomas "Academic scholarships at UP are automatic — no application needed. They're based entirely on your GWA."
-    kuya_tomas "University Scholar — GWA of 1.20 or better at the end of the semester, with NO grade of 5.00 or INC."
-    kuya_tomas "University Scholars are exempted from ALL tuition and miscellaneous fees. Full exemption."
-    kuya_tomas "College Scholar — GWA of 1.45 or better. Same conditions apply — no 5.00 or INC."
-    kuya_tomas "College Scholars receive a partial to full exemption depending on their college's rules."
-    kuya_tomas "Dean's Lister — GWA of 1.75 or better. Academic recognition; no tuition benefit but it carries prestige."
-    player_char "Can I be both a University Scholar AND receive STFAP benefits?"
-    kuya_tomas "Yes! These are independent systems. University Scholar removes tuition fees through academic merit."
-    kuya_tomas "STFAP sets your tuition based on income. If you're a University Scholar, your tuition is already zero — so STFAP still applies to miscellaneous fees."
-    kuya_tomas "And you can stack external scholarships on top of all of these. UP doesn't limit scholarship stacking."
-    kuya_tomas "The catch: most scholarships require you to MAINTAIN a minimum GWA — usually 2.00 or better."
-    kuya_tomas "Fall below, and you get one semester of probation. Don't recover — scholarship is suspended or revoked."
-    player_char "What does the Scholarship Service do beyond STFAP and academic scholarships?"
-    kuya_tomas "We process and verify ALL types — government grants like DOST and CHED, private foundation awards, LGU assistance."
-    kuya_tomas "We issue official certifications: enrollment verification, good moral character, certified true copies of grades."
-    kuya_tomas "These are what scholarship sponsors need to release your stipend or renew your grant."
-    kuya_tomas "We also post new scholarship announcements on our bulletin board first — before social media. Check it every week."
-    jump act6_schol_end
-
-label act6_schol_end:
-    narrator_char "(Kuya Tomas hands you a folder: STFAP Application Form, Document Checklist, and the Bracket Table.)"
-    kuya_tomas "This is your starter pack. Read everything. Come back with questions."
-    kuya_tomas "Remember — financial hardship is not a barrier at UP. It is something we are designed to address."
-    kuya_tomas "Use the system. It exists for you."
-    narrator_char "(Encyclopedia unlocked: Scholarship Service.)"
-    $ persistent.encyclopedia_unlocks.add("scholarship_service")
-    $ talked_kuya_tomas = True
-    $ complete_task("talk_kuya_tomas")
-    $ complete_task("visit_scholarship_service")
-    window hide
-    return
-
-## ============================================================================
-## NPC 5 — DAN (Returning from Act 5 — Financial Stress / GCSU Referral)
-## KEY INFO: Financial hardship, GCSU preventive counseling, New Admin scholarship
+## SCENE 1 — Find Dan (CAS Corridor)
+## INTERACTIVE: Player chooses how to approach Dan
 ## ============================================================================
 label act6_npc_dan:
+    scene expression "images/ui/cas_front.png" at fit_screen
     window show
-    narrator_char "(You spot Dan from your Kas 1 class sitting alone on a bench near the CAS corridor. He's staring at his phone — not really looking at anything.)"
-    player_char "Dan? Hey."
-    dan "Oh — hey."
-    player_char "You look rough. What's going on?"
-    dan "I'm fine. It's nothing."
-    player_char "You're sitting alone staring at your phone during Freshie Week. That's not nothing."
+    narrator_char "(Dan is on a bench near the water fountain. Pale. Hunched. Staring at nothing.)"
+    player_char "Dan."
+    dan "Oh. Hey."
+    player_char "You look terrible."
+    dan "I'm fine."
+
+    menu:
+        "You're getting checked out. Right now.":
+            jump act6_dan_direct
+        "When did you last eat?":
+            jump act6_dan_gentle
+        "You don't look fine. Talk to me.":
+            jump act6_dan_talk
+
+label act6_dan_direct:
+    dan "It's not that serious—"
+    player_char "You're gray and you can barely sit straight. It's that serious."
     dan "..."
-    dan "My allowance didn't come in. My parents are dealing with something back home and they couldn't send anything this month."
-    dan "I've got fifty pesos left. I don't know how I'm going to eat, buy printing supplies, pay for the commute back to the dorm..."
-    player_char "Have you talked to anyone about it? The guidance office, maybe?"
-    dan "The guidance office? That's for people who are — I don't know. Mentally falling apart or something."
-    player_char "It's not only for that. Ate Jenny was just telling me the GCSU handles academic stress, financial problems, all of it."
-    player_char "They also connect students to emergency financial assistance."
-    dan "Emergency financial assistance? That's a thing here?"
-    player_char "Apparently. Come on — let's go find out."
-    dan "...You'd come with me?"
-    player_char "You walked me to the HSU in Act 5. I owe you one."
-    jump act6_visit_gcsu_dan
+    dan "Okay."
+    jump act6_dan_convinced
 
-label act6_visit_gcsu_dan:
-    narrator_char "(The Guidance and Counseling Services Unit. A quiet room near the Office of Student Affairs. A small sign on the door: 'GCSU — All sessions are confidential. Walk-ins welcome.')"
-    narrator_char "(Inside: calm lighting, a few chairs, some plants on the windowsill. A counselor looks up from her desk with a steady, welcoming expression.)"
-    guidance_counselor "Good afternoon. Come in — both of you. I'm Ma'am Garcia."
-    guidance_counselor "Please, sit. Take a breath. There's no rush here."
-    dan "Hi, Ma'am. I'm — I'm not sure if this is the right place, but my classmate said—"
-    guidance_counselor "This is exactly the right place. Whatever brought you here is valid."
-    guidance_counselor "Take your time."
-    dan "I'm a first-semester freshman. My allowance from home didn't come in this month. My family is going through something."
-    dan "I have fifty pesos left. I don't know how to get through the next few weeks. And I didn't know who to tell."
-    guidance_counselor "Thank you for saying that out loud. I know it takes courage."
-    guidance_counselor "What you're feeling right now — the stress, the uncertainty, the shame of asking for help — those are real. And you are not alone in feeling them."
-    guidance_counselor "Financial pressure is one of the most common reasons freshmen struggle in their first semester. Most suffer in silence. You didn't. That matters."
-    dan "I kept thinking I should be able to handle it myself."
-    guidance_counselor "That belief — that you have to manage everything alone — is one we want to gently work through today."
-    guidance_counselor "Asking for help is not weakness. It is one of the wisest things a person can do."
-    guidance_counselor "Let's start simply. Can you take a slow breath with me?"
-    guidance_counselor "In... hold... and out."
-    narrator_char "(A quiet moment passes. You watch Dan breathe. Something in his posture settles — just slightly.)"
-    guidance_counselor "Good. Let me tell you what the GCSU can offer."
-    guidance_counselor "We provide preventive counseling — sessions like this one, designed to help students before a difficulty becomes a crisis."
-    guidance_counselor "We also do individual follow-up sessions, group support, stress management workshops, and crisis intervention when things become serious."
-    guidance_counselor "Today I want to do two things with you."
-    guidance_counselor "First — remind you that this situation is temporary, and it says nothing about your capability."
-    guidance_counselor "Second — connect you with the office that can help you get through this month."
-    dan "There's an office for that?"
-    guidance_counselor "Yes. The Scholarship Service at the New Administration Building."
-    guidance_counselor "They handle emergency financial assistance — a Student Emergency Fund that can cover meals, photocopying, and basic transport while you stabilize."
-    guidance_counselor "They also process STFAP re-bracketing. If your family's financial situation changed, you can request a reassessment — which may lower your tuition next semester."
-    guidance_counselor "And they can show you scholarship programs with monthly stipends you may still qualify to apply for."
-    player_char "So there's actually quite a lot available."
-    guidance_counselor "More than most students know about. That's exactly why this referral system exists."
-    guidance_counselor "I'm writing you a referral letter to the Scholarship Service now. It helps them prioritize urgent cases."
-    guidance_counselor "Bring it to the New Admin Building. Ask for Kuya Tomas. Tell him I sent you."
-    dan "I... thank you, Ma'am. I really didn't think anyone here would care about something like this."
-    guidance_counselor "We care. That is what this office is for."
-    guidance_counselor "Come back and see me, even after this is resolved, Dan. Adjusting to college life is hard — with or without financial pressure."
-    guidance_counselor "My door is always open."
-    narrator_char "(Ma'am Garcia seals a referral envelope and hands it to Dan along with a small pamphlet: 'GCSU — Because You Matter.')"
-    narrator_char "(Dan holds it carefully. Like it means something. Because it does.)"
-    jump act6_dan_new_admin
+label act6_dan_gentle:
+    dan "..."
+    dan "Yesterday. I think."
+    player_char "You think."
+    dan "Maybe the day before."
+    player_char "HSU. Now."
+    dan "I don't want to make it a big deal."
+    player_char "Not eating for two days IS the big deal."
+    jump act6_dan_convinced
 
-label act6_dan_new_admin:
-    narrator_char "(You walk with Dan to the New Administration Building. Kuya Tomas is at his desk. He reads the referral letter, sets it down, and opens a folder.)"
-    kuya_tomas "Referral from Ma'am Garcia. Sit down."
-    kuya_tomas "Okay — let's talk about what we can do."
-    kuya_tomas "First — the Student Emergency Assistance Fund. This covers immediate needs: meals, photocopying, basic transport. Up to ₱1,500, processed in 24 to 48 hours."
-    kuya_tomas "I'll flag your case as urgent. You should have something by end of week."
-    dan "That would really help."
-    kuya_tomas "Second — STFAP re-bracketing. If your family's financial situation changed this semester, we reassess your bracket."
-    kuya_tomas "A lower bracket means lower tuition. Some brackets include a monthly living allowance — ₱1,000 to ₱4,000 depending on your assessment."
-    kuya_tomas "Third — here's a list of scholarship programs with applications open this month."
-    narrator_char "(He slides a printed sheet across the desk. Dan scans it. His eyes stop at the stipend amounts.)"
-    dan "Some of these give ₱3,000 a month?"
-    kuya_tomas "Some give more. The key is applying on time. Deadlines are strict — one day late means disqualification."
-    kuya_tomas "Fill out this form. Student number, contact details, and a brief description of your situation. We'll start the emergency fund process today."
-    player_char "Is there anything else he should know?"
-    kuya_tomas "Keep a folder — grades, income certificate, all your documents. When scholarship season opens, you grab it and go. No scrambling."
-    kuya_tomas "And check this bulletin board every week. New scholarship announcements go up every Monday."
-    kuya_tomas "You're not the first student in this chair. You won't be the last."
-    kuya_tomas "UP has been doing this for over a hundred years. We don't let students fall through the cracks."
-    narrator_char "(Dan fills out the form. His hands are steady.)"
-    narrator_char "(An hour ago he was on a bench with fifty pesos and no path forward.)"
-    narrator_char "(Now he has an emergency fund in motion, a scholarship list, and a follow-up session at the GCSU.)"
-    player_char "(This is what a support system looks like when it actually works.)"
+label act6_dan_talk:
+    dan "I just haven't been sleeping. Or eating much."
+    dan "My parents couldn't send my allowance. I didn't want anyone to know."
+    player_char "Dan. That's what the campus clinics are for. Come on."
+    jump act6_dan_convinced
+
+label act6_dan_convinced:
+    narrator_char "(He doesn't argue. That tells you everything.)"
+    $ complete_task("talk_dan_cas")
+    window hide
+    return
+
+
+## ============================================================================
+## SCENE 2 — HSU Visit
+## INTERACTIVE: Menu-driven consultation + sq_hsu_triage sort game
+## ============================================================================
+label act6_at_hsu:
+    scene expression "images/ui/hsu.jpg" at fit_screen
+    window show
+    narrator_char "(The Health Services Unit. Green cross above the door. A nurse logs Dan in before he even finishes handing over his ID.)"
+    hsu_nurse "Student ID. Sit. When did you last eat?"
+    dan "Day before yesterday."
+    hsu_nurse "Blood pressure's low. You're dehydrated and hypoglycemic."
+    narrator_char "(The physician steps out and looks at the chart, then at Dan.)"
+    physician "This has been going on how long?"
+    dan "A week."
+    physician "And you waited because...?"
+    dan "I thought I could get through it."
+    narrator_char "(She sets down her pen. Looks at you.)"
+    physician "You have questions. Ask them."
+
+    $ act6_hsu_asked = []
+
+label act6_hsu_question_loop:
+    menu:
+        "What can the HSU actually treat on campus?" if "treat" not in act6_hsu_asked:
+            $ act6_hsu_asked.append("treat")
+            jump act6_hsu_q_treat
+        "What if it's something more serious?" if "serious" not in act6_hsu_asked:
+            $ act6_hsu_asked.append("serious")
+            jump act6_hsu_q_serious
+        "What's the Annual Physical Exam?" if "ape" not in act6_hsu_asked:
+            $ act6_hsu_asked.append("ape")
+            jump act6_hsu_q_ape
+        "That's enough. What happens next?":
+            jump act6_hsu_next
+
+label act6_hsu_q_treat:
+    physician "Consultations, medicines, wound care, dental extraction, vitamins, ORS — all free with your student ID."
+    physician "We also issue Medical Certificates if you miss class due to illness."
+    jump act6_hsu_question_loop
+
+label act6_hsu_q_serious:
+    physician "We refer. Miagao District Hospital for emergencies. WVMC in Iloilo City for specialists."
+    physician "You are never left to navigate that alone — we write the referral letter and coordinate."
+    jump act6_hsu_question_loop
+
+label act6_hsu_q_ape:
+    physician "Required for your enrollment clearance every year. Height, weight, blood pressure, vision, general screening."
+    physician "Done here, free of charge. Don't skip it — it flags issues before they become crises. Like this one."
+    jump act6_hsu_question_loop
+
+label act6_hsu_next:
+    physician "I'm treating the immediate problem — ORS, glucose drink, vitamin B complex."
+    physician "But the root cause is financial stress. I'm writing a referral to the GCSU."
+    dan "I don't need a counselor—"
+    physician "You haven't eaten in two days because you have no money. That is not a personal failing. That is a circumstance the GCSU can help address."
+    dan "...Okay."
+    narrator_char "(She hands over the medication pack and the referral envelope.)"
+    physician "Before you go — let me make sure you know how to use the HSU correctly."
+    narrator_char "(Encyclopedia unlocked: HSU — Health Services Unit.)"
+    $ persistent.encyclopedia_unlocks.add("hsu_ape")
+
+    ## ── Sort mini-game: Campus Health Triage ──────────────────────────────────
+    if "sq_hsu_triage" not in subquests_completed:
+        jump sq_hsu_triage
+    else:
+        physician "Good. The HSU is your first stop — not your last resort."
+
+    $ complete_task("visit_hsu_annual")
+    window hide
+    return
+
+
+## ============================================================================
+## SCENE 3 — OSA Corridor (Ate Jenny)
+## INTERACTIVE: Player asks about confidentiality or OSA role
+## ============================================================================
+label act6_corridor_jenny:
+    scene expression "images/ui/osa_corridor.png" at fit_screen
+    window show
+    narrator_char "(Outside the HSU. Dan's got his glucose drink. A little color back in his face.)"
+    narrator_char "(Ate Jenny is posting announcements on the OSA bulletin board. She spots you.)"
+    ate_jenny "Dan — from the freshman batch?"
+    dan "Yeah."
+    ate_jenny "GCSU referral?"
+    narrator_char "(Dan holds up the envelope.)"
+    ate_jenny "Good. I'm Ate Jenny, Office of Student Affairs. Walk with me."
+    ate_jenny "Three offices. HSU — physical. GCSU — mental and emotional. Scholarship Service — financial."
+    ate_jenny "These three problems are connected. You can't fix one while ignoring the others."
+    player_char "Dan's worried about confidentiality."
+
+    menu:
+        "Is the GCSU session actually private?":
+            jump act6_jenny_confidentiality
+        "What exactly does the OSA do?":
+            jump act6_jenny_osa_role
+        "Can a counselor contact his parents?":
+            jump act6_jenny_parents
+
+label act6_jenny_confidentiality:
+    ate_jenny "Protected under Republic Act 9258 — the Guidance and Counseling Act of 2004."
+    ate_jenny "Nothing leaves that room without your written consent. Professors, parents, the dean — nobody."
+    ate_jenny "The only exceptions: imminent harm to yourself or others, or a court order."
+    jump act6_jenny_continue
+
+label act6_jenny_osa_role:
+    ate_jenny "We're the coordinating hub. If you don't know which office handles your problem, you come here first."
+    ate_jenny "We also handle student org registration, activity permits, and student welfare cases."
+    ate_jenny "Think of us as the router. We direct you to the right place."
+    jump act6_jenny_continue
+
+label act6_jenny_parents:
+    ate_jenny "The law says no. RA 9258 means the counselor cannot disclose anything to anyone without your written consent."
+    ate_jenny "Dan is the client. The counselor is on his side."
+    dan "Even if I'm a minor?"
+    ate_jenny "Even then. The law is clear."
+    jump act6_jenny_continue
+
+label act6_jenny_continue:
+    narrator_char "(She stops at the GCSU door and holds it open.)"
+    ate_jenny "Ma'am Garcia. She's been here twelve years. Just be honest with her."
+    ate_jenny "My door's always open after."
+    $ complete_task("talk_ate_jenny")
+    jump act6_at_gcsu
+
+
+## ============================================================================
+## SCENE 4 — GCSU Counseling Session
+## INTERACTIVE: Player helps Dan open up + inline GCSU quiz + breathing exercise
+## ============================================================================
+label act6_at_gcsu:
+    scene expression "images/ui/gcsu.png" at fit_screen
+    window show
+    narrator_char "(The GCSU. Calm lighting. Plants on the windowsill. Ma'am Garcia closes her notebook.)"
+    guidance_counselor "Come in. Take a seat. I'm Ma'am Garcia."
+    guidance_counselor "No rush. Start wherever you want."
+    narrator_char "(Dan looks at the floor. He's still holding the referral.)"
+    guidance_counselor "You look like you have a lot on your mind. What's the biggest thing right now?"
+
+    menu:
+        "Tell her about the not eating.":
+            jump act6_gcsu_physical
+        "Tell her about the money situation.":
+            jump act6_gcsu_financial
+        "Tell her everything.":
+            jump act6_gcsu_everything
+
+label act6_gcsu_physical:
+    dan "I've been... not eating properly. For about a week."
+    guidance_counselor "And before the food — what was happening?"
+    dan "I can't sleep. I keep thinking about whether I should just go home."
+    guidance_counselor "What's pulling you home?"
+    jump act6_gcsu_core
+
+label act6_gcsu_financial:
+    dan "My parents can't send my allowance. Probably not next month either."
+    guidance_counselor "How long have you been carrying that alone?"
+    dan "Since the semester started."
+    guidance_counselor "That's a long time to go without telling anyone."
+    jump act6_gcsu_core
+
+label act6_gcsu_everything:
+    dan "I haven't eaten in two days. My parents have no money to send. I can't sleep. I zone out in class."
+    dan "I keep thinking I don't belong here."
+    guidance_counselor "Thank you for saying all of that at once. That takes courage."
+    jump act6_gcsu_core
+
+label act6_gcsu_core:
+    guidance_counselor "What you're describing — the exhaustion, the isolation, the feeling of being behind — that's adjustment difficulty."
+    guidance_counselor "It's the most common thing I see in first-semester freshmen. You are not unusual. You are not weak."
+    guidance_counselor "The UPCAT doesn't make mistakes. You earned your place here."
+    dan "It doesn't feel that way right now."
+    guidance_counselor "It rarely does in the first month."
+    guidance_counselor "Let's try something. Follow my lead."
+
+    ## ── Breathing exercise ────────────────────────────────────────────────────
+    window hide
+    call screen breathing_exercise_screen
+    window show
+
+    guidance_counselor "Good. Now — let me make sure you both know what this office actually provides."
+    guidance_counselor "Quick check — three questions."
+
+    ## ── Inline GCSU knowledge quiz ────────────────────────────────────────────
+    python:
+        sq_quiz_state.setup(
+            "GCSU — Know Your Rights",
+            "Three questions about the Guidance and Counseling Services Unit",
+            "💙",
+            [
+                (
+                    "Under RA 9258, can Ma'am Garcia tell Dan's parents about this session?",
+                    [
+                        ("No — only if there is imminent harm or a court order", True, "Correct. RA 9258 protects everything said in this room. Parents, professors, the dean — none of them have access without Dan's written consent."),
+                        ("Yes — parents are legal guardians and have the right to know", False, "RA 9258 is clear: the student is the client. Guardian rights do not override the confidentiality of counseling sessions."),
+                        ("Yes, but only if Dan is failing academically", False, "Academic performance is not an exception under RA 9258. The law protects counseling disclosures regardless of grades."),
+                    ]
+                ),
+                (
+                    "Which of these is NOT a GCSU service?",
+                    [
+                        ("Annual Physical Examination (APE)", True, "Correct — the APE is an HSU service. The GCSU handles counseling, psychological testing, career guidance, and crisis intervention."),
+                        ("Individual Counseling sessions", False, "Individual Counseling is one of the GCSU's core services — one-on-one, confidential, free for enrolled students."),
+                        ("Crisis Intervention for students in acute distress", False, "Crisis Intervention is a GCSU service. They also coordinate referrals to licensed psychiatrists in Iloilo."),
+                    ]
+                ),
+                (
+                    "Dan skips his follow-up GCSU session. What happens?",
+                    [
+                        ("Nothing is enforced — counseling is voluntary, but the door stays open", True, "Exactly. The GCSU cannot compel attendance. The invitation stays open. Showing up again is always an option."),
+                        ("It gets flagged on his academic record", False, "GCSU sessions are confidential. Attendance or absence does not appear on any academic record."),
+                        ("His scholarship application gets blocked", False, "GCSU attendance has no connection to scholarship processing. These offices coordinate, but they don't penalize non-attendance."),
+                    ]
+                ),
+            ]
+        )
+    window hide
+    call screen sq_quiz_game()
+    $ _gcsu_quiz = _return
+    window show
+
+    if _gcsu_quiz >= 2:
+        guidance_counselor "Good. You know your rights. That matters."
+    else:
+        guidance_counselor "Review what you missed. Knowing what this office can and cannot do — that's part of using it correctly."
+
+    guidance_counselor "Dan — I'm writing a referral to the Scholarship Service. GCSU-referred cases are prioritized."
+    guidance_counselor "Come back after. Not because something is wrong with you. Because adjustment is a process."
+    dan "...Yes, Ma'am."
+    narrator_char "(She hands Dan a small card. 'GCSU — Walk-in hours Mon–Fri, 8AM–5PM. You don't need a reason. Just come.')"
     narrator_char "(Encyclopedia unlocked: GCSU — Guidance and Counseling Services Unit.)"
     $ persistent.encyclopedia_unlocks.add("gcsu")
     $ complete_task("talk_dan_gcsu")
-    window hide
-    return
+    jump act6_at_scholarship
+
 
 ## ============================================================================
-## ACT 6 COMPLETION — Org Fair Visit
+## SCENE 5 — Scholarship Service
+## INTERACTIVE: Menu-driven consultation + sq_stfap_docs sort game
 ## ============================================================================
-label act6_org_fair:
+label act6_at_scholarship:
     window show
-    narrator_char "(You walk through the org fair. Banners of every color line the corridor.)"
-    narrator_char "(Students call out to freshmen, handing out flyers, cracking jokes.)"
-    narrator_char "(You sign up for two orgs. It feels like the start of something bigger than classes.)"
-    narrator_char "\[ACT 6 COMPLETE] — Student Orgs & Campus Life."
-    $ complete_task("visit_org_fair")
+    narrator_char "(New Admin Building. Bulletin boards dense with scholarship deadlines and STFAP notices.)"
+    narrator_char "(Kuya Tomas reads the GCSU referral. Sets it face-down. Opens a folder.)"
+    kuya_tomas "Flagged urgent. Sit down."
+    kuya_tomas "Three things that can help you. Ask me about whichever one you need first."
+
+    $ act6_scholarship_asked = []
+
+label act6_scholarship_loop:
+    menu:
+        "Emergency Assistance Fund" if "emergency" not in act6_scholarship_asked:
+            $ act6_scholarship_asked.append("emergency")
+            jump act6_schol_emergency
+        "STFAP re-bracketing" if "stfap" not in act6_scholarship_asked:
+            $ act6_scholarship_asked.append("stfap")
+            jump act6_schol_stfap
+        "Scholarships with stipends" if "scholarships" not in act6_scholarship_asked:
+            $ act6_scholarship_asked.append("scholarships")
+            jump act6_schol_scholarships
+        "What do we do right now?":
+            jump act6_schol_action
+
+label act6_schol_emergency:
+    kuya_tomas "Student Emergency Assistance Fund. Covers immediate needs — meals, photocopying, basic transport."
+    kuya_tomas "Maximum ₱1,500 per application. Processing: 24 to 48 hours."
+    kuya_tomas "GCSU-referred cases — like yours — get prioritized. You could have something by end of week."
+    dan "That would get me through this."
+    jump act6_scholarship_loop
+
+label act6_schol_stfap:
+    kuya_tomas "STFAP — Socialized Tuition and Financial Assistance Program. UP's equity mechanism."
+    kuya_tomas "Brackets A down to E9. Lower brackets mean reduced tuition. E5 to E9 also include a monthly living allowance — ₱1,000 to ₱4,000."
+    player_char "So lower-bracket students get money every month?"
+    kuya_tomas "Yes. That's the financial assistance component. Not just tuition — actual living support."
+    kuya_tomas "If your family's situation changed since you enrolled, you can request re-bracketing."
+    jump act6_scholarship_loop
+
+label act6_schol_scholarships:
+    kuya_tomas "University Scholar — GWA of 1.20 or better. Full tuition and miscellaneous fee exemption. Automatic, no application."
+    kuya_tomas "DOST-SEI — for STEM students. Full tuition plus ₱7,000 monthly stipend."
+    kuya_tomas "CHED Merit — based on entrance scores. Full tuition and allowance."
+    kuya_tomas "UPV Foundation scholarships — mix of need-based and merit-based. Applications open each semester."
+    dan "Some of these give ₱3,000 a month?"
+    kuya_tomas "Some give more. Maintain your GWA and watch this bulletin board. Deadlines are absolute."
+    jump act6_scholarship_loop
+
+label act6_schol_action:
+    kuya_tomas "Emergency Fund form — fill it out now. I'll flag it."
+    narrator_char "(Dan picks up the pen. His handwriting is small and careful.)"
+    kuya_tomas "Students always think there's nothing they can do. That's the most common thing I hear in this office."
+    kuya_tomas "UP has been doing this for a hundred years. No Filipino should be denied education because of poverty."
+    kuya_tomas "STFAP, the emergency fund, the scholarships — that's the mechanism. You just have to find the door."
+    narrator_char "(Dan sets the pen down. Form complete.)"
+    narrator_char "(Encyclopedia unlocked: Scholarship Service — STFAP & Financial Assistance.)"
+    $ persistent.encyclopedia_unlocks.add("scholarship_service")
+    $ complete_task("talk_kuya_tomas")
+
+    ## ── Sort mini-game: Documents Checklist ──────────────────────────────────
+    if "sq_stfap_docs" not in subquests_completed:
+        jump sq_stfap_docs
+    else:
+        kuya_tomas "Keep your document folder ready. Deadlines wait for no one."
+
+    jump act6_dan_resolution
+
+
+## ============================================================================
+## SCENE 6 — Resolution (Outside New Admin)
+## INTERACTIVE: Dan quizzes player → sq_support_router sort game
+## ============================================================================
+label act6_dan_resolution:
+    window show
+    narrator_char "(Outside the New Admin Building. Late afternoon. Campus has gone quiet.)"
+    dan "That was... a lot."
+    player_char "How do you feel?"
+    dan "Tired. But lighter."
+    player_char "You know where to go now."
+    dan "HSU for the body. GCSU for the mind. Scholarship Service for the money. Three offices."
+    dan "I didn't know any of them existed two hours ago."
+    player_char "Now you do. And you know which one to hit first for any problem."
+    dan "Hey. You didn't have to do any of this."
+    player_char "You looked like you needed someone to say 'let's go.' So I said it."
+    dan "..."
+    dan "Thank you."
+    narrator_char "(He almost smiles. It's small — but it's real.)"
+
+    ## ── Sort mini-game: Which Support Office? ────────────────────────────────
+    if "sq_support_router" not in subquests_completed:
+        jump sq_support_router
+    else:
+        player_char "(HSU. GCSU. Scholarship Service. OSA. You know the map now.)"
+
     window hide
-    return
+    jump act6_complete
+
+
+## ============================================================================
+## ACT 6 COMPLETE
+## ============================================================================
+label act6_complete:
+    scene black
+    call screen act_transition("ACT 6 COMPLETE",
+        "Dan is no longer alone.\nYou know the three offices now.", "complete")
+    call screen act_transition("ACT 7", "Library & Academic Resources", "intro")
+
+    $ current_act = 7
+    $ player_map_x = 2500
+    $ player_map_y = 2600
+    $ player_facing = "up"
+    jump act7_map
 
 ## ============================================================================
 ## END OF ACT 6 DIALOGUES
 ## ============================================================================
+play music "audio/Act7.mp3" fadein 1.0

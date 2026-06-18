@@ -1,5 +1,28 @@
 ﻿################################################################################
-## Styles
+# Top Navigation Bar: Encyclopedia, Dictionary, Phone
+################################################################################
+screen top_navbar(selected=None):
+    frame:
+        xalign 0.5
+        yalign 0.0
+        xsize 420
+        ysize 56
+        background Solid(DARK_MAROON)
+        padding (8, 8, 8, 8)
+        frame:
+            xfill True
+            yfill True
+            background Solid("#fff4")
+            hbox:
+                xalign 0.5
+                spacing 24
+                
+                textbutton "Encyclopedia" action ToggleScreen("encyclopedia_screen") style "nav_btn"
+                textbutton "Dictionary [D]" action ToggleScreen("dictionary_screen") style "nav_btn"
+                textbutton "Phone" action ToggleScreen("phone_screen") style "nav_btn"
+
+    ## Keyboard shortcut
+    key "d" action ToggleScreen("dictionary_screen")
 ################################################################################
 init offset = -1
 
@@ -455,19 +478,21 @@ init python:
         "Dorm Manager": "images/npcs/dorm_mgr.png",
         ## Act 5
         "Prof. Lena": "images/npcs/prof_lena.png",
-        "Kuya Rico": "images/npcs/kuya_rico.png",
+        "Kuya Rico": "images/npcs/manong_guard.png",
         "Ate Grace": "images/npcs/ate_grace.png",
-        "Dan": "images/npcs/classmate_dan.png",
+        "Dan": "images/npcs/Caezar.png",
+        "School Physician": "images/npcs/physician.png",
         ## Act 6
         "Mika": "images/npcs/mika.png",
         "Kuya Tomas": "images/npcs/kuya_tomas.png",
-        "Ate Jenny": "images/npcs/ate_jenny.png",
+        "Ate Jenny": "images/npcs/OSa.png",
         "Coach Ramon": "images/npcs/coach_ramon.png",
+        "Ma'am Garcia": "images/npcs/Councilor.png",
         ## Act 7
-        "Ate Rosa": "images/npcs/ate_rosa.png",
-        "Kuya Neil": "images/npcs/kuya_neil.png",
-        "Prof. Santos": "images/npcs/prof_santos.png",
-        "Bea": "images/npcs/classmate_bea.png",
+        "Ate Rosa": "images/npcs/ow_cub.png",
+        "Kuya Neil": "images/npcs/ow_lovers.png",
+        "Prof. Santos": "images/npcs/ow_hsu.png",
+        "Bea": "images/npcs/ate_bea.png",
         ## Act 8
         "Ate Linda": "images/npcs/ate_linda.png",
         "Nanay Elena": "images/npcs/nanay_elena.png",
@@ -481,37 +506,48 @@ init python:
         "Aleng Maria": "Carinderia Owner",
         "Manong Chris": "Local Resident",
         "Joseph": "Tricycle Driver",
+        "Manong Driver": "Campus Shuttle Driver",
+        "School Physician": "Campus Physician",
+        "School Dentist": "Campus Dentist",
         ## Act 2
         "ate bea": "Upperclassman Guide",
         "kuya mark": "Campus Security",
         "maam reyes": "Admin Staff",
         "sir allan": "Faculty Member",
+        "Sir Noel": "Faculty Member",
         ## Act 3/4
         "Sarah": "Fellow Student",
+        "Mikhaela": "Fellow Student",
         "Caezar": "Campus Regular",
         "Manong Guard": "Gate Guard",
         "Sir Ruel": "Strict Professor",
         "Ms. Santos": "OSA Staff",
         "Dorm Manager": "Dorm Manager",
         ## Act 5
-        "Prof. Lena": "GE Professor",
-        "Kuya Rico": "Senior Adviser",
-        "Ate Grace": "Council Rep",
-        "Dan": "Fellow Freshie",
+        "Prof. Lena": "Passionate Mentor",
+        "Kuya Rico": "Reliable Upperclassman",
+        "Ate Grace": "Supportive Ate",
+        "Dan": "Chill Classmate",
+        "Ria": "Study Buddy",
+        "Nurse Santos": "Caring Nurse",
         ## Act 6
-        "Mika": "Org Recruiter",
-        "Kuya Tomas": "Scholarship Staff",
-        "Ate Jenny": "OSA Staff",
-        "Coach Ramon": "Sports Coordinator",
+        "Mika": "Freshman Dreamer",
+        "Kuya Tomas": "Dorm Leader",
+        "Ate Jenny": "Friendly Ate",
+        "Coach Ramon": "Motivator",
         ## Act 7
-        "Ate Rosa": "Campus Librarian",
-        "Kuya Neil": "Lab Attendant",
-        "Prof. Santos": "Research Mentor",
-        "Bea": "Study Organizer",
+        "Ate Rosa": "Library Guardian",
+        "Kuya Neil": "Tech Wiz",
+        "Prof. Santos": "Stern Professor",
+        "Bea": "Quiet Achiever",
         ## Act 8
-        "Ate Linda": "Canteen Worker",
-        "Nanay Elena": "Dorm Housemother",
-        "Prof. Reyes": "Senior Faculty",
+        "Ate Linda": "Gentle Guide",
+        "Nanay Elena": "Wise Elder",
+        "Prof. Reyes": "Inspiring Scholar",
+        ## Support/Other
+        "Ma'am Garcia": "Guidance Counselor",
+        "TLRC Coordinator": "Learning Resource Head",
+        "Peer Tutor": "Peer Tutor",
     }
 
     # Warm portrait assets so they appear instantly on first dialogue line.
@@ -1175,7 +1211,7 @@ style choice_vbox:
 
 style choice_content is default:
     xfill True
-    ymaximum 200
+    ymaximum 700
     yalign 0.5
     background Frame(Solid("#1e0c12ee"), 0, 0)
     padding (20, 14, 20, 14)
@@ -1184,7 +1220,6 @@ style choice_area is default:
     xalign 0.5
     yalign 1.0
     xfill True
-    ysize gui.textbox_height
     left_margin 120
     right_margin 120
     bottom_margin 92
@@ -1496,21 +1531,8 @@ screen quick_menu():
     ## Ensure this appears on top of other screens.
     zorder 100
 
-    if quick_menu:
 
-        hbox:
-            style_prefix "quick"
-            style "quick_menu"
-
-            textbutton _("Back") action Rollback()
-            textbutton _("History") action ShowMenu('history')
-            textbutton _("Skip") action Skip() alternate Skip(fast=True, confirm=True)
-            textbutton _("Auto") action Preference("auto-forward", "toggle")
-            textbutton _("Save") action ShowMenu('save')
-            textbutton _("Q.Save") action QuickSave()
-            textbutton _("Q.Load") action QuickLoad()
-            textbutton _("Prefs") action ShowMenu('preferences')
-            textbutton _("ENCYCLOPEDIA") action ShowMenu("encyclopedia") ## Encyclopedia Button
+    # Quick menu removed as requested
 
 
 
@@ -1743,8 +1765,8 @@ screen main_menu():
             align (0.5, 0.5)
             spacing 0
 
-            textbutton _("NEW GAME") action Start() style "mm_btn" at btn_appear(0.7), btn_hover_lift
-            textbutton _("CONTINUE") action ShowMenu("load") style "mm_btn" at btn_appear(0.85), btn_hover_lift
+            textbutton _("NEW GAME") action [Stop('music', fadeout=1.0), Start()] style "mm_btn" at btn_appear(0.7), btn_hover_lift
+            textbutton _("CONTINUE") action [Stop('music', fadeout=1.0), ShowMenu("load")] style "mm_btn" at btn_appear(0.85), btn_hover_lift
             textbutton _("SETTINGS") action ShowMenu("preferences") style "mm_btn" at btn_appear(1.0), btn_hover_lift
             textbutton _("ABOUT") action ShowMenu("about") style "mm_btn" at btn_appear(1.15), btn_hover_lift
             textbutton _("QUIT") action Quit(confirm=not main_menu) style "mm_btn_quit" at btn_appear(1.3), btn_hover_lift
@@ -3023,33 +3045,123 @@ screen confirm(message, yes_action, no_action):
 
     ## Ensure other screens do not get input while this screen is displayed.
     modal True
-
     zorder 200
 
-    style_prefix "confirm"
-
-    add "gui/overlay/confirm.png"
+    add Solid("#0d0406") alpha 0.82 at confirm_overlay_in
 
     frame:
+        xalign 0.5
+        yalign 0.5
+        padding (0, 0, 0, 0)
+        background Solid("#00000000")
+        at confirm_panel_in
 
-        vbox:
-            xalign .5
-            yalign .5
-            spacing 45
+        frame:
+            padding (3, 3, 3, 3)
+            background Frame(Solid("#f6d79d44"), 0, 0)
 
-            label _(message):
-                style "confirm_prompt"
-                xalign 0.5
+            frame:
+                padding (2, 2, 2, 2)
+                background Frame(Solid("#c8921833"), 0, 0)
 
-            hbox:
-                xalign 0.5
-                spacing 150
+                frame:
+                    xminimum 420
+                    xmaximum 520
+                    padding (0, 0, 0, 0)
+                    background Solid("#1a0a0ef8")
 
-                textbutton _("Yes") action yes_action
-                textbutton _("No") action no_action
+                    vbox:
+                        spacing 0
+
+                        ## Header bar
+                        frame:
+                            background Solid("#2a0e0e")
+                            xfill True
+                            padding (24, 14, 24, 14)
+                            hbox:
+                                spacing 10
+                                yalign 0.5
+                                text "\u26a0" size 14 color "#ffd700" yalign 0.5
+                                text "CONFIRM ACTION" size 13 color "#ffd700" bold True yalign 0.5
+
+                        ## Gold rule
+                        frame:
+                            background Solid("#f6d79d33")
+                            xfill True
+                            ysize 1
+                            padding (0, 0, 0, 0)
+
+                        ## Message body
+                        frame:
+                            background Solid("#0d0406")
+                            xfill True
+                            padding (32, 28, 32, 24)
+                            vbox:
+                                spacing 0
+                                xalign 0.5
+                                text _(message):
+                                    xalign 0.5
+                                    text_align 0.5
+                                    size 15
+                                    color "#f1debf"
+                                    bold True
+                                    line_spacing 4
+
+                        ## Gold rule
+                        frame:
+                            background Solid("#f6d79d22")
+                            xfill True
+                            ysize 1
+                            padding (0, 0, 0, 0)
+
+                        ## Action buttons
+                        frame:
+                            background Solid("#130609")
+                            xfill True
+                            padding (24, 16, 24, 16)
+                            hbox:
+                                xalign 0.5
+                                spacing 20
+
+                                ## Yes - crimson confirm
+                                button:
+                                    xsize 160
+                                    padding (0, 12, 0, 12)
+                                    background Solid("#5c1a1a")
+                                    hover_background Solid("#7c2222")
+                                    action yes_action
+                                    hbox:
+                                        xalign 0.5
+                                        spacing 8
+                                        yalign 0.5
+                                        text "\u2713" size 14 color "#ffd700" yalign 0.5
+                                        text _("Yes") size 14 color "#ffd700" bold True yalign 0.5
+
+                                ## No - dark dismiss
+                                button:
+                                    xsize 160
+                                    padding (0, 12, 0, 12)
+                                    background Solid("#2a1018")
+                                    hover_background Solid("#3c1828")
+                                    action no_action
+                                    hbox:
+                                        xalign 0.5
+                                        spacing 8
+                                        yalign 0.5
+                                        text "\u2717" size 14 color "#c8921888" yalign 0.5
+                                        text _("No") size 14 color "#f6d79d88" bold True yalign 0.5
 
     ## Right-click and escape answer "no".
     key "game_menu" action no_action
+
+
+transform confirm_overlay_in:
+    alpha 0.0
+    easein 0.18 alpha 1.0
+
+transform confirm_panel_in:
+    alpha 0.0 zoom 0.95 yoffset 12
+    easein 0.22 alpha 1.0 zoom 1.0 yoffset 0
 
 
 style confirm_frame is gui_frame
@@ -3059,20 +3171,26 @@ style confirm_button is gui_medium_button
 style confirm_button_text is gui_medium_button_text
 
 style confirm_frame:
-    background Frame([ "gui/confirm_frame.png", "gui/frame.png"], gui.confirm_frame_borders, tile=gui.frame_tile)
-    padding gui.confirm_frame_borders.padding
+    background Solid("#00000000")
     xalign .5
     yalign .5
 
 style confirm_prompt_text:
     textalign 0.5
     layout "subtitle"
+    color "#f1debf"
+    size 15
 
 style confirm_button:
-    properties gui.button_properties("confirm_button")
+    background "#5c1a1a"
+    hover_background "#7c2222"
+    padding (20, 10, 20, 10)
 
 style confirm_button_text:
-    properties gui.text_properties("confirm_button")
+    color "#ffd700"
+    hover_color "#ffffff"
+    size 14
+    bold True
 
 
 ## Skip indicator screen #######################################################
@@ -3144,47 +3262,53 @@ screen notify(message):
 
     frame at notify_appear:
         xalign 0.5
-        ypos 80
+        ypos 110
         xminimum 320
         padding (3, 3, 3, 3)
-        background Frame(Solid("#f6d79d44"), 0, 0)
+        background Frame(Solid("#f6d79d55"), 0, 0)
 
         frame:
             xfill True
-            padding (28, 16, 28, 16)
-            background Frame(Solid("#1e0c12ee"), 0, 0)
+            padding (2, 2, 2, 2)
+            background Frame(Solid("#c8921833"), 0, 0)
 
-            hbox:
-                xalign 0.5
-                spacing 10
+            frame:
+                xfill True
+                padding (20, 12, 20, 12)
+                background Solid("#1a0a0ef5")
 
-                text "★":
-                    size 20
-                    color "#ffd700"
-                    outlines [(2, "#1e0c12", 0, 0)]
+                hbox:
+                    xalign 0.5
+                    spacing 10
                     yalign 0.5
 
-                text "[message!tq]":
-                    size 20
-                    color "#b8e6b0"
-                    outlines [(2, "#1e0c12", 0, 0)]
-                    yalign 0.5
+                    text "★":
+                        size 13
+                        color "#ffd700"
+                        outlines [(1, "#1a0a0e", 0, 0)]
+                        yalign 0.5
 
-                text "★":
-                    size 20
-                    color "#ffd700"
-                    outlines [(2, "#1e0c12", 0, 0)]
-                    yalign 0.5
+                    text "[message!tq]":
+                        size 14
+                        color "#f1debf"
+                        outlines [(1, "#1a0a0e", 0, 0)]
+                        yalign 0.5
+
+                    text "★":
+                        size 13
+                        color "#ffd700"
+                        outlines [(1, "#1a0a0e", 0, 0)]
+                        yalign 0.5
 
     timer 3.0 action Hide('notify')
 
 
 transform notify_appear:
     on show:
-        alpha 0 yoffset -20
-        easein 0.35 alpha 1.0 yoffset 0
+        alpha 0 yoffset -16
+        easein 0.28 alpha 1.0 yoffset 0
     on hide:
-        easeout 0.4 alpha 0.0 yoffset -20
+        easeout 0.32 alpha 0.0 yoffset -16
 
 
 ## NVL screen ##################################################################
@@ -3798,132 +3922,259 @@ screen item_pickup_screen(item):
     zorder 300
     modal False
 
+    ## Outer glow border - same triple-frame as other UI panels
     frame:
         xalign 0.5
         yalign 0.0
-        yoffset 80
-        background "#1e1e3a"
-        padding (20, 14, 24, 14)
+        yoffset 24
+        padding (3, 3, 3, 3)
+        background Frame(Solid("#f6d79d55"), 0, 0)
         at item_pickup_anim
 
-        hbox:
-            spacing 12
-            yalign 0.5
-            text item.icon size 22 yalign 0.5
-            vbox:
-                spacing 2
-                text "INFO ITEM COLLECTED" size 10 color "#a78bfa" bold True
-                text item.label size 13 color "#f1f5f9" bold True
-                text item.short size 11 color "#94a3b8"
+        frame:
+            padding (2, 2, 2, 2)
+            background Frame(Solid("#c8921833"), 0, 0)
+
+            frame:
+                padding (0, 0, 0, 0)
+                background Solid("#1a0a0ef2")
+
+                hbox:
+                    spacing 0
+
+                    ## Gold left accent bar
+                    frame:
+                        xsize 4
+                        ysize 62
+                        background Solid("#ffd700")
+                        padding (0, 0, 0, 0)
+
+                    ## Content
+                    frame:
+                        padding (16, 14, 20, 14)
+                        background Solid("#00000000")
+                        hbox:
+                            spacing 14
+                            yalign 0.5
+
+                            ## Icon badge
+                            frame:
+                                xysize (38, 38)
+                                yalign 0.5
+                                background Solid("#3c1a28")
+                                text item.icon size 20 xalign 0.5 yalign 0.5
+
+                            ## Text block
+                            vbox:
+                                spacing 4
+                                yalign 0.5
+
+                                ## Label row
+                                hbox:
+                                    spacing 6
+                                    yalign 0.5
+                                    frame:
+                                        xsize 3
+                                        ysize 10
+                                        yalign 0.5
+                                        background Solid("#ffd700")
+                                        padding (0, 0, 0, 0)
+                                    text "\u2605  INFO ITEM COLLECTED" size 9 color "#c89218" bold True yalign 0.5
+
+                                text item.name size 13 color "#ffd700" bold True
+                                text item.desc size 11 color "#f1debf88"
 
 transform item_pickup_anim:
-    alpha 0.0 yoffset -20
-    ease 0.3 alpha 1.0 yoffset 0
-    pause 2.0
-    ease 0.4 alpha 0.0 yoffset -10
+    alpha 0.0 yoffset -16
+    ease 0.25 alpha 1.0 yoffset 0
+    pause 2.2
+    ease 0.35 alpha 0.0 yoffset -10
 
 ## ----------------------------------------------------------------------------
 ## SCREEN: INVENTORY (can be toggled, I key)
 ## ----------------------------------------------------------------------------
 
-screen inventory_screen():
+screen dictionary_screen():
     modal True
     zorder 150
 
+    # Direct keybindings for closing the dictionary
+    key "d" action Hide("dictionary_screen")
+    key "game_menu" action Hide("dictionary_screen") # Esc key
+
+    # (Optional: keep these if you want to close other overlays from here)
     key "K_p" action Hide("phone_screen")
     key "K_i" action Hide("inventory_screen")
-    key "K_ESCAPE" action Hide("inventory_screen")
-    key "K_e" action [Hide("inventory_screen"), Show("encyclopedia_screen")]
 
-    add "#000000" alpha 0.6
+    add Solid("#0d0406") alpha 0.92
 
+    ## Outer glow border
     frame:
         xalign 0.5
         yalign 0.5
-        xsize 800
-        ysize 540
-        background "#F9F6F0" # Book paper color
-        padding (0, 0, 0, 0)
+        xsize 836
+        padding (4, 4, 4, 4)
+        background Frame(Solid("#f6d79d33"), 0, 0)
 
-        # Spine shadow in the middle
-        add Solid("#E8E0D5"):
-            xalign 0.5
-            xsize 2
-            ysize 540
+        frame:
+            xfill True
+            padding (2, 2, 2, 2)
+            background Frame(Solid("#c8921822"), 0, 0)
 
-        vbox:
-            spacing 0
-
-            # Header
             frame:
-                background "#2C3E50"
                 xfill True
-                padding (30, 20, 30, 20)
-                hbox:
-                    xfill True
-                    text "FRESHMAN DICTIONARY" size 16 color "#F9F6F0" bold True xalign 0.0 yalign 0.5
-                    text "Entries: [len(collected_items)]/14" size 14 color "#BDC3C7" xalign 1.0 yalign 0.5
+                padding (0, 0, 0, 0)
+                background Solid("#1a0a0ef8")
 
-            # Content
-            frame:
-                background Solid("#00000000")
-                xfill True
-                ysize 420
-                padding (40, 30, 40, 30)
+                vbox:
+                    spacing 0
 
-                vpgrid:
-                    cols 2
-                    spacing 40
-                    xfill True
-                    yinitial 0.0
-
-                    if len(collected_items) == 0:
-                        text "No entries yet.\nTalk to locals to gather information." size 14 color "#7F8C8D" italic True xalign 0.5
-
-                    for item in collected_items:
-                        vbox:
+                    ## Header
+                    frame:
+                        background Solid("#2a0e0e")
+                        xfill True
+                        padding (24, 14, 24, 14)
+                        hbox:
                             xfill True
-                            spacing 6
-
-                            # Term and Source
-                            hbox:
-                                spacing 8
-                                text item.icon size 18 yalign 0.5
-                                text item.label size 16 color "#2C3E50" bold True yalign 0.5
-                                text "— " + item.source size 11 color "#95A5A6" italic True yalign 0.7
-                            
-                            # Definition
-                            text item.short size 13 color "#34495E"
-                            
-                            # Separator
-                            null height 8
-                            # ✅ FIX
+                            yalign 0.5
+                            vbox:
+                                spacing 3
+                                hbox:
+                                    spacing 8
+                                    text "📖" size 15 yalign 0.5
+                                    text "FRESHMAN DICTIONARY" size 15 color "#ffd700" bold True yalign 0.5
+                                text "Words and terms collected from the locals of Miagao" size 10 color "#c8921888" italic True
                             frame:
-                                background Solid("#E0DCD3")
-                                xfill True
-                                ysize 1
-                                padding (0, 0, 0, 0)
+                                xalign 1.0
+                                yalign 0.5
+                                background Solid("#1a0a0e")
+                                padding (12, 6, 12, 6)
+                                text "[len(collected_items)] entries" size 12 color "#ffd700" bold True
 
-            # Footer
-            frame:
-                background Solid("#00000000")
-                xfill True
-                padding (20, 10, 20, 10)
-                hbox:
-                    xalign 0.5
-                    spacing 24
-                    text "[[I]] / [[ESC]] — Close" substitute False size 11 color "#95A5A6" italic True yalign 0.5
-                    textbutton "📖 Encyclopedia [[E]]" substitute False:
-                        style "inv_enc_btn"
-                        action [Hide("inventory_screen"), Show("encyclopedia_screen")]
+                    ## Progress bar
+                    frame:
+                        background Solid("#130609")
+                        xfill True
+                        ysize 3
+                        padding (0, 0, 0, 0)
+
+                    ## Content area — 2-column scrollable grid
+                    frame:
+                        background Solid("#0d0406")
+                        xfill True
+                        padding (0, 0, 0, 0)
+
+                        if len(collected_items) == 0:
+                            frame:
+                                background Solid("#00000000")
+                                xfill True
+                                ysize 440
+                                padding (0, 0, 0, 0)
+                                vbox:
+                                    xalign 0.5
+                                    yalign 0.5
+                                    spacing 12
+                                    text "📜" size 44 xalign 0.5
+                                    text "No entries yet." size 16 color "#f6d79d" bold True xalign 0.5
+                                    text "Talk to locals around Miagao to\ncollect words and knowledge." size 12 color "#c8921888" italic True xalign 0.5 text_align 0.5
+                        else:
+                            viewport:
+                                xfill True
+                                ysize 440
+                                mousewheel True
+                                draggable True
+                                scrollbars "vertical"
+
+                                vbox:
+                                    xfill True
+                                    spacing 0
+                                    xmaximum 800
+
+                                    python:
+                                        _inv_pairs = []
+                                        for _ii in range(0, len(collected_items), 2):
+                                            _inv_pairs.append(collected_items[_ii:_ii+2])
+
+                                    for _row in _inv_pairs:
+                                        hbox:
+                                            xfill True
+                                            spacing 0
+
+                                            for _itm in _row:
+                                                frame:
+                                                    xsize 400
+                                                    padding (22, 16, 22, 16)
+                                                    background Solid("#00000000")
+
+                                                    vbox:
+                                                        xfill True
+                                                        spacing 6
+
+                                                        ## Term header
+                                                        hbox:
+                                                            spacing 10
+                                                            yalign 0.5
+                                                            frame:
+                                                                xysize (32, 32) yalign 0.5
+                                                                background Solid("#3c1a28")
+                                                                text _itm.icon size 16 xalign 0.5 yalign 0.5
+                                                            vbox:
+                                                                spacing 2
+                                                                text _itm.name size 14 color "#ffd700" bold True
+                                                                text "— " + _itm.act size 10 color "#c8921888" italic True
+
+                                                        ## Definition
+                                                        text _itm.desc size 12 color "#f1debf" line_spacing 3
+
+                                                        ## Bottom rule
+                                                        null height 4
+                                                        frame:
+                                                            background Solid("#f6d79d22")
+                                                            xfill True
+                                                            ysize 1
+                                                            padding (0, 0, 0, 0)
+
+                                            ## Pad right cell if odd number
+                                            if len(_row) == 1:
+                                                frame:
+                                                    xsize 400
+                                                    padding (0, 0, 0, 0)
+                                                    background Solid("#00000000")
+
+                                    ## Vertical divider between columns
+                                    ## (done via inner frame xsize 400 above)
+
+                    ## Divider
+                    frame:
+                        background Solid("#f6d79d22")
+                        xfill True
+                        ysize 1
+                        padding (0, 0, 0, 0)
+
+                    ## Footer
+                    frame:
+                        background Solid("#2a0e0e")
+                        xfill True
+                        padding (20, 10, 20, 10)
+                        hbox:
+                            xfill True
+                            yalign 0.5
+                            hbox:
+                                spacing 20
+                                yalign 0.5
+                                text "[[I]] / [[D]] / [[ESC]] — Close" substitute False size 10 color "#f6d79d55" italic True yalign 0.5
+                                text "Scroll with mouse wheel" size 10 color "#f6d79d33" italic True yalign 0.5
 
 style inv_enc_btn:
-    background "#2C3E50"
-    hover_background "#1e2d3d"
-    padding (10, 5, 10, 5)
-    color "#BDC3C7"
-    hover_color "#ffffff"
+    background "#5c1a1a"
+    hover_background "#7c2222"
+    padding (14, 7, 14, 7)
+
+style inv_enc_btn_text:
+    color "#f6d79d"
+    hover_color "#ffd700"
     size 11
+    bold True
 
 ## ----------------------------------------------------------------------------
 ## SCREEN: ENCYCLOPEDIA — Detailed knowledge book, organised by NPC source
@@ -3935,212 +4186,329 @@ screen encyclopedia_screen():
     zorder 155
 
     key "K_e" action Hide("encyclopedia_screen")
-    key "K_i" action [Hide("encyclopedia_screen"), Show("inventory_screen")]
     key "K_ESCAPE" action Hide("encyclopedia_screen")
 
     default enc_selected = ""
 
-    add "#000000" alpha 0.78
+    add Solid("#0d0406") alpha 0.92
 
     python:
-        _enc_order = ["Jaden", "Manong Josh", "Aleng Maria", "Manong Chris", "Tol Joseph"]
-        _enc_has   = [s for s in _enc_order if any(i.source == s for i in collected_items)]
-        _enc_extra = [s for s in dict.fromkeys(i.source for i in collected_items) if s not in _enc_order]
+        _enc_order = [
+            ## Act 1 — Arrival in Miagao
+            "Jaden", "Manong Josh", "Aleng Maria", "Manong Chris", "Tol Joseph",
+            ## Act 2 — Entering the University
+            "Ate Bea", "Kuya Mark", "Ma'am Reyes",
+            ## Act 3 — Enrollment
+            "Sir Noel",
+            ## Act 4 — Dorm Life
+            "Dorm Manager",
+            ## Act 5 — First Day of Classes
+            "Prof. Lena", "Kuya Rico", "Ate Grace", "Dan",
+            ## Act 6 — Org Fair & Campus Life
+            "Mika", "Kuya Tomas", "Ate Jenny", "Coach Ramon",
+            ## Act 7 — Library & Academic Resources
+            "Ate Rosa", "Kuya Neil", "Prof. Santos", "Bea",
+            ## Act 8 — Finding Your Place
+            "Nanay Elena", "Prof. Reyes",
+        ]
+        _enc_has   = [s for s in _enc_order if any(i.act == s for i in collected_items)]
+        _enc_extra = [s for s in dict.fromkeys(i.act for i in collected_items) if s not in _enc_order]
         _enc_srcs  = _enc_has + _enc_extra
 
         _enc_meta = {
+            ## Act 1
             "Jaden":        ("🎒", "Fellow freshie from Iloilo City with UPV tips."),
             "Manong Josh":  ("🏘️", "Long-time Miagao local who knows every corner."),
             "Aleng Maria":  ("🍚", "Carinderia owner near the UPV gate — feeds half the campus."),
             "Manong Chris": ("🙏", "Born-and-raised Miagaoanon fluent in Kinaray-a."),
             "Tol Joseph":   ("🛺", "The tricycle driver who knows every route and fare."),
+            ## Act 2
+            "Ate Bea":      ("🎓", "Senior student volunteer at the BOX 1 entrance — freshie lifesaver."),
+            "Kuya Mark":    ("🛡️", "Campus security officer who knows every rule on campus."),
+            "Ma'am Reyes":  ("📋", "Administrative staff at New Admin who handles office directory queries."),
+            ## Act 3
+            "Sir Noel":     ("💻", "Faculty enrollment adviser who walks freshmen through CRS and scheduling."),
+            ## Act 4
+            "Dorm Manager": ("🏠", "The dormitory manager who handles check-in, rules, and room assignments."),
+            ## Act 5
+            "Prof. Lena":   ("📊", "Professor who explains the UP grading system on the first day of class."),
+            "Kuya Rico":    ("📅", "Upperclassman who knows the MAO policy and campus building layout."),
+            "Ate Grace":    ("⚖️", "OSA student assistant knowledgeable about student rights."),
+            "Dan":          ("📚", "Classmate and study-tips enthusiast with a surprisingly organized planner."),
+            ## Act 6
+            "Mika":         ("🌿", "Org leader at the fair who explains org culture and anti-hazing laws."),
+            "Kuya Tomas":   ("💰", "Scholarship upperclassman with practical advice on grants and STFAP."),
+            "Ate Jenny":    ("🗓️", "OSA student rep who knows every UPV campus event by heart."),
+            "Coach Ramon":  ("🏅", "Sports coordinator and long-time UPV athletics coach."),
+            ## Act 7
+            "Ate Rosa":     ("📖", "Friendly librarian at the Diwata Library — knows every resource on campus."),
+            "Kuya Neil":    ("🖥️", "Computer lab technician who manages student access and printing."),
+            "Prof. Santos": ("🔬", "Research professor who explains UP's three mandates and research culture."),
+            "Bea":          ("📝", "Classmate and APA citation guru — already on her second coffee of the day."),
+            ## Act 8
+            "Nanay Elena":  ("🎒", "Veteran dormer who gives freshmen the real survival kit list."),
+            "Prof. Reyes":  ("🏅", "Professor who embodies the meaning of UP's Honor and Excellence motto."),
         }
 
+    ## Outer glow border
     frame:
         xalign 0.5
         yalign 0.5
-        xsize 880
-        ysize 560
-        background "#F5EFE0"
-        padding (0, 0, 0, 0)
+        xsize 916
+        padding (4, 4, 4, 4)
+        background Frame(Solid("#f6d79d33"), 0, 0)
 
-        vbox:
-            spacing 0
+        frame:
+            xfill True
+            padding (2, 2, 2, 2)
+            background Frame(Solid("#c8921822"), 0, 0)
 
-            ## Header
             frame:
-                background "#1e130a"
                 xfill True
-                padding (28, 14, 28, 14)
-                hbox:
-                    xfill True
-                    yalign 0.5
-                    vbox:
-                        spacing 2
-                        text "📖  MIAGAO FRESHMAN ENCYCLOPEDIA" size 15 color "#d4a843" bold True
-                        text "Complete knowledge gathered from locals" size 10 color "#8b7355" italic True
-                    text "[len(collected_items)] entries" size 12 color "#8b6914" xalign 1.0 yalign 0.5
+                padding (0, 0, 0, 0)
+                background Solid("#1a0a0ef8")
 
-            ## Body
-            hbox:
-                spacing 0
+                vbox:
+                    spacing 0
 
-                ## TOC panel
-                frame:
-                    xsize 210
-                    ysize 492
-                    background "#E8DFC8"
-                    padding (0, 0, 0, 0)
-
-                    vbox:
-                        spacing 0
-                        frame:
-                            background "#2c1810"
+                    ## Header
+                    frame:
+                        background Solid("#2a0e0e")
+                        xfill True
+                        padding (24, 14, 24, 14)
+                        hbox:
                             xfill True
-                            padding (14, 10, 14, 10)
-                            text "CHAPTERS" size 10 color "#d4a843" bold True
-
-                        if len(_enc_srcs) == 0:
-                            frame:
-                                background Solid("#00000000")
-                                xfill True
-                                padding (14, 20, 14, 20)
-                                text "Talk to locals to\nunlock chapters." size 11 color "#8b7355" italic True
-
-                        for _esrc in _enc_srcs:
-                            python:
-                                _emeta  = _enc_meta.get(_esrc, ("📄", "A local source."))
-                                _ecount = len([i for i in collected_items if i.source == _esrc])
-                                _eword  = "entry" if _ecount == 1 else "entries"
-                                _eact   = (enc_selected == _esrc)
-
-                            button:
-                                xfill True
-                                background ("#3d2214" if _eact else None)
-                                hover_background "#2c1810"
-                                padding (14, 12, 14, 12)
-                                action SetScreenVariable("enc_selected", _esrc)
+                            yalign 0.5
+                            vbox:
+                                spacing 3
                                 hbox:
                                     spacing 8
-                                    text _emeta[0] size 14 yalign 0.5
-                                    vbox:
-                                        spacing 1
-                                        text _esrc size 12 color ("#d4a843" if _eact else "#4a3020") bold True
-                                        text "[_ecount] [_eword]" size 9 color "#8b7355"
-
+                                    text "📚" size 15 yalign 0.5
+                                    text "MIAGAO FRESHMAN ENCYCLOPEDIA" size 15 color "#ffd700" bold True yalign 0.5
+                                text "Complete knowledge gathered from the locals" size 10 color "#c8921888" italic True
                             frame:
-                                background Solid("#D4C4A066")
-                                xfill True
-                                ysize 1
-                                padding (0, 0, 0, 0)
+                                xalign 1.0
+                                yalign 0.5
+                                background Solid("#1a0a0e")
+                                padding (12, 6, 12, 6)
+                                text "[len(collected_items)] entries" size 12 color "#ffd700" bold True
 
-                ## Spine
-                frame:
-                    xsize 3
-                    ysize 492
-                    background "#d4a843"
-                    padding (0, 0, 0, 0)
+                    ## Body: sidebar + content
+                    hbox:
+                        spacing 0
 
-                ## Content panel
-                frame:
-                    xsize 667
-                    ysize 492
-                    background "#FDFAF4"
-                    padding (0, 0, 0, 0)
+                        ## ── Sidebar / TOC ──────────────────────────────────────
+                        frame:
+                            xsize 218
+                            ysize 502
+                            background Solid("#130609")
+                            padding (0, 0, 0, 0)
 
-                    if enc_selected == "":
+                            vbox:
+                                spacing 0
+
+                                ## Sidebar heading
+                                frame:
+                                    background Solid("#2a0e0e")
+                                    xfill True
+                                    padding (16, 10, 16, 10)
+                                    hbox:
+                                        spacing 6
+                                        yalign 0.5
+                                        frame:
+                                            xsize 3
+                                            ysize 12
+                                            yalign 0.5
+                                            background Solid("#ffd700")
+                                            padding (0, 0, 0, 0)
+                                        text "SOURCES" size 10 color "#ffd700" bold True yalign 0.5
+
+                                if len(_enc_srcs) == 0:
+                                    frame:
+                                        background Solid("#00000000")
+                                        xfill True
+                                        padding (16, 24, 16, 24)
+                                        vbox:
+                                            spacing 8
+                                            xalign 0.5
+                                            text "📜" size 28 xalign 0.5
+                                            text "Talk to locals to\nunlock chapters." size 11 color "#c8921866" italic True xalign 0.5 text_align 0.5
+
+                                viewport:
+                                    xfill True
+                                    ysize 462
+                                    mousewheel True
+                                    draggable True
+
+                                    vbox:
+                                        spacing 0
+                                        xfill True
+
+                                        for _esrc in _enc_srcs:
+                                            python:
+                                                _emeta  = _enc_meta.get(_esrc, ("📄", "A local source."))
+                                                _ecount = len([i for i in collected_items if i.act == _esrc])
+                                                _eword  = "entry" if _ecount == 1 else "entries"
+                                                _eact   = (enc_selected == _esrc)
+
+                                            button:
+                                                xfill True
+                                                background Solid("#3c1a28" if _eact else "#00000000")
+                                                hover_background Solid("#2a0e1a")
+                                                padding (14, 12, 14, 12)
+                                                action SetScreenVariable("enc_selected", _esrc)
+                                                hbox:
+                                                    spacing 10
+                                                    yalign 0.5
+                                                    ## Active indicator bar
+                                                    frame:
+                                                        xsize 3
+                                                        ysize 30
+                                                        yalign 0.5
+                                                        background Solid("#ffd700" if _eact else "#00000000")
+                                                        padding (0, 0, 0, 0)
+                                                    frame:
+                                                        xysize (28, 28) yalign 0.5
+                                                        background Solid("#2a0e0e" if _eact else "#1e0a10")
+                                                        text _emeta[0] size 14 xalign 0.5 yalign 0.5
+                                                    vbox:
+                                                        spacing 2
+                                                        text _esrc size 12 color ("#ffd700" if _eact else "#f1debf") bold True
+                                                        text "[_ecount] [_eword]" size 9 color "#c8921866"
+
+                                            frame:
+                                                background Solid("#f6d79d11")
+                                                xfill True
+                                                ysize 1
+                                                padding (0, 0, 0, 0)
+
+                        ## Gold spine
+                        frame:
+                            xsize 2
+                            ysize 502
+                            background Solid("#ffd70044")
+                            padding (0, 0, 0, 0)
+
+                        ## ── Content panel ──────────────────────────────────────
                         frame:
                             xfill True
-                            ysize 492
-                            background Solid("#00000000")
-                            vbox:
-                                xalign 0.5
-                                yalign 0.5
-                                spacing 14
-                                text "📖" size 52 xalign 0.5
-                                text "Select a Chapter" size 18 color "#4a3020" bold True xalign 0.5
-                                text "Choose a source from the left\nto read the knowledge you collected." size 12 color "#8b7355" italic True xalign 0.5 text_align 0.5
+                            ysize 502
+                            background Solid("#0d0406")
+                            padding (0, 0, 0, 0)
 
-                    else:
-                        python:
-                            _eitems  = [i for i in collected_items if i.source == enc_selected]
-                            _echmeta = _enc_meta.get(enc_selected, ("📄", "Information gathered from a local."))
-
-                        vbox:
-                            spacing 0
-
-                            ## Chapter header
-                            frame:
-                                background "#E8DFC8"
-                                xfill True
-                                padding (20, 12, 20, 12)
-                                hbox:
-                                    spacing 12
-                                    text _echmeta[0] size 26 yalign 0.5
-                                    vbox:
-                                        spacing 2
-                                        text enc_selected size 17 color "#1e130a" bold True
-                                        text _echmeta[1] size 11 color "#6b5a3a" italic True
-
-                            ## Scrollable entries
-                            viewport:
-                                xfill True
-                                ysize 398
-                                scrollbars "vertical"
-                                mousewheel True
-                                yinitial 0.0
-
+                            if enc_selected == "":
+                                ## Empty state
                                 frame:
                                     xfill True
+                                    ysize 502
                                     background Solid("#00000000")
-                                    padding (20, 12, 20, 12)
-
                                     vbox:
+                                        xalign 0.5
+                                        yalign 0.5
+                                        spacing 14
+                                        text "📚" size 52 xalign 0.5
+                                        text "Select a Source" size 18 color "#ffd700" bold True xalign 0.5
+                                        text "Choose someone from the left panel\nto read the knowledge you've gathered." size 12 color "#c8921888" italic True xalign 0.5 text_align 0.5
+
+                            else:
+                                python:
+                                    _eitems  = [i for i in collected_items if i.act == enc_selected]
+                                    _echmeta = _enc_meta.get(enc_selected, ("📄", "Information gathered from a local."))
+
+                                vbox:
+                                    spacing 0
+
+                                    ## Chapter header
+                                    frame:
+                                        background Solid("#2a0e0e")
                                         xfill True
-                                        spacing 0
-
-                                        for _eitem in _eitems:
+                                        padding (20, 14, 20, 14)
+                                        hbox:
+                                            spacing 14
+                                            yalign 0.5
                                             frame:
-                                                xfill True
-                                                background Solid("#00000000")
-                                                padding (0, 10, 0, 10)
-                                                vbox:
+                                                xysize (40, 40) yalign 0.5
+                                                background Solid("#3c1a28")
+                                                text _echmeta[0] size 22 xalign 0.5 yalign 0.5
+                                            vbox:
+                                                spacing 3
+                                                yalign 0.5
+                                                text enc_selected size 16 color "#ffd700" bold True
+                                                text _echmeta[1] size 11 color "#c8921888" italic True
+
+                                    ## Scrollable entries
+                                    viewport:
+                                        xfill True
+                                        ysize 448
+                                        scrollbars "vertical"
+                                        mousewheel True
+                                        yinitial 0.0
+
+                                        vbox:
+                                            xfill True
+                                            spacing 0
+                                            xmaximum 800
+
+                                            for _eitem in _eitems:
+                                                frame:
                                                     xfill True
-                                                    spacing 5
+                                                    background Solid("#00000000")
+                                                    padding (22, 14, 22, 14)
 
-                                                    hbox:
-                                                        spacing 10
-                                                        text _eitem.icon size 20 yalign 0.5
-                                                        text _eitem.label size 14 color "#1e130a" bold True yalign 0.5
-
-                                                    text _eitem.short size 12 color "#3a2a1a"
-
-                                                    if _eitem.full and _eitem.full != _eitem.short:
-                                                        null height 4
-                                                        frame:
-                                                            background "#EDE4CC"
-                                                            xfill True
-                                                            padding (12, 8, 12, 8)
-                                                            text _eitem.full size 11 color "#4a3a1a"
-
-                                                    null height 6
-                                                    frame:
-                                                        background Solid("#D8CCAA")
+                                                    vbox:
                                                         xfill True
-                                                        ysize 1
-                                                        padding (0, 0, 0, 0)
+                                                        spacing 8
 
-            ## Footer
-            frame:
-                background "#E8DFC8"
-                xfill True
-                padding (20, 8, 20, 8)
-                hbox:
-                    xalign 0.5
-                    spacing 24
-                    text "[[E]] / [[ESC]] — Close" substitute False size 10 color "#8b7355" italic True yalign 0.5
-                    text "[[I]] — Dictionary" substitute False size 10 color "#8b7355" italic True yalign 0.5
-                    text "Scroll with mouse wheel" size 10 color "#8b7355" italic True yalign 0.5
+                                                        ## Entry title row
+                                                        hbox:
+                                                            spacing 10
+                                                            yalign 0.5
+                                                            frame:
+                                                                xysize (30, 30) yalign 0.5
+                                                                background Solid("#3c1a28")
+                                                                text _eitem.icon size 15 xalign 0.5 yalign 0.5
+                                                            text _eitem.name size 15 color "#ffd700" bold True yalign 0.5
+
+                                                        ## Short desc
+                                                        text _eitem.desc size 13 color "#f1debf" line_spacing 3
+
+                                                        ## Long desc (if different)
+                                                        if _eitem.full and _eitem.full != _eitem.desc:
+                                                            frame:
+                                                                background Solid("#2a0e0e")
+                                                                xfill True
+                                                                padding (14, 10, 14, 10)
+                                                                hbox:
+                                                                    spacing 10
+                                                                    yalign 0.5
+                                                                    frame:
+                                                                        xsize 2
+                                                                        ysize 40
+                                                                        yalign 0.5
+                                                                        background Solid("#c89218")
+                                                                        padding (0, 0, 0, 0)
+                                                                    text _eitem.full size 12 color "#f6d79d" line_spacing 3
+
+                                                        ## Divider
+                                                        frame:
+                                                            background Solid("#f6d79d1a")
+                                                            xfill True
+                                                            ysize 1
+                                                            padding (0, 0, 0, 0)
+
+                    ## Footer
+                    frame:
+                        background Solid("#2a0e0e")
+                        xfill True
+                        padding (20, 10, 20, 10)
+                        hbox:
+                            xfill True
+                            yalign 0.5
+                            hbox:
+                                spacing 20
+                                yalign 0.5
+                                text "[[E]] / [[ESC]] — Close" substitute False size 10 color "#f6d79d55" italic True yalign 0.5
+                                text "Scroll with mouse wheel" size 10 color "#f6d79d33" italic True yalign 0.5
 
 ## ----------------------------------------------------------------------------
 ## SCREEN: QUIZ MINIGAME
@@ -4469,66 +4837,78 @@ screen quiz_inner(state):
                                         outlines [(1, "#1a0a0e", 0, 0)]
 
                                 ## Evidence grid
-                                vpgrid:
-                                    cols 2
+                                viewport:
+                                    id "evidence_vp"
                                     xfill True
-                                    spacing 6
+                                    ysize 268
+                                    mousewheel True
+                                    draggable True
+                                    scrollbars "vertical"
 
-                                    for item in items:
-                                        python:
-                                            is_chosen  = (state["chosen"] == item.item_id)
-                                            card_bg    = "#2e1810" if is_chosen else "#130609"
-                                            tab_col    = "#ffd700" if is_chosen else "#f6d79d33"
-                                            lbl_col    = "#ffd700" if is_chosen else "#f1debf"
-                                            src_col    = "#f6d79daa" if is_chosen else "#f6d79d44"
+                                    frame:
+                                        background None
+                                        padding (0, 0, 16, 0)
 
-                                        button:
-                                            background card_bg
-                                            hover_background "#1e0c10"
+                                        vpgrid:
+                                            cols 2
                                             xfill True
-                                            padding (0, 0, 0, 0)
-                                            if state["feedback"] is None:
-                                                action SetDict(state, "chosen", item.item_id)
-                                            else:
-                                                action NullAction()
+                                            spacing 6
 
-                                            hbox:
-                                                spacing 0
-                                                xfill True
+                                            for item in items:
+                                                python:
+                                                    is_chosen  = (state["chosen"] == item.item_id)
+                                                    card_bg    = "#2e1810" if is_chosen else "#130609"
+                                                    tab_col    = "#ffd700" if is_chosen else "#f6d79d33"
+                                                    lbl_col    = "#ffd700" if is_chosen else "#f1debf"
+                                                    src_col    = "#f6d79daa" if is_chosen else "#f6d79d44"
 
-                                                ## Selection tab
-                                                frame:
-                                                    xsize 3
-                                                    ysize 56
-                                                    background Solid(tab_col)
-                                                    padding (0,0,0,0)
-
-                                                frame:
+                                                button:
+                                                    background card_bg
+                                                    hover_background "#1e0c10"
                                                     xfill True
-                                                    padding (10, 8, 10, 8)
-                                                    background Solid("#00000000")
+                                                    padding (0, 0, 0, 0)
+                                                    if state["feedback"] is None:
+                                                        action SetDict(state, "chosen", item.item_id)
+                                                    else:
+                                                        action NullAction()
 
-                                                    vbox:
-                                                        spacing 2
+                                                    hbox:
+                                                        spacing 0
                                                         xfill True
 
-                                                        hbox:
-                                                            spacing 6
-                                                            yalign 0.5
-                                                            text item.icon:
-                                                                size 16
-                                                                yalign 0.5
-                                                            text item.label:
-                                                                size 12
-                                                                color lbl_col
-                                                                bold True
-                                                                outlines [(1, "#1a0a0e", 0, 0)]
-                                                                yalign 0.5
+                                                        ## Selection tab
+                                                        frame:
+                                                            xsize 3
+                                                            ysize 56
+                                                            background Solid(tab_col)
+                                                            padding (0,0,0,0)
 
-                                                        text item.short:
-                                                            size 9
-                                                            color src_col
-                                                            line_spacing 2
+                                                        frame:
+                                                            xfill True
+                                                            padding (10, 8, 10, 8)
+                                                            background Solid("#00000000")
+
+                                                            vbox:
+                                                                spacing 2
+                                                                xfill True
+
+                                                                hbox:
+                                                                    spacing 6
+                                                                    yalign 0.5
+                                                                    text item.icon:
+                                                                        size 16
+                                                                        yalign 0.5
+                                                                    text item.name:
+                                                                        size 12
+                                                                        color lbl_col
+                                                                        bold True
+                                                                        outlines [(1, "#1a0a0e", 0, 0)]
+                                                                        yalign 0.5
+
+                                                                text item.desc:
+                                                                    size 9
+                                                                    color src_col
+                                                                    line_spacing 2
 
                     ## Gold rule
                     frame:
@@ -4919,51 +5299,68 @@ screen phone_screen():
     key "p" action Hide("phone_screen")
     key "K_ESCAPE" action Hide("phone_screen")
 
-    add "#000000" alpha 0.6
+    add Solid("#0d0406") alpha 0.7
 
-    ## Phone frame
+    ## Phone shell — slides in from right side
     frame:
-        xalign 0.98
+        xalign 0.97
         yalign 0.5
-        xsize 320
-        ysize 580
-        background "#111111"
+        xsize 310
+        ysize 600
+        background Solid("#0f0f0f")
         padding (0, 0, 0, 0)
 
         vbox:
             spacing 0
 
-            ## Status bar
+            ## ── Notch / top bar ─────────────────────────────────────────────
             frame:
-                background "#1a1a1a"
+                background Solid("#1a0a0e")
                 xfill True
-                ysize 28
-                padding (12, 0, 12, 0)
+                ysize 30
+                padding (14, 0, 14, 0)
                 hbox:
                     xfill True
                     yalign 0.5
-                    text "9:41 AM" size 10 color "#ffffff" bold True yalign 0.5
-                    text "●●●  WiFi  🔋" size 9 color "#9ca3af" xalign 1.0 yalign 0.5
+                    text "9:41" size 10 color "#ffd700" bold True yalign 0.5
+                    hbox:
+                        xalign 1.0
+                        yalign 0.5
+                        spacing 6
+                        text "●●●" size 8 color "#c8921888" yalign 0.5
+                        text "WiFi" size 8 color "#c8921888" yalign 0.5
+                        text "🔋" size 9 yalign 0.5
 
-            ## App bar
+            ## ── App title bar ───────────────────────────────────────────────
             frame:
-                background "#1e1e1e"
+                background Solid("#2a0e0e")
                 xfill True
                 padding (12, 10, 12, 10)
                 hbox:
                     spacing 10
                     xfill True
                     yalign 0.5
-                    text "←" size 14 color "#7C3AED" yalign 0.5
+                    frame:
+                        xysize (32, 32) yalign 0.5
+                        background Solid("#5c1a1a")
+                        text "🌊" size 16 xalign 0.5 yalign 0.5
                     vbox:
-                        spacing 1
-                        text "UPV Freshies 2024 🌊" size 12 color "#f1f5f9" bold True
-                        text "Batch [gc_open_count]/[len(gc_all_messages)]  •  4 members" size 10 color "#6b7280"
-                    text "⋮" size 16 color "#6b7280" xalign 1.0 yalign 0.5
+                        spacing 2
+                        yalign 0.5
+                        text "UPV Freshies 2024" size 12 color "#ffd700" bold True
+                        text "Batch [gc_open_count]/[len(gc_messages)]  •  4 members" size 9 color "#c8921888"
+                    text "⋮" size 16 color "#c8921866" xalign 1.0 yalign 0.5
 
-            ## Messages area
+            ## Thin gold rule
             frame:
-                background "#0d0d0d"
+                background Solid("#ffd70033")
+                xfill True
+                ysize 1
+                padding (0, 0, 0, 0)
+
+            ## ── Messages area ───────────────────────────────────────────────
+            frame:
+                background Solid("#0d0406")
                 xfill True
                 ysize 430
                 padding (8, 8, 8, 8)
@@ -4976,59 +5373,72 @@ screen phone_screen():
 
                     if len(gc_revealed) == 0:
                         frame:
-                            background "#1a1a1a"
+                            background Solid("#1a0a0e")
                             xfill True
-                            padding (12, 16, 12, 16)
-                            text "Talk to Jaden again to unlock the group chat..." size 11 color "#4b5563" italic True xalign 0.5
+                            padding (12, 18, 12, 18)
+                            vbox:
+                                spacing 6
+                                xalign 0.5
+                                text "💬" size 22 xalign 0.5
+                                text "Talk to Jaden to unlock\nthe group chat..." size 11 color "#c8921866" italic True xalign 0.5 text_align 0.5
 
                     for idx in gc_revealed:
                         python:
-                            msg   = gc_all_messages[idx // 3][idx % 3]
+                            msg   = gc_messages[idx // 4][idx % 4]
                             align = 1.0 if msg.is_player else 0.0
 
                         if msg.is_player:
+                            ## Player message — right aligned, gold/crimson bubble
                             hbox:
                                 xfill True
                                 xalign 1.0
-                                null width 40
+                                null width 50
                                 frame:
-                                    background "#7C3AED"
-                                    padding (10, 7, 10, 7)
-                                    text msg.text size 11 color "#ffffff"
+                                    background Solid("#5c1a1a")
+                                    padding (10, 8, 10, 8)
+                                    text msg.text size 11 color "#f6d79d"
 
                         else:
+                            ## Other member — left aligned with avatar
                             hbox:
                                 spacing 6
                                 xfill True
 
-                                ## Avatar circle (simulated)
+                                ## Avatar circle
                                 frame:
-                                    background msg.avatar_color
+                                    background Solid(msg.avatar_color)
                                     xsize 28
                                     ysize 28
                                     padding (0, 0, 0, 0)
                                     text msg.sender[0] size 12 color "#ffffff" bold True xalign 0.5 yalign 0.5
 
                                 vbox:
-                                    spacing 2
-                                    text msg.sender size 10 color "#9ca3af" bold True
+                                    spacing 3
+                                    text msg.sender size 9 color "#c89218" bold True
                                     frame:
-                                        background "#1e1e1e"
-                                        padding (10, 7, 10, 7)
-                                        text msg.text size 11 color "#e2e8f0"
+                                        background Solid("#2a0e0e")
+                                        padding (10, 8, 10, 8)
+                                        text msg.text size 11 color "#f1debf"
 
                                 null width 40
 
-            ## Input bar + load more
+            ## Thin gold rule
             frame:
-                background "#1a1a1a"
+                background Solid("#ffd70033")
+                xfill True
+                ysize 1
+                padding (0, 0, 0, 0)
+
+            ## ── Input / Load more bar ───────────────────────────────────────
+            frame:
+                background Solid("#1a0a0e")
                 xfill True
                 padding (8, 8, 8, 8)
                 vbox:
                     spacing 6
 
-                    if gc_open_count < len(gc_all_messages):
-                        textbutton "Next Batch →  ([gc_open_count + 1]/[len(gc_all_messages)])":
+                    if gc_open_count < len(gc_messages):
+                        textbutton "Next Batch →  ([gc_open_count + 1]/[len(gc_messages)])":
                             xalign 0.5
                             style "gc_load_btn"
                             action [
@@ -5040,28 +5450,30 @@ screen phone_screen():
                         spacing 6
                         xfill True
                         frame:
-                            background "#2a2a2a"
+                            background Solid("#2a0e0e")
                             xfill True
                             padding (10, 8, 10, 8)
-                            text "Type a message..." size 11 color "#4b5563" italic True
+                            text "Type a message..." size 11 color "#c8921855" italic True
                         frame:
-                            background "#7C3AED"
+                            background Solid("#5c1a1a")
                             padding (10, 8, 10, 8)
-                            text "➤" size 12 color "#ffffff"
+                            text "➤" size 12 color "#ffd700"
 
-            ## Close hint
+            ## ── Close hint ──────────────────────────────────────────────────
             frame:
-                background "#111111"
+                background Solid("#0d0406")
                 xfill True
                 padding (8, 6, 8, 6)
-                text "Press [[P]] to put phone away" substitute False size 9 color "#374151" italic True xalign 0.5
+                text "Press [[P]] to put phone away" substitute False size 9 color "#c8921855" italic True xalign 0.5
 
 style gc_load_btn:
-    background "#1e1e2e"
-    hover_background "#2d2d4a"
+    background "#2a0e0e"
+    hover_background "#3c1a28"
     padding (16, 6, 16, 6)
-    color "#a78bfa"
-    hover_color "#c4b5fd"
+
+style gc_load_btn_text:
+    color "#c89218"
+    hover_color "#ffd700"
     size 11
 
 
@@ -6097,3 +6509,204 @@ screen dorm_room_setup_game():
                 text_hover_color "#ffffff"
                 text_outlines [(2, "#1e0c12", 0, 0)]
                 action Return("completed")
+
+
+################################################################################
+## Travel Cutscene Screen
+## Self-contained: video + RPG-style border + vignette + HUD all in one screen.
+##
+## Usage in a label:
+##   window hide
+##   show screen travel_cutscene("images/maps/MyVideo.webm", "Location Name")
+##   $ renpy.pause()
+##   hide screen travel_cutscene
+################################################################################
+
+## Pulsing glow for the dot indicator
+transform _travel_dot_pulse:
+    alpha 1.0
+    linear 0.55 alpha 0.15
+    linear 0.55 alpha 1.0
+    repeat
+
+## Destination card slides up on appear
+transform _travel_card_slidein:
+    alpha 0.0
+    yoffset 28
+    linear 0.5 alpha 1.0 yoffset 0
+
+## Staggered travel dots (sequential blink)
+transform _travel_tdot1:
+    block:
+        alpha 0.2
+        linear 0.28 alpha 1.0
+        linear 0.28 alpha 0.2
+        repeat
+
+transform _travel_tdot2:
+    pause 0.22
+    block:
+        alpha 0.2
+        linear 0.28 alpha 1.0
+        linear 0.28 alpha 0.2
+        repeat
+
+transform _travel_tdot3:
+    pause 0.44
+    block:
+        alpha 0.2
+        linear 0.28 alpha 1.0
+        linear 0.28 alpha 0.2
+        repeat
+
+## Subtle scan line sweeping top to bottom
+transform _travel_scan:
+    ypos -3
+    linear 2.8 ypos 1083
+    repeat
+
+screen travel_cutscene(video_path, destination, subtitle=""):
+    zorder 500
+    modal False
+
+    ## ── Black base ──
+    add Solid("#000000") xsize 1920 ysize 1080
+
+    ## ── Video (fullscreen) ──
+    add Movie(play=video_path) xsize 1920 ysize 1080 xpos 0 ypos 0
+
+    ## ── Scan line (very subtle, sweeps over video) ──
+    add Solid("#ffffff08") xsize 1920 ysize 3 at _travel_scan
+
+    ## ── Vignette: dark wash on all four edges ──
+    add Solid("#000000CC") xsize 1920 ysize 110 xpos 0 ypos 0
+    add Solid("#000000CC") xsize 1920 ysize 110 xpos 0 yalign 1.0
+    add Solid("#00000077") xsize 110 ysize 1080 xpos 0 ypos 0
+    add Solid("#00000077") xsize 110 ysize 1080 xalign 1.0 ypos 0
+
+    ## ── Thin outer border (dark maroon, 3px, all 4 sides) ──
+    add Solid("#4a0e0e") xsize 1920 ysize 3   xpos 0      ypos 0
+    add Solid("#4a0e0e") xsize 1920 ysize 3   xpos 0      yalign 1.0
+    add Solid("#4a0e0e") xsize 3   ysize 1080 xpos 0      ypos 0
+    add Solid("#4a0e0e") xsize 3   ysize 1080 xalign 1.0  ypos 0
+
+    ## ── Outer corner brackets (warm gold, 110px arms, 8px thick) ──
+    ## Top-left
+    add Solid("#c8923a") xsize 110 ysize 8 xpos 0      ypos 0
+    add Solid("#c8923a") xsize 8   ysize 110 xpos 0    ypos 0
+    ## Top-right
+    add Solid("#c8923a") xsize 110 ysize 8 xalign 1.0  ypos 0
+    add Solid("#c8923a") xsize 8   ysize 110 xalign 1.0 ypos 0
+    ## Bottom-left
+    add Solid("#c8923a") xsize 110 ysize 8 xpos 0      yalign 1.0
+    add Solid("#c8923a") xsize 8   ysize 110 xpos 0    yalign 1.0
+    ## Bottom-right
+    add Solid("#c8923a") xsize 110 ysize 8 xalign 1.0  yalign 1.0
+    add Solid("#c8923a") xsize 8   ysize 110 xalign 1.0 yalign 1.0
+
+    ## ── Corner squares at outer bracket tips (gold, 12×12) ──
+    add Solid("#c8923a") xsize 12 ysize 12 xpos 0      ypos 0
+    add Solid("#c8923a") xsize 12 ysize 12 xalign 1.0  ypos 0
+    add Solid("#c8923a") xsize 12 ysize 12 xpos 0      yalign 1.0
+    add Solid("#c8923a") xsize 12 ysize 12 xalign 1.0  yalign 1.0
+
+    ## ── Inner corner brackets (maroon, 70px arms, 3px thick, inset 22px) ──
+    ## Top-left
+    add Solid("#a03030") xsize 70 ysize 3 xpos 22          ypos 22
+    add Solid("#a03030") xsize 3  ysize 70 xpos 22         ypos 22
+    ## Top-right  (1920 - 22 - 70 = 1828 | 1920 - 22 - 3 = 1895)
+    add Solid("#a03030") xsize 70 ysize 3 xpos 1828        ypos 22
+    add Solid("#a03030") xsize 3  ysize 70 xpos 1895       ypos 22
+    ## Bottom-left  (1080 - 22 - 3 = 1055 | 1080 - 22 - 70 = 988)
+    add Solid("#a03030") xsize 70 ysize 3 xpos 22          ypos 1055
+    add Solid("#a03030") xsize 3  ysize 70 xpos 22         ypos 988
+    ## Bottom-right
+    add Solid("#a03030") xsize 70 ysize 3 xpos 1828        ypos 1055
+    add Solid("#a03030") xsize 3  ysize 70 xpos 1895       ypos 988
+
+    ## ── Top HUD strip: "◆ NAVIGATING ◆" ──
+    frame:
+        xalign 0.5
+        ypos 10
+        background "#00000000"
+        padding (18, 4, 18, 4)
+        hbox:
+            spacing 10
+            xalign 0.5
+            text "◆" at _travel_dot_pulse:
+                color "#c8923a"
+                size 20
+                yalign 0.5
+            text "NAVIGATING":
+                color "#2FA89A"
+                size 30
+                yalign 0.5
+            text "◆" at _travel_dot_pulse:
+                color "#c8923a"
+                size 20
+                yalign 0.5
+
+    ## ── Destination card (slides up) ──
+    frame at _travel_card_slidein:
+        xalign 0.5
+        yalign 0.87
+        background "#000000AA"
+        padding (48, 14, 48, 20)
+        vbox:
+            spacing 6
+            xalign 0.5
+
+            ## "DESTINATION" label with arrow indicators
+            hbox:
+                spacing 8
+                xalign 0.5
+                text "▶" at _travel_dot_pulse:
+                    color "#e07070"
+                    size 11
+                    yalign 0.5
+                text "DESTINATION":
+                    color "#ffffff44"
+                    size 11
+                    yalign 0.5
+                text "▶" at _travel_dot_pulse:
+                    color "#e07070"
+                    size 11
+                    yalign 0.5
+
+            ## Destination name
+            text destination:
+                xalign 0.5
+                color "#ffffff"
+                size 38
+                bold True
+                outlines [(2, "#000000AA", 1, 1)]
+
+            ## Optional subtitle
+            if subtitle:
+                text subtitle:
+                    xalign 0.5
+                    color "#ffffff77"
+                    size 14
+
+            ## Staggered travel dots
+            null height 2
+            hbox:
+                xalign 0.5
+                spacing 10
+                text "●" at _travel_tdot1:
+                    color "#c8923a"
+                    size 10
+                text "●" at _travel_tdot2:
+                    color "#c8923a"
+                    size 10
+                text "●" at _travel_tdot3:
+                    color "#c8923a"
+                    size 10
+
+    ## ── Skip hint (bottom-right, inside corner bracket) ──
+    text "[[ Click to skip ]]":
+        xpos 1895
+        xanchor 1.0
+        ypos 1062
+        color "#ffffff33"
+        size 11

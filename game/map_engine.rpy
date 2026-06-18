@@ -237,27 +237,22 @@ init python:
 ## MAP SCREEN
 ## ============================================================================
 
-screen map_screen(map_bg, nodes, task_text="", map_scale=1.0, player_zoom=2.5):
+screen map_screen(map_bg, nodes, task_text="", map_scale=1.0, player_zoom=2.5, fit_mode="cover"):
 
     predict False
 
     ## Key bindings for phone, inventory, encyclopedia — overlays so the map stays visible
     key "p" action If(phone_unlocked, Show("phone_screen"), NullAction())
-    key "i" action If(inventory_unlocked, Show("inventory_screen"), NullAction())
-    key "e" action If(inventory_unlocked, Show("encyclopedia_screen"), NullAction())
+    key "e" action Show("encyclopedia_screen")
+    key "d" action Show("dictionary_screen")
 
-    ## Black background behind everything
-    add Solid("#000000"):
-        xysize (1920, 1080)
-
-    ## Map background — scaled and centered with white border
-    frame:
-        background Solid("#ffffff")
-        padding (4, 4, 4, 4)
-        xalign 0.5
-        yalign 0.5
-        add ("images/" + map_bg):
-            zoom map_scale
+    ## Full-screen map background — stretches to fill 1920x1080
+    add ("images/" + map_bg):
+        xpos 0
+        ypos 0
+        xsize 1920
+        ysize 1080
+        fit fit_mode
 
     ## Node markers — positioned using screen coordinates
     for node in nodes:
@@ -265,14 +260,20 @@ screen map_screen(map_bg, nodes, task_text="", map_scale=1.0, player_zoom=2.5):
         $ _sx = int(node.x * MAP_SCALE_X)
         $ _sy = int(node.y * MAP_SCALE_Y)
 
+        $ _icon_zoom = getattr(node, "icon_zoom", 1.0)
+        ## Clamp zoom for hit box — min 0.8 so tiny icons are still clickable,
+        ## max 2.0 so large arrows don't create oversized boxes.
+        $ _hit_scale = max(0.8, min(_icon_zoom, 2.0))
+        $ _btn_w = int(80 * _hit_scale)
+        $ _btn_h = int((90 if getattr(node, "icon_image", "").lower().startswith("arrow") else (220 if map_bg == "maps/NewAd_Office.png" else 160)) * _hit_scale)
         if not node.locked:
             button:
-                xpos _sx - 40
-                ypos _sy - 70
-                xysize (80, 90)
+                xpos _sx - _btn_w // 2
+                ypos _sy - int(_btn_h * 0.78)
+                xysize (_btn_w, _btn_h)
                 action Return(("walk", node))
-                background Solid("#00000000")
-                hover_background Solid("#00000000")
+                background Solid("#ff000088") # DEBUG: semi-transparent red
+                hover_background Solid("#ff0000cc") # DEBUG: more opaque red
 
                 vbox:
                     xalign 0.5
@@ -285,11 +286,11 @@ screen map_screen(map_bg, nodes, task_text="", map_scale=1.0, player_zoom=2.5):
                     else:
                         frame:
                             xalign 0.5
-                            xysize (20, 20)
+                            xysize (int(20 * _hit_scale), int(20 * _hit_scale))
                             background Solid(node.icon_color if not node.visited else "#666666")
                             padding (3, 3, 3, 3)
                             add Solid("#ffffff"):
-                                xysize (14, 14)
+                                xysize (int(14 * _hit_scale), int(14 * _hit_scale))
 
                     text node.tooltip:
                         size 12
@@ -300,10 +301,10 @@ screen map_screen(map_bg, nodes, task_text="", map_scale=1.0, player_zoom=2.5):
 
         else:
             frame:
-                xpos _sx - 40
-                ypos _sy - 70
-                xysize (80, 90)
-                background Solid("#00000000")
+                xpos _sx - _btn_w // 2
+                ypos _sy - int(_btn_h * 0.78)
+                xysize (_btn_w, _btn_h)
+                background Solid("#ff000088") # DEBUG: semi-transparent red
 
                 vbox:
                     xalign 0.5
@@ -317,11 +318,11 @@ screen map_screen(map_bg, nodes, task_text="", map_scale=1.0, player_zoom=2.5):
                     else:
                         frame:
                             xalign 0.5
-                            xysize (18, 18)
+                            xysize (int(18 * _hit_scale), int(18 * _hit_scale))
                             background Solid("#33333388")
                             padding (3, 3, 3, 3)
                             add Solid("#55555588"):
-                                xysize (12, 12)
+                                xysize (int(12 * _hit_scale), int(12 * _hit_scale))
 
                     text "🔒":
                         size 12
@@ -500,6 +501,161 @@ screen map_screen(map_bg, nodes, task_text="", map_scale=1.0, player_zoom=2.5):
                         background Solid("#f6d79d66")
                         padding (0, 0, 0, 0)
 
+    ## --- QUICK-ACCESS TOOLBAR (top center) ---
+    ## Same construction as the task box above: outer glow + dark panel + gold ornaments.
+
+    frame:
+        xalign 0.5
+        ypos 14
+        padding (3, 3, 3, 3)
+        background Frame(Solid("#f6d79d22"), 0, 0)
+
+        frame:
+            xfill True
+            padding (20, 10, 20, 10)
+            background Frame(Solid("#1e0c12ee"), 0, 0)
+
+            vbox:
+                xfill True
+                spacing 0
+
+                ## Top ornament line
+                hbox:
+                    xalign 0.5
+                    spacing 6
+
+                    frame:
+                        xsize 30 ysize 2 yalign 0.5
+                        background Solid("#f6d79d66") padding (0, 0, 0, 0)
+                    frame:
+                        xsize 6 ysize 6 yalign 0.5
+                        background Solid("#f6d79d") padding (0, 0, 0, 0)
+                    frame:
+                        xsize 60 ysize 2 yalign 0.5
+                        background Solid("#f6d79d") padding (0, 0, 0, 0)
+                    frame:
+                        xsize 6 ysize 6 yalign 0.5
+                        background Solid("#f6d79d") padding (0, 0, 0, 0)
+                    frame:
+                        xsize 30 ysize 2 yalign 0.5
+                        background Solid("#f6d79d66") padding (0, 0, 0, 0)
+
+                null height 8
+
+                ## Button row
+                hbox:
+                    xalign 0.5
+                    spacing 20
+
+                    ## [E]ncyclopedia
+                    button:
+                        background Solid("#00000000")
+                        hover_background Solid("#f6d79d14")
+                        insensitive_background Solid("#00000000")
+                        padding (10, 4, 10, 4)
+                        action Show("encyclopedia_screen")
+
+                        hbox:
+                            spacing 5
+                            yalign 0.5
+                            frame:
+                                xsize 18 ysize 18 yalign 0.5
+                                padding (0, 0, 0, 0)
+                                background Solid("#5c1a1a")
+                                text "E":
+                                    xalign 0.5 yalign 0.5
+                                    size 11 bold True
+                                    color "#ffd700"
+                                    outlines [(1, "#1e0c12", 0, 0)]
+                            text "ncyclopedia":
+                                yalign 0.5 size 15
+                                color "#f1debf"
+                                outlines [(2, "#1e0c12", 0, 0)]
+
+                    ## Thin gold divider
+                    frame:
+                        xsize 1 ysize 20 yalign 0.5
+                        background Solid("#f6d79d44") padding (0, 0, 0, 0)
+
+                    ## [D]ictionary
+                    button:
+                        background Solid("#00000000")
+                        hover_background Solid("#f6d79d14")
+                        insensitive_background Solid("#00000000")
+                        padding (10, 4, 10, 4)
+                        action Show("dictionary_screen")
+
+                        hbox:
+                            spacing 5
+                            yalign 0.5
+                            frame:
+                                xsize 18 ysize 18 yalign 0.5
+                                padding (0, 0, 0, 0)
+                                background Solid("#5c1a1a")
+                                text "D":
+                                    xalign 0.5 yalign 0.5
+                                    size 11 bold True
+                                    color "#ffd700"
+                                    outlines [(1, "#1e0c12", 0, 0)]
+                            text "ictionary":
+                                yalign 0.5 size 15
+                                color "#f1debf"
+                                outlines [(2, "#1e0c12", 0, 0)]
+
+                    ## Thin gold divider
+                    frame:
+                        xsize 1 ysize 20 yalign 0.5
+                        background Solid("#f6d79d44") padding (0, 0, 0, 0)
+
+                    ## [P]hone
+                    button:
+                        background Solid("#00000000")
+                        hover_background Solid("#f6d79d14")
+                        insensitive_background Solid("#00000000")
+                        padding (10, 4, 10, 4)
+                        action If(phone_unlocked, Show("phone_screen"), NullAction())
+                        sensitive phone_unlocked
+
+                        hbox:
+                            spacing 5
+                            yalign 0.5
+                            frame:
+                                xsize 18 ysize 18 yalign 0.5
+                                padding (0, 0, 0, 0)
+                                background Solid("#5c1a1a")
+                                text "P":
+                                    xalign 0.5 yalign 0.5
+                                    size 11 bold True
+                                    color "#ffd700"
+                                    outlines [(1, "#1e0c12", 0, 0)]
+                            text "hone":
+                                yalign 0.5 size 15
+                                color ("#f1debf" if phone_unlocked else "#f1debf44")
+                                outlines [(2, "#1e0c12", 0, 0)]
+
+                null height 8
+
+                ## Bottom ornament line (mirrors top)
+                hbox:
+                    xalign 0.5
+                    spacing 6
+
+                    frame:
+                        xsize 30 ysize 2 yalign 0.5
+                        background Solid("#f6d79d66") padding (0, 0, 0, 0)
+                    frame:
+                        xsize 6 ysize 6 yalign 0.5
+                        background Solid("#f6d79d") padding (0, 0, 0, 0)
+                    frame:
+                        xsize 60 ysize 2 yalign 0.5
+                        background Solid("#f6d79d") padding (0, 0, 0, 0)
+                    frame:
+                        xsize 6 ysize 6 yalign 0.5
+                        background Solid("#f6d79d") padding (0, 0, 0, 0)
+                    frame:
+                        xsize 30 ysize 2 yalign 0.5
+                        background Solid("#f6d79d66") padding (0, 0, 0, 0)
+
 transform task_item_bob:
     yoffset 0
     block:
@@ -511,30 +667,74 @@ screen map_nodes_overlay(nodes):
     for node in nodes:
         $ _sx = int(node.x * MAP_SCALE_X)
         $ _sy = int(node.y * MAP_SCALE_Y)
+        $ _icon_zoom = getattr(node, "icon_zoom", 1.0)
+        $ _hit_scale = max(0.8, min(_icon_zoom, 2.0))
+        $ _btn_w = int(80 * _hit_scale)
+        $ _btn_h = int((90 if getattr(node, "icon_image", "").lower().startswith("arrow") else (220 if current_map_bg == "maps/NewAd_Office.png" else 160)) * _hit_scale)
 
         if not node.locked:
-            if getattr(node, "icon_image", None):
-                add ("npcs/" + node.icon_image):
-                    zoom getattr(node, "icon_zoom", 0.12)
-                    xpos _sx - 40
-                    ypos _sy - 70
-            text node.tooltip:
-                xpos _sx - 40
-                ypos _sy - 10
-                size 12
-                color "#ffffff"
-                outlines [(3, "#000000", 0, 0)]
+            frame:
+                xpos _sx - _btn_w // 2
+                ypos _sy - int(_btn_h * 0.78)
+                xysize (_btn_w, _btn_h)
+                background None
+                padding (0, 0, 0, 0)
+
+                vbox:
+                    xalign 0.5
+                    spacing 2
+
+                    if getattr(node, "icon_image", None):
+                        add ("npcs/" + node.icon_image):
+                            zoom getattr(node, "icon_zoom", 0.12)
+                            xalign 0.5
+                    else:
+                        frame:
+                            xalign 0.5
+                            xysize (int(20 * _hit_scale), int(20 * _hit_scale))
+                            background Solid(node.icon_color if not node.visited else "#666666")
+                            padding (3, 3, 3, 3)
+                            add Solid("#ffffff"):
+                                xysize (int(14 * _hit_scale), int(14 * _hit_scale))
+
+                    text node.tooltip:
+                        size 12
+                        color "#ffffff"
+                        outlines [(3, "#000000", 0, 0)]
+                        text_align 0.5
+                        xalign 0.5
         else:
-            if getattr(node, "icon_image", None):
-                add ("npcs/" + node.icon_image):
-                    zoom getattr(node, "icon_zoom", 0.12)
-                    xpos _sx - 40
-                    ypos _sy - 70
-                    matrixcolor BrightnessMatrix(-0.5)
-            text "🔒":
-                xpos _sx - 40
-                ypos _sy - 10
-                size 12
+            frame:
+                xpos _sx - _btn_w // 2
+                ypos _sy - int(_btn_h * 0.78)
+                xysize (_btn_w, _btn_h)
+                background None
+                padding (0, 0, 0, 0)
+
+                vbox:
+                    xalign 0.5
+                    spacing 2
+
+                    if getattr(node, "icon_image", None):
+                        add ("npcs/" + node.icon_image):
+                            zoom getattr(node, "icon_zoom", 0.12)
+                            xalign 0.5
+                            matrixcolor BrightnessMatrix(-0.5)
+                    else:
+                        frame:
+                            xalign 0.5
+                            xysize (int(20 * _hit_scale), int(20 * _hit_scale))
+                            background Solid("#666666")
+                            padding (3, 3, 3, 3)
+                            add Solid("#444444"):
+                                xysize (int(14 * _hit_scale), int(14 * _hit_scale))
+
+                    text "🔒":
+                        size 12
+                        color "#ffffff"
+                        outlines [(3, "#000000", 0, 0)]
+                        text_align 0.5
+                        xalign 0.5
 
 ## ============================================================================
 ## WALK LABEL
@@ -546,10 +746,28 @@ label walk_to_node(target_node, map_bg=None, nodes=None, player_zoom=2.5):
         $ map_bg = current_map_bg
 
     ## Show the map background so it stays visible during the walk animation
-    show expression ("images/" + map_bg) as walk_map_bg:
-        xalign 0.5
-        yalign 0.5
-        zoom 1.0
+    # Use map_scale=0.5 for Act 5 CL3, otherwise default to 1.0
+    python:
+        _map_scale = 1.0
+        _use_black_bg = False
+        _fit_cover = False
+        if map_bg == "maps/CL3.png" or map_bg == "ui/CAS_Overworld(F).png" or map_bg == "ui/Diwata.png":
+            _fit_cover = True
+    if map_bg == "maps/CL3.png":
+        # Remove black/white border for CL3, use fit cover for consistency
+        pass
+    if _fit_cover:
+        show expression ("images/" + map_bg) as walk_map_bg:
+            xpos 0
+            ypos 0
+            xsize 1920
+            ysize 1080
+            fit "cover"
+    else:
+        show expression ("images/" + map_bg) as walk_map_bg:
+            xalign 0.5
+            yalign 0.5
+            zoom _map_scale
 
     if nodes is not None:
         show screen map_nodes_overlay(nodes)

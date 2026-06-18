@@ -7,7 +7,14 @@
 ## NPC — DORM MANAGER (Check-in & Rules)
 ## KEY INFO: Point system, curfew, dorm rules, room assignment
 ## ============================================================================
+transform fit_screen:
+    xalign 0.5
+    yalign 0.5
+    fit "cover"
+
 label act4_npc_dorm_manager:
+    # play music moved to end of previous act
+    scene expression "images/ui/dorm_lobby.png" at fit_screen
     window show
 
     dorm_mgr "Good afternoon. You're one of the new freshmen?"
@@ -136,13 +143,50 @@ label act4_dorm_key:
 
     $ complete_task("talk_dorm_manager")
     if "sq_dorm_code" not in subquests_completed or "sq_dorm_survival" not in subquests_completed:
-        menu:
-            "★ Walk me through the dorm rules properly." if "sq_dorm_code" not in subquests_completed:
-                jump sq_dorm_code
-            "★ Help me check if I have everything I need." if "sq_dorm_survival" not in subquests_completed:
-                jump sq_dorm_survival
-            "(Okay, heading to my room now.)":
-                pass
+        $ _flip = renpy.random.randint(0, 1)
+        if "sq_dorm_code" not in subquests_completed and "sq_dorm_survival" not in subquests_completed:
+            if _flip == 0:
+                menu:
+                    "★ Walk me through the dorm rules properly.":
+                        jump sq_dorm_code
+                    "★ Help me check if I have everything I need.":
+                        jump sq_dorm_survival
+                    "(Okay, heading to my room now.)":
+                        pass
+            else:
+                menu:
+                    "★ Help me check if I have everything I need.":
+                        jump sq_dorm_survival
+                    "★ Walk me through the dorm rules properly.":
+                        jump sq_dorm_code
+                    "(Okay, heading to my room now.)":
+                        pass
+        elif "sq_dorm_code" not in subquests_completed:
+            if _flip == 0:
+                menu:
+                    "★ Walk me through the dorm rules properly.":
+                        jump sq_dorm_code
+                    "(Okay, heading to my room now.)":
+                        pass
+            else:
+                menu:
+                    "(Okay, heading to my room now.)":
+                        pass
+                    "★ Walk me through the dorm rules properly.":
+                        jump sq_dorm_code
+        else:
+            if _flip == 0:
+                menu:
+                    "★ Help me check if I have everything I need.":
+                        jump sq_dorm_survival
+                    "(Okay, heading to my room now.)":
+                        pass
+            else:
+                menu:
+                    "(Okay, heading to my room now.)":
+                        pass
+                    "★ Help me check if I have everything I need.":
+                        jump sq_dorm_survival
     window hide
     return
 
@@ -151,7 +195,7 @@ label act4_dorm_key:
 ## ROOM EXPLORATION — Enter the dorm room
 ## ============================================================================
 label act4_explore_room:
-    scene expression "images/maps/Dorm_Room.png" with fade
+    scene expression "images/maps/Dorm_Room.png" at fit_screen with fade
     window show
 
     narrator_char "(You open the door to Room 207.)"
@@ -186,3 +230,4 @@ label act4_explore_room:
 ## ============================================================================
 ## END OF ACT 4 DIALOGUES
 ## ============================================================================
+play music "audio/Act5.mp3" fadein 1.0

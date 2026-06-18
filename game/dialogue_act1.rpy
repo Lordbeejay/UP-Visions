@@ -1,10 +1,15 @@
+transform fit_screen:
+    xalign 0.5
+    yalign 0.5
+    fit "cover"
+
+
 ## ============================================================================
 ## ACT 1 — DIALOGUE LABELS ONLY
 ## All classes, data, screens, and helpers have been moved to:
 ##   - variables.rpy (classes, items, GC data, helpers, unlock flags)
 ##   - screens.rpy   (notebook, inventory, quiz, phone screens)
 ## ============================================================================
-
 
 ## ============================================================================
 ## ACT 1 GAME FLOW
@@ -15,6 +20,8 @@
 ## ----------------------------------------------------------------------------
 
 label act1_start:
+    play music "audio/Act1.mp3" fadein 1.0
+    
     $ talked_jaden   = False
     $ talked_josh    = False
     $ talked_maria   = False
@@ -33,6 +40,7 @@ label act1_start:
     ## Reset notebook questions
     $ [setattr(q, 'answered', False) for q in notebook_questions]
     $ [setattr(q, 'chosen_item_id', None) for q in notebook_questions]
+
 
     ## Brief intro narration
     narrator_char "You've just arrived in Miagao."
@@ -56,7 +64,7 @@ label act1_start:
 label act1_npc_jaden:
     
 
-    scene expression "images/ui/UI_Miagao.png"
+    scene expression "images/ui/UI_Miagao.png" at fit_screen
     window show
 
     jaden "Oh! Hey. You're a freshie too, right? I can tell by the confused look."
@@ -120,11 +128,19 @@ label act1_jaden_end:
     jaden "Anyway — I'm going to keep walking around. Still figuring out where everything is."
     jaden "If you want to compare notes later, find me."
     if "sq_oblation" not in subquests_completed:
-        menu:
-            "★ Actually — tell me about the Oblation statue. What does it really mean?":
-                jump sq_oblation
-            "(Alright, see you around.)":
-                jump act1_jaden_complete
+        $ _flip = renpy.random.randint(0, 1)
+        if _flip == 0:
+            menu:
+                "★ Actually — tell me about the Oblation statue. What does it really mean?":
+                    jump sq_oblation
+                "(Alright, see you around.)":
+                    jump act1_jaden_complete
+        else:
+            menu:
+                "(Alright, see you around.)":
+                    jump act1_jaden_complete
+                "★ Actually — tell me about the Oblation statue. What does it really mean?":
+                    jump sq_oblation
     else:
         jump act1_jaden_complete
 
@@ -184,7 +200,7 @@ label act1_npc_jaden_second:
 label act1_npc_manong_josh:
     
 
-    scene expression "images/ui/UI_Miagao.png"
+    scene expression "images/ui/marillac.png" at fit_screen
     window show
 
     manong_josh "Ay, estudyante ka? Bagong-abot?"
@@ -246,11 +262,19 @@ label act1_josh_general:
 label act1_josh_end:
     manong_josh "You seem like a good kid. Study hard."
     if "sq_miagao_heritage" not in subquests_completed:
-        menu:
-            "★ Manong, can you tell me more about the Miagao Church and the town's history?":
-                jump sq_miagao_heritage
-            "(Thank you, Manong.)":
-                jump act1_josh_complete
+        $ _flip = renpy.random.randint(0, 1)
+        if _flip == 0:
+            menu:
+                "★ Manong, can you tell me more about the Miagao Church and the town's history?":
+                    jump sq_miagao_heritage
+                "(Thank you, Manong.)":
+                    jump act1_josh_complete
+        else:
+            menu:
+                "(Thank you, Manong.)":
+                    jump act1_josh_complete
+                "★ Manong, can you tell me more about the Miagao Church and the town's history?":
+                    jump sq_miagao_heritage
     else:
         jump act1_josh_complete
 
@@ -268,7 +292,7 @@ label act1_josh_complete:
 
 label act1_npc_aleng_maria:
 
-    scene expression "images/ui/UI_Miagao.png"
+    scene expression "images/ui/tinda.png" at fit_screen
     window show
 
     aleng_maria "Uy, estudyante! Gutom ka na? Kain na dali!"
@@ -358,7 +382,7 @@ label act1_maria_end:
 
 label act1_npc_manong_chris:
 
-    scene expression "images/ui/UI_Miagao.png"
+    scene expression "images/ui/marillac.png" at fit_screen
     window show
 
     manong_chris "Ay, bag-o ka diri? Taga-diin ka?"
@@ -444,7 +468,7 @@ label act1_chris_end:
 label act1_npc_joseph_driver:
     
 
-    scene expression "images/ui/UI_Miagao.png"
+    scene expression "images/ui/tinda.png" at fit_screen
     window show
 
     joseph "Sakay! Saan? Saan?"
@@ -639,6 +663,8 @@ label act1_box1_arrive:
     $ complete_task("reach_box1")
     $ complete_task("act1_complete")
 
+    stop music fadeout 1.0
+    play music "audio/Act2.mp3" fadein 1.0
     window hide
     return
 
